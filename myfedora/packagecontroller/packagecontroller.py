@@ -16,12 +16,12 @@ resource_urls = {'info':('Info', InfoURLHandler),
                  'bugs':('Bugs', BugsURLHandler)}
 
 class PackageController(controllers.Controller):
-    @expose(template='myfedora.templates.packages.index')
+    @expose(template='myfedora.templates.packages.master')
     def index(self):
         dict = {}
         return dict
 
-    @expose(template='myfedora.templates.packages.index')
+    @expose(template='myfedora.templates.packages.master')
     def default(self, *args, **kw):
         dict = {}
         dict['package'] = args[0]
