@@ -1,0 +1,5 @@
+from urlhandler import URLHandler
+from kojiurlhandler import KojiURLHandler
+from bodhiurlhandler import BodhiURLHandler
+from pkgdburlhandler import PkgDBURLHandler
+from bugsurlhandler import BugsURLHandler
