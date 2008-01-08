@@ -1,5 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" py:replace="''"/>
 <title>Package $package</title>
@@ -17,7 +19,7 @@
 
 <div id="tabfloat">
 <ul id="primary-links">
-<span py:for="r_name, r_url in resource_urls.values()"><li><a href="${package_url}/${r_name}">${r_name}</a></li> </span>
+<span py:for="r in resource_urls.values()"><li><a href="${package_url}/${r[0]}">${r[0]}</a></li> </span>
 </ul>
 </div>
   <div id="resource_content">
