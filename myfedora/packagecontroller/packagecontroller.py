@@ -9,11 +9,11 @@ class InfoURLHandler(URLHandler):
 
         self.set_base_url('/packages')
 
-resource_urls = {'info':('Info', InfoURLHandler),
-                 'builds':('Builds', KojiURLHandler),
-                 'updates':('Updates', BodhiURLHandler),
-                 'acls':('ACLs', PkgDBURLHandler),
-                 'bugs':('Bugs', BugsURLHandler)}
+resource_urls = (('Info', InfoURLHandler),
+                 ('Builds', KojiURLHandler),
+                 ('Updates', BodhiURLHandler),
+                 ('Permissions', PkgDBURLHandler),
+                 ('Bugs', BugsURLHandler))
 
 class PackageController(controllers.Controller):
     @expose(template='myfedora.templates.packages.master')
@@ -28,23 +28,23 @@ class PackageController(controllers.Controller):
         dict['package_url'] = '/packages/' + dict['package']
         dict['my_iframe'] = None
 
-        rurls = {}
-        for key in resource_urls.keys():
-            resource = resource_urls[key]
+        rurls = []
+        for resource in reversed(resource_urls):
             urlhandler = resource[1]()
-            pkg_url = urlhandler.get_package_url(dict['package'])
-            url_mapping = (resource[0], pkg_url)
-            rurls[key] = url_mapping
+            rurls.append(resource[0])
 
-        print rurls
+            # set the iframe
+            try:
+                r = args[1].lower()
+
+                if r == resource[0].lower():
+                    urlhandler = resource[1]()
+                    pkg_url = urlhandler.get_package_url(dict['package'])
+ 
+                    dict['my_iframe'] = pkg_url 
+            except:
+                pass
 
         dict['resource_urls'] = rurls
-
-        try:
-            r = args[1].lower()
-
-            dict['my_iframe'] = rurls[r][1]
-        except:
-            pass
 
         return dict 
