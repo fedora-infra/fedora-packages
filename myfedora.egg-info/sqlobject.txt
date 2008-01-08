@@ -1,2 +1,0 @@
-db_module=myfedora.model
-history_dir=$base/myfedora/sqlobject-history
