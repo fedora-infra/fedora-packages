@@ -6,7 +6,12 @@ from cherrypy import request, response
 # import logging
 # log = logging.getLogger("myfedora.controllers")
 
+from packagecontroller import PackageController
+
 class Root(controllers.RootController):
+    # /packages/ is used for the package views
+    packages = PackageController()
+
     @expose(template="myfedora.templates.welcome")
     # @identity.require(identity.in_group("admin"))
     def index(self):
@@ -45,3 +50,5 @@ class Root(controllers.RootController):
     def logout(self):
         identity.current.logout()
         raise redirect("/")
+
+
