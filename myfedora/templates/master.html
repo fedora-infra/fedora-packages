@@ -6,7 +6,7 @@
   <head py:match="head" py:attrs="select('@*')">
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"
       py:replace="''" />
-    <title py:content="title"></title>
+    <title py:content="'Your Title Goes Here'"></title>
 
     <script type="text/javascript"
       src="${tg.url('/static/js/jquery-1.2.1.js')}" />
@@ -23,7 +23,7 @@
       type="image/x-icon" rel="shortcut icon"/> 
 
     <style type="text/css" media="screen">
-      @import url("https://fedoraproject.org/css/fedora.css");
+      @import url("https://fedoraproject.org/static/css/fedora.css");
     </style>
   </head>
   <body py:match="body" py:attrs="select('@*')">
