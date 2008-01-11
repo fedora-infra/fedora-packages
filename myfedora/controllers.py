@@ -73,9 +73,9 @@ class RSSWidget(Widget):
     template = 'fedora.widgets.rsswidget'
     pollInterval = timedelta(minutes=15)
 
-    def __init__(self, widgetId, title, url):
-        super(RSSWidget).__init__(self, widgetId, url=None)
-        self.url = url
+    def __init__(self, widgetId, title = None, url = None):
+        super(RSSWidget).__init__(self, widgetId)
+        self.url = url or self.url
         self.title = title
         try:
             self.entries = urlDataMap[url]
@@ -92,7 +92,7 @@ class RSSWidget(Widget):
 
 class FedoraPeopleWidget(RSSWidget):
     url = 'http://planet.fedoraproject.org/rss20.xml'
-
+    title = 'Fedora People'
 
 class Root(controllers.RootController):
     # /packages/ is used for the package views
@@ -104,7 +104,7 @@ class Root(controllers.RootController):
         widgets = ([], [], [])
         if identity.current.anonymous:
             # use defaults
-            widgets[LEFT].append(FedoraPeopleWidget())
+            widgets[LEFT].append(FedoraPeopleWidget('people1'))
         else:
             ### FIXME:
             # figure out what widgets user wants to display
