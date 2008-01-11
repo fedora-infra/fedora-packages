@@ -1,0 +1,14 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:py="http://genshi.edgewall.org/"
+  py:strip="">
+
+  <table border="0"
+    class="widget RSSWidget" py:attrs="{'id': widgetId}">
+    <h2>${title}</h2>
+    <tr py:for="entry in entries[:max_length]">
+      <td><img src="${entry['image']}" height="32" width="32"/></td>
+      <td><a href="${entry['link']}">${entry['title']}</a></td>
+    </tr>
+  </table>
+</html>
