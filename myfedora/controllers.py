@@ -1,12 +1,11 @@
 import re
 import logging
 import feedparser
-import timedelta
-import datetime
 
 from testcontroller import TestController
 from packagecontroller import PackageController
 
+from datetime import timedelta, datetime
 from turbogears import controllers, expose, flash
 from turbogears import identity, redirect
 from cherrypy import request, response
