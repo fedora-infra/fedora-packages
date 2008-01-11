@@ -144,6 +144,7 @@ a img
 #content
 {
   margin-left: 0px;
+  margin-right: 10px;
   color: #666666;
   background: #FFFFFF;
   display: inline-block;
@@ -682,4 +683,9 @@ background-position:100% -24px;
 
 #col2 .widget h2 {
   text-align: left;
+}
+
+.usernav {
+  margin-bottom: 10px;
+  text-align: right;
 }
