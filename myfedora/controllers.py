@@ -7,10 +7,12 @@ from cherrypy import request, response
 # log = logging.getLogger("myfedora.controllers")
 
 from packagecontroller import PackageController
+from testcontroller import TestController
 
 class Root(controllers.RootController):
     # /packages/ is used for the package views
     packages = PackageController()
+    test = TestController()
 
     @expose(template="myfedora.templates.welcome")
     # @identity.require(identity.in_group("admin"))
