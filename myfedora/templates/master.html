@@ -27,7 +27,7 @@
       <div id="head">
         <h1><a href="http://fedoraproject.org/index.html">Fedora</a></h1>
       </div>
-      <div id="content">
+      <div class="content">
         <div py:if="tg.config('identity.on',False) and not 'logging_in' in locals()" id="pageLogin" class="usernav">
           <span py:if="tg.identity.anonymous">
             You are not logged in yet <a class="loginButton" href="${tg.url('/login/')}">login</a>
