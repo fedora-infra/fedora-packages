@@ -3,12 +3,12 @@
   xmlns:py="http://genshi.edgewall.org/"
   py:strip="">
 
-  <table border="0"
+  <div
     class="widget RSSWidget" py:attrs="{'id': widgetId}">
     <h2>${title}</h2>
-    <tr py:for="entry in entries[:max_length]">
-      <td><img src="${entry['image']}" height="32" width="32"/></td>
-      <td><a href="${entry['link']}">${entry['title']}</a></td>
-    </tr>
-  </table>
+    <ul py:for="entry in entries[:max_length]">
+      <li><img src="${entry['image']}" height="32" width="32"/></li>
+      <li><a href="${entry['link']}">${entry['title']}</a></li>
+    </ul>
+  </div>
 </html>
