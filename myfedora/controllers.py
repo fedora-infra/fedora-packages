@@ -62,12 +62,19 @@ class RSSData(list):
                 'title' : entry['title'],
                 'image' : regex.match(entry['summary']).group(1)
             })
-        for entry in range(0, len(newEntries)):
-            if newEntries[entry].link != self[entry].link:
-                self[:]
-                self.extend(newEntries)
-                self.lastChange = datetime.utcnow()
-                break
+            
+        changes = True
+        if len(self) == len(newEntries):
+            for entry in range(0, len(newEntries) - 1):
+                if newEntries[entry]['link'] != self[entry]['link']:
+                    break
+            changes = False
+            
+        if changes:        
+            self[:]
+            self.extend(newEntries)
+            self.lastChange = datetime.utcnow()
+            
         self.lastPoll = datetime.utcnow()
 
 class RSSWidget(Widget):
@@ -104,6 +111,7 @@ class RawhideBugWidget(RSSWidget):
 class FedoraUpdatesWidget(RSSWidget):
     url = 'https://admin.fedoraproject.org/updates/rss/rss2.0?status=stable'
     title = 'Fedora Updates'
+
 
 class Root(controllers.RootController):
     # /packages/ is used for the package views
