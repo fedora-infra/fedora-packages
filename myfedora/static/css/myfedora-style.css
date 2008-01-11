@@ -634,6 +634,10 @@ background-position:100% -24px;
   font-size: 1.7ex;
 }
 
+.widget-list {
+  list-style: none;
+}
+
 #col1 {
   width: 200px;
   height: 100%;

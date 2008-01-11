@@ -23,7 +23,7 @@
       type="image/x-icon" rel="shortcut icon"/> 
 
     <style type="text/css" media="screen">
-      @import url("https://fedoraproject.org/static/css/fedora.css");
+      @import url("/static/css/myfedora-style.css");
     </style>
   </head>
   <body py:match="body" py:attrs="select('@*')">
@@ -39,14 +39,6 @@
             Welcome <a href="${tg.url('/users/info/')}">${tg.identity.user.display_name}</a>
             <a class="loginButton" href="${tg.url('/logout/')}">Logout</a>
           </span>
-        </div>
-      </div>
-      <div id="sidebar">
-        <div id="nav">
-          <h2>Navigation</h2>
-          <ul>
-            <li><!-- List of URLs for the nav sidebar system here --></li>
-          </ul>
         </div>
       </div>
       <div id="content">
