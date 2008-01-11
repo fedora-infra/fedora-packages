@@ -113,3 +113,31 @@ class Permission(SQLObject):
                          intermediateTable='group_permission',
                          joinColumn='permission_id',
                          otherColumn='group_id')
+
+class WidgetConfig(simplejson):
+    """
+    Widget configuration for display or the object parameters
+    """
+    
+    def __init__(self, widgetId, configType):
+        return simplejson.load(
+            WidgetConfigTable.selectBy(
+                widget_id = widgetId,
+                config_type = configType,
+                active = True).get(1).config_data)
+
+class WidgetConfigTable(SQLObject):
+    """
+    Database interaction to get the configuration
+    """
+    
+    class sqlmeta:
+        table = 'widget_config'
+    
+    widget_id = StringCol(length=16, alternateID = True)
+    
+    config_type = EnumCol(enumValues=['display', 'widget'], alternateID = True)
+    
+    active = BoolCol(default=True, alternateID = True)
+
+    config_data = UnicodeCol()
