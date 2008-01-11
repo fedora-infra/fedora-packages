@@ -1,12 +1,13 @@
-from turbogears import controllers, expose, flash
-# from model import *
-from turbogears import identity, redirect
-from cherrypy import request, response
-# from myfedora import json
-# import logging
-# log = logging.getLogger("myfedora.controllers")
+import logging
 
 from packagecontroller import PackageController
+
+from turbogears import controllers, expose, flash
+from turbogears import identity, redirect
+from cherrypy import request, response
+
+log = logging.getLogger("myfedora.controllers")
+
 
 class Root(controllers.RootController):
     # /packages/ is used for the package views
@@ -40,7 +41,7 @@ class Root(controllers.RootController):
         else:
             msg=_("Please log in.")
             forward_url= request.headers.get("Referer", "/")
-            
+
         response.status=403
         return dict(message=msg, previous_url=previous_url, logging_in=True,
                     original_parameters=request.params,
@@ -50,5 +51,3 @@ class Root(controllers.RootController):
     def logout(self):
         identity.current.logout()
         raise redirect("/")
-
-
