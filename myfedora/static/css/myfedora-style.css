@@ -11,6 +11,7 @@ html, body
 
 body
 {
+  color: #666666;
   font-size: 76%;
   background: #FFFFFF url(/static/images/border-left.png) 0 0 repeat-y;
 }
@@ -501,3 +502,180 @@ background-image:url(/themes/bluebeach/header-tab2.png);
 background-position:100% -24px;
 }
 
+/*********** My Fedora Widget stuff *************/
+
+.col {
+  margin: 5px
+  padding: 0 0 2ex;
+}
+
+.downloadbox li li
+{
+  width: auto;
+  float: none;
+  padding: 0;
+}
+
+
+#content pre.command
+{
+  font-size: 2.25ex;
+  border: solid #DDDDDD;
+  border-width: 1px 1px 1px 5px;
+  background: #F2F5F6;
+  padding: 0.5ex 2ex;
+}
+
+
+#content p.note
+{
+  padding: 1ex 2ex;
+  font-size: 1.75ex;
+  border: 1px solid #DDDDDD;
+  background: #F2F5F6;
+}
+
+#content ul#resources
+{
+  list-style: none;
+}
+
+#content ul#resources a
+{
+  padding-left: 20px;
+  background: url(/static/images/arrow.png) 0 50% no-repeat;
+}
+
+#content ul#resources li
+{
+  padding-left: 70px;
+  margin-bottom: 3.5ex;
+}
+
+ul#resources li.resource-docs
+{
+  background: url(/static/images/icon-docs.png) 0 50% no-repeat;
+}
+
+ul#resources li.resource-communicate
+{
+  background: url(/static/images/icon-communicate.png) 0 50% no-repeat;
+}
+
+ul#resources li.resource-download
+{
+  background: url(/static/images/icon-download.png) 0 50% no-repeat;
+}
+
+
+#tabfloat {
+  right:25px;
+  position:absolute;
+  top:77px;
+  width:100%;
+  z-index:2;
+}
+
+ul#primary-links {
+  list-style-type:none;
+  margin:0px;
+  padding:0px 0px 0px 255px;
+}
+
+ul#primary-links li {
+  background:transparent url(/static/images/header-tab1.png) no-repeat scroll 0%;
+  float:right;
+  list-style-type:none;
+  margin:0px 0px;
+  padding:0px;
+}
+
+ul#primary-links li a {
+  background:transparent url(/static/images/header-tab2.png) no-repeat scroll 100% 0px;
+  color: #666666;
+  display:block;
+  font-weight:bold;
+  font-size:larger;
+  height:33px;
+  list-style-type:none;
+  margin:0px;
+  padding:4px 20px 0px;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+ul#primary-links li:hover {
+background-image:url(/themes/bluebeach/header-tab1.png);
+background-position:0% -24px;
+}
+ul#primary-links li:hover a {
+background-image:url(/themes/bluebeach/header-tab2.png);
+background-position:100% -24px;
+}
+
+/*********** My Fedora Widget stuff *************/
+
+.col-group {
+  overflow: hidden;
+}
+
+.col {
+  float: left;
+  margin: 5px;
+  padding: 0 0 2ex; 
+  padding-bottom: 32767px;
+  margin-bottom: -32767px;  
+  /*display: table-column; */
+}
+
+.col ul {
+  font-weight: normal;
+  list-style: none;
+  font-size: 1.7ex;
+}
+
+#col1 {
+  width: 200px;
+  height: 100%;
+}
+
+#col2 {
+}
+
+#col3 {
+  float: right;
+  width: 200px;
+  
+}
+
+.widget-list {
+  /*display: table-cell;*/
+}
+
+#col1 .widget {
+  border-width: 1px 1px 1px 1px;
+  border-spacing: 2px;
+  border-style: outset outset outset outset;
+  border-color: gray gray gray gray;
+  border-collapse: separate;
+  background-color: white;
+}
+
+#col3 .widget {
+  border-width: 1px 1px 1px 1px;
+  border-spacing: 2px;
+  border-style: outset outset outset outset;
+  border-color: gray gray gray gray;
+  border-collapse: separate;
+  background-color: white;
+}
+
+.widget h2 {
+  border-width: 1px 1px 1px 1px;
+  font-weight: bold;
+  text-align: center; 
+}
+
+#col2 .widget h2 {
+  text-align: left;
+}
