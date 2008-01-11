@@ -25,7 +25,8 @@ class Widget(TWWidget):
         'widget' : None,
     }
     widgetId = None
-
+    engine='genshi'
+    
     def __init__(self, widgetId):
         self.widgetId = widgetId
 
@@ -70,9 +71,8 @@ class RSSData(list):
         self.lastPoll = datetime.utcnow()
 
 class RSSWidget(Widget):
-    template = 'myfedora.templates.rsswidget'
+    template = 'fedora.widgets.rsswidget'
     pollInterval = timedelta(minutes=15)
-    params = ["title", "entries"]
 
     def __init__(self, widgetId, title = None, url = None):
         super(RSSWidget, self).__init__(widgetId)
