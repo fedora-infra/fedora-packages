@@ -25,7 +25,7 @@ class Widget(TWWidget):
         'widget' : None,
     }
     widgetId = None
-    engine='genshi'
+    engine_name='genshi'
     
     def __init__(self, widgetId):
         self.widgetId = widgetId
