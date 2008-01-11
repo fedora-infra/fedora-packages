@@ -70,7 +70,7 @@ class RSSData(list):
         self.lastPoll = datetime.utcnow()
 
 class RSSWidget(Widget):
-    template = 'myfedora.widgets.rsswidget'
+    template = 'myfedora.templates.rsswidget'
     pollInterval = timedelta(minutes=15)
 
     def __init__(self, widgetId, title = None, url = None):
