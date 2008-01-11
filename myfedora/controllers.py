@@ -29,7 +29,7 @@ class Widget(TWWidget):
     def __init__(self, widgetId):
         self.widgetId = widgetId
 
-        if self.widgetId:
+        if not identity.current.anonymous:
             self.config.display = WidgetConfig(widgetId, 'display')
             self.config.widget = WidgetConfig(widgetId, 'widget')
 
@@ -61,7 +61,7 @@ class RSSData(list):
                 'title' : entry['title'],
                 'image' : regex.match(entry['summary']).group(1)
             })
-        for entry in range(0, newEntries):
+        for entry in range(0, len(newEntries)):
             if newEntries[entry].link != self[entry].link:
                 self[:]
                 self.extend(newEntries)
@@ -81,6 +81,7 @@ class RSSWidget(Widget):
             self.entries = urlDataMap[url]
         except KeyError:
             urlDataMap[url] = RSSData(url, self.pollInterval)
+            self.entries = urlDataMap[url]
         self.entries.refresh()
 
     def update_params():
