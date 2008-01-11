@@ -82,10 +82,10 @@ class RSSWidget(Widget):
         self.title = title or self.title
         self.entries = maxEntries or self.entries
         try:
-            self.entries = urlDataMap[url]
+            self.entries = urlDataMap[self.url]
         except KeyError:
-            urlDataMap[url] = RSSData(url, self.pollInterval)
-            self.entries = urlDataMap[url]
+            urlDataMap[self.url] = RSSData(self.url, self.pollInterval)
+            self.entries = urlDataMap[self.url]
         self.entries.refresh()
 
 
