@@ -102,7 +102,7 @@ class Root(controllers.RootController):
     @expose(template='myfedora.templates.index', allow_json=True)
     def index(self):
         widgets = ([], [], [])
-        if identity.anonymous():
+        if identity.current.anonymous:
             # use defaults
             widgets[LEFT].append(FedoraPeopleWidget())
         else:
