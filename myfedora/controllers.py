@@ -74,7 +74,7 @@ class RSSWidget(Widget):
     pollInterval = timedelta(minutes=15)
 
     def __init__(self, widgetId, title = None, url = None):
-        super(RSSWidget).__init__(self, widgetId)
+        super(RSSWidget, self).__init__(widgetId)
         self.url = url or self.url
         self.title = title
         try:
