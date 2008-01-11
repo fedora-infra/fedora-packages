@@ -84,8 +84,6 @@ class RSSWidget(Widget):
             self.entries = urlDataMap[url]
         self.entries.refresh()
 
-    def update_params():
-        print "update_params()"
 
     def __json__(self):
         return {'widgetId': self.widgetId, 'url':self.url, 'entries': self.entries}
