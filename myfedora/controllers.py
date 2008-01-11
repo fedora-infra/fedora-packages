@@ -59,9 +59,10 @@ class RSSData(list):
         for entry in feed['entries'][:5]: # FIXME: use config info
             newEntries.append({
                 'link'  : entry['link'],
-                'title' : entry['title'],
-                'image' : regex.match(entry['summary']).group(1)
+                'title' : entry['title']
             })
+            if regex.match(entry['summary']):
+                newEntries[-1]['image'] = regex.match(entry['summary']).group(1)
             
         changes = True
         if len(self) == len(newEntries):
@@ -70,7 +71,7 @@ class RSSData(list):
                     break
             changes = False
             
-        if changes:        
+        if changes:
             self[:]
             self.extend(newEntries)
             self.lastChange = datetime.utcnow()
