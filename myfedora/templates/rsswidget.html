@@ -6,7 +6,7 @@
   <div
     class="widget RSSWidget" py:attrs="{'id': widgetId}">
     <h2>${title}</h2>
-    <ul py:for="entry in entries[:max_length]">
+    <ul py:for="entry in entries[:maxEntries]">
       <li><img src="${entry['image']}" height="32" width="32"/></li>
       <li><a href="${entry['link']}">${entry['title']}</a></li>
     </ul>

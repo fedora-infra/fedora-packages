@@ -73,12 +73,14 @@ class RSSData(list):
 class RSSWidget(Widget):
     template = 'myfedora.templates.rsswidget'
     pollInterval = timedelta(minutes=15)
-    params = ["title", "entries"]
+    params = ["title", "entries", "maxEntries"]
+    entries = 5
 
-    def __init__(self, widgetId, title = None, url = None):
+    def __init__(self, widgetId, title = None, url = None, maxEntries = None):
         super(RSSWidget, self).__init__(widgetId)
         self.url = url or self.url
         self.title = title or self.title
+        self.entries = maxEntries or self.entries
         try:
             self.entries = urlDataMap[url]
         except KeyError:
