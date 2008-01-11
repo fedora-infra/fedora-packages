@@ -97,6 +97,14 @@ class FedoraPeopleWidget(RSSWidget):
     url = 'http://planet.fedoraproject.org/rss20.xml'
     title = 'Fedora People'
 
+class RawhideBugWidget(RSSWidget):
+    url = 'https://bugzilla.redhat.com/buglist.cgi?bug_file_loc_type=allwordssubstr&bug_status=ASSIGNED&bug_status=MODIFIED&bug_status=NEEDINFO&bug_status=NEW&bugidtype=include&changedin=7&chfield=%5BBug%20creation%5D&chfieldto=Now&cust_facing_type=substring&devel_whiteboard_type=allwordssubstr&emailassigned_to1=1&emailassigned_to2=1&emailcc2=1&emailqa_contact2=1&emailreporter2=1&emailtype1=exact&emailtype2=exact&field0-0-0=noop&fixed_in_type=allwordssubstr&keywords_type=allwords&long_desc_type=substring&product=Fedora&qa_whiteboard_type=allwordssubstr&query_format=advanced&short_desc_type=allwordssubstr&status_whiteboard_type=allwordssubstr&type0-0-0=noop&version=rawhide&ctype=rss'
+    title = 'Rawhide Bugs'
+
+class FedoraUpdatesWidget(RSSWidget):
+    url = 'https://admin.fedoraproject.org/updates/rss/rss2.0?status=stable'
+    title = 'Fedora Updates'
+
 class Root(controllers.RootController):
     # /packages/ is used for the package views
     packages = PackageController()
@@ -108,6 +116,8 @@ class Root(controllers.RootController):
         if identity.current.anonymous:
             # use defaults
             widgets[LEFT].append(FedoraPeopleWidget('people1'))
+            widgets[RIGHT].append(FedoraUpdatesWidget('updates1'))
+            widgets[RIGHT].append(RawhideBugWidget('rawhide1'))
         else:
             ### FIXME:
             # figure out what widgets user wants to display
