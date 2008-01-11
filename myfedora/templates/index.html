@@ -11,7 +11,7 @@
         <ul class="widget_list">
           <div py:for="w in widgets[0]">
             <li>
-              ${w}
+              ${w.display()}
             </li>
           </div>
         </ul>
@@ -20,7 +20,7 @@
       <ul class="widget_list">
         <div py:for="w in widgets[2]">
             <li>
-              ${w}
+              ${w.display()}
             </li>
         </div>
       </ul>
@@ -30,7 +30,7 @@
       <ul class="widget_list">
         <div py:for="w in widgets[1]">
             <li>
-              ${w}
+              ${w.display()}
             </li>
         </div>
       </ul>
