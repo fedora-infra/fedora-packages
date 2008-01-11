@@ -8,12 +8,7 @@
       py:replace="''" />
     <title py:content="'Your Title Goes Here'"></title>
 
-    <script type="text/javascript"
-      src="${tg.url('/static/js/jquery-1.2.1.js')}" />
-    <!-- We're going to use jquery in infrastructure as much as possible for
-      future work so MochiKit should be pulled in only on pages that need it.
-    <script src="${tg.tg_js}/MochiKit.js" type="text/javascript"></script>
-    -->
+    <script type="text/javascript" src="${tg.url('/static/js/jquery.js')}" />
     <link py:for="js in tg_js_head" py:strip="">${XML(js)}</link>
     <link py:for="css in tg_css" py:strip="">${XML(css)}</link>
 
