@@ -72,6 +72,7 @@ class RSSData(list):
 class RSSWidget(Widget):
     template = 'myfedora.templates.rsswidget'
     pollInterval = timedelta(minutes=15)
+    params = ["title", "entries"]
 
     def __init__(self, widgetId, title = None, url = None):
         super(RSSWidget, self).__init__(widgetId)
