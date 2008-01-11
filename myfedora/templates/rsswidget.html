@@ -8,8 +8,7 @@
     <h2>${title}</h2>
     <ul py:for="entry in entries[:maxEntries]">
       <li>
-        <img py:if="'image' in entry" src="${entry['image']}"
-          height="32" width="32"/>
+        <img py:if="'image' in entry" src="${entry['image']}" width="32"/>
         <a href="${entry['link']}">${entry['title']}</a>
       </li>
     </ul>
