@@ -1,3 +1,5 @@
+import simplejson
+
 from datetime import datetime
 from turbogears.database import PackageHub
 from sqlobject import *
@@ -114,7 +116,7 @@ class Permission(SQLObject):
                          joinColumn='permission_id',
                          otherColumn='group_id')
 
-class WidgetConfig(simplejson):
+class WidgetConfig:
     """
     Widget configuration for display or the object parameters
     """
