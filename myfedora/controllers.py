@@ -77,7 +77,7 @@ class RSSWidget(Widget):
     def __init__(self, widgetId, title = None, url = None):
         super(RSSWidget, self).__init__(widgetId)
         self.url = url or self.url
-        self.title = title
+        self.title = title or self.title
         try:
             self.entries = urlDataMap[url]
         except KeyError:
