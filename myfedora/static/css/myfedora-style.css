@@ -141,7 +141,7 @@ a img
   text-decoration: none;
 }
 
-#content
+.content
 {
   margin-left: 0px;
   margin-right: 10px;
@@ -151,58 +151,58 @@ a img
 }
 
 /* Blame IE6 and the guillotine bug for this one */
-#content { display: block; }
+.content { display: block; }
 
-#content h2
+.content h2
 {
   font-size: 3.25ex;
 }
 
-#content h2 div {
+.content h2 div {
   font-size: 1ex;
   font-weight: normal;
 }
 
-#content h3
+.content h3
 {
   color: #337acc;
   margin: 1.5ex 0 0.5ex;
   font-size: 2.5ex;
 }
 
-#content table
+.content table
 {
   border-collapse: collapse;
 }
 
-#content table th
+.content table th
 {
   background: #DDDDDD;
 }
 
-#content table th, #content table td
+.content table th, .content table td
 {
   border: 1px solid #000000;
   padding: 0.6ex;
 }
 
-#content p
+.content p
 {
   margin: 1ex 5ex 1ex 0;
 }
 
-#content ul
+.content ul
 {
   list-style: square;
   margin: 0 3ex 2ex;
 }
 
-#content img
+.content img
 {
   margin: 2ex 0;
 }
 
-#content a
+.content a
 {
   color: #337ACC;
 }
