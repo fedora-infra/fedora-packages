@@ -21,7 +21,7 @@ a img
   border: none;
 }
 
-#wrapper
+.wrapper
 {
   margin-left: 18px;
   font: normal 2.3ex/1.5 sans-serif;
@@ -31,14 +31,14 @@ a img
   overflow: auto;
 }
 
-#head
+.head
 {
   border-top: 10px solid #337ACC;
   padding: 1ex 2ex 17px;
   background: #FFFFFF url(http://fedoraproject.org/static/images/line.png) 0 100% repeat-x;
 }
 
-#head h1 a
+.head h1 a
 {
   display: block;
   text-indent: -9999px;
@@ -518,7 +518,7 @@ background-position:100% -24px;
 }
 
 
-#content pre.command
+.content pre.command
 {
   font-size: 2.25ex;
   border: solid #DDDDDD;
@@ -528,7 +528,7 @@ background-position:100% -24px;
 }
 
 
-#content p.note
+.content p.note
 {
   padding: 1ex 2ex;
   font-size: 1.75ex;
@@ -536,18 +536,18 @@ background-position:100% -24px;
   background: #F2F5F6;
 }
 
-#content ul#resources
+.content ul#resources
 {
   list-style: none;
 }
 
-#content ul#resources a
+.content ul#resources a
 {
   padding-left: 20px;
   background: url(http://fedoraproject.org/static/images/arrow.png) 0 50% no-repeat;
 }
 
-#content ul#resources li
+.content ul#resources li
 {
   padding-left: 70px;
   margin-bottom: 3.5ex;
@@ -612,6 +612,16 @@ background-position:0% -24px;
 ul#primary-links li:hover a {
 background-image:url(/static/images/header-tab2.png);
 background-position:100% -24px;
+}
+
+.mainsearch 
+  {
+  top: 18px;
+  right: 28px;
+  z-index:2;
+  width: 300;
+  z-index:2;
+  position:absolute;
 }
 
 /*********** My Fedora Widget stuff *************/

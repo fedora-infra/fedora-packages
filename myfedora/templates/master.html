@@ -23,9 +23,14 @@
   </head>
   <body py:match="body" py:attrs="select('@*')">
     <div py:for="js in tg_js_bodytop" py:replace="XML(js.display())" />
-    <div id="wrapper">
-      <div id="head">
+    <div class="wrapper">
+      <div class="head">
         <h1><a href="http://fedoraproject.org/index.html">Fedora</a></h1>
+        <div class="mainsearch">
+          <form action="search/search.html" method="get">
+            <input type="text" name="search" />
+          </form> 
+        </div>
       </div>
       <div class="content">
         <div py:if="tg.config('identity.on',False) and not 'logging_in' in locals()" id="pageLogin" class="usernav">
