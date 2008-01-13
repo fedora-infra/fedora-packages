@@ -87,6 +87,9 @@ class User(SQLObject):
     groups = RelatedJoin('Group', intermediateTable='user_group',
                          joinColumn='user_id', otherColumn='group_id')
 
+    widgets = RelatedJoin('WidgetConfig', intermediateTable='user_widgets',
+                         joinColumn='user_id', otherColumn='widgetId')
+
     def _get_permissions(self):
         perms = set()
         for g in self.groups:
@@ -122,6 +125,7 @@ class WidgetConfig(SQLObject):
     """
 
     widgetId = StringCol(length=16)
+    widgetClass = StringCol(length=64)
     configType = EnumCol(enumValues=['display', 'widget'])
     active = BoolCol(default=True)
     config = UnicodeCol(default=None)
