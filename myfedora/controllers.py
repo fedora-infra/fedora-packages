@@ -4,6 +4,7 @@ import feedparser
 
 from testcontroller import TestController
 from packagecontroller import PackageController
+from searchcontroller import SearchController
 
 from datetime import timedelta, datetime
 from turbogears import controllers, expose, flash
@@ -141,6 +142,7 @@ class Root(controllers.RootController):
     # /packages/ is used for the package views
     packages = PackageController()
     test = TestController()
+    search = SearchController()
 
     @expose(template='myfedora.templates.index', allow_json=True)
     def index(self):
