@@ -116,30 +116,38 @@ class Permission(SQLObject):
                          joinColumn='permission_id',
                          otherColumn='group_id')
 
-class WidgetConfig:
+class WidgetConfig(SQLObject):
     """
     Widget configuration for display or the object parameters
     """
-    
-    def __init__(self, widgetId, configType):
-        return simplejson.load(
-            WidgetConfigTable.selectBy(
-                widget_id = widgetId,
-                config_type = configType,
-                active = True).get(1).config_data)
 
-class WidgetConfigTable(SQLObject):
-    """
-    Database interaction to get the configuration
-    """
+    widgetId = StringCol(length=16)
+    configType = EnumCol(enumValues=['display', 'widget'])
+    active = BoolCol(default=True)
+    config = UnicodeCol(default=None)
     
-    class sqlmeta:
-        table = 'widget_config'
-    
-    widget_id = StringCol(length=16, alternateID = True)
-    
-    config_type = EnumCol(enumValues=['display', 'widget'], alternateID = True)
-    
-    active = BoolCol(default=True, alternateID = True)
+    id_type = DatabaseIndex('widgetId', 'configType', unique=True)
 
-    config_data = UnicodeCol()
+    def _get_config(self):
+        "Loads JSON data and deserializes it"
+        config = None
+
+        try:
+            config = self._SO_get_config()
+            config = simplejson.loads(config)
+        except SQLObjectNotFound:
+            pass
+
+        if config is None:
+            config = {}
+        
+        return config
+
+    def _set_config(self, config = None):
+        "Saves config as JSON serialized data"
+        if config is not None:
+            config = simplejson.dumps(config)
+            self._SO_set_config(config)
+
+# vim:ts=4:sw=4:et:
+
