@@ -10,7 +10,7 @@ from turbogears import controllers, expose, flash, url
 from turbogears import identity, redirect
 from cherrypy import request, response
 
-from toscawidgets.api import Widget as TWWidget
+from toscawidgets.api import Widget
 from toscawidgets.api import JSLink as TWJSLink
 
 from myfedora.model import WidgetConfig
@@ -24,25 +24,25 @@ urlDataMap = {}
 LEFT, MIDDLE, RIGHT = range(3)
 
 
-class Widget(TWWidget):
-    config = {
-        'display' : {},
-        'widget' : {},
-    }
-    widgetId = None
+class FedoraWidget(Widget):
     engine_name='genshi'
     
-    def __init__(self, widgetId):
-        self.widgetId = widgetId
+    def __new__(cls, widgetId, parent=None, children=[], **kw):
+        obj = super(FedoraWidget, cls).__new__(cls, widgetId, parent, children, **kw)
 
+        obj.config = {
+                'display' : {},
+                'widget' : {},
+                }
         if not identity.current.anonymous:
-            for configType in self.config.keys():
+            for configType in obj.config.keys():
                 try:
-                    self.config[configType] = WidgetConfig.selectBy(
-                        widgetId=self.widgetId,
+                    obj.config[configType] = WidgetConfig.selectBy(
+                        widgetId=obj.widgetId,
                         configType=configType).getOne().config
                 except SQLObjectNotFound:
                     pass
+        return obj
 
     def save(self):
         for configType in self.config.keys():
@@ -104,7 +104,7 @@ class LocalTWJSLink(TWJSLink):
         super(TWJSLink, self).update_params(d)
         d["link"] = url(self.filename)
 
-class RSSWidget(Widget):
+class RSSWidget(FedoraWidget):
     javascript = [ LocalTWJSLink(modname='myfedora',
         filename='/static/js/fedorawidgets.js')]
 
@@ -113,18 +113,21 @@ class RSSWidget(Widget):
     params = ["widgetId", "url", "title", "entries", "maxEntries"]
     entries = None
     maxEntries = 5
+    url = ''
+    title = 'RSS Feed'
 
-    def __init__(self, widgetId, title = None, url = None, maxEntries = None):
-        super(RSSWidget, self).__init__(widgetId)
-        self.config['display']['title'] = title or self.title
-        self.config['widget']['url'] = url or self.url
-        self.config['widget']['maxEntries'] = maxEntries or self.maxEntries
+    def __new__(cls, widgetId, parent=None, children=[], title = None, url = None, maxEntries = None, **kw):
+        obj = super(RSSWidget, cls).__new__(cls, widgetId, parent, children, **kw)
+        obj.config['display']['title'] = title or cls.title
+        obj.config['widget']['url'] = url or cls.url
+        obj.config['widget']['maxEntries'] = maxEntries or cls.maxEntries
         try:
-            self.entries = urlDataMap[self.url]
+            obj.entries = urlDataMap[obj.config['widget']['url']]
         except KeyError:
-            urlDataMap[self.url] = RSSData(self.url, self.pollInterval)
-            self.entries = urlDataMap[self.url]
-        self.entries.refresh()
+            urlDataMap[obj.config['widget']['url']] = RSSData(obj.config['widget']['url'], cls.pollInterval)
+            obj.entries = urlDataMap[obj.config['widget']['url']]
+        obj.entries.refresh()
+        return obj
 
     def __json__(self):
         return {'widgetId': self.widgetId,
@@ -159,26 +162,27 @@ class WidgetsController(controllers.Controller):
         print kwargs
         print RSSWidget
         print (dir (RSSWidget))
+        print 'widgetId type:', type(widgetId)
         rss = RSSWidget(widgetId, title, url, maxEntries)
-        return { widget:rss }
+        return { 'widget':rss }
 
     @expose(template='myfedora.templates.widget', allow_json=True)
-    def FedoraPeople(self, widgetId):
+    def FedoraPeople(self, widgetId, **kwargs):
         '''Serve the FedoraPeopleWidget.'''
         fedorapeople = FedoraPeopleWidget(widgetId)
-        return { widget:fedorapeople }
+        return { 'widget':fedorapeople }
 
     @expose(template='myfedora.templates.widget', allow_json=True)
-    def RawhideBugs(self, widgetId):
+    def RawhideBugs(self, widgetId, **kwargs):
         '''Serve the FedoraPeopleWidget.'''
         rawhidebugs = RawhideBugs(widgetId)
-        return { widget:rawhidebugs }
+        return { 'widget':rawhidebugs }
 
     @expose(template='myfedora.templates.widget', allow_json=True)
-    def FedoraUpdates(self, widgetId):
+    def FedoraUpdates(self, widgetId, **kwargs):
         '''Serve the FedoraPeopleWidget.'''
         fedoraupdates = FedoraUpdatesWidget(widgetId)
-        return { widget:fedoraupdates }
+        return { 'widget':fedoraupdates }
 
 class Root(controllers.RootController):
     # /packages/ is used for the package views

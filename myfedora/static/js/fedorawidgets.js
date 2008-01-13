@@ -559,6 +559,10 @@ fedora.widgets.RSS.prototype.refresh = function () {
             + '&title=' + escape(widget.title)
             + '&url=' + escape(widget.widgetUrl)
             + '&maxEntries=' + escape(widget.numEntries),
+            /*
+        url: 'http://localhost:8080/widgets/FedoraPeople/?tg_format=json'
+            + '&widgetId=' + escape(widget.widgetId),
+            */
         type: 'GET',
         dataType: 'jsonp',
         timeout: 5000,
