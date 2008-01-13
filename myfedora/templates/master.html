@@ -9,6 +9,7 @@
     <title py:content="'Your Title Goes Here'"></title>
 
     <script type="text/javascript" src="${tg.url('/static/js/jquery.js')}" />
+    <script type="text/javascript" src="${tg.url('/static/js/fedorawidgets.js')}" />
     <link py:for="js in tg_js_head" py:strip="">${XML(js)}</link>
     <link py:for="css in tg_css" py:strip="">${XML(css)}</link>
 
