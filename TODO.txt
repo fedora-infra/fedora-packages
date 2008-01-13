@@ -1,0 +1,3 @@
+Widgets
+  - Widget ID provider (need to have a widget ID before a widget is created)
+
