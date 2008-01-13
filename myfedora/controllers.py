@@ -198,16 +198,17 @@ class Root(controllers.RootController):
         # new container class that extracts javascript and css properties from
         # the widgets.
         widgets = ([], [], [])
-        if identity.current.anonymous:
-            # use defaults
-            widgets[LEFT].append(FedoraPeopleWidget('people1'))
-            widgets[RIGHT].append(FedoraUpdatesWidget('updates1'))
-            widgets[RIGHT].append(RawhideBugsWidget('rawhide1'))
-        else:
-            ### FIXME:
-            # figure out what widgets user wants to display
-            # instantiate widgets with custom configuration
-            pass
+        # use defaults
+        widgets[LEFT].append(FedoraPeopleWidget('people1'))
+        widgets[RIGHT].append(FedoraUpdatesWidget('updates1'))
+        widgets[RIGHT].append(RawhideBugsWidget('rawhide1'))
+        if not identity.current.anonymous:
+            userWidgets = identity.current.user.widgets
+            if userWidgets:
+                for widget in userWidgets:
+                    widgets[widget.config['display']['column']] \
+                        [widget.config['display']['row']] = \
+                        widget.widgetClass(widget.widgetId)
 
         return {
             'widgets': widgets,
