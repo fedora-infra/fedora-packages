@@ -34,26 +34,33 @@ class FedoraWidget(Widget):
                 'display' : {},
                 'widget' : {},
                 }
+        obj.widgetId = widgetId
+
         if not identity.current.anonymous:
-            for configType in obj.config.keys():
-                try:
-                    obj.config[configType] = WidgetConfig.selectBy(
-                        widgetId=obj.widgetId,
-                        configType=configType).getOne().config
-                except SQLObjectNotFound:
-                    pass
+            try:
+                widget_config = WidgetConfig.selectBy(
+                    widgetId=obj.widgetId).getOne()
+                obj.config['display'] = widget_config.configDisplay
+                obj.config['widget'] = widget_config.configWidget
+            except SQLObjectNotFound:
+                pass
         return obj
 
     def save(self):
-        for configType in self.config.keys():
-            try:
-                WidgetConfig(widgetId=self.widgetId, configType=configType,
-                    config=self.config[configType])
-            except DuplicateEntryError:
-                wc = WidgetConfig.selectBy(
-                    widgetId=self.widgetId,
-                    configType=configType).getOne().set(
-                        config=self.config[configType])
+        obj = None
+
+        try:
+            obj = WidgetConfig(widgetId=self.widgetId,
+                widgetClass=self.__class__.__name__,
+                configDisplay=self.config['display'],
+                configWidget=self.config['widget'])
+        except DuplicateEntryError:
+            obj = WidgetConfig.selectBy(widgetId=self.widgetId).getOne()
+            obj.set(
+                configDisplay=self.config['display'],
+                configWidget=self.config['widget'])
+
+        return obj
 
 class RSSData(list):
     """
@@ -205,10 +212,18 @@ class Root(controllers.RootController):
         if not identity.current.anonymous:
             userWidgets = identity.current.user.widgets
             if userWidgets:
-                for widget in userWidgets:
-                    widgets[widget.config['display']['column']] \
-                        [widget.config['display']['row']] = \
-                        widget.widgetClass(widget.widgetId)
+                # FIXME: need to instantiate the class
+                # in widget_config.widgetClass
+                for widget_config in userWidgets:
+                    widget_class = getattr(widget_config.widgetClass, '__new__')
+                    widgets[widget_config.config['display']['column']] \
+                        [widget_config.config['display']['row']] = \
+                        widget_class(widget_config.widgetId)
+            else:
+                for widgetCol in widgets:
+                    for widget in widgetCol:
+                        widget_config = widget.save()
+                        identity.current.user.addWidgetConfig(widget_config.id)
 
         return {
             'widgets': widgets,
