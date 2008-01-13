@@ -15,6 +15,9 @@ from toscawidgets.api import JSLink as TWJSLink
 
 from myfedora.model import WidgetConfig
 
+from sqlobject import SQLObjectNotFound
+from sqlobject.dberrors import *
+
 log = logging.getLogger("myfedora.controllers")
 
 urlDataMap = {}
@@ -23,8 +26,8 @@ LEFT, MIDDLE, RIGHT = range(3)
 
 class Widget(TWWidget):
     config = {
-        'display' : None,
-        'widget' : None,
+        'display' : {},
+        'widget' : {},
     }
     widgetId = None
     engine_name='genshi'
@@ -33,8 +36,24 @@ class Widget(TWWidget):
         self.widgetId = widgetId
 
         if not identity.current.anonymous:
-            self.config.display = WidgetConfig(widgetId, 'display')
-            self.config.widget = WidgetConfig(widgetId, 'widget')
+            for configType in self.config.keys():
+                try:
+                    self.config[configType] = WidgetConfig.selectBy(
+                        widgetId=self.widgetId,
+                        configType=configType).getOne().config
+                except SQLObjectNotFound:
+                    pass
+
+    def save(self):
+        for configType in self.config.keys():
+            try:
+                WidgetConfig(widgetId=self.widgetId, configType=configType,
+                    config=self.config[configType])
+            except DuplicateEntryError:
+                wc = WidgetConfig.selectBy(
+                    widgetId=self.widgetId,
+                    configType=configType).getOne().set(
+                        config=self.config[configType])
 
 class RSSData(list):
     """
@@ -92,12 +111,14 @@ class RSSWidget(Widget):
     template = 'myfedora.templates.rsswidget'
     pollInterval = timedelta(minutes=15)
     params = ["widgetId", "url", "title", "entries", "maxEntries"]
+    entries = None
+    maxEntries = 5
 
     def __init__(self, widgetId, title = None, url = None, maxEntries = None):
         super(RSSWidget, self).__init__(widgetId)
-        self.url = url or self.url
-        self.title = title or self.title
-        self.maxEntries = maxEntries or 5
+        self.config['display']['title'] = title or self.title
+        self.config['widget']['url'] = url or self.url
+        self.config['widget']['maxEntries'] = maxEntries or self.maxEntries
         try:
             self.entries = urlDataMap[self.url]
         except KeyError:
@@ -106,7 +127,10 @@ class RSSWidget(Widget):
         self.entries.refresh()
 
     def __json__(self):
-        return {'widgetId': self.widgetId, 'url':self.url, 'entries': self.entries}
+        return {'widgetId': self.widgetId,
+            'url': self.config['widget']['url'],
+            'entries': self.entries,
+            'maxEntries': self.config['widget']['maxEntries']}
 
 class FedoraPeopleWidget(RSSWidget):
     url = 'http://planet.fedoraproject.org/rss20.xml'
@@ -185,6 +209,7 @@ class Root(controllers.RootController):
             'widgets': widgets,
         }
 
+
     @expose(template="myfedora.templates.login")
     def login(self, forward_url=None, previous_url=None, *args, **kw):
 
@@ -215,3 +240,6 @@ class Root(controllers.RootController):
     def logout(self):
         identity.current.logout()
         raise redirect("/")
+
+# vim:ts=4:sw=4:et:
+
