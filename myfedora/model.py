@@ -87,6 +87,9 @@ class User(SQLObject):
     groups = RelatedJoin('Group', intermediateTable='user_group',
                          joinColumn='user_id', otherColumn='group_id')
 
+    widgets = RelatedJoin('WidgetConfig', intermediateTable='user_widgets',
+                         joinColumn='user_id', otherColumn='widget_id')
+
     def _get_permissions(self):
         perms = set()
         for g in self.groups:
@@ -121,19 +124,18 @@ class WidgetConfig(SQLObject):
     Widget configuration for display or the object parameters
     """
 
-    widgetId = StringCol(length=16)
-    configType = EnumCol(enumValues=['display', 'widget'])
+    widgetId = StringCol(length=16, alternateID=True)
+    widgetClass = StringCol(length=64)
     active = BoolCol(default=True)
-    config = UnicodeCol(default=None)
+    configDisplay = UnicodeCol(default=None)
+    configWidget = UnicodeCol(default=None)
     
-    id_type = DatabaseIndex('widgetId', 'configType', unique=True)
-
-    def _get_config(self):
+    def _get_configDisplay(self):
         "Loads JSON data and deserializes it"
         config = None
 
         try:
-            config = self._SO_get_config()
+            config = self._SO_get_configDisplay()
             config = simplejson.loads(config)
         except SQLObjectNotFound:
             pass
@@ -143,11 +145,32 @@ class WidgetConfig(SQLObject):
         
         return config
 
-    def _set_config(self, config = None):
+    def _set_configDisplay(self, config = None):
         "Saves config as JSON serialized data"
         if config is not None:
             config = simplejson.dumps(config)
-            self._SO_set_config(config)
+            self._SO_set_configDisplay(config)
+
+    def _get_configWidget(self):
+        "Loads JSON data and deserializes it"
+        config = None
+
+        try:
+            config = self._SO_get_configWidget()
+            config = simplejson.loads(config)
+        except SQLObjectNotFound:
+            pass
+
+        if config is None:
+            config = {}
+        
+        return config
+
+    def _set_configWidget(self, config = None):
+        "Saves config as JSON serialized data"
+        if config is not None:
+            config = simplejson.dumps(config)
+            self._SO_set_configWidget(config)
 
 # vim:ts=4:sw=4:et:
 

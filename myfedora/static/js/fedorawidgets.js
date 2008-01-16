@@ -489,6 +489,7 @@ fedora.widgets.RSS = function(widgetId, widgetUrl, title, entries,
         displayedEntries) {
     fedora.widgets.RSS.base.call(this, widgetId);
     this.widgetUrl = widgetUrl;
+    this.title = title;
     this.entries = entries;
     this.numEntries = displayedEntries;
     this.timeout = 5 *60;
@@ -536,12 +537,13 @@ fedora.widgets.RSS.prototype.refresh_on  = function (timeout) {
 }
 
 fedora.widgets.RSS.prototype.refresh_off = function() {
-    console.debiug('In rss.refresh_off')
+    console.debug('In rss.refresh_off')
     window.clearInterval(this._intervalId);
     this._intervalId = null;
 }
 
 fedora.widgets.RSS.prototype.refresh = function () {
+    console.debug('In rss.refresh')
     /* Busy the widget */
     this.busy();
 
@@ -551,9 +553,18 @@ fedora.widgets.RSS.prototype.refresh = function () {
     var widget = this;
 
     jQuery.ajax({
-        url: widget.widgetUrl,
+        /* FIXME: Hack for now; generalise later: */
+        url: 'http://localhost:8080/widgets/RSS/?tg_format=json'
+            + '&widgetId=' + escape(widget.widgetId)
+            + '&title=' + escape(widget.title)
+            + '&url=' + escape(widget.widgetUrl)
+            + '&maxEntries=' + escape(widget.numEntries),
+            /*
+        url: 'http://localhost:8080/widgets/FedoraPeople/?tg_format=json'
+            + '&widgetId=' + escape(widget.widgetId),
+            */
         type: 'GET',
-        dataType: 'json',
+        dataType: 'jsonp',
         timeout: 5000,
         complete: function () {widget.unbusy();},
         error: function(data, message, error) {
@@ -566,6 +577,7 @@ fedora.widgets.RSS.prototype.refresh = function () {
         },
         success: function(data, message) {
             /* Get the new feed data */
+            console.debug('successful query');
             widget.entries = data.peopleData;
             widget.render(jQuery('table#' + widget.widgetId));
         }
