@@ -1,6 +1,8 @@
 from turbogears import controllers, expose
 from turbogears import redirect
 
+from searchplugins import PackageSearch
+
 class SearchController(controllers.Controller):
     @expose(template='myfedora.templates.search.index')
     def index(self):
@@ -16,5 +18,9 @@ class SearchController(controllers.Controller):
             dict['tg_template'] = 'myfedora.templates.search.index'            
         else:
             dict['search'] = search
+
+        ps = PackageSearch()
+        list = ps.search(search)
+        dict['search_results'] = list
 
         return dict

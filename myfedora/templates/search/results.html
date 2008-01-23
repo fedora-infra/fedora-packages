@@ -10,5 +10,14 @@
 </head>
 <body>
 You searched for $search
+<p>
+Results:
+
+<ul>
+     <span py:for="pkg in search_results">
+       <li><a href="/packages/${pkg[0]}">${pkg[0]}</a> - ${pkg[1]}</li>
+     </span>
+</ul>
+</p>
 </body>
 </html>

@@ -345,12 +345,20 @@ a img
 
 input, textarea, select
 {
-  border: #AAA 1px solid;
+  border: #d0d9e3 1px solid;
+  margin: auto;
 }
 
-input, textarea, option
+select 
+
+input
 {
-  padding: 2px 5px 2px 5px;
+  background: transparent url(/static/images/text_entry_drop_shadow.png);
+}
+
+input, textarea, select
+{
+  padding: 3px 5px 3px 5px;
 }
 
 #content #sponsors
@@ -698,4 +706,14 @@ background-position:100% -24px;
 .usernav {
   margin-bottom: 10px;
   text-align: right;
+}
+
+.centered {
+  margin-left: auto;
+  margin-right: auto;
+  width: 45em;
+}
+
+.largesearch {
+  width: 30em;
 }
