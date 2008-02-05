@@ -6,17 +6,23 @@ class KojiURLHandler(URLHandler):
     def __init__(self):
         URLHandler.__init__(self)
 
-        self.set_base_url('http://koji.fedoraproject.org/')
+        self._set_link_type(self.INTERNAL_LINK)
 
-        self.package_path = 'koji/packageinfo?packageID='
+        self.route = None
+
+        self.package_path = 'packages/'
         self.xml_rpc_path = 'kojihub'
-        self.xml_rpc_url = self.get_base_url() + self.xml_rpc_path
+        self.xml_rpc_url = 'http://koji.fedoraproject.org/' + self.xml_rpc_path
+
+    def get_route(self):
+        if not self.route:
+            from myfedora.packagecontroller.buildsroute import BuildsRoute
+            self.route = BuildsRoute()
+
+        return self.route
 
     def get_package_url(self, pkg_name):
-        cs = koji.ClientSession(self.xml_rpc_url)
-        pkg = cs.getPackage(pkg_name)
-
-        return self.get_base_url() + self.package_path + str(pkg['id'])
+        return self.get_base_url() + self.package_path + pkg_name + '/Builds/'
 
     def get_xml_rpc_url(self):
         return self.xml_rpc_url

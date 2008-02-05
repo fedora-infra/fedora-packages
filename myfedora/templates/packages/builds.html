@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include href="../master.html"/>
+<head>
+<title>Package $package</title>
+<script src="/static/js/jquery.js" type="text/javascript"></script>
+<script src="/static/js/jquery.dimentions.js" type="text/javascript"></script>
+</head>
+<body>
+    <h2>Package $package</h2>
+
+<div id="tabfloat">
+<ul id="primary-links">
+<span py:for="r in resource_urls"><li><a href="${package_url}/${r}">${r}</a></li> </span>
+</ul>
+</div>
+  <div id="resource_content">
+     <script type="text/javascript">
+       function resizeIFrameOnLoad(iframe_id) {
+         var iframe = $("#" + iframe_id);
+         var h = $(window).height() - iframe.offset()["top"] - 1;
+         iframe.height(h); 
+       }
+     </script>
+     
+     Builds Baby!!! 
+  </div>
+</body>
+</html>

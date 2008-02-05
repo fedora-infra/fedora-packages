@@ -29,22 +29,28 @@ class PackageController(controllers.Controller):
         dict['my_iframe'] = None
 
         rurls = []
+        route = None
         for resource in reversed(resource_urls):
             urlhandler = resource[1]()
             rurls.append(resource[0])
 
-            # set the iframe
+            # route the url to the correct handler
             try:
                 r = args[1].lower()
 
                 if r == resource[0].lower():
-                    urlhandler = resource[1]()
                     pkg_url = urlhandler.get_package_url(dict['package'])
- 
-                    dict['my_iframe'] = pkg_url 
-            except:
-                pass
+                    if urlhandler.get_link_type() == urlhandler.IFRAME_LINK:
+                        dict['my_iframe'] = pkg_url
+                    elif urlhandler.get_link_type() == urlhandler.INTERNAL_LINK:
+                        route = urlhandler.get_route()
+            except Exception, e:
+                print e 
 
         dict['resource_urls'] = rurls
 
+        if route:
+            dict = route.default(dict, *args, **kw)
+
+        print dict
         return dict 
