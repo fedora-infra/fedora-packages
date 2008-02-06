@@ -17,15 +17,10 @@
 </ul>
 </div>
   <div id="resource_content">
-     <script type="text/javascript">
-       function resizeIFrameOnLoad(iframe_id) {
-         var iframe = $("#" + iframe_id);
-         var h = $(window).height() - iframe.offset()["top"] - 1;
-         iframe.height(h); 
-       }
-     </script>
-     
-     Builds Baby!!! 
+     <!-- TODO: make this a table and CSS it -->
+     <ul>
+        <li py:for="build in builds_list">${str(build)}</li>
+     </ul> 
   </div>
 </body>
 </html>

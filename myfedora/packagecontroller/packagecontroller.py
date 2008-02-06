@@ -50,7 +50,6 @@ class PackageController(controllers.Controller):
         dict['resource_urls'] = rurls
 
         if route:
-            dict = route.default(dict, *args, **kw)
+            dict = route.default(dict, *args[1:], **kw)
 
-        print dict
         return dict 
