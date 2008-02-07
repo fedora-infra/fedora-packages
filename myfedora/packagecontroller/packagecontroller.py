@@ -3,6 +3,8 @@ from turbogears import redirect
 
 from myfedora.urlhandler import KojiURLHandler, BodhiURLHandler, PkgDBURLHandler, BugsURLHandler, URLHandler
 
+import cherrypy
+
 class InfoURLHandler(URLHandler):
     def __init__(self):
         URLHandler.__init__(self)
@@ -24,12 +26,25 @@ class PackageController(controllers.Controller):
     @expose(template='myfedora.templates.packages.master')
     def default(self, *args, **kw):
         dict = {}
-        dict['package'] = args[0]
-        dict['package_url'] = '/packages/' + dict['package']
+
+        if cherrypy.request.simple_cookie.has_key('packages-last-resource'):
+            last_resource = cherrypy.request.simple_cookie['packages-last-resource'].value
+
+        count = len(args)
+
+        package_name = args[0]
+
+        if count == 1 and last_resource:
+            raise redirect(package_name + '/' + last_resource)
+
+        dict['package'] = package_name
+        
+        dict['package_url'] = '/packages/' + package_name 
         dict['my_iframe'] = None
 
         rurls = []
         route = None
+        current_resource = ''
         for resource in reversed(resource_urls):
             urlhandler = resource[1]()
             rurls.append(resource[0])
@@ -39,6 +54,7 @@ class PackageController(controllers.Controller):
                 r = args[1].lower()
 
                 if r == resource[0].lower():
+                    current_resource = args[1] 
                     pkg_url = urlhandler.get_package_url(dict['package'])
                     if urlhandler.get_link_type() == urlhandler.IFRAME_LINK:
                         dict['my_iframe'] = pkg_url
@@ -48,8 +64,10 @@ class PackageController(controllers.Controller):
                 print e 
 
         dict['resource_urls'] = rurls
-
+        cherrypy.response.simple_cookie['packages-last-resource'] = current_resource
+        cherrypy.response.simple_cookie['packages-last-resource']['path']='/packages'
         if route:
-            dict = route.default(dict, *args[1:], **kw)
+            package = args[0]
+            dict = route.default(dict, package, *args[2:], **kw)
 
         return dict 
