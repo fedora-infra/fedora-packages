@@ -18,9 +18,27 @@
 </div>
   <div id="resource_content">
      <!-- TODO: make this a table and CSS it -->
-     <ul>
-        <li py:for="build in builds_list">${str(build)}</li>
-     </ul> 
+     <table>
+        <tr class="table_header1">
+          <td class="table_header_col1">Build ID</td>
+          <td class="table_header_col1">Name</td>
+          <td class="table_header_col1">Build By</td>
+          <td class="table_header_col1">Started</td>
+          <td class="table_header_col1">Finished</td>
+          <td class="table_header_col1">State</td>
+          <td class="table_header_col1">Release</td>
+        </tr>
+        
+        <tr py:for="build in builds_list">
+          <td>${str(build['build_id'])}</td>
+          <td>${str(build['nvr'])}</td>
+          <td>${str(build['owner_name'])}</td>
+          <td>${str(build['creation_time'])}</td>
+          <td>${str(build['completion_time'])}</td>
+          <td>${str(build['state'])}</td>
+        </tr>
+
+     </table> 
   </div>
 </body>
 </html>
