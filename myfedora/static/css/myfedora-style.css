@@ -267,7 +267,7 @@ a img
   font: normal 1.5ex/1.5 sans-serif;
   text-align: center;
   background: #FFFFFF url(http://fedoraproject.org/static/images/line-bottom.png) 0 0 repeat-x;
-  margin: -90px 0 0;
+  margin: 10px 0 0;
   border-bottom: 10px solid #337ACC;
   height: 80px;
   color: #AAAAAA;
@@ -275,8 +275,6 @@ a img
 
 #bottom
 {
-  margin-left: 18px;
-  padding-right: 18px;
 }
 
 #footer ul
