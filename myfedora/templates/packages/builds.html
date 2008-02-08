@@ -17,7 +17,14 @@
 </ul>
 </div>
   <div id="resource_content">
-     <!-- TODO: make this a table and CSS it -->
+     <!-- TODO: CSS -->
+     <form name="builds_navigation_form" action="${current_url}">
+       <a onClick="document.builds_navigation_form.direction.value='prev'; document.builds_navigation_form.submit()" href="#" py:if="previous_disabled != 'disabled'">&lt;-- prev </a>
+       <a onClick="document.builds_navigation_form.direction.value='next'; document.builds_navigation_form.submit()" href="#" py:if="next_disabled != 'disabled'">next --&gt; </a>
+       <input type="hidden" name="offset" value="${offset}" />
+       <input type="hidden" name="limit" value="${limit}" />
+       <input type="hidden" name="direction" value="next"/>
+     </form> 
      <table>
         <tr class="table_header1">
           <td class="table_header_col1">Build ID</td>
@@ -35,7 +42,7 @@
           <td>${str(build['owner_name'])}</td>
           <td>${str(build['creation_time'])}</td>
           <td>${str(build['completion_time'])}</td>
-          <td>${str(build['state'])}</td>
+          <td><img src="${str(build['tg_state_img'])}" /></td>
         </tr>
 
      </table> 

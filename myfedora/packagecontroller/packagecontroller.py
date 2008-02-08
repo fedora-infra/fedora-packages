@@ -27,6 +27,7 @@ class PackageController(controllers.Controller):
     def default(self, *args, **kw):
         dict = {}
 
+        last_resource = ''
         if cherrypy.request.simple_cookie.has_key('packages-last-resource'):
             last_resource = cherrypy.request.simple_cookie['packages-last-resource'].value
 
