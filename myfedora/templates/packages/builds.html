@@ -47,8 +47,23 @@
               <div class="menu" id="${menu_id}">
                 <ul>
                   <li><a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${str(build['build_id'])}" target="_blank" >Details</a></li>
-                  <li>Downloads - None</li>
-                  <li>Logs - </li>
+                  <li py:with="logs_base_url='http://koji.fedoraproject.org/packages/' + package + '/' + build['version'] + '/' + build['release'] + '/data/logs'">
+                    <a href="${logs_base_url}">Logs</a>
+                    <span py:if="build['mf_arches']" py:with="arches = build['mf_arches']"> [
+                      <span py:for="ar in arches[:-1]">
+                        <a href="${logs_base_url}/${ar}">${ar}</a> 
+                      </span>]
+                    </span>
+ 
+                  </li>
+                  <li py:if="build['state'] == 1" py:with="dl_base_url='http://koji.fedoraproject.org/packages/' + package + '/' + build['version'] + '/' + build['release']">
+                    <a href="${dl_base_url}">Downloads</a>
+                    <span py:if="build['mf_arches']" py:with="arches = build['mf_arches']"> [
+                      <span py:for="ar in arches">
+                        <a href="${dl_base_url}/${ar}">${ar}</a> 
+                      </span>]
+                    </span>
+                  </li>
                 </ul>
               </div>
             </div> 
