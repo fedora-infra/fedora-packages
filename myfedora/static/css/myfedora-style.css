@@ -718,3 +718,11 @@ background-position:100% -24px;
 .largesearch {
   width: 30em;
 }
+
+/*************** UI Elements ********************/
+.menu {
+  display: none; 
+  position: absolute;
+  z-index: 2;
+  background-color: white;
+}
