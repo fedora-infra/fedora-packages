@@ -33,10 +33,18 @@ class BuildsRoute(Route):
                      'order': '-creation_time'}
         builds_list = cs.listBuilds(packageID=pkg_id, queryOpts=queryOpts)
 
+        list_count = len(builds_list)
+
         for build in builds_list:
-            #show state icon
+            # show state icon
             state = build['state']
             build['mf_state_img']= self._get_state_img_src(state)
+
+            # get tag to determine release
+            # FIXME: we should add a call to koji to optimize this as a join
+            #        or do them as seperate json queries
+            tags = cs.listTags(build = build['build_id'])
+            build['mf_release'] = tags 
 
         dict['offset'] = self.offset
         dict['limit'] = self.limit
