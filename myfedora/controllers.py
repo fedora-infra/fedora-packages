@@ -5,6 +5,7 @@ import feedparser
 from testcontroller import TestController
 from packagecontroller import PackageController
 from searchcontroller import SearchController
+from mfquery.querycontroller import QueryController
 
 from datetime import timedelta, datetime
 from turbogears import controllers, expose, flash, url
@@ -23,7 +24,6 @@ log = logging.getLogger("myfedora.controllers")
 
 urlDataMap = {}
 LEFT, MIDDLE, RIGHT = range(3)
-
 
 class FedoraWidget(Widget):
     engine_name='genshi'
@@ -198,6 +198,7 @@ class Root(controllers.RootController):
     test = TestController()
     search = SearchController()
     widgets = WidgetsController()
+    mfquery = QueryController();
 
     @expose(template='myfedora.templates.index', allow_json=True)
     def index(self):

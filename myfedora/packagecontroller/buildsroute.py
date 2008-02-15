@@ -43,7 +43,7 @@ class BuildsRoute(Route):
             # get tag to determine release
             # FIXME: we should add a call to koji to optimize this as a join
             #        or do them as seperate json queries
-            tags = cs.listTags(build = build['build_id'])
+            tags = '' #cs.listTags(build = build['build_id'])
             build['mf_release'] = tags
             build['mf_arches'] = []
             if tags:
