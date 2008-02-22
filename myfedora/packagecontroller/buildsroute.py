@@ -12,15 +12,15 @@ class BuildsRoute(Route):
 
     def _get_state_img_src(self, state):
         src = ''
-        if state == 1:
+        if state == koji.BUILD_STATES['COMPLETE']:
             src = 'http://koji.fedoraproject.org/koji-static/images/complete.png'
-        elif state == 4:
+        elif state == koji.BUILD_STATES['CANCELED']:
             src = 'http://koji.fedoraproject.org/koji-static/images/canceled.png'
-        elif state == 2:
+        elif state == koji.BUILD_STATES['DELETED']:
             src = 'http://koji.fedoraproject.org/koji-static/images/deleted.png'
-        elif state == 3:
+        elif state == koji.BUILD_STATES['FAILED']:
             src = 'http://koji.fedoraproject.org/koji-static/images/failed.png'
-        elif state == 0:
+        elif state == koji.BUILD_STATES['BUILDING']:
             src = 'http://koji.fedoraproject.org/koji-static/images/building.png'
         return src
 

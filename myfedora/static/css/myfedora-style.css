@@ -726,3 +726,7 @@ background-position:100% -24px;
   z-index: 2;
   background-color: white;
 }
+
+.message_row {
+  display: none;
+}

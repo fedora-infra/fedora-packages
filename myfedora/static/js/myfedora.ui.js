@@ -30,10 +30,9 @@ function mf_replace_block_async(block_name, url, user_callback, user_data)
     $.getJSON(url + "&tg_format=json", 
       function (data) 
           {
-            var html = user_callback(data, user_data);
-            var div = $("#" + block_name);
-            
-            div.html(html);
+            var block = $("#" + block_name);
+            var html = user_callback(block, data, user_data);
+            block.html(html);
           } 
     ); 
     

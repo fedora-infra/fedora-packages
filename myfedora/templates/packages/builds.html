@@ -12,7 +12,7 @@
     <h2>Package $package</h2>
     <script src="/static/js/myfedora.ui.js" type="text/javascript"></script>
     <script type="text/javascript">
-      function render_release_tags(data, user_data)
+      function render_release_tags(block, data, user_data)
       {
         var results = "";
 
@@ -22,6 +22,36 @@
         }
         return results;
       }
+  
+      function render_files_tags(block, data, user_data)
+      {
+        var results = "";
+
+        var logs = data.files.logs;
+        var downloads = data.files.downloads;
+
+
+
+        results = files.toString();
+        return results;
+      }
+
+      function render_message(block, data, user_data)
+      {
+        var results = "";
+
+        var css_class = user_data["css_class"];
+        block.addClass(css_class);
+        block.parent().fadeIn('slow');
+
+        log_url = data.log_url;
+        log_name = data.log_name;
+
+        results = "Error in build.  You can &lt;a target='_blank' href='" + log_url + "'&gt; refer to log " + log_name + " for more details&lt;/a&gt;";
+
+        return results;
+      }
+
     </script>
 <div id="tabfloat">
 <ul id="primary-links">
@@ -47,8 +77,9 @@
           <td class="table_header_col1">State</td>
           <td class="table_header_col1">Release</td>
         </tr>
-        
-        <tr py:for="build in builds_list" py:with="build_id=str(build['build_id'])">
+        <span py:for="build in builds_list" 
+              py:with="build_id=str(build['build_id']); build_state=str(build['state']); task_id=str(build['task_id'])">
+        <tr>  
           <td>${build_id}</td>
           <!-- for now send to koji but we want a simpler page
                with the most common info organized nicely -->
@@ -56,26 +87,33 @@
             <div onMouseOver="mf_menu_hover_start('${menu_id}')" 
                  onMouseOut="mf_menu_hover_stop()">
               <a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${str(build['nvr'])}</a>
-              <div class="menu" id="${menu_id}">
+              <div class="menu" id="${menu_id}" rowspan="4">
                 <ul>
                   <li><a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank" >Details</a></li>
-                  <li py:with="logs_base_url='http://koji.fedoraproject.org/packages/' + package + '/' + build['version'] + '/' + build['release'] + '/data/logs'">
-                    <a href="${logs_base_url}">Logs</a>
-                    <span py:if="build['mf_arches']" py:with="arches = build['mf_arches']"> [
-                      <span py:for="ar in arches[:-1]">
-                        <a href="${logs_base_url}/${ar}">${ar}</a> 
-                      </span>]
-                    </span>
- 
-                  </li>
-                  <li py:if="build['state'] == 1" py:with="dl_base_url='http://koji.fedoraproject.org/packages/' + package + '/' + build['version'] + '/' + build['release']">
-                    <a href="${dl_base_url}">Downloads</a>
-                    <span py:if="build['mf_arches']" py:with="arches = build['mf_arches']"> [
-                      <span py:for="ar in arches">
-                        <a href="${dl_base_url}/${ar}">${ar}</a> 
-                      </span>]
-                    </span>
-                  </li>
+                  <span py:with="files_id = 'files_' + menu_id" id="${files_id}">
+                     <script type="text/javascript">
+                       $(document).ready(
+                         function () {
+                           /*mf_replace_block_async('${files_id}', 
+                                                  '/mfquery/koji_files?task_id=${task_id}',
+                                                  render_files_tags,
+                                                  '');*/
+                       });
+                     </script>
+
+                    <li py:with="logs_base_url='http://koji.fedoraproject.org/packages/' + package + '/' + build['version'] + '/' + build['release'] + '/data/logs'">
+                      Logs
+                        <ul>
+                          <li><img src="/static/images/spinner-20.gif" /></li>
+                        </ul>
+                    </li>
+                    <li py:if="build_state == '1'" py:with="dl_base_url='http://koji.fedoraproject.org/packages/' + package + '/' + build['version'] + '/' + build['release']">
+                      Downloads
+                        <ul>
+                          <li><img src="/static/images/spinner-20.gif" /></li>
+                        </ul>
+                    </li>
+                  </span>
                 </ul>
               </div>
             </div> 
@@ -87,18 +125,39 @@
           <td 
               py:with="release_id='release_' + build_id"
               id="${release_id}">
-            <script type="text/javascript">
-              $(document).ready(
+            <span py:if="build_state=='1'">
+              <script type="text/javascript">
+                $(document).ready(
                 function () {
                   mf_replace_block_async('${release_id}', 
                                          '/mfquery/koji_tags?build_id=${build_id}',
                                           render_release_tags,
                                           '');
                 });
-            </script>
-            <img src="/static/images/spinner-20.gif" />
+              </script>
+              <img src="/static/images/spinner-20.gif" />
+            </span>
           </td>
         </tr>
+        <tr class="message_row">
+          <td></td>
+          <td colspan="6" 
+              py:with="message_id='message_' + build_id"
+              id="${message_id}">
+            <span py:if="build_state=='3'">
+              <script type="text/javascript">
+                $(document).ready(
+                function () {
+                  mf_replace_block_async('${message_id}', 
+                                         '/mfquery/koji_get_error_log?task_id=${task_id}',
+                                          render_message,
+                                          {'css_class':'error_message'});
+                });
+              </script>
+            </span>
+          </td>
+        </tr>
+        </span> 
 
      </table> 
   </div>
