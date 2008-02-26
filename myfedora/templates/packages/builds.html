@@ -11,6 +11,7 @@
 <body>
     <h2>Package $package</h2>
     <script src="/static/js/myfedora.ui.js" type="text/javascript"></script>
+    <script src="/static/js/myfedora.util.js" type="text/javascript"></script>
     <script type="text/javascript">
       function render_release_tags(block, data, user_data)
       {
@@ -25,14 +26,39 @@
   
       function render_files_tags(block, data, user_data)
       {
-        var results = "";
+        var hidden_class_name = "more_" + block[0].id;
+        var results = "<li>Dowloads:<br />";
+        var arch = mf_guess_client_arch('i386'); 
 
-        var logs = data.files.logs;
         var downloads = data.files.downloads;
+        var devel_file_match = /.*-(devel|doc|debuginfo)-.*/;
+
+        /* loop over primary arch */
+        for (i in arch) {
+          var a = arch[i];
+          arch_files = downloads[a];
 
 
+          if (arch_files) {
+            results += a + "<br /><ul>";
+            for (i in arch_files) {
+              var f = arch_files[i];
+              var hidden_class = "";
+              
+              if (f.name.match(devel_file_match))
+                hidden_class = "class='" + hidden_class_name + "'";
 
-        results = files.toString();
+              results += "&lt;li " + hidden_class + "&gt;";
+              results += "&lt;a href='" + f.url + "'&gt;"; 
+              results += f.name + "&lt;/a&gt;&lt;/li&gt;";
+            }
+            delete downloads[a];
+            results += "</ul>";
+          }
+        } 
+
+        results += "</li>";
+
         return results;
       }
 
@@ -84,7 +110,7 @@
           <!-- for now send to koji but we want a simpler page
                with the most common info organized nicely -->
           <td py:with="menu_id='menu_' + build_id" >
-            <div onMouseOver="mf_menu_hover_start('${menu_id}')" 
+            <div onMouseOver="mf_menu_hover_start('${menu_id}'); load_files_${menu_id}();" 
                  onMouseOut="mf_menu_hover_stop()">
               <a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${str(build['nvr'])}</a>
               <div class="menu" id="${menu_id}" rowspan="4">
@@ -92,26 +118,23 @@
                   <li><a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank" >Details</a></li>
                   <span py:with="files_id = 'files_' + menu_id" id="${files_id}">
                      <script type="text/javascript">
-                       $(document).ready(
-                         function () {
-                           /*mf_replace_block_async('${files_id}', 
+                       files_loading_${menu_id} = false;
+                       function load_files_${menu_id}() {
+                           if (files_loading_${menu_id})
+                             return;
+
+                           files_loading_${menu_id} = true;
+                      
+                           mf_replace_block_async('${files_id}', 
                                                   '/mfquery/koji_files?task_id=${task_id}',
                                                   render_files_tags,
-                                                  '');*/
-                       });
+                                                  '');
+                       };
                      </script>
 
-                    <li py:with="logs_base_url='http://koji.fedoraproject.org/packages/' + package + '/' + build['version'] + '/' + build['release'] + '/data/logs'">
-                      Logs
-                        <ul>
-                          <li><img src="/static/images/spinner-20.gif" /></li>
-                        </ul>
-                    </li>
                     <li py:if="build_state == '1'" py:with="dl_base_url='http://koji.fedoraproject.org/packages/' + package + '/' + build['version'] + '/' + build['release']">
-                      Downloads
-                        <ul>
-                          <li><img src="/static/images/spinner-20.gif" /></li>
-                        </ul>
+                      Downloads<br/>
+                          <img src="/static/images/spinner-20.gif" />
                     </li>
                   </span>
                 </ul>

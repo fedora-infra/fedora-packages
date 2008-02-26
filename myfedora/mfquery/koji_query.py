@@ -75,11 +75,12 @@ class KojiGetErrorLogQuery(controllers.Controller):
 class KojiFilesQuery(controllers.Controller):
     @expose("json", allow_json=True)
     def index(self, *args, **kw):
-        results = {'logs':{}, 'downloads':{}}
+        results = {'logs':{}, 'downloads':{'rpms':{}, 'logs':{}}}
         task_id = int(kw.get('task_id', '0'))
         state = int(kw.get('state', '0'))
+        koji_url_handler = KojiURLHandler()
 
-        cs = koji.ClientSession(KojiURLHandler().get_xml_rpc_url())
+        cs = koji.ClientSession(koji_url_handler.get_xml_rpc_url())
 
         decendents = cs.getTaskDescendents(task_id)
         for task in decendents.keys():
@@ -102,25 +103,15 @@ class KojiFilesQuery(controllers.Controller):
                     if not f_name.endswith('rpm'):
                         f_type = 'logs'
 
-                        output = {'name': f_name, 
-                                  'm_time': f_info['st_mtime'],
-                                  'is_last': False}
-
-                        f_type = 'logs'
-                        if  f_info['st_mtime'] > last_log[1]:
-                            if last_log[0]:
-                                last_log[0]['is_last'] = False
-
-                            output['is_last'] = True
-                            last_log = (output, f_info['st_mtime'])
-                    else:
-                        output = {'name': f_name, 
-                                  'm_time': f_info['st_mtime']}
-
                     if not results[f_type].has_key(child_label):
                         results[f_type][child_label] = []
 
-                    results[f_type][child_label].append(output)
+                    url = koji_url_handler.get_file_url(child_task_id, f_name)
+                    file_result = {'name': f_name, 'url': url}
+ 
+                    results[f_type][child_label].append(file_result)
+
+                    results[f_type][child_label].sort(lambda a, b: cmp(a['name'], b['name']))
 
         return {'files': results}
 
