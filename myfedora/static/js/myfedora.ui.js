@@ -32,7 +32,8 @@ function mf_replace_block_async(block_name, url, user_callback, user_data)
           {
             var block = $("#" + block_name);
             var html = user_callback(block, data, user_data);
-            block.html(html);
+            if (html != undefined)
+              block.html(html);
           } 
     ); 
     

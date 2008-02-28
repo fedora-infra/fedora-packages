@@ -23,11 +23,39 @@
         }
         return results;
       }
-  
+
+      function _render_files_tags_more_or_less(hidden_class_name)
+      {
+        var more_link = $("#" + hidden_class_name);
+        var hidden_dl = $("." + hidden_class_name);
+ 
+        var link_text = more_link.text()
+        if (link_text == "more") {
+          more_link.text("less");
+          hidden_dl.slideDown();
+        } else {
+          more_link.text("more");
+          hidden_dl.slideUp();
+        }
+      } 
+ 
       function render_files_tags(block, data, user_data)
       {
         var hidden_class_name = "more_" + block[0].id;
-        var results = "<li>Dowloads:<br />";
+        var dl_item = $("<li/>").text("Dowloads")
+        
+        /* show and hide hidden files */
+        var more_or_less = $("<span/>").text("[");
+        var more_link = $("<a/>").attr("id", hidden_class_name);
+        more_link.attr("href","javascript:void(0);");
+        more_link.attr("onClick", "_render_files_tags_more_or_less('" + hidden_class_name + "')");
+        more_link.text("more");
+        more_or_less.append(more_link);
+        more_or_less.append("]");
+        dl_item.append(more_or_less).append($("<br />"));
+
+        /* guess the user's arch and only display those files
+           unless expanded with the more link */
         var arch = mf_guess_client_arch('i386'); 
 
         var downloads = data.files.downloads;
@@ -40,42 +68,81 @@
 
 
           if (arch_files) {
-            results += a + "<br /><ul>";
+            dl_item.append(a);
+            var arch_list = $("<ul />");
+ 
             for (i in arch_files) {
               var f = arch_files[i];
-              var hidden_class = "";
-              
+
+              arch_item = $("<li/>");
               if (f.name.match(devel_file_match))
-                hidden_class = "class='" + hidden_class_name + "'";
+                arch_item.attr("class", hidden_class_name);
 
-              results += "&lt;li " + hidden_class + "&gt;";
-              results += "&lt;a href='" + f.url + "'&gt;"; 
-              results += f.name + "&lt;/a&gt;&lt;/li&gt;";
+              dl_link = $("<a/>").attr("href", f.url).append(f.name);
+              arch_item.append(dl_link);
+              arch_list.append(arch_item);
             }
+
+            dl_item.append(arch_list);
             delete downloads[a];
-            results += "</ul>";
+
+            /* only get the first arch with files 
+             * since it should be the best match
+             */
+            break;
           }
-        } 
+        }
 
-        results += "</li>";
+        /* FIXME: The above loop and this one are essentally the same
+                  break it out into another function */
+        /* loop over the rest of the arches and add them hidden */
+        for (a in downloads) {
+          arch_files = downloads[a];
+          if (arch_files) {
+            var arch_list = $("<ul />");
 
-        return results;
+            arch_div = $("<div/>").attr("class", hidden_class_name).append(a);
+ 
+            for (i in arch_files) {
+              var f = arch_files[i];
+
+              arch_item = $("<li/>");
+
+              dl_link = $("<a/>").attr("href", f.url).append(f.name);
+              arch_item.append(dl_link);
+              arch_list.append(arch_item);
+            }
+
+            arch_div.append(arch_list);
+            dl_item.append(arch_div);
+          }
+        }
+
+        dl_item.find("." + hidden_class_name).hide();
+
+        dl_item.hide();
+        block.html(dl_item);
+        dl_item.slideDown(); 
       }
 
       function render_message(block, data, user_data)
       {
-        var results = "";
-
         var css_class = user_data["css_class"];
         block.addClass(css_class);
-        block.parent().fadeIn('slow');
 
         log_url = data.log_url;
         log_name = data.log_name;
 
-        results = "Error in build.  You can &lt;a target='_blank' href='" + log_url + "'&gt; refer to log " + log_name + " for more details&lt;/a&gt;";
+        msg_div = $("<div/>");
+        msg_div.append("Error in build. You can ");
+        link = $("<a/>").attr("href", log_url).attr("target", "_blank");
+        link.append("refer to log ");
+        link.append(log_name);
+        link.append(" for more details");
+        msg_div.append(link);
 
-        return results;
+        block.html(msg_div);
+        block.parent().fadeIn();
       }
 
     </script>
