@@ -134,12 +134,16 @@
         log_name = data.log_name;
 
         msg_div = $("<div/>");
-        msg_div.append("Error in build. You can ");
-        link = $("<a/>").attr("href", log_url).attr("target", "_blank");
-        link.append("refer to log ");
-        link.append(log_name);
-        link.append(" for more details");
-        msg_div.append(link);
+        msg_div.append("Error in build.");
+        if (log_url) {
+          link = $("<a/>").attr("href", log_url).attr("target", "_blank");
+          link.append("You can refer to log ");
+          link.append(log_name);
+          link.append(" for more details");
+          msg_div.append(link);
+        } else {
+          msg_div.append(" No logs are available to inspect");
+        }
 
         block.html(msg_div);
         block.parent().fadeIn();

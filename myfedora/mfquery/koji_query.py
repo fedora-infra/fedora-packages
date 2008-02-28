@@ -10,6 +10,8 @@ def _mock_error_code_to_log_file(err_code):
         log_file = 'build.log'
     elif err_code == 10 or err_code == 30:
         log_file = 'root.log'
+    else:
+        print "Unhandled error code :", err_code
 
     return log_file
 
