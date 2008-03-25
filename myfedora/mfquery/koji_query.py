@@ -15,9 +15,9 @@ def _mock_error_code_to_log_file(err_code):
 
     return log_file
 
-class KojiReleaseTagsQuery(controllers.Controller):
+class KojiQuery(controllers.Controller):
     @expose("json", allow_json=True)
-    def index(self, *args, **kw):
+    def get_tags(self, *args, **kw):
         build_id = int(kw.get('build_id', '0'))
 
         cs = koji.ClientSession(KojiURLHandler().get_xml_rpc_url())
@@ -26,9 +26,8 @@ class KojiReleaseTagsQuery(controllers.Controller):
 
         return {'tags': tags}
 
-class KojiGetErrorLogQuery(controllers.Controller):
     @expose("json", allow_json=True)
-    def index(self, *args, **kw):
+    def get_error_log(self, *args, **kw):
         results = {'log_url':'', 'log_name':'', 'task_id':''}
         task_id = int(kw.get('task_id', '0'))
 
@@ -72,11 +71,8 @@ class KojiGetErrorLogQuery(controllers.Controller):
 
         return results
 
-
-
-class KojiFilesQuery(controllers.Controller):
     @expose("json", allow_json=True)
-    def index(self, *args, **kw):
+    def get_files(self, *args, **kw):
         results = {'logs':{}, 'downloads':{'rpms':{}, 'logs':{}}}
         task_id = int(kw.get('task_id', '0'))
         state = int(kw.get('state', '0'))

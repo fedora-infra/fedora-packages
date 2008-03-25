@@ -222,7 +222,7 @@
                            files_loading_${menu_id} = true;
                       
                            mf_replace_block_async('${files_id}', 
-                                                  '/mfquery/koji_files',
+                                                  '/mfquery/koji/get_files',
                                                   {'task_id':'${task_id}'},
                                                   render_files_tags,
                                                   '');
@@ -250,7 +250,7 @@
                 $(document).ready(
                 function () {
                   mf_replace_block_async('${release_id}', 
-                                         '/mfquery/koji_tags',
+                                         '/mfquery/koji/get_tags',
                                           {'build_id':'${build_id}'},
                                           render_release_tags,
                                           {"package":"${str(build['nvr'])}"});
@@ -270,7 +270,7 @@
                 $(document).ready(
                 function () {
                   mf_replace_block_async('${message_id}', 
-                                         '/mfquery/koji_get_error_log',
+                                         '/mfquery/koji/get_error_log',
                                           {'task_id':'${task_id}'},
                                           render_message,
                                           {'css_class':'error_message'});
