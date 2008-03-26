@@ -1,0 +1,30 @@
+import simplejson, urllib, urllib2, cookielib 
+
+from turbogears import controllers, expose, identity
+
+from myfedora.urlhandler import BodhiURLHandler
+
+class BodhiQuery(controllers.Controller):
+    @expose("json", allow_json=True)
+    def get_info(self, *args, **kw):
+        kw.update({
+            'tg_format': 'json'
+        })
+
+        if not kw.get('package', None):
+            return {}
+
+        url = BodhiURLHandler().get_base_url() + 'list?' 
+        url += urllib.urlencode(kw)
+
+        cj = cookielib.CookieJar()
+
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        request = urllib2.Request(url)
+        request.add_header("Cookie", "_sessionCookie=" + identity.current.visit_key)
+        response = opener.open(request)
+
+        json_data = simplejson.load(response)
+        
+        return json_data
+
