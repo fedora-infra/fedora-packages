@@ -17,13 +17,14 @@
     <script type="text/javascript">
       function render_updates(block, data, user_data)
       {
-        block.append(data);
+        for (attr in data) 
+          block.append(attr + ", ");
       }
 
       function render_release_tags(block, data, user_data)
       {
         var updates_match = /.*-(updates|testing|candidate)/;
-        var updates_block_id = "updates_info_" + block;
+        var updates_block_id = "updates_info_" + block[0].id;
         var query_updates = false;
         var tags = data.tags;        
 
@@ -41,9 +42,8 @@
         
         if (query_updates){ 
           mf_replace_block_async(updates_block_id, 
-                                 'http://publictest10.fedoraproject.org/updates/list',
-                                 {'package': user_data.package,
-                                  'callback': '?'},
+                                 '/mfquery/bodhi/get_info',
+                                 {'package': user_data.package},
                                  render_updates,
                                  user_data);
         }
