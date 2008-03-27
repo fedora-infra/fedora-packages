@@ -17,8 +17,14 @@
     <script type="text/javascript">
       function render_updates(block, data, user_data)
       {
-        for (attr in data) 
-          block.append(attr + ", ");
+        for (attr in data)
+          {  
+             block.append(attr);
+             if (data[attr] is Object)
+               {
+                 
+               }
+          }
       }
 
       function render_release_tags(block, data, user_data)
@@ -150,7 +156,7 @@
         dl_item.slideDown(); 
       }
 
-      function render_message(block, data, user_data)
+      function render_log_message(block, data, user_data)
       {
         var css_class = user_data["css_class"];
         block.addClass(css_class);
@@ -200,7 +206,7 @@
           <td class="table_header_col1">Release</td>
         </tr>
         <span py:for="build in builds_list" 
-              py:with="build_id=str(build['build_id']); build_state=str(build['state']); task_id=str(build['task_id'])">
+              py:with="build_id=str(build['build_id']); build_state=str(build['state']); task_id=str(build['task_id']); message_id='message_' + build_id">
         <tr>  
           <td>${build_id}</td>
           <!-- for now send to koji but we want a simpler page
@@ -253,7 +259,9 @@
                                          '/mfquery/koji/get_tags',
                                           {'build_id':'${build_id}'},
                                           render_release_tags,
-                                          {"package":"${str(build['nvr'])}"});
+                                          {"package":"${str(build['nvr'])}",
+                                           "message_block_id": "${message_id}"
+                                          });
                 });
               </script>
               <img src="/static/images/spinner-20.gif" />
@@ -263,7 +271,6 @@
         <tr class="message_row">
           <td></td>
           <td colspan="6" 
-              py:with="message_id='message_' + build_id"
               id="${message_id}">
             <span py:if="build_state=='3'">
               <script type="text/javascript">
@@ -272,7 +279,7 @@
                   mf_replace_block_async('${message_id}', 
                                          '/mfquery/koji/get_error_log',
                                           {'task_id':'${task_id}'},
-                                          render_message,
+                                          render_log_message,
                                           {'css_class':'error_message'});
                 });
               </script>
