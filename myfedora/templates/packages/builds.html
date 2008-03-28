@@ -17,10 +17,38 @@
     <script type="text/javascript">
       function render_updates(block, data, user_data)
       {
-        for (attr in data)
-          {  
-             block.append(attr);
+        var message_block = $("#" + user_data.message_block_id);
+        msg_div = $("<div/>");
+
+        var update = data.updates[0]
+        if (update) {
+          var msg_div = $("<div/>");
+          var legacy_test = true;
+
+          var rstatus = update.status
+          if (rstatus) {
+            msg_div.append("<b>release status: </b>" + rstatus + "<br/>");
+            legacy_test = false;
           }
+
+          var push_requested = update.request;
+          if (push_requested) {
+            msg_div.append("<b>push request: </b>" + rstatus + "<br/>");
+            legacy_test = false;
+          }
+
+          var release_note = update.note;
+          if (release_note) {
+            msg_div.append("<b>release notes: </b>" + release_note + "<br/>");
+            legacy_test = false;
+          }
+
+          if (legacy_test) 
+            msg_div.append(update);
+
+          message_block.html(msg_div); 
+          message_block.parent().fadeIn("slow");
+        }
       }
 
       function render_release_tags(block, data, user_data)
