@@ -5,15 +5,15 @@
 <xi:include href="../master.html"/>
 <head>
 <title>Package $package</title>
-<script src="/static/js/jquery.js" type="text/javascript"></script>
-<script src="/static/js/jquery.dimentions.js" type="text/javascript"></script>
+<script src="${tg.url('/static/js/jquery.js')}" type="text/javascript"></script>
+<script src="${tg.url('/static/js/jquery.dimentions.js')}" type="text/javascript"></script>
 </head>
 <body>
     <h2>Package $package</h2>
     <!-- FIXME: These scripts should be in the head but something is not working
                 with template merging so they are here for now -->
-    <script src="/static/js/myfedora.ui.js" type="text/javascript"></script>
-    <script src="/static/js/myfedora.util.js" type="text/javascript"></script>
+    <script src="${tg.url('/static/js/myfedora.ui.js')}" type="text/javascript"></script>
+    <script src="${tg.url('/static/js/myfedora.util.js')}" type="text/javascript"></script>
     <script type="text/javascript">
       function render_updates(block, data, user_data)
       {
@@ -72,7 +72,7 @@
         
         if (query_updates){ 
           mf_replace_block_async(updates_block_id, 
-                                 '/mfquery/bodhi/get_info',
+                                 "${tg.url('/mfquery/bodhi/get_info')}",
                                  {'package': user_data.package},
                                  render_updates,
                                  user_data);
@@ -207,7 +207,7 @@
     </script>
 <div id="tabfloat">
 <ul id="primary-links">
-<span py:for="r in resource_urls"><li><a href="${package_url}/${r}">${r}</a></li> </span>
+<span py:for="r in resource_urls"><li><a href="${tg.url(package_url + '/' + r">${r}</a></li> </span>
 </ul>
 </div>
   <div id="resource_content">
@@ -252,7 +252,7 @@
                            files_loading_${menu_id} = true;
                       
                            mf_replace_block_async('${files_id}', 
-                                                  '/mfquery/koji/get_files',
+                                                  "${tg.url('/mfquery/koji/get_files')}",
                                                   {'task_id':'${task_id}'},
                                                   render_files_tags,
                                                   '');
@@ -271,7 +271,7 @@
           <td>${str(build['owner_name'])}</td>
           <td>${str(build['creation_time'])}</td>
           <td>${str(build['completion_time'])}</td>
-          <td><img src="${str(build['mf_state_img'])}" /></td>
+          <td><img src="${tg.url(str(build['mf_state_img']))}" /></td>
           <td 
               py:with="release_id='release_' + build_id"
               id="${release_id}">
@@ -280,7 +280,7 @@
                 $(document).ready(
                 function () {
                   mf_replace_block_async('${release_id}', 
-                                         '/mfquery/koji/get_tags',
+                                         "${tg.url('/mfquery/koji/get_tags')}",
                                           {'build_id':'${build_id}'},
                                           render_release_tags,
                                           {"package":"${str(build['nvr'])}",
@@ -288,7 +288,7 @@
                                           });
                 });
               </script>
-              <img src="/static/images/spinner-20.gif" />
+              <img src="${tg.url('/static/images/spinner-20.gif')}" />
             </span>
           </td>
         </tr>
@@ -301,7 +301,7 @@
                 $(document).ready(
                 function () {
                   mf_replace_block_async('${message_id}', 
-                                         '/mfquery/koji/get_error_log',
+                                         "${tg.url('/mfquery/koji/get_error_log')}",
                                           {'task_id':'${task_id}'},
                                           render_log_message,
                                           {'css_class':'error_message'});
