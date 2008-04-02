@@ -1,6 +1,6 @@
 import simplejson, urllib, urllib2, cookielib 
 
-from turbogears import controllers, expose, identity
+from turbogears import controllers, expose, identity, config
 
 from myfedora.urlhandler import BodhiURLHandler
 
