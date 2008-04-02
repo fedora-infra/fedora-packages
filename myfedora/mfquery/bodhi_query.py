@@ -21,7 +21,8 @@ class BodhiQuery(controllers.Controller):
 
         opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
         request = urllib2.Request(url)
-        request.add_header("Cookie", "_sessionCookie=" + identity.current.visit_key)
+        cookieName = config.get('visit.cookie.name', 'tg-visit')
+        request.add_header("Cookie", cookieName + "=" + identity.current.visit_key)
         response = opener.open(request)
 
         json_data = simplejson.load(response)
