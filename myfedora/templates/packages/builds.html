@@ -20,31 +20,58 @@
         var message_block = $("#" + user_data.message_block_id);
         msg_div = $("<div/>");
 
-        var update = data.updates[0]
+        var update = data.updates[0];
         if (update) {
           var msg_div = $("<div/>");
+          var msg_list = $("<ul/>");
+          msg_div.append(msg_list);
           var legacy_test = true;
 
-          var rstatus = update.status
-          if (rstatus) {
-            msg_div.append("<b>release status: </b>" + rstatus + "<br/>");
+          var ustatus = update.status;
+          if (ustatus) {
+            var list_item = $("<li />");
+            list_item.append("<b>release status: </b>" + ustatus);
+            msg_list.append(list_item);
             legacy_test = false;
           }
 
-          var push_requested = update.request;
-          if (push_requested) {
-            msg_div.append("<b>push request: </b>" + rstatus + "<br/>");
+          var urequest = update.request;
+          if (urequest) {
+            var list_item = $("<li />");
+            list_item.append("<b>push request: </b>" + urequest);
+            msg_list.append(list_item);
             legacy_test = false;
           }
 
           var release_note = update.note;
           if (release_note) {
-            msg_div.append("<b>release notes: </b>" + release_note + "<br/>");
+            var list_item = $("<li />");
+            list_item.append("<b>release notes: </b>" + release_note);
+            msg_list.append(list_item);
             legacy_test = false;
           }
 
           if (legacy_test) 
-            msg_div.append(update);
+            msg_list.append("<li/>").append(update);
+
+          if (update.can_modify) {
+             var form_had_data = false;
+             var update_form = ("<form />").attr("name","modify_build_update");
+             update_form.attr("action","javascript:void(0);");
+
+             if (urequest) {
+               var button;
+               if (urequest == "testing") {
+                 button = $("<input />").attr('type', 'submit').attr('value','Request move to stable');
+                 update_form.append(button);
+               }
+ 
+               if (ustatus == "pending") {
+                 button = $("<input />").attr('type', 'submit').attr('value','Cancel request');
+                 update_form.append(button);
+               }
+             }
+          }
 
           message_block.html(msg_div); 
           message_block.parent().fadeIn("slow");
@@ -58,13 +85,16 @@
         var query_updates = false;
         var tags = data.tags;        
 
-        var text = $("<div />");
-        block.html(text);
+        var tag_div = $("<div />");
+        var tag_list = $("<ul />");
+        var tag_div.append(tag_list);
+        block.html(tag_div);
         block.append($("<div />").attr("id", updates_block_id));
 
         for (var i in tags) {
            var name = tags[i]['name'];
-           text.append(name);
+           var list_item = $("<li />").append(name);
+           tag_list.append(list_item);
            
            if (name.match(updates_match)) 
              query_updates = true;  
