@@ -73,7 +73,8 @@
         if (query_updates){ 
           mf_replace_block_async(updates_block_id, 
                                  "${tg.url('/mfquery/bodhi/get_info')}",
-                                 {'package': user_data.package},
+                                 {'package': user_data.package,
+                                  'get_auth': true},
                                  render_updates,
                                  user_data);
         }
