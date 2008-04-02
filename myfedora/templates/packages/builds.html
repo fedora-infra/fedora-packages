@@ -62,13 +62,13 @@
              if (urequest) {
                var button;
                if (urequest == "testing") {
-                 button = $("<input />").attr('type', 'submit').attr('value','Request move to stable');
+                 button = $("<input type='submit'/>").attr('value','Request move to stable');
                  update_form.append(button);
                  form_has_data = true;
                }
  
                if (ustatus == "pending") {
-                 button = $("<input />").attr('type', 'submit').attr('value','Cancel request');
+                 button = $("<input type='submit' />").attr('value','Cancel request');
                  update_form.append(button);
                  form_has_data = true;
                }
