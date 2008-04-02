@@ -55,7 +55,7 @@
             msg_list.append("<li/>").append(update);
 
           if (update.can_modify) {
-             var form_had_data = false;
+             var form_has_data = false;
              var update_form = ("<form />").attr("name","modify_build_update");
              update_form.attr("action","javascript:void(0);");
 
@@ -64,13 +64,18 @@
                if (urequest == "testing") {
                  button = $("<input />").attr('type', 'submit').attr('value','Request move to stable');
                  update_form.append(button);
+                 form_has_data = true;
                }
  
                if (ustatus == "pending") {
                  button = $("<input />").attr('type', 'submit').attr('value','Cancel request');
                  update_form.append(button);
+                 form_has_data = true;
                }
              }
+
+             if (form_has_data)
+               msg_list.append(update_form);
           }
 
           message_block.html(msg_div); 
