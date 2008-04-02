@@ -52,11 +52,11 @@
           }
 
           if (legacy_test) 
-            msg_list.append("<li/>").append(update);
+            msg_list.append($("<li/>")).append(update);
 
           if (update.can_modify) {
              var form_has_data = false;
-             var update_form = ("<form />").attr("name","modify_build_update");
+             var update_form = $("<form />").attr("name","modify_build_update");
              update_form.attr("action","javascript:void(0);");
 
              if (urequest) {
