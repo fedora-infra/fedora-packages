@@ -5,9 +5,9 @@ from turbogears import controllers, expose, identity, config
 from myfedora.urlhandler import BodhiURLHandler
 
 def get_info(*args, **kw):
-   kw.update({
+    kw.update({
        'tg_format': 'json'
-   })
+    })
 
     if not kw.get('package', None):
         return {}
