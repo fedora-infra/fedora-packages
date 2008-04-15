@@ -9,7 +9,6 @@ def get_info(*args, **kw):
        'tg_format': 'json'
    })
 
-    print kw['tg_format']
     if not kw.get('package', None):
         return {}
 
