@@ -8,7 +8,13 @@ class UpdatesRoute(Route):
         Route.__init__(self, "myfedora.templates.packages.updates")
 
     def index(self, dict, package, **kw):
-        result = bodhi_query.get_info(dict)
+        result = bodhi_query.get_info(True, package=package)
+        dict['tg_template'] = self.get_default_template()
+        dict['current_url'] = cherrypy.request.path
+        
+        result.update(dict)
         print result
-
         return result
+
+    def default(self, dict, package, **kw):
+        return self.index(dict, package, **kw)

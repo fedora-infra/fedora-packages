@@ -8,6 +8,12 @@ class BodhiURLHandler(URLHandler):
         self._set_link_type(self.INTERNAL_LINK)
         self.route = None
 
+    def get_bodhi_update_url(self, collection_short_name, status, nvr):
+        url = (self.get_base_url() + '/' + collection_short_name + 
+            '/' + status + '/' + nvr)
+        
+        return url 
+
     def get_route(self):
         if not self.route:
             from myfedora.packagecontroller.updatesroute import UpdatesRoute
