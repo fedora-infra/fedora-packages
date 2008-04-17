@@ -1,6 +1,8 @@
 from myfedora.mfquery.bodhi_query import BodhiQuery
 from route import Route
 
+import cherrypy
+
 bodhi_query = BodhiQuery()
 
 class UpdatesRoute(Route):
