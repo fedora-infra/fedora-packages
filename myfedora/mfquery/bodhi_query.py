@@ -4,7 +4,7 @@ from turbogears import controllers, expose, identity, config
 
 from myfedora.urlhandler import BodhiURLHandler
 
-def get_info(*args, **kw):
+def get_info(kwarg_compat, **kw):
     kw.update({
        'tg_format': 'json'
     })
@@ -24,12 +24,21 @@ def get_info(*args, **kw):
     response = opener.open(request)
 
     json_data = simplejson.load(response)
-        
+    if kwarg_compat:
+        # when using dicts as kwargs (e.g. **{}) the top level keys can not
+        # be unicode in Python 2.5 and below but simplejson returns all keys
+        # as unicode
+        compat_dict = {}
+        for key, value in json_data.iteritems():
+            compat_dict[str(key)] = value
+            
+        json_data = compat_dict
+
     return json_data
 
 
 class BodhiQuery(controllers.Controller):
     @expose("json", allow_json=True)
     def get_info(self, *args, **kw): 
-        return get_info(*args, **kw)
+        return get_info(False, **kw)
 
