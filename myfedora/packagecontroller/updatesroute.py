@@ -1,9 +1,7 @@
-from myfedora.mfquery.bodhi_query import BodhiQuery
+from myfedora.mfquery import bodhi_query
 from route import Route
 
 import cherrypy
-
-bodhi_query = BodhiQuery()
 
 class UpdatesRoute(Route):
     def __init__(self):
@@ -15,7 +13,6 @@ class UpdatesRoute(Route):
         dict['current_url'] = cherrypy.request.path
         
         result.update(dict)
-        print result
         return result
 
     def default(self, dict, package, **kw):
