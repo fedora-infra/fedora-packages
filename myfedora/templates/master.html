@@ -6,13 +6,14 @@
   <head py:match="head" py:attrs="select('@*')">
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"
       py:replace="''" />
-    <title py:content="'Your Title Goes Here'"></title>
+
+    <title py:replace="''">Your title goes here</title>
+    <link py:for="css in tg_css" py:replace="ET(css.display())" />
+    <link py:for="js in tg_js_head" py:replace="ET(js.display())" />
+    <meta py:replace="select('*')" />
 
     <script type="text/javascript" src="${tg.url('/static/js/jquery.js')}" />
     <script type="text/javascript" src="${tg.url('/static/js/fedorawidgets.js')}" />
-    <link py:for="js in tg_js_head" py:strip="">${XML(js)}</link>
-    <link py:for="css in tg_css" py:strip="">${XML(css)}</link>
-
     <link href="${tg.url('/static/images/favicon.ico')}"
       type="image/vnd.microsoft.icon" rel="shortcut icon" /> 
     <link href="${tg.url('/static/images/favicon.ico')}"
