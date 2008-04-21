@@ -3,6 +3,10 @@
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude" py:strip="True">
 <xi:include href="../master.html"/>
+
+<head>
+<title py:match="title">My Fedora Packages - ${package} - ${select('*|text()')}</title>
+</head>
 <div py:match="div[@class='content']" py:attrs="select('@*')">
   <div id="tabfloat">
     <ul id="primary-links">

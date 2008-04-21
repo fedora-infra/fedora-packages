@@ -4,12 +4,12 @@
       xmlns:xi="http://www.w3.org/2001/XInclude">
 <xi:include href="chrome.html"/>
 <head>
-<title>Package $package</title>
+<title>Builds</title>
   <script src="${tg.url('/static/js/jquery.js')}" type="text/javascript"></script>
   <script src="${tg.url('/static/js/myfedora.ui.js')}" type="text/javascript"></script>
   <script src="${tg.url('/static/js/myfedora.util.js')}" type="text/javascript"></script>
 
-<script type="text/javascript">
+  <script type="text/javascript">
       function render_updates(block, data, user_data)
       {
         var message_block = $("#" + user_data.message_block_id);
@@ -236,8 +236,7 @@
         block.parent().fadeIn();
       }
 
-    </script>
-
+  </script>
 </head>
 <body>
   <h2>Package $package</h2>
