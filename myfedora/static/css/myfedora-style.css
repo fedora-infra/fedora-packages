@@ -13,7 +13,7 @@ body
 {
   color: #666666;
   font-size: 76%;
-  background: #FFFFFF url(http://fedoraproject.org/static/images/border-left.png) 0 0 repeat-y;
+  background: #FFFFFF url(../images/border-left.png) 0 0 repeat-y;
 }
 
 a img
@@ -26,7 +26,7 @@ a img
   margin-left: 18px;
   font: normal 2.3ex/1.5 sans-serif;
   min-height: 100%;
-  background: #FFFFFF url(http://fedoraproject.org/static/images/border-right.png) 100% 0 repeat-y;
+  background: #FFFFFF url(../images/border-right.png) 100% 0 repeat-y;
   padding-right: 18px;
   overflow: auto;
 }
@@ -35,14 +35,14 @@ a img
 {
   border-top: 10px solid #337ACC;
   padding: 1ex 2ex 17px;
-  background: #FFFFFF url(http://fedoraproject.org/static/images/line.png) 0 100% repeat-x;
+  background: #FFFFFF url(../images/line.png) 0 100% repeat-x;
 }
 
 .head h1 a
 {
   display: block;
   text-indent: -9999px;
-  background: url(http://fedoraproject.org/static/images/fedora-logo.png) 20px 50% no-repeat;
+  background: url(../images/fedora-logo.png) 20px 50% no-repeat;
   height: 73px;
   width: 138px;
   overflow: hidden;
@@ -115,7 +115,7 @@ a img
 
 #nav ul
 {
-  list-style: url(http://fedoraproject.org/static/images/arrow.png);
+  list-style: url(../images/arrow.png);
   margin-left: 15px;
 }
 
@@ -210,7 +210,7 @@ a img
 
 .download
 {
-  list-style-image: url(http://fedoraproject.org/static/images/arrow.png);
+  list-style-image: url(../images/arrow.png);
   list-style-position: outside;
   margin: 1.6ex 3ex;
 }
@@ -267,7 +267,7 @@ a img
   position: relative;
   font: normal 1.5ex/1.5 sans-serif;
   text-align: center;
-  background: #FFFFFF url(http://fedoraproject.org/static/images/line-bottom.png) 0 0 repeat-x;
+  background: #FFFFFF url(../images/line-bottom.png) 0 0 repeat-x;
   margin: -90px 0 0;
   border-bottom: 10px solid #337ACC;
   height: 80px;
@@ -354,7 +354,7 @@ select
 
 input
 {
-  background: transparent url(/static/images/text_entry_drop_shadow.png);
+  background: transparent url(../images/text_entry_drop_shadow.png);
 }
 
 input, textarea, select
@@ -397,9 +397,9 @@ input, textarea, select
   display: inline-block;
 }
 
-#content ul.installdvd { background-image: url(http://fedoraproject.org/static/images/installdvd.png); }
-#content ul.gnomelive { background-image: url(http://fedoraproject.org/static/images/gnomelive.png); }
-#content ul.kdelive { background-image: url(http://fedoraproject.org/static/images/kdelive.png); }
+#content ul.installdvd { background-image: url(../images/installdvd.png); }
+#content ul.gnomelive { background-image: url(../images/gnomelive.png); }
+#content ul.kdelive { background-image: url(../images/kdelive.png); }
 
 .downloadbox li
 {
@@ -442,7 +442,7 @@ input, textarea, select
 #content ul#resources a
 {
   padding-left: 20px;
-  background: url(http://fedoraproject.org/static/images/arrow.png) 0 50% no-repeat;
+  background: url(../images/arrow.png) 0 50% no-repeat;
 }
 
 #content ul#resources li
@@ -453,17 +453,17 @@ input, textarea, select
 
 ul#resources li.resource-docs
 {
-  background: url(http://fedoraproject.org/static/images/icon-docs.png) 0 50% no-repeat;
+  background: url(../images/icon-docs.png) 0 50% no-repeat;
 }
 
 ul#resources li.resource-communicate
 {
-  background: url(http://fedoraproject.org/static/images/icon-communicate.png) 0 50% no-repeat;
+  background: url(../images/icon-communicate.png) 0 50% no-repeat;
 }
 
 ul#resources li.resource-download
 {
-  background: url(http://fedoraproject.org/static/images/icon-download.png) 0 50% no-repeat;
+  background: url(../images/icon-download.png) 0 50% no-repeat;
 }
 
 
@@ -482,7 +482,7 @@ ul#primary-links {
 }
 
 ul#primary-links li {
-  background:transparent url(http://fedoraproject.org/static/images/header-tab1.png) no-repeat scroll 0%;
+  background:transparent url(../images/header-tab1.png) no-repeat scroll 0%;
   float:right;
   list-style-type:none;
   margin:0px 0px;
@@ -490,7 +490,7 @@ ul#primary-links li {
 }
 
 ul#primary-links li a {
-  background:transparent url(http://fedoraproject.org/static/images/header-tab2.png) no-repeat scroll 100% 0px;
+  background:transparent url(../images/header-tab2.png) no-repeat scroll 100% 0px;
   color: #666666;
   display:block;
   font-weight:bold;
@@ -504,11 +504,11 @@ ul#primary-links li a {
 }
 
 ul#primary-links li:hover {
-background-image:url(/static/images/header-tab1.png);
+background-image:url(../images/header-tab1.png);
 background-position:0% -24px;
 }
 ul#primary-links li:hover a {
-background-image:url(/static/images/header-tab2.png);
+background-image:url(../images/header-tab2.png);
 background-position:100% -24px;
 }
 
@@ -553,7 +553,7 @@ background-position:100% -24px;
 .content ul#resources a
 {
   padding-left: 20px;
-  background: url(http://fedoraproject.org/static/images/arrow.png) 0 50% no-repeat;
+  background: url(../images/arrow.png) 0 50% no-repeat;
 }
 
 .content ul#resources li
@@ -564,17 +564,17 @@ background-position:100% -24px;
 
 ul#resources li.resource-docs
 {
-  background: url(http://fedoraproject.org/static/images/icon-docs.png) 0 50% no-repeat;
+  background: url(../images/icon-docs.png) 0 50% no-repeat;
 }
 
 ul#resources li.resource-communicate
 {
-  background: url(http://fedoraproject.org/static/images/icon-communicate.png) 0 50% no-repeat;
+  background: url(../images/icon-communicate.png) 0 50% no-repeat;
 }
 
 ul#resources li.resource-download
 {
-  background: url(http://fedoraproject.org/static/images/icon-download.png) 0 50% no-repeat;
+  background: url(../images/icon-download.png) 0 50% no-repeat;
 }
 
 
@@ -593,7 +593,7 @@ ul#primary-links {
 }
 
 ul#primary-links li {
-  background:transparent url(/static/images/header-tab1.png) no-repeat scroll 0%;
+  background:transparent url(../images/header-tab1.png) no-repeat scroll 0%;
   float:right;
   list-style-type:none;
   margin:0px 0px;
@@ -601,7 +601,7 @@ ul#primary-links li {
 }
 
 ul#primary-links li a {
-  background:transparent url(/static/images/header-tab2.png) no-repeat scroll 100% 0px;
+  background:transparent url(../images/header-tab2.png) no-repeat scroll 100% 0px;
   color: #666666;
   display:block;
   font-weight:bold;
@@ -615,11 +615,11 @@ ul#primary-links li a {
 }
 
 ul#primary-links li:hover {
-background-image:url(/static/images/header-tab1.png);
+background-image:url(../images/header-tab1.png);
 background-position:0% -24px;
 }
 ul#primary-links li:hover a {
-background-image:url(/static/images/header-tab2.png);
+background-image:url(../images/header-tab2.png);
 background-position:100% -24px;
 }
 
