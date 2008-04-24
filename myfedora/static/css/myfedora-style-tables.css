@@ -28,3 +28,7 @@
 .content_table tr.even {
   background-color: #edf3fe;
 }
+
+.error_message {
+  background-color: #ffcccc;
+}

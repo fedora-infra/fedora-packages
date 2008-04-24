@@ -73,7 +73,7 @@ class KojiQuery(controllers.Controller):
 
     @expose("json", allow_json=True)
     def get_files(self, *args, **kw):
-        results = {'logs':{}, 'downloads':{'rpms':{}, 'logs':{}}}
+        results = {'logs':{}, 'downloads':{}}
         task_id = int(kw.get('task_id', '0'))
         state = int(kw.get('state', '0'))
         koji_url_handler = KojiURLHandler()
