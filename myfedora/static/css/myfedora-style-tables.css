@@ -1,0 +1,30 @@
+
+.content_table {
+  border-collapse: collapse;
+  border:medium none;
+  width: 100%;
+  background-color:#E3E3E3;
+  font-family:verdana,sans-serif;
+}
+
+.content_table thead tr th {
+  text-align: left;
+  background-color:#F0F0F0;
+  color:#333333;
+
+  border:medium none;
+  padding:3px;
+}
+
+.content_table td {
+  border:medium none;
+  padding:3px;
+}
+
+.content_table tr.odd {
+  background-color: #ffffff;
+}
+
+.content_table tr.even {
+  background-color: #edf3fe;
+}

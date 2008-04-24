@@ -12,7 +12,8 @@ html, body
 body
 {
   color: #666666;
-  font-size: 76%;
+  font-size: 9pt;
+  font-family: liberation,veranda,sans-serif;
   background: #FFFFFF url(../images/border-left.png) 0 0 repeat-y;
 }
 
@@ -24,7 +25,6 @@ a img
 .wrapper
 {
   margin-left: 18px;
-  font: normal 2.3ex/1.5 sans-serif;
   min-height: 100%;
   background: #FFFFFF url(../images/border-right.png) 100% 0 repeat-y;
   padding-right: 18px;
@@ -174,17 +174,6 @@ a img
 .content table
 {
   border-collapse: collapse;
-}
-
-.content table th
-{
-  background: #DDDDDD;
-}
-
-.content table th, .content table td
-{
-  border: 1px solid #000000;
-  padding: 0.6ex;
 }
 
 .content p

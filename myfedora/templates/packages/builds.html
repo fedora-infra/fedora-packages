@@ -239,7 +239,6 @@
   </script>
 </head>
 <body>
-  <h2>Package $package</h2>
   <div id="resource_content">
      <!-- TODO: CSS -->
      <form name="builds_navigation_form" action="${current_url}">
@@ -249,19 +248,25 @@
        <input type="hidden" name="limit" value="${limit}" />
        <input type="hidden" name="direction" value="next"/>
      </form> 
-     <table>
-        <tr class="table_header1">
-          <td class="table_header_col1">Build ID</td>
-          <td class="table_header_col1">Name</td>
-          <td class="table_header_col1">Build By</td>
-          <td class="table_header_col1">Started</td>
-          <td class="table_header_col1">Finished</td>
-          <td class="table_header_col1">State</td>
-          <td class="table_header_col1">Release</td>
-        </tr>
+     <table class="content_table">
+        <thead>
+          <tr>
+            <th>Build ID</th>
+            <th>Name</th>
+            <th>Build By</th>
+            <th>Started</th>
+            <th>Finished</th>
+            <th>State</th>
+            <th>Release</th>
+          </tr>
+        </thead>
+        <tbody py:with="oe = tg.cycle(('odd','even'));">
         <span py:for="build in builds_list" 
-              py:with="build_id=str(build['build_id']); build_state=str(build['state']); task_id=str(build['task_id']); message_id='message_' + build_id">
-        <tr>  
+              py:with="build_id=str(build['build_id']); 
+                       build_state=str(build['state']); 
+                       task_id=str(build['task_id']); 
+                       message_id='message_' + build_id;">
+         <tr class="${oe.next()}">
           <td>${build_id}</td>
           <!-- for now send to koji but we want a simpler page
                with the most common info organized nicely -->
@@ -340,8 +345,8 @@
             </span>
           </td>
         </tr>
-        </span> 
-
+       </span>
+      </tbody> 
      </table> 
   </div>
 </body>

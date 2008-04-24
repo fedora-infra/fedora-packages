@@ -5,7 +5,7 @@
 <xi:include href="../master.html"/>
 
 <head>
-<title py:match="title">My Fedora Packages - ${package} - ${select('*|text()')}</title>
+  <title py:match="title">My Fedora Packages - ${package} - ${select('*|text()')}</title>
 </head>
 <div py:match="div[@class='content']" py:attrs="select('@*')">
   <div id="tabfloat">
@@ -13,6 +13,6 @@
       <span py:for="r in resource_urls"><li><a href="${tg.url(package_url + '/' + r)}">${r}</a></li> </span>
     </ul>
   </div>
-  <div py:replace="select('*|text()')" />
-  </div>
-</html>
+    <h2>Package $package</h2>
+    <div py:replace="select('*|text()')" />
+</div></html>
