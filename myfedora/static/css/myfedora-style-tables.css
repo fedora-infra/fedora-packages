@@ -32,3 +32,8 @@
 .error_message {
   background-color: #ffcccc;
 }
+
+.error_message .details {
+  text-indent: 20px;
+}
+

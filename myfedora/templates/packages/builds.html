@@ -220,7 +220,10 @@
         log_url = data.log_url;
         log_name = data.log_name;
 
-        msg_div = $("<div/>");
+        name_col = $('#' + user_data.build_id + '_name_col');
+        name_col.addClass(css_class);
+
+        msg_div = $("<div/>").addClass('details');
         msg_div.append("Error in build.");
         if (log_url) {
           link = $("<a/>").attr("href", log_url).attr("target", "_blank");
@@ -266,11 +269,12 @@
                        build_state=str(build['state']); 
                        task_id=str(build['task_id']); 
                        message_id='message_' + build_id;">
-         <tr class="${oe.next()}">
+         <?python odd_or_even = oe.next() ?>
+         <tr class="${odd_or_even}">
           <td>${build_id}</td>
           <!-- for now send to koji but we want a simpler page
                with the most common info organized nicely -->
-          <td py:with="menu_id='menu_' + build_id" >
+          <td py:with="menu_id='menu_' + build_id" id="${build_id}_name_col">
             <div onMouseOver="mf_menu_hover_start('${menu_id}'); load_files_${menu_id}();" 
                  onMouseOut="mf_menu_hover_stop()">
               <a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${str(build['nvr'])}</a>
@@ -327,8 +331,8 @@
             </span>
           </td>
         </tr>
-        <tr class="message_row">
-          <td></td>
+        <tr class="message_row, ${odd_or_even}">
+          <td> </td>
           <td colspan="6" 
               id="${message_id}">
             <span py:if="build_state=='3'">
@@ -339,7 +343,7 @@
                                          "${tg.url('/mfquery/koji/get_error_log')}",
                                           {'task_id':'${task_id}'},
                                           render_log_message,
-                                          {'css_class':'error_message'});
+                                          {'css_class':'error_message', 'build_id':'${build_id}'});
                 });
               </script>
             </span>
