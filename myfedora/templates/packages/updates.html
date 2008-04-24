@@ -30,7 +30,7 @@
         </tr>
       </thead>
       <tbody py:with="oe = tg.cycle(('odd','even'));">
-        <tr class="${oe.next}" py:for="update in updates">
+        <tr class="${oe.next()}" py:for="update in updates">
             <td>
                 ${update.updateid}
             </td>
