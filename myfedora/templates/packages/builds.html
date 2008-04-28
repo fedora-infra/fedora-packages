@@ -111,31 +111,65 @@
         }
       }
 
-      function _render_files_tags_more_or_less(hidden_class_name)
+      function _render_files_tags_more_or_less(downloads)
       {
-        var more_link = $("#" + hidden_class_name);
-        var hidden_dl = $("." + hidden_class_name);
- 
-        var link_text = more_link.text()
-        if (link_text == "more") {
-          more_link.text("less");
-          hidden_dl.slideDown();
-        } else {
-          more_link.text("more");
-          hidden_dl.slideUp();
+        var arch_item; 
+        var arch_list = $("<ul />");
+
+        /* loop over the downloads and add them to the display */
+        for (a in downloads) {
+          arch_files = downloads[a];
+          if (arch_files) {
+            var arch_li = $("<li />").append(a);
+            var arch_ul = $("<ul />");
+            for (i in arch_files) {
+              var f = arch_files[i];
+
+              arch_item = $("<li/>");
+
+              var dl_link = $("<a/>").attr("href", f.url).append(f.name);
+              arch_item.append(dl_link);
+              arch_ul.append(arch_item);
+            }
+
+            arch_li.append(arch_ul);
+            arch_list.append(arch_li);
+          }
         }
+
+        var download_div = $("<div />").css(
+                        {
+                          "background-color": "#ffffff"
+                        });
+
+        download_div.append(arch_list);
+       
+        close_button_div = $("<div />").attr("class", "link_button"); 
+        close_button = $("<a />").attr("href", "javascript:void(0)");
+        close_button.click(function (){mf_hide_overlay('mf_overlay');});
+        close_button.append("X Close");
+        close_button_div.append(close_button);
+        download_div.append(arch_list);
+        download_div.append(close_button_div);
+
+        var overlay = mf_show_overlay("mf_overlay", download_div, 5);
       } 
  
       function render_files_tags(block, data, user_data)
-      {
+     {
         var hidden_class_name = "more_" + block[0].id;
-        var dl_item = $("<li/>").text("Dowloads")
-        
-        /* show and hide hidden files */
+        var dl_item = $("<li/>").text("Dowloads");
+        var downloads = data.files.downloads;       
+ 
+        /* show and hide all files */
         var more_or_less = $("<span/>").text("[");
         var more_link = $("<a/>").attr("id", hidden_class_name);
         more_link.attr("href","javascript:void(0);");
-        more_link.attr("onClick", "_render_files_tags_more_or_less('" + hidden_class_name + "')");
+
+        more_link.click(function() {
+                          _render_files_tags_more_or_less(downloads); 
+                        });
+
         more_link.text("more");
         more_or_less.append(more_link);
         more_or_less.append("]");
@@ -145,7 +179,6 @@
            unless expanded with the more link */
         var arch = mf_guess_client_arch('i386'); 
 
-        var downloads = data.files.downloads;
         var devel_file_match = /.*-(devel|doc|debuginfo)-.*/;
 
         /* loop over primary arch */
@@ -161,9 +194,11 @@
             for (i in arch_files) {
               var f = arch_files[i];
 
-              arch_item = $("<li/>");
+              // don't diplay devel files
               if (f.name.match(devel_file_match))
-                arch_item.attr("class", hidden_class_name);
+                continue;
+
+              arch_item = $("<li/>");
 
               dl_link = $("<a/>").attr("href", f.url).append(f.name);
               arch_item.append(dl_link);
@@ -179,33 +214,6 @@
             break;
           }
         }
-
-        /* FIXME: The above loop and this one are essentally the same
-                  break it out into another function */
-        /* loop over the rest of the arches and add them hidden */
-        for (a in downloads) {
-          arch_files = downloads[a];
-          if (arch_files) {
-            var arch_list = $("<ul />");
-
-            arch_div = $("<div/>").attr("class", hidden_class_name).append(a);
- 
-            for (i in arch_files) {
-              var f = arch_files[i];
-
-              arch_item = $("<li/>");
-
-              dl_link = $("<a/>").attr("href", f.url).append(f.name);
-              arch_item.append(dl_link);
-              arch_list.append(arch_item);
-            }
-
-            arch_div.append(arch_list);
-            dl_item.append(arch_div);
-          }
-        }
-
-        dl_item.find("." + hidden_class_name).hide();
 
         dl_item.hide();
         block.html(dl_item);
@@ -242,6 +250,7 @@
   </script>
 </head>
 <body>
+  <div id="mf_overlay" style="opacity:0; zindex:-1"/>
   <div id="resource_content">
      <!-- TODO: CSS -->
      <form name="builds_navigation_form" action="${current_url}">
