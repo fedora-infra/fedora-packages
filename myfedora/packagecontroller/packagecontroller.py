@@ -20,10 +20,12 @@ resource_urls = (('Info', InfoURLHandler),
 class PackageController(controllers.Controller):
     @expose(template='myfedora.templates.packages.master')
     def index(self):
-        dict = {}
+        dict = {'package':'',
+                'resource_urls': resource_urls}
+
         return dict
 
-    @expose(template='myfedora.templates.packages.master')
+    @expose(template='myfedora.templates.packages.iframe')
     def default(self, *args, **kw):
         dict = {}
 

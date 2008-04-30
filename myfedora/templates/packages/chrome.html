@@ -5,14 +5,17 @@
 <xi:include href="../master.html"/>
 
 <head>
-  <title py:match="title">My Fedora Packages - ${package} - ${select('*|text()')}</title>
+  <title py:if="package" py:match="title">My Fedora Packages - ${package} - ${select('*|text()')}</title>
+  <title py:if="not package"  py:match="title">My Fedora Packages - ${select('*|text()')}</title>
 </head>
 <div py:match="div[@class='content']" py:attrs="select('@*')">
   <div id="tabfloat">
     <ul id="primary-links">
-      <span py:for="r in resource_urls"><li><a href="${tg.url(package_url + '/' + r)}">${r}</a></li> </span>
+      <span py:if="package" py:for="r in resource_urls"><li><a href="${tg.url(package_url + '/' + r)}">${r}</a></li> </span>
+      <span py:if="not package" py:for="r in resource_urls"><li><a href="${tg.url(r)}">${r}</a></li> </span>
+
     </ul>
   </div>
-    <h2>Package $package</h2>
+    <h2 py:if="package">Package ${package}</h2>
     <div py:replace="select('*|text()')" />
 </div></html>

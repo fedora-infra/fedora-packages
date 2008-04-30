@@ -1,6 +1,6 @@
 from route import Route
 from myfedora.urlhandler import KojiURLHandler
-
+from datetime import datetime
 import koji
 import cherrypy
 
@@ -11,6 +11,85 @@ class BuildsRoute(Route):
 
         self.offset = 0 
         self.limit = 10
+
+    def _time_delta_to_date_str(self, start, end):
+        datetimestr = ""
+
+        delta = end - start
+
+        if delta.days < 1 and start.tm_mday == end.tm_mday:
+            datetimestr += "Today "
+        elif delta.days < 7:
+            datetimestr += datetime.strftime(start, "%a ")  
+        else:
+            datetimestr += datetime.strftime(start, "%b %d ")
+            #if start.tm_year != end.tm_year:
+            #    datetimestr += str(start.tm_year)
+
+        datetimestr +=  datetime.strftime(start,"%H:%M")
+
+        return datetimestr
+
+    def _time_delta_to_elapsed_str(self, start, end):
+        elapsed_str = ""
+
+        delta = end - start
+
+        days = delta.days
+        hours = int(delta.seconds / 3600)
+        minutes = int((delta.seconds - hours * 3600) / 60)
+        seconds = delta.seconds - minutes * 60
+
+        if days:
+            elapsed_str += str(days) + " day"
+            if days > 1:
+                elapsed_str += "s "
+            else:
+                elapsed_str += " "
+
+        if hours:
+            elapsed_str += str(hours) + " hour"
+            if hours > 1:
+                elapsed_str += "s "
+            else:
+                elapsed_str += " "
+
+        if minutes:
+            elapsed_str += str(minutes) + " minute"
+            if minutes > 1:
+                elapsed_str += "s "
+            else:
+                elapsed_str += " "
+
+        if seconds:
+            elapsed_str += "and " + str(seconds) + " second"
+            if seconds > 1:
+                elapsed_str += "s "
+            else:
+                elapsed_str += " "
+
+        return elapsed_str
+
+    def _make_delta_timestamps_human_readable(self, start, end):
+        result_dict = {
+                       'start_time_display':None, 
+                       'end_time_display':None
+                      }
+
+        parse_format = "%Y-%m-%d %H:%M:%S"
+
+        start = datetime.strptime(start.split(".")[0], parse_format) 
+        end = datetime.strptime(end.split(".")[0], parse_format)
+        now = datetime.now()
+
+        start_str = self._time_delta_to_date_str(start, now)
+        end_str = self._time_delta_to_date_str(end, now)
+        elapsed_str = self._time_delta_to_elapsed_str(start, end)
+        
+        result_dict['start_time_display'] = start_str
+        result_dict['end_time_display'] =  end_str + '(' + elapsed_str + ')'
+
+        return result_dict
 
     def _get_state_img_src(self, state):
         src = ''
@@ -28,11 +107,16 @@ class BuildsRoute(Route):
 
     def index(self, dict, package, **kw):
         cs = koji.ClientSession(KojiURLHandler().get_xml_rpc_url())
-        pkg_id = cs.getPackageID(package)
+        
+        pkg_id = None
+        if (package):
+            pkg_id = cs.getPackageID(package)
+
         # always add 1 to the limit so we know if there should be another page 
         queryOpts = {'offset': self.offset, 
                      'limit': self.limit + 1, 
                      'order': '-creation_time'}
+
         builds_list = cs.listBuilds(packageID=pkg_id, queryOpts=queryOpts)
 
         list_count = len(builds_list)
@@ -55,6 +139,13 @@ class BuildsRoute(Route):
                     arches.append('src')
                     build['mf_arches'] = arches
 
+            # convert timestamps to human readable entries
+            time_dict = self._make_delta_timestamps_human_readable(
+                            build['creation_time'],
+                            build['completion_time'])
+
+            build['creation_time'] = time_dict['start_time_display']
+            build['completion_time'] = time_dict['end_time_display']
 
         dict['offset'] = self.offset
         dict['limit'] = self.limit
