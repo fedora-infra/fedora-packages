@@ -1,3 +1,4 @@
+import os
 import re
 import logging
 import feedparser
@@ -10,7 +11,7 @@ from mfquery.querycontroller import QueryController
 from datetime import timedelta, datetime
 from turbogears import controllers, expose, flash, url
 from turbogears import identity, redirect
-from cherrypy import request, response
+from cherrypy import request, response, HTTPRedirect, NotFound
 
 from toscawidgets.api import Widget
 from toscawidgets.api import JSLink as TWJSLink
@@ -19,6 +20,12 @@ from myfedora.model import WidgetConfig
 
 from sqlobject import SQLObjectNotFound
 from sqlobject.dberrors import *
+
+from routes import *
+
+from myfedora import Resource
+
+m = Mapper()
 
 log = logging.getLogger("myfedora.controllers")
 
@@ -193,12 +200,43 @@ class WidgetsController(controllers.Controller):
         return { 'widget':fedoraupdates }
 
 class Root(controllers.RootController):
-    # /packages/ is used for the package views
-    packages = PackageController()
-    test = TestController()
-    search = SearchController()
-    widgets = WidgetsController()
-    mfquery = QueryController();
+    def __init__(self):
+        self.base_re = re.compile( r'^(?P<protocol>[a-zA-Z]+)://(?P<host>.*)' )
+        
+        # Change the controllers here to the controllers in your app:
+        self.controllers = {
+              'main': self,
+              'search': SearchController(),
+              'mfquery': QueryController()
+            }
+        
+        # Here you need to add your own routes (http://routes.groovie.org/manual.html)
+        m.connect('search/', controller='search')
+        m.connect('mfquery/', contoller='mfquery') 
+       
+        self._register_resources()
+        self._register_tools()
+        
+        m.create_regs(self.controllers.keys())
+        
+    def _register_resources(self):
+        """Dynamically import resources in the resources directory"""
+        self.resources = {}
+
+        files = os.listdir('myfedora/resources')
+        for f in files:
+            if f.endswith('.py'):
+                __import__("myfedora.resources." + f[:-3],None,None,[],0)
+
+        classes = Resource.__subclasses__()
+
+        for c in classes:
+            r = c()
+            self.resources[r.get_mount_point()] = r
+
+    def redirect(self, url):
+        # Recreated this function as the cherrypy one is depreciated
+        raise HTTPRedirect(turbogears.url(url), 302)
 
     @expose(template='myfedora.templates.index', allow_json=True)
     def index(self):
@@ -263,6 +301,37 @@ class Root(controllers.RootController):
     def logout(self):
         identity.current.logout()
         raise redirect("/")
+
+    @expose()
+    def default(self, *args, **kwargs):
+
+        base = request.base
+        d = self.base_re.match( base ).groupdict()
+        host = d[ 'host' ]
+        proto = d[ 'protocol' ]
+        path = request.path
+
+        con = request_config()
+        con.mapper = m # the Routes Mapper object
+        con.host = host
+        con.protocol = proto
+        con.redirect = self.redirect
+        con.mapper_dict = m.match( path )
+
+        if con.mapper_dict:
+            c = con.mapper_dict.pop( 'controller' )
+            controller = self.controllers[c]
+            action = con.mapper_dict.pop( 'action', 'index' )
+            try:
+                meth = getattr(controller, action, getattr(controller, 'default'))
+            except AttributeError:
+                raise NotFound( path )
+            kwargs.update( con.mapper_dict )
+            
+            return meth( **kwargs )
+
+        raise NotFound( path )
+
 
 # vim:ts=4:sw=4:et:
 
