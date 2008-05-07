@@ -23,7 +23,7 @@ from sqlobject.dberrors import *
 
 from routes import *
 
-from myfedora import Resource
+from myfedora.plugin import Resource, Tool
 
 m = Mapper()
 
@@ -213,17 +213,18 @@ class Root(controllers.RootController):
         # Here you need to add your own routes (http://routes.groovie.org/manual.html)
         m.connect('search/', controller='search')
         m.connect('mfquery/', contoller='mfquery') 
-       
+      
         self._register_resources()
         self._register_tools()
-        
+        self._register_routes()
+         
         m.create_regs(self.controllers.keys())
         
     def _register_resources(self):
         """Dynamically import resources in the resources directory"""
         self.resources = {}
 
-        files = os.listdir('myfedora/resources')
+        files = os.listdir(os.path.join('myfedora', 'resources'))
         for f in files:
             if f.endswith('.py'):
                 __import__("myfedora.resources." + f[:-3],None,None,[],0)
@@ -232,7 +233,49 @@ class Root(controllers.RootController):
 
         for c in classes:
             r = c()
-            self.resources[r.get_mount_point()] = r
+            self.resources[r.get_id()] = r
+
+    def _register_tools(self):
+        """Dynamically import tools in the tools directory"""
+        self.tools = {}
+
+        tools_dir = os.path.join('myfedora','tools')
+        tools_dir_files = os.listdir(tools_dir)
+        for tf in tools_dir_files:
+            plugin_tool_dir = os.path.join(tools_dir, tf)
+            if os.path.isdir(plugin_tool_dir):
+                tool_files = os.listdir(plugin_tool_dir)
+                for f in tool_files:
+                    if f.endswith('.py'):
+                        __import__("myfedora.tools." + tf + '.' + f[:-3],
+                                   None,None,[],0)
+
+        classes = Tool.__subclasses__()
+
+        for c in classes:
+            # instantiate once so we can get the mount point 
+            # and resource ids
+            t = c(None)
+
+            if t.is_active():
+                tool_id = t.get_id()
+                self.tools[tool_id] = c 
+                resource_ids = t.get_resource_ids()
+
+                for id in resource_ids:
+                    # pass in the class so that the resource can instantiate 
+                    # its own instance of the tool
+                    r = self.resources[id]
+                    r.register_tool(c)
+                    
+
+    def _register_routes(self):
+        for resource in self.resources.values():
+            print resource.get_id()
+            
+            for tool in resource.get_tool_list():
+                controller_key = resource.set_tool_route(m, tool)
+                self.controllers[controller_key] = tool
 
     def redirect(self, url):
         # Recreated this function as the cherrypy one is depreciated

@@ -1,4 +1,4 @@
-from myfedora import Resource
+from myfedora.plugin import Resource
 
 class PackagesResource(Resource):
     """Packages works on Fedora packages as a resource set.  All tools are
@@ -16,12 +16,12 @@ class PackagesResource(Resource):
                                 name which can be used to query various data
                                 sources for information relevant to the tool
                                 ''')
-    def get_routes(self, route_map, tool):
+    def register_tool_route(self, route_map, tool):
         if tool.is_default():
-            route_map.connect(self.url(self.get_mount_point()), 
+            route_map.connect(self.url(self.get_id()), 
                               contoller = self._namespace_id(tool.get_id()))
 
-        r = self._route_cat(self.url(self.get_mount_point()),
+        r = self._route_cat(self.url(self.get_id()),
                             ':package',
                             tool.get_id())
 
