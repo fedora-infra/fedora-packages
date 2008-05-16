@@ -11,9 +11,12 @@ class TestResource(Resource):
                                 and acting as an example
                                 ''')
 
-    def get_template_globals(self, *args, **kwargs):
-        return {'resource_template': 'master2.html'}
+        self.set_master_template('master')
 
+    def get_template_globals(self, *args, **kwargs):
+        result = Resource.get_template_globals(self, *args, **kwargs)
+        result.update({'resource_name': self.get_id()})
+        return result
 
     def set_tool_route(self, route_map, tool):
         tool_id = tool.get_id()
@@ -22,7 +25,7 @@ class TestResource(Resource):
         if tool.is_default():
             route_map.connect(self.url(resource_id), 
                               contoller = controller_id,
-                              resource = resource_id)
+                              resource = self)
 
         r = self._route_cat(self.url(resource_id),
                             ':data',
@@ -30,7 +33,6 @@ class TestResource(Resource):
 
         route_map.connect(r, 
                           controller = controller_id, 
-                          data = '',
-                          resource = resource_id)
+                          data = '')
 
         return controller_id

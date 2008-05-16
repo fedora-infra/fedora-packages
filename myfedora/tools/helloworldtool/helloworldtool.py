@@ -1,5 +1,6 @@
 from myfedora.plugin import Tool
 from turbogears import expose
+import random
 
 class HelloWorldTool(Tool):
     def __init__(self, parent_resource):
@@ -11,6 +12,9 @@ class HelloWorldTool(Tool):
                                    ['test'],
                                    ['test'])
 
-    @expose()
-    def default(self, resource, data=''):
-        return "Hello " + data + " how do you like resource " + resource
+    @expose(template='myfedora.tools.helloworldtool.templates.helloworld', allow_json=True)
+    def default(self, data=''):
+        result = self.get_parent_resource().get_template_globals()
+       
+        result.update({'tool_name': data}) 
+        return result

@@ -16,6 +16,7 @@ class PackagesResource(Resource):
                                 name which can be used to query various data
                                 sources for information relevant to the tool
                                 ''')
+
     def set_tool_route(self, route_map, tool):
         tool_id = tool.get_id()
         resource_id = self.get_id()
@@ -23,8 +24,7 @@ class PackagesResource(Resource):
 
         if tool.is_default():
             route_map.connect(self.url(resource_id), 
-                              contoller = controller_id,
-                              resource = resource_id)
+                              contoller = controller_id)
 
         r = self._route_cat(self.url(resource_id),
                             ':package',
@@ -32,7 +32,6 @@ class PackagesResource(Resource):
 
         route_map.connect(r, 
                           controller=self._namespace_id(tool.get_id()), 
-                          package='_all',
-                          resource=resource_id)
+                          package='_all')
 
         return controller_id

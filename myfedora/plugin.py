@@ -1,3 +1,5 @@
+import os
+import genshi.template.plugin
 import turbogears
 from turbogears import controllers
 
@@ -164,6 +166,23 @@ class Resource(object):
                               # display
         self._icon = None # if an icon is present it can be used in the web page
 
+        self._template_engine = genshi.template.plugin.MarkupTemplateEnginePlugin()
+
+        main_module = self.__module__.rsplit('.', 1)[0]
+
+        self._template_namespace =main_module + ".templates"
+        self._master_template = None 
+
+    def get_master_template(self):
+        """Returns -- the fully qualified master template for this resourcei
+                      or None if not set
+        """
+        if self._master_template:
+            file = self._template_engine.load_template(self._master_template).filename
+            return file
+
+        return None
+
     def get_display_name(self):
         """Returns -- the display name for output in a web page"""
         return self._display_name
@@ -272,6 +291,37 @@ class Resource(object):
             icon_url -- a relitive or complete URL to the icon
         """
         self._icon_url = icon_url
+
+    def set_master_template(self, name):
+        """Set's the master template which can be used by tools to show
+        a unified UI for the resource
+
+        Parameters:
+        
+            name - the name of the template relitive to the resource's 
+                   template directory
+             
+        """
+        self._master_template = self._template_namespace + "." + name
+
+
+    def get_template_globals(self, *args, **kwargs):
+        """Method that can be over ridden to provide various data to the 
+        tool's template
+
+        Standard data:
+
+            resource -- this object
+
+        Parameters:
+
+            args -- all the arguments passed to the tool's controller which
+
+            kwargs -- all the keyword arguments sent to the tool's controller
+
+        Returns -- a hash of data
+        """
+        return {'resource': self}
 
     def set_tool_route(self, mapper, tool):
         """Pure virtual method that needs to be overridden by the derived class
