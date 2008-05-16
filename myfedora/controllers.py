@@ -2,6 +2,7 @@ import os
 import re
 import logging
 import feedparser
+import sys
 
 from testcontroller import TestController
 from packagecontroller import PackageController
@@ -25,6 +26,7 @@ from routes import *
 
 from myfedora.plugin import Resource, Tool
 
+# route mapper
 m = Mapper()
 
 log = logging.getLogger("myfedora.controllers")
@@ -224,10 +226,17 @@ class Root(controllers.RootController):
         """Dynamically import resources in the resources directory"""
         self.resources = {}
 
-        files = os.listdir(os.path.join('myfedora', 'resources'))
-        for f in files:
-            if f.endswith('.py'):
-                __import__("myfedora.resources." + f[:-3],None,None,[],0)
+        resource_dir = os.path.join('myfedora', 'resources')
+        top_dirlist = os.listdir(resource_dir)
+        for td in top_dirlist:
+            plugin_resource_dir = os.path.join(resource_dir, td)
+            if os.path.isdir(plugin_resource_dir):
+                resource_dirlist = os.listdir(plugin_resource_dir)
+                for f in resource_dirlist:
+                    if f.endswith('.py'):
+                        __import__("myfedora.resources." + td + '.' + f[:-3],
+                                   None,
+                                   None,[],0)
 
         classes = Resource.__subclasses__()
 
@@ -271,7 +280,6 @@ class Root(controllers.RootController):
 
     def _register_routes(self):
         for resource in self.resources.values():
-            print resource.get_id()
             
             for tool in resource.get_tool_list():
                 controller_key = resource.set_tool_route(m, tool)
@@ -370,7 +378,6 @@ class Root(controllers.RootController):
             except AttributeError:
                 raise NotFound( path )
             kwargs.update( con.mapper_dict )
-            
             return meth( **kwargs )
 
         raise NotFound( path )

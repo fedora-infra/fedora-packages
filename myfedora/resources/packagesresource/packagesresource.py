@@ -16,15 +16,23 @@ class PackagesResource(Resource):
                                 name which can be used to query various data
                                 sources for information relevant to the tool
                                 ''')
-    def register_tool_route(self, route_map, tool):
-        if tool.is_default():
-            route_map.connect(self.url(self.get_id()), 
-                              contoller = self._namespace_id(tool.get_id()))
+    def set_tool_route(self, route_map, tool):
+        tool_id = tool.get_id()
+        resource_id = self.get_id()
+        controller_id = self._namespace_id(tool_id)
 
-        r = self._route_cat(self.url(self.get_id()),
+        if tool.is_default():
+            route_map.connect(self.url(resource_id), 
+                              contoller = controller_id,
+                              resource = resource_id)
+
+        r = self._route_cat(self.url(resource_id),
                             ':package',
-                            tool.get_id())
+                            tool_id)
 
         route_map.connect(r, 
                           controller=self._namespace_id(tool.get_id()), 
-                          package='_all')
+                          package='_all',
+                          resource=resource_id)
+
+        return controller_id
