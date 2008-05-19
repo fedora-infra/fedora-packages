@@ -214,9 +214,24 @@ class Resource(object):
     
         return True
 
-    def get_tool_url(self, tool):
-        """Returns -- the tg url sanitized link to the requested tool"""
-        return turbogears.url('/' + self.get_id() + '/' + tool)
+    def get_tool_url(self, tool, data=None):
+        """gets the tg url sanitized link to the requested tool
+        
+        Parameters:
+            
+            tool -- the tool's id we wish to link to
+            data -- the data pointer for data we are working on
+
+        Returns -- the tg url sanitized link to the requested tool
+        """
+
+        url = '/' + self.get_id()
+        if data:
+            url += '/' + data
+
+        url += '/' + tool
+
+        return turbogears.url(url)
 
     def get_tool_list(self):
         """Returns -- a user ordered list of registered tools. 
