@@ -17,6 +17,23 @@ class PackagesResource(Resource):
                                 sources for information relevant to the tool
                                 ''')
 
+        self.set_master_template("master")
+
+    def get_template_globals(self, package, **kwargs):
+        result = Resource.get_template_globals(self)
+        dict = {}
+
+        tool_list = self.get_tool_list()
+
+        resource_urls = []
+        for tool in tool_list:
+            resource_urls.append((self.get_tool_url(tool.get_id(), package), 
+                                  tool.get_display_name())) 
+
+        result.update({'resource_urls': resource_urls,
+                       'package': package})
+        return result
+
     def set_tool_route(self, route_map, tool):
         tool_id = tool.get_id()
         resource_id = self.get_id()
