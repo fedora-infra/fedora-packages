@@ -21,20 +21,18 @@ m = Mapper()
 log = logging.getLogger("myfedora.controllers")
 
 class Root(controllers.RootController):
+    search = SearchController()
+    mfquery = QueryController()
+
     def __init__(self):
         self.base_re = re.compile( r'^(?P<protocol>[a-zA-Z]+)://(?P<host>.*)' )
         
         # Change the controllers here to the controllers in your app:
         self.controllers = {
-              'main': self,
-              'search': SearchController(),
-              'mfquery': QueryController()
+              'main': self
             }
         
         # Here you need to add your own routes (http://routes.groovie.org/manual.html)
-        m.connect('search/', controller='search')
-        m.connect('mfquery/', contoller='mfquery') 
-      
         self._register_resources()
         self._register_tools()
         self._register_tool_routes()
