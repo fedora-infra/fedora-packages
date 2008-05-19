@@ -1,8 +1,13 @@
 import os
+import sys
 import genshi.template.plugin
 import cherrypy
 import turbogears
 from turbogears import controllers
+
+# to be used by module for figuring out template locations
+_template_engine = genshi.template.plugin.MarkupTemplateEnginePlugin()
+
 
 class ToolLoadException(Exception):
     pass
@@ -130,7 +135,28 @@ class Tool(controllers.Controller):
             is_active -- enables or disables this tool
         """
         self._is_active = is_active
-    
+
+    @classmethod
+    def local_template(cls, template_name):
+        """Transforms the template_name into a fully qualified file path
+        for refrencing templates within the local template directory
+
+        Parameters:
+
+            template_name -- the local template name 
+                             (without the file extention)
+            
+        Returns -- a fully qualified path to the template
+        """
+
+        # use a traceback hack to find the calling file
+        # we are always local to the calling file
+        f = sys._getframe(1)
+
+        dir = os.path.dirname(f.f_code.co_filename)
+
+        file = os.path.join(dir, 'templates', template_name) 
+        
 class Resource(object):
     """
     This is the starting point for MyFedora plugins. A resource is any abstract 
@@ -167,11 +193,9 @@ class Resource(object):
                               # display
         self._icon = None # if an icon is present it can be used in the web page
 
-        self._template_engine = genshi.template.plugin.MarkupTemplateEnginePlugin()
-
         main_module = self.__module__.rsplit('.', 1)[0]
 
-        self._template_namespace =main_module + ".templates"
+        self._template_namespace = main_module + ".templates"
         self._master_template = None 
 
     def get_master_template(self):
@@ -179,7 +203,7 @@ class Resource(object):
                       or None if not set
         """
         if self._master_template:
-            file = self._template_engine.load_template(self._master_template).filename
+            file = _template_engine.load_template(self._master_template).filename
             return file
 
         return None
