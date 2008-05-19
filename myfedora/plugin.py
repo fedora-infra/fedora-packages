@@ -155,8 +155,14 @@ class Tool(controllers.Controller):
 
         dir = os.path.dirname(f.f_code.co_filename)
 
-        file = os.path.join(dir, 'templates', template_name) 
-        
+        # FIXME: we need to add the .html but genshi has config options to 
+        #        set the file extention which is expected
+        # FIXME: deal with templates in sub directories by swapping period
+        #        delimiters for file delimiters 
+        file = os.path.join(dir, 'templates', template_name + '.html') 
+       
+        return file
+         
 class Resource(object):
     """
     This is the starting point for MyFedora plugins. A resource is any abstract 

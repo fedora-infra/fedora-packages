@@ -28,14 +28,14 @@ class BuildsTool(Tool):
 
         delta = end - start
 
-        if delta.days < 1 and start.tm_mday == end.tm_mday:
+        if delta.days < 1 and start.day == end.day:
             datetimestr += "Today "
         elif delta.days < 7:
             datetimestr += datetime.strftime(start, "%a ")  
         else:
             datetimestr += datetime.strftime(start, "%b %d ")
-            #if start.tm_year != end.tm_year:
-            #    datetimestr += str(start.tm_year)
+            if start.year != end.year:
+                datetimestr += str(start.year)
 
         datetimestr +=  datetime.strftime(start,"%H:%M")
 
@@ -116,7 +116,7 @@ class BuildsTool(Tool):
             src = 'http://koji.fedoraproject.org/koji-static/images/building.png'
         return src
 
-    @expose(Tool.local_template('builds'))
+    @expose('myfedora.tools.buildtool.templates.builds')
     def index(self, package, **kw):
         dict = self.get_parent_resource().get_template_globals(package)
 
@@ -176,7 +176,7 @@ class BuildsTool(Tool):
         dict['previous_disabled'] = 'disabled'
         if self.offset != 0:
             dict['previous_disabled'] = ''
-        
+       
         return dict 
 
     @expose('myfedora.tools.buildtool.templates.builds')
