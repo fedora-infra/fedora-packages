@@ -37,7 +37,7 @@ class Root(controllers.RootController):
       
         self._register_resources()
         self._register_tools()
-        self._register_routes()
+        self._register_tool_routes()
          
         m.create_regs(self.controllers.keys())
         
@@ -97,7 +97,7 @@ class Root(controllers.RootController):
                     r.register_tool(c)
                     
 
-    def _register_routes(self):
+    def _register_tool_routes(self):
         for resource in self.resources.values():
             
             for tool in resource.get_tool_list():
