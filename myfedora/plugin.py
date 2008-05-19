@@ -1,5 +1,6 @@
 import os
 import genshi.template.plugin
+import cherrypy
 import turbogears
 from turbogears import controllers
 
@@ -213,6 +214,10 @@ class Resource(object):
     
         return True
 
+    def get_tool_url(self, tool):
+        """Returns -- the tg url sanitized link to the requested tool"""
+        return turbogears.url('/' + self.get_id() + '/' + tool)
+
     def get_tool_list(self):
         """Returns -- a user ordered list of registered tools. 
         Tools not given an order by the user are ordered alphabetically 
@@ -311,7 +316,8 @@ class Resource(object):
 
         Standard data:
 
-            resource -- this object
+            myfedora.resource -- this object
+            myfedora.current_url -- your current url
 
         Parameters:
 
@@ -321,7 +327,11 @@ class Resource(object):
 
         Returns -- a hash of data
         """
-        return {'resource': self}
+        return {'myfedora' :
+                 {'resource': self,
+                  'current_url': cherrypy.request.path
+                 }
+               }
 
     def set_tool_route(self, mapper, tool):
         """Pure virtual method that needs to be overridden by the derived class
