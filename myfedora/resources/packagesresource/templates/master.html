@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude" py:strip="True">
-<xi:include href="../master.html"/>
+<xi:include href="../../../templates/master.html"/>
 
 <head>
   <title py:if="package" py:match="title">My Fedora Packages - ${package} - ${select('*|text()')}</title>
@@ -11,7 +11,7 @@
 <div py:match="div[@class='content']" py:attrs="select('@*')">
   <div id="tabfloat">
     <ul id="primary-links">
-      <span py:if="package" py:for="r in resource_urls"><li><a href="${tg.url(package_url + '/' + r)}">${r}</a></li> </span>
+      <span py:if="package" py:for="r in resource_urls"><li><a href="${r[0]}">${r[1]}</a></li> </span>
       <span py:if="not package" py:for="r in resource_urls"><li><a href="${tg.url(r)}">${r}</a></li> </span>
 
     </ul>

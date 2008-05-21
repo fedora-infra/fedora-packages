@@ -1,13 +1,24 @@
-from route import Route
 from myfedora.urlhandler import KojiURLHandler
+from myfedora.plugin import Tool
+from turbogears import expose
+
+
 from datetime import datetime
 import koji
 import cherrypy
 
 
-class BuildsRoute(Route):
-    def __init__(self):
-        Route.__init__(self, "myfedora.templates.packages.builds")
+class BuildsTool(Tool):
+    def __init__(self, parent_resource):
+        Tool.__init__(self, parent_resource,
+                            'Builds',
+                            'builds',
+                            'Shows the current builds',
+                            '''The build tool allows you to look at
+                               and manipulate build data
+                            ''',
+                            ['packages', 'people'],
+                            [])
 
         self.offset = 0 
         self.limit = 10
@@ -17,9 +28,6 @@ class BuildsRoute(Route):
 
         delta = end - start
 
-        end = end
-        start = start
-
         if delta.days < 1 and start.day == end.day:
             datetimestr += "Today "
         elif delta.days < 7:
@@ -27,7 +35,7 @@ class BuildsRoute(Route):
         else:
             datetimestr += datetime.strftime(start, "%b %d ")
             if start.year != end.year:
-                datetimestr += str(start.tm_year)
+                datetimestr += str(start.year)
 
         datetimestr +=  datetime.strftime(start,"%H:%M")
 
@@ -108,19 +116,41 @@ class BuildsRoute(Route):
             src = 'http://koji.fedoraproject.org/koji-static/images/building.png'
         return src
 
-    def index(self, dict, package, **kw):
+    @expose('myfedora.tools.buildtool.templates.builds')
+    def index(self, **kw):
+        resource = self.get_parent_resource()
+        person = None
+        package = None
+        data = None
+        if resource.get_id() == 'people':
+            data = kw['person']
+            person = data
+        elif resource.get_id() == 'packages':
+            data = kw['package']
+            package = data
+
+        dict = self.get_parent_resource().get_template_globals(data)
+
         cs = koji.ClientSession(KojiURLHandler().get_xml_rpc_url())
         
         pkg_id = None
         if (package):
             pkg_id = cs.getPackageID(package)
 
+        user_id = None
+        if (person):
+            user_id = cs.getUser(person)['id']
+
         # always add 1 to the limit so we know if there should be another page 
         queryOpts = {'offset': self.offset, 
                      'limit': self.limit + 1, 
                      'order': '-creation_time'}
 
-        builds_list = cs.listBuilds(packageID=pkg_id, queryOpts=queryOpts)
+       
+        print user_id 
+        builds_list = cs.listBuilds(packageID=pkg_id, 
+                                    userID=user_id, 
+                                    queryOpts=queryOpts)
 
         list_count = len(builds_list)
 
@@ -165,11 +195,13 @@ class BuildsRoute(Route):
         dict['previous_disabled'] = 'disabled'
         if self.offset != 0:
             dict['previous_disabled'] = ''
-        
-
+       
         return dict 
 
-    def default(self, dict, package, *args, **kw):
+    @expose('myfedora.tools.buildtool.templates.builds')
+    def default(self, package, *args, **kw):
+        dict = get_parent_resource().get_template_globals(package)        
+
         dict['tg_template'] = self.get_default_template()
         dict['current_url'] = cherrypy.request.path
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
-<xi:include href="chrome.html"/>
+<xi:include href="${myfedora.resource.get_master_template()}"/>
 <head>
 <title>Builds</title>
   <script src="${tg.url('/static/js/jquery.js')}" type="text/javascript"></script>
@@ -253,7 +253,7 @@
   <div id="mf_overlay" style="opacity:0; zindex:-1"/>
   <div id="resource_content">
      <!-- TODO: CSS -->
-     <form name="builds_navigation_form" action="${current_url}">
+     <form name="builds_navigation_form" action="${myfedora.current_url}">
        <a onClick="document.builds_navigation_form.direction.value='prev'; document.builds_navigation_form.submit()" href="#" py:if="previous_disabled != 'disabled'">&lt;-- prev </a>
        <a onClick="document.builds_navigation_form.direction.value='next'; document.builds_navigation_form.submit()" href="#" py:if="next_disabled != 'disabled'">next --&gt; </a>
        <input type="hidden" name="offset" value="${offset}" />
@@ -307,7 +307,7 @@
                        };
                      </script>
 
-                    <li py:if="build_state == '1'" py:with="dl_base_url='http://koji.fedoraproject.org/packages/' + package + '/' + build['version'] + '/' + build['release']">
+                    <li py:if="build_state == '1'" >
                       Downloads<br/>
                           <img src="/static/images/spinner-20.gif" />
                     </li>
