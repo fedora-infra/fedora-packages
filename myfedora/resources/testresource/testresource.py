@@ -15,7 +15,22 @@ class TestResource(Resource):
 
     def get_template_globals(self, *args, **kwargs):
         result = Resource.get_template_globals(self, *args, **kwargs)
-        result.update({'resource_name': self.get_id()})
+       
+        data = kwargs.get('data', '')
+        
+        # get the list of registered tools to send to the template
+        tool_list = self.get_tool_list()
+
+        tool_urls = []
+        for tool in tool_list:
+            tool_urls.append((self.get_tool_url(tool.get_id(), data),
+                              tool.get_display_name()))
+
+        # set some global data the template can use
+        result.update({'tool_urls': tool_urls,
+                       'resource_name': self.get_id()
+                      })
+
         return result
 
     def set_tool_route(self, route_map, tool):

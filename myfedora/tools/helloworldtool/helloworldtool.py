@@ -16,5 +16,5 @@ class HelloWorldTool(Tool):
     def default(self, data=''):
         result = self.get_parent_resource().get_template_globals()
        
-        result.update({'tool_name': data}) 
+        result.update({'data': data}) 
         return result
