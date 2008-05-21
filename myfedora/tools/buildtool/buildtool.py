@@ -17,7 +17,7 @@ class BuildsTool(Tool):
                             '''The build tool allows you to look at
                                and manipulate build data
                             ''',
-                            ['packages'],
+                            ['packages', 'people'],
                             [])
 
         self.offset = 0 
@@ -117,8 +117,19 @@ class BuildsTool(Tool):
         return src
 
     @expose('myfedora.tools.buildtool.templates.builds')
-    def index(self, package, **kw):
-        dict = self.get_parent_resource().get_template_globals(package)
+    def index(self, **kw):
+        resource = self.get_parent_resource()
+        person = None
+        package = None
+        data = None
+        if resource.get_id() == 'people':
+            data = kw['person']
+            person = data
+        elif resource.get_id() == 'packages':
+            data = kw['package']
+            package = data
+
+        dict = self.get_parent_resource().get_template_globals(data)
 
         cs = koji.ClientSession(KojiURLHandler().get_xml_rpc_url())
         
@@ -126,12 +137,20 @@ class BuildsTool(Tool):
         if (package):
             pkg_id = cs.getPackageID(package)
 
+        user_id = None
+        if (person):
+            user_id = cs.getUser(person)['id']
+
         # always add 1 to the limit so we know if there should be another page 
         queryOpts = {'offset': self.offset, 
                      'limit': self.limit + 1, 
                      'order': '-creation_time'}
 
-        builds_list = cs.listBuilds(packageID=pkg_id, queryOpts=queryOpts)
+       
+        print user_id 
+        builds_list = cs.listBuilds(packageID=pkg_id, 
+                                    userID=user_id, 
+                                    queryOpts=queryOpts)
 
         list_count = len(builds_list)
 
