@@ -12,7 +12,7 @@ _template_engine = genshi.template.plugin.MarkupTemplateEnginePlugin()
 class ToolLoadException(Exception):
     pass
 
-class Tool(controllers.Controller):
+class Tool(controllers.RootController):
     """
     A tool is a web app for viewing or manipulating data.  For example Builds
     would be a tool for the package resource.  Tools are implemented as self

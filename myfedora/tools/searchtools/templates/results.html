@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:py="http://genshi.edgewall.org/"
+  py:strip="">
+<xi:include href="${myfedora.resource.get_master_template()}"/>
+
+<head>
+<title>Search Results for ${search_string}</title>
+</head>
+<body>
+You searched for $search_string
+<p>
+Results:
+
+<ul class="search_results">
+   <li py:for="r in search_results">
+     <div class='search_header'><a href="${r['url']}">${r['header']}</a></div>
+      <ul>
+         <li py:for="item in r['items']">
+           <a href="${item['url']}">${item['name']}</a> - ${item['summary']}
+         </li>
+
+         <li py:if="r.get('iframe_url', None)">
+           <iframe src="${r['iframe_url']}" width="100%"/>
+         </li>
+      </ul>
+   </li>
+</ul>
+</p>
+</body>
+</html>

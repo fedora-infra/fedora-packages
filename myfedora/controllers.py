@@ -3,7 +3,7 @@ import re
 import logging
 import sys
 
-from searchcontroller import SearchController
+#from searchcontroller import SearchController
 from mfquery.querycontroller import QueryController
 
 from datetime import timedelta, datetime
@@ -21,7 +21,7 @@ m = Mapper()
 log = logging.getLogger("myfedora.controllers")
 
 class Root(controllers.RootController):
-    search = SearchController()
+    #search = SearchController()
     mfquery = QueryController()
 
     def __init__(self):
@@ -184,18 +184,36 @@ class Root(controllers.RootController):
         con.host = host
         con.protocol = proto
         con.redirect = self.redirect
+
         con.mapper_dict = m.match( path )
+
+        action = None
+        send_args = []
+       
+        while (con.mapper_dict == None) and path != None:
+            split_path = os.path.split(path)
+
+            if action:
+                send_args.insert(0, action)
+
+            action = split_path[1]
+            
+            path = split_path[0]
+            con.mapper_dict = m.match( path )
+            
+            if con.mapper_dict:
+                con.mapper_dict['action'] = os.path.splitext(action)[0]
 
         if con.mapper_dict:
             c = con.mapper_dict.pop( 'controller' )
             controller = self.controllers[c]
             action = con.mapper_dict.pop( 'action', 'index' )
             try:
-                meth = getattr(controller, action, getattr(controller, 'default'))
+                meth = getattr(controller, action, getattr(controller, 'default', None))
             except AttributeError:
                 raise NotFound( path )
             kwargs.update( con.mapper_dict )
-            return meth( **kwargs )
+            return meth( *send_args, **kwargs )
 
         raise NotFound( path )
 
