@@ -11,9 +11,7 @@
 <div py:match="div[@class='content']" py:attrs="select('@*')">
   <div id="tabfloat">
     <ul id="primary-links">
-      <span py:if="package" py:for="r in resource_urls"><li><a href="${r[0]}">${r[1]}</a></li> </span>
-      <span py:if="not package" py:for="r in resource_urls"><li><a href="${tg.url(r)}">${r}</a></li> </span>
-
+      <span py:if="package" py:for="t in tool_urls"><li><a href="${t[0]}">${t[1]}</a></li> </span>
     </ul>
   </div>
     <h2 py:if="package">Package ${package}</h2>
