@@ -26,12 +26,12 @@ class PeopleResource(Resource):
 
         tool_list = self.get_tool_list()
 
-        resource_urls = []
+        tool_urls = []
         for tool in tool_list:
-            resource_urls.append((self.get_tool_url(tool.get_id(), person), 
-                                  tool.get_display_name())) 
+            tool_urls.append((self.get_tool_url(tool.get_id(), person), 
+                              tool.get_display_name())) 
 
-        result.update({'resource_urls': resource_urls,
+        result.update({'tool_urls': tool_urls,
                        'person': person})
         return result
 
@@ -49,7 +49,7 @@ class PeopleResource(Resource):
                             tool_id)
 
         route_map.connect(r, 
-                          controller=self._namespace_id(tool.get_id()), 
+                          controller=controller_id, 
                           person='_all')
 
         return controller_id

@@ -25,12 +25,12 @@ class PackagesResource(Resource):
 
         tool_list = self.get_tool_list()
 
-        resource_urls = []
+        tool_urls = []
         for tool in tool_list:
-            resource_urls.append((self.get_tool_url(tool.get_id(), package), 
-                                  tool.get_display_name())) 
+            tool_urls.append((self.get_tool_url(tool.get_id(), package), 
+                              tool.get_display_name())) 
 
-        result.update({'resource_urls': resource_urls,
+        result.update({'tool_urls': tool_urls,
                        'package': package})
         return result
 
@@ -48,7 +48,7 @@ class PackagesResource(Resource):
                             tool_id)
 
         route_map.connect(r, 
-                          controller=self._namespace_id(tool.get_id()), 
+                          controller=controller_id, 
                           package='_all')
 
         return controller_id

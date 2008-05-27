@@ -244,6 +244,24 @@ class Resource(object):
     
         return True
 
+    def cat_tool_url(self, *args):
+        """creates a tg url santized link by concatinating the base URL
+        for the resource to the string args
+        
+        Paramerters:
+            
+            *args -- a list of strings to be concatinated as elements in a path
+
+        Returns -- the tg url sanitized link of all the concatinated elements
+        """
+
+        url = '/' + self.get_id()
+
+        for a in args:
+            url += '/' + a
+
+        return turbogears.url(url)
+     
     def get_tool_url(self, tool, data=None):
         """gets the tg url sanitized link to the requested tool
         
@@ -254,14 +272,14 @@ class Resource(object):
 
         Returns -- the tg url sanitized link to the requested tool
         """
-
-        url = '/' + self.get_id()
+        
+        elements = []
         if data:
-            url += '/' + data
+            elements.append(data)
 
-        url += '/' + tool
+        elements.append(tool)
 
-        return turbogears.url(url)
+        return self.cat_tool_url(*elements)
 
     def get_tool_list(self):
         """Returns -- a user ordered list of registered tools. 
