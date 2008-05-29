@@ -1,6 +1,9 @@
 import os
 import logging
 import feedparser
+import re 
+
+from datetime import timedelta, datetime
 
 from turbogears import controllers, expose, flash, url
 from turbogears import identity, redirect
@@ -14,6 +17,7 @@ from myfedora.model import WidgetConfig
 from sqlobject import SQLObjectNotFound
 from sqlobject.dberrors import *
 
+log = logging.getLogger("myfedora.controllers")
 
 urlDataMap = {}
 LEFT, MIDDLE, RIGHT = range(3)
