@@ -40,15 +40,16 @@ class PackagesResource(Resource):
         controller_id = self._namespace_id(tool_id)
 
         if tool.is_default():
-            route_map.connect(self.url(resource_id), 
-                              contoller = controller_id)
+            r = self._route_cat(self.url(resource_id),
+                            ':package')
+            route_map.connect(r, 
+                              controller = controller_id,
+                              package='_none')
 
         r = self._route_cat(self.url(resource_id),
-                            ':package',
+                            ':(package)',
                             tool_id)
-
         route_map.connect(r, 
-                          controller=controller_id, 
-                          package='_all')
+                          controller=controller_id)
 
         return controller_id
