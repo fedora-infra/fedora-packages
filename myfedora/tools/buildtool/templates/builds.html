@@ -316,7 +316,9 @@
               </div>
             </div> 
           </td>
-          <td>${str(build['owner_name'])}</td>
+          <td py:with="user = str(build['owner_name'])">
+               <a href="${tg.url('/people/' + user + '/builds')}">${user}</a>
+          </td>
           <td>${str(build['creation_time'])}</td>
           <td>${str(build['completion_time'])}</td>
           <td><img src="${tg.url(str(build['mf_state_img']))}" /></td>
