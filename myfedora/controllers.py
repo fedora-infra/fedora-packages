@@ -12,13 +12,14 @@ from turbogears import identity, redirect
 from cherrypy import request, response, HTTPRedirect, NotFound
 
 from routes import *
+from widgets import *
 
 from myfedora.plugin import Resource, Tool
 
 # route mapper
 m = Mapper()
 
-log = logging.getLogger("myfedora.controllers")
+log = logging.getLogger("myfedora")
 
 class Root(controllers.RootController):
     #search = SearchController()
@@ -51,7 +52,9 @@ class Root(controllers.RootController):
                 resource_dirlist = os.listdir(plugin_resource_dir)
                 for f in resource_dirlist:
                     if f.endswith('.py'):
-                        __import__("myfedora.resources." + td + '.' + f[:-3],
+                        module_name = 'myfedora.resources.' + td + '.' + f[:-3]
+                        log.debug('Importing resource module ' +  module_name)
+                        __import__(module_name,
                                    None,
                                    None,[],0)
 
@@ -59,6 +62,7 @@ class Root(controllers.RootController):
 
         for c in classes:
             r = c()
+            log.debug('Registering resource "' + r.get_display_name() + '" from class ' + str(c)) 
             self.resources[r.get_id()] = r
 
     def _register_tools(self):
@@ -73,7 +77,9 @@ class Root(controllers.RootController):
                 tool_files = os.listdir(plugin_tool_dir)
                 for f in tool_files:
                     if f.endswith('.py'):
-                        __import__("myfedora.tools." + tf + '.' + f[:-3],
+                        module_name = 'myfedora.tools.' + tf + '.' + f[:-3]
+                        log.debug('Importing tool module ' + module_name) 
+                        __import__(module_name,
                                    None,None,[],0)
 
         classes = Tool.__subclasses__()
@@ -92,12 +98,12 @@ class Root(controllers.RootController):
                     # pass in the class so that the resource can instantiate 
                     # its own instance of the tool
                     r = self.resources[id]
+                    log.debug('Registering tool "' + t.get_display_name() + '" from class ' + str(c) + ' with Resource "' + r.get_display_name() + '"')
                     r.register_tool(c)
                     
 
     def _register_tool_routes(self):
         for resource in self.resources.values():
-            
             for tool in resource.get_tool_list():
                 controller_key = resource.set_tool_route(m, tool)
                 self.controllers[controller_key] = tool
@@ -185,12 +191,13 @@ class Root(controllers.RootController):
         con.protocol = proto
         con.redirect = self.redirect
 
+        log.debug('Matching path ' + path)
         con.mapper_dict = m.match( path )
 
         action = None
         send_args = []
        
-        while (con.mapper_dict == None) and path != None:
+        while (con.mapper_dict == None) and path != '/' and path != None:
             split_path = os.path.split(path)
 
             if action:
@@ -199,6 +206,7 @@ class Root(controllers.RootController):
             action = split_path[1]
             
             path = split_path[0]
+            log.debug('Path not found.  Reducing match to ' + path)
             con.mapper_dict = m.match( path )
             
             if con.mapper_dict:
@@ -206,14 +214,21 @@ class Root(controllers.RootController):
 
         if con.mapper_dict:
             c = con.mapper_dict.pop( 'controller' )
+
+            log.debug('Searching for controller id ' + c + '...')
             controller = self.controllers[c]
+            log.debug('...controller found')
             action = con.mapper_dict.pop( 'action', 'index' )
             try:
                 meth = getattr(controller, action, getattr(controller, 'default', None))
             except AttributeError:
                 raise NotFound( path )
             kwargs.update( con.mapper_dict )
-            return meth( *send_args, **kwargs )
+
+            log.debug('Calling ' + str(meth) + ' with paramteters ' + str(args) + ' and keywords ' + str(kwargs))
+            results = meth( *send_args, **kwargs )
+            log.debug('Returning ' + results[:40] + '...')
+            return results
 
         raise NotFound( path )
 
