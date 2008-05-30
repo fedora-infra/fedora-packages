@@ -4,10 +4,20 @@
       xmlns:xi="http://www.w3.org/2001/XInclude"> 
 
 <xi:include href="${myfedora.resource.get_master_template()}"/>
-<body> 
+<body>
+  ${package_data['summary']}
+ 
   <h3>Description:</h3>
    
-  ${data.packageListings[0].package.description}
+  ${package_data['description']}
+
+  <h3>Collections:</h3>
+  <ul>
+    <li py:for="c in package_data['collection_list']">
+      <b>${c['fullname']}</b> - <a href="${tg.url('/people/' + c['package_owner_id'])}">${c['package_owner_name']}</a>
+
+   </li>
+  </ul>
 </body>
 </html>
 
