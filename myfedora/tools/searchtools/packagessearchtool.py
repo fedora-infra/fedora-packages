@@ -96,7 +96,7 @@ class PackageSearchTool(Tool):
         # FIXME: we can optimize above so we don't have to do this
         for pkg in weighted_pkg_list:
             item = {'name': pkg[0],
-                    'url': self.get_parent_resource().url('/package/' + pkg[0]),
+                    'url': self.get_parent_resource().url('/packages/' + pkg[0]),
                     'summary': '' }# none for now
             pkg_list.append(item)
 
