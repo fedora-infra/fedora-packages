@@ -1,5 +1,6 @@
-This file is for you to describe the myfedora application. Typically
-you would include information such as the information below:
+TurboGears2 Installation
+========================
+http://turbogears.org/2.0/docs/main/DownloadInstall.html
 
 Installation and Setup
 ======================
