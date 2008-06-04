@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:py="http://genshi.edgewall.org/"
+  py:strip="">
+  <xi:include href="master.html" />
+  <head/>
+
+  <div class="widget RSSWidget" py:attrs="{'id': widgetId}">
+    <h2>${title}</h2>
+    <script src="http://localhost:8000/_/orbited.js" charset="utf-8" type="text/javascript"/>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript">
+var ie_nocache = 1;
+
+create_xhr = function() {
+  return window.ActiveXObject ?
+                new ActiveXObject("Microsoft.XMLHTTP") :
+                new XMLHttpRequest();
+}
+
+feed_event = function(data) {
+  $.each(data, function(i, entry){
+    $("<div/>").hide().append(
+      $("<img/>").attr("src", entry["image"])
+        .attr("height", "32").attr("width", "32")
+      ).append(
+        $("<a/>").attr("href", entry["link"]).text(entry["title"])
+      ).prependTo("#data").slideDown();
+  });
+}
+
+connect = function() {
+  Orbited.connect(feed_event, 'bobvila', "/feed/fedorapeople", "0");
+  var xhr = create_xhr();
+  xhr.open("GET", "/join?feed=" + 'fedorapeople', true);
+  xhr.send(null);
+}
+
+$(document).ready(function(){
+    connect();
+});
+    </script>
+  <div id="data" class="data">Data goes here</div>
+  </div>
+</html>
