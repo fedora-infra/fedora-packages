@@ -31,9 +31,6 @@ from myfedora.lib.base import BaseController
 
 log = logging.Logger(__name__)
 
-# How do we keep track of what widgets a user is looking at?
-# - pull it from our WSGI environ!
-#   meaning we need something to put it there (sessions?)
 
 class RootController(BaseController):
 
