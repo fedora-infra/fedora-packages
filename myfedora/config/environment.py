@@ -18,12 +18,12 @@ def template_loaded(template):
     "Plug-in our i18n function to Genshi."
     template.filters.insert(0, Translator(ugettext))
 
-def load_widgets(widgets):
+def load_widgets():
     print "Loading Widgets"
     for widget in pkg_resources.iter_entry_points('myfedora.widgets'):
-        if not widgets.has_key(widget.name):
-            widgets[widget.name] = widget.load()()
-            print widgets[widget.name]
+        if not config['pylons.app_globals'].widgets.has_key(widget.name):
+            config['pylons.app_globals'].widgets[widget.name] = widget.load()()
+            print config['pylons.app_globals'].widgets[widget.name]
 
 def load_environment(global_conf, app_conf):
     """Configure the Pylons environment via the ``pylons.config``
@@ -49,7 +49,7 @@ def load_environment(global_conf, app_conf):
     #config['pylons.h'] = myfedora.lib.helpers
 
     # Load widgets from the myfedora.widgets entry point
-    load_widgets(config['pylons.app_globals'].widgets)
+    load_widgets()
 
     # Start our DataStreamer thread
     config['pylons.app_globals'].datastreamer.start()
