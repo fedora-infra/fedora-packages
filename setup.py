@@ -34,8 +34,15 @@ setup(
     [paste.app_install]
     main = pylons.util:PylonsInstaller
 
-    [myfedora.plugins]
-    package = myfedora.plugins.package:PackageController
+    [myfedora.plugins.views]
+    packages = myfedora.plugins.views.packages:PackagesViewController
+    people = myfedora.plugins.views.people:PeopleViewController
+
+    [myfedora.plugins.views.packages.tools]
+    build = myfedora.plugins.tools.build:BuildToolWidget
+
+    [myfedora.plugins.views.people.tools]
+    build = myfedora.plugins.tools.build:BuildToolWidget
 
     [myfedora.widgets]
     fedorapeople = myfedora.widgets:FedoraPeopleWidget

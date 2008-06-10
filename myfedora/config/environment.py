@@ -26,6 +26,14 @@ def load_widgets():
                     widget.load()(widget.name)
             print config['pylons.app_globals'].widgets[widget.name]
 
+def load_views():
+    print "Loading MyFedora views"
+    for view in pkg_resources.iter_entry_points('myfedora.plugins.views'):
+        if not config['pylons.app_globals'].views.has_key(view.name):
+            config['pylons.app_globals'].views[view.name] = view.load()()
+            print config['pylons.app_globals'].views[view.name]
+
+
 def load_environment(global_conf, app_conf):
     """Configure the Pylons environment via the ``pylons.config``
     object
@@ -51,6 +59,9 @@ def load_environment(global_conf, app_conf):
 
     # Load widgets from the myfedora.widgets entry point
     load_widgets()
+
+    # Load myfedora's View/Tool infrastructure
+    load_views()
 
     # Start our DataStreamer thread
     config['pylons.app_globals'].datastreamer.start()
