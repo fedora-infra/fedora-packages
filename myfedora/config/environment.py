@@ -22,7 +22,8 @@ def load_widgets():
     print "Loading Widgets"
     for widget in pkg_resources.iter_entry_points('myfedora.widgets'):
         if not config['pylons.app_globals'].widgets.has_key(widget.name):
-            config['pylons.app_globals'].widgets[widget.name] = widget.load()()
+            config['pylons.app_globals'].widgets[widget.name] = \
+                    widget.load()(widget.name)
             print config['pylons.app_globals'].widgets[widget.name]
 
 def load_environment(global_conf, app_conf):
