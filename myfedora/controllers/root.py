@@ -47,16 +47,6 @@ class RootController(BaseController):
 
     @expose('myfedora.templates.index')
     def index(self):
-        # Figure out what widgets we need to show
-        # Add them to the pylons.tmpl_context.w
-        # Get the data to populate them
-        #  - from where ?
-        #   Depending on the type of widget, maybe here, or maybe the widget
-        #   is self-populating (comet, etc).
-        #    Widgets need a data store!
-        #      Since our widgets are stateless, and singletons,
-        #      They can be self-populating/publishing?!
-        # Pass data to template
         pylons.tmpl_context.w.people = pylons.g.widgets.values()[0]
         return dict(page='index')
 
