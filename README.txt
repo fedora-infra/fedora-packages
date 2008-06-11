@@ -2,6 +2,10 @@ TurboGears2 Installation
 ========================
 http://turbogears.org/2.0/docs/main/DownloadInstall.html
 
+Additional packages needed:
+
+    hg clone http://beta.toscawidgets.org/hg/tw.jquery/
+
 Installation and Setup
 ======================
 
