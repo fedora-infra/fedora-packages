@@ -68,7 +68,7 @@ def load_environment(global_conf, app_conf):
 
     # Create the Genshi TemplateLoader
     config['pylons.app_globals'].genshi_loader = TemplateLoader(
-        search_path=paths['templates'], auto_reload=True)
+        paths['templates'], auto_reload=True)
 
     # If you'd like to change the default template engine used to render
     # text/html content, edit these options.

@@ -9,11 +9,11 @@ from pylons.middleware import ErrorHandler, StaticJavascripts, \
     StatusCodeRedirect
 from pylons.wsgiapp import PylonsApp
 from routes.middleware import RoutesMiddleware
-from tw.core.middleware import TGWidgetsMiddleware
-from tw.mods.pylonshf import PylonsHostFramework
+
+from tw.api import make_middleware as tw_middleware
 
 from myfedora.config.environment import load_environment
-from tgrepozewho.middleware import make_who_middleware
+from tg.ext.repoze.who.middleware import make_who_middleware
 from myfedora.model import User, Group, Permission, DBSession
 
 # the criterion (ie instance of column) against which to mach
@@ -54,9 +54,11 @@ def make_app(global_conf, full_stack=True, **app_conf):
     app = CacheMiddleware(app, config)
 
     # ToscaWidgets Middleware
-    host_framework = PylonsHostFramework(default_view="genshi")
-    app = TGWidgetsMiddleware(app, host_framework)
-
+    app = tw_middleware(app, {
+        # Change the following to 'mako' if using mako as a default template
+        # language so widgets are displayed properly
+        'toscawidgets.framework.default_view': 'genshi',
+        })
     # Identity Middleware
     app = make_who_middleware(app, config, User, user_criterion, user_id_col,
             DBSession)
