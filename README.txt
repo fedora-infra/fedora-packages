@@ -22,3 +22,7 @@ Tweak the config file as appropriate and then setup the application::
     paster setup-app config.ini
 
 Then you are ready to go.
+
+Run the Server
+==============
+paster serve config.ini
