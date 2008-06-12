@@ -12,17 +12,24 @@ tg_flash = tg.get_flash()
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
     <title py:replace="''">Your title goes here</title>
     <meta py:replace="select('*')"/>
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/myfedora-style.css" />
+    <link href="${tg.url('/images/favicon.ico')}"
+      type="image/vnd.microsoft.icon" rel="shortcut icon" /> 
+    <link href="${tg.url('/images/favicon.ico')}"
+      type="image/x-icon" rel="shortcut icon"/> 
+
 </head>
 
 <body py:match="body" py:attrs="select('@*')">
-  ${header()}
-  <div id="main_content">
-    <div id="status_block" py:if="tg_flash" class="flash" py:content="tg_flash"></div>
-    <div py:replace="select('*|text()')"/>
-    <!-- End of main_content -->
-    <div class="clearingdiv" />
-    ${footer()}
-  </div>
+  <div class="wrapper">
+    ${header()}
+    <div id="main_content">
+      <div id="status_block" py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+      <div py:replace="select('*|text()')"/>
+      <!-- End of main_content -->
+      <div class="clearingdiv" />
+    </div>
+   </div>
+   ${footer()}
 </body>
 </html>

@@ -6,6 +6,19 @@ Additional packages needed:
 
     hg clone http://beta.toscawidgets.org/hg/tw.jquery/
 
+Running orbited
+
+    ./orbited orbited.cfg
+
+Instead of connecting directly to the TG app, you'll need to connect to
+orbited, which will proxy the necessary requests to TG.
+
+    http://localhost:8000
+
+
+================================================================================
+
+
 Installation and Setup
 ======================
 

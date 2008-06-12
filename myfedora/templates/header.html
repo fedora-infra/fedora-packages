@@ -2,13 +2,27 @@
       xmlns:xi="http://www.w3.org/2001/XInclude">
 <py:def function="header">
   <div id="header">
-    <div class="alogo">
-      <img src="/images/tg2_04.gif" alt="TG2!" height="40" width="84" />
-    </div>
-    <div class="headtext">
-     <span py:replace="page"/> - 
-    change me in header.html
-    </div>
+     <div class="head">
+        <h1><a href="http://fedoraproject.org/index.html">Fedora</a></h1>
+        <div class="mainsearch">
+          <form action="${tg.url('/search/results.html')}" method="get">
+            <input type="text" name="search_string" />
+          </form> 
+        </div>
+      </div>
+      <div id="top_ticker">
+        <div class="usernav">
+          <!-- <span py:if="tg.identity.anonymous"> -->
+          <span>
+            You are not logged in yet <a class="loginButton" href="${tg.url('/login/')}">login</a>
+          </span>
+          <!-- <span py:if="not tg.identity.anonymous"> -->
+          <span>
+            <a href="${tg.url('/users/info/')}">profile</a> |
+            <a class="loginButton" href="${tg.url('/logout/')}">logout</a>
+          </span>
+        </div>
+      </div>
   </div>
 </py:def>    
 </html>
