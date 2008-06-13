@@ -1,4 +1,4 @@
-from toscawidgets.api import WidgetBunch
+from tw.api import WidgetBunch
 import pylons
 
 class WidgetFactory(WidgetBunch):    
@@ -8,7 +8,7 @@ class WidgetFactory(WidgetBunch):
             widget_id = widget_data['widget_id']
             widget = self[widget_id]
             rendered_widgets += widget.render(id=widget_id, 
-                                              widget_data['app_data'])
+                                              **widget_data['app_data'])
 
         return rendered_widgets
 
@@ -18,7 +18,6 @@ class AppBundle(object):
         self.apps = []
         self._counter = 0
 
-    @property("counter")
     def read_counter(self):
         c = self._counter
         self._counter += 1
@@ -32,7 +31,7 @@ class AppBundle(object):
         if app.config_id:
             return app.config_id
         else:
-            return app.name + '_' + id + '_' + str(counter)
+            return app.name + '_' + id + '_' + str(self.read_counter())
 
     def compose(self):
         formatted_data = {}
@@ -42,8 +41,8 @@ class AppBundle(object):
             wf.add(a.get_widget())
             formatted_data[self.get_app_id(app)] = app.get_data()
            
-        pylons.tmpl_context.widget_factory = 
-            pylons.tmpl_context.get('widget_factory', {})
+        #pylons.tmpl_context.widget_factory = 
+        #    pylons.tmpl_context.get('widget_factory', {})
 
         pylons.tmpl_context.widget_factory[self.id] = wf
 

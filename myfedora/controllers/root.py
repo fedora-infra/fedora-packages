@@ -28,6 +28,7 @@ from pylons.i18n import ugettext as _
 #from dbsprockets.saprovider import SAProvider
 
 from myfedora.lib.base import BaseController
+from myfedora.controllers.apps import AppController
 
 log = logging.Logger(__name__)
 
@@ -35,6 +36,7 @@ log = logging.Logger(__name__)
 class RootController(BaseController):
 
     #admin = DBMechanic(SAProvider(metadata), '/admin')
+    apps = AppController()
 
     @expose()
     def join(self, feed, *args, **kw):

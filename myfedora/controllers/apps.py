@@ -1,12 +1,13 @@
 from myfedora.lib.base import Controller
 from myfedora.lib.appbundle import AppBundle
+from tg import expose
 import pylons
 
 class AppController(Controller):
     """AppController provide the base controller for serving applications"""
 
     @expose('myfedora.templates.apps.html')    
-    def default(self, app_id, app_config_id=None, width=None, height=None, 
+    def name(self, app_id, app_config_id=None, width=None, height=None, 
                 view='Home', **kw):
         """
         Handle a request for an app and pass the keywords hash
@@ -38,6 +39,10 @@ class AppController(Controller):
         app_bundle.add(app)
 
         return dict(standalone_data = app_bundle.compose())
+   
+    @expose() 
+    def list(self):
+        return '<br />'.join(pylons.g.apps.keys())
                         
     def _find_app(self, app_id):
         """Find the app class in globals
