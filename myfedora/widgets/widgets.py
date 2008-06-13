@@ -69,7 +69,7 @@ class FedoraPeopleData(RSSDataStream):
     url = 'http://planet.fedoraproject.org/rss20.xml'
     id = 'fedorapeople'
 
-class FedoraPeopleApp(AppFactory)
+class FedoraPeopleApp(AppFactory):
     entry_name = 'fedorapeople'
     def __init__(self, app_config_id, width=None, height=None):
         super(FedoraPeopleData, self).__init__(app_config_id, width, height)
