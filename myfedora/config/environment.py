@@ -33,6 +33,13 @@ def load_views():
             config['pylons.app_globals'].views[view.name] = view.load()()
             print config['pylons.app_globals'].views[view.name]
 
+def load_apps():
+    print "Loading MyFedora apps"
+    for app in pkg_resources.iter_entry_points('myfedora.apps'):
+        if not config['pylons.app_globals'].apps.has_key(app.name):
+            config['pylons.app_globals'].apps[app.name] = app.load()
+        print config['pylons.app_globals'].apps[app.name]
+
 
 def load_environment(global_conf, app_conf):
     """Configure the Pylons environment via the ``pylons.config``
@@ -62,6 +69,9 @@ def load_environment(global_conf, app_conf):
 
     # Load myfedora's View/Tool infrastructure
     load_views()
+
+    # Load all "Applications" from the myfedora.apps entry point
+    load_apps()
 
     # Start our DataStreamer thread
     config['pylons.app_globals'].datastreamer.start()

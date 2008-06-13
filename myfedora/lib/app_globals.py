@@ -12,6 +12,7 @@ class Globals(object):
         """
         self.widgets = {} # {name: Widget instance}
         self.views = {} # {name: View instance}
+        self.apps = {} # {name: App instance}
 
         # Our comet data streamer, responsible for polling the data
         # streams, and providing data to the widgets
