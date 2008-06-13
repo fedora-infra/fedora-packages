@@ -59,7 +59,7 @@ class AppFactory(object):
 #                    useragent='MyFedora ProxyClient/0.1')
 #        return self._user_fas
 
-    def load_config(self, force_refresh=False):
+    def load_configs(self, force_refresh=False):
         '''Load a config from the FAS db into MyFedora.
 
         This method does not currently cache the configs but may in the future.
@@ -77,7 +77,7 @@ class AppFactory(object):
         ### FIXME: fedora.accounts.fas2.AccountSystem method needed
         configs = fas.get_configs_like(identity.current.username, 'myfedora',
                 self.app_config_id)
-        
+
         return configs
 
     def save_configs(self, configs):
@@ -97,7 +97,7 @@ class AppFactory(object):
         #fas = self._get_auth_fas()
         #fas.del_configs(configs)
 
-    property(config, load_config, save_config, del_config,
+    property(config, load_configs, save_configs, del_configs,
             'Config information for this AppFactory')
 
     def get_data(self, force_refresh=False):
