@@ -83,7 +83,8 @@ class DataStreamer(threading.Thread):
                         self.orbited.event(subscribers, item, False)
 
             # We don't want to poll as fast as we can, but we also don't
-            # want to sleep for too long.  Make this suck less.
+            # want to sleep for too long.
+            # TODO: Make this suck less.
             time.sleep(10)
 
     def user_keys(self, feed):
@@ -94,7 +95,6 @@ class DataStreamer(threading.Thread):
     def join(self, user, feed, session='0'):
         print "%s joining %s feed (%s)" % (user, feed, session)
         with self.lock:
-            print "with self.lock!"
             if self.users.has_key(feed):
                 if (user, session) not in self.users[feed]:
                     self.users[feed].append((user, session))
