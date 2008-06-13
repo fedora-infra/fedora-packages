@@ -44,10 +44,18 @@ setup(
     [myfedora.plugins.views.people.tools]
     build = myfedora.plugins.tools.build:BuildToolWidget
 
-    [myfedora.widgets]
-    fedorapeople = myfedora.widgets:FedoraPeopleWidget
+    [myfedora.widgets.home]
+    rss = myfedora.widgets:FedoraPeopleWidget
+    [myfedora.widgets.canvas]
+    rss = myfedora.widgets:FedoraPeopleWidget
+    [myfedora.widgets.profile]
+    rss = myfedora.widgets:FedoraPeopleWidget
+    [myfedora.widgets.preview]
+    rss = myfedora.widgets:FedoraPeopleWidget
+    [myfedora.widgets.config]
+    rss = myfedora.widgets:FedoraPeopleWidget
 
-    [myfedora.widgets.data]
-    fedorapeople = myfedora.widgets:FedoraPeopleData
+    [myfedora.data]
+    rss = myfedora.widgets:FedoraPeopleData
     """,
 )

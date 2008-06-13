@@ -10,7 +10,7 @@ class Globals(object):
         initialization and is available during requests via the 'g'
         variable
         """
-        self.widgets = {} # {name: Widget instance}
+        self.widgets = {'home': {}, 'canvas': {}, 'profile': {}, 'preview': {}, 'config':{}} # {viewtype: {name: Widget instance}}
         self.views = {} # {name: View instance}
 
         # Our comet data streamer, responsible for polling the data

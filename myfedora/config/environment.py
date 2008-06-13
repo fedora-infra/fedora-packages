@@ -9,6 +9,8 @@ from genshi.filters import Translator
 from genshi.template import TemplateLoader
 from sqlalchemy import engine_from_config
 
+from fedora.accounts.fas2 import AccountSystem
+
 import myfedora.lib.app_globals as app_globals
 from myfedora.model import init_model, DBSession, metadata
 #import myfedora.lib.helpers
@@ -33,6 +35,16 @@ def load_views():
             config['pylons.app_globals'].views[view.name] = view.load()()
             print config['pylons.app_globals'].views[view.name]
 
+def load_fas():
+    '''Load an instance of the Fedora Account System object.
+
+    Since we only use the system fas account, we can create a single fas
+    account for everyone.
+    '''
+    print "Loading fas"
+    fas = AccountSystem(config['fas.url'], username=config['fas.username'],
+            password=config['fas.password'])
+    config['pylons.app_globals'].fas = fas
 
 def load_environment(global_conf, app_conf):
     """Configure the Pylons environment via the ``pylons.config``

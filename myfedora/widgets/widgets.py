@@ -20,6 +20,7 @@ from tw.api import Widget, JSLink, js_function, js_callback
 from tw.jquery import jquery_js, jQuery
 
 from myfedora.streams import RSSDataStream
+from myfedora.lib.app_factory import AppFactory
 
 orbited_js = JSLink(link='http://localhost:8000/_/orbited.js')
 rsswidget_js = JSLink(link='/javascript/rsswidget.js')
@@ -68,6 +69,18 @@ class FedoraPeopleData(RSSDataStream):
     url = 'http://planet.fedoraproject.org/rss20.xml'
     id = 'fedorapeople'
 
+class FedoraPeopleApp(AppFactory)
+    entry_name = 'fedorapeople'
+    def __init__(self, app_config_id, width=None, height=None):
+        super(FedoraPeopleData, self).__init__(app_config_id, width, height)
+        self.rss_stream = RSSDataStream()
+        self.rss_stream.url = 'http://planet.fedoraproject.org/rss20.xml'
+        self.rss_stream.id = 'fedorapeople'
+
+    def get_data(self, force_refresh=False):
+        data = super(FedoraPeopleData, self).get_data(force_refresh)
+        data['rss-stream'] = FedoraPeopleData()
+        return data
 
 class FedoraPeopleWidget(RSSWidget):
     name = 'Fedora People'
