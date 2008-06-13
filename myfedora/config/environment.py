@@ -37,7 +37,7 @@ def load_apps():
     print "Loading MyFedora apps"
     for app in pkg_resources.iter_entry_points('myfedora.apps'):
         if not config['pylons.app_globals'].apps.has_key(app.name):
-            config['pylons.app_globals'].apps[app.name] = app.load()()
+            config['pylons.app_globals'].apps[app.name] = app.load()
         print config['pylons.app_globals'].apps[app.name]
 
 
