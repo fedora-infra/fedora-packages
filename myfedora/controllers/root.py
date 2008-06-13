@@ -28,6 +28,7 @@ from pylons.i18n import ugettext as _
 #from dbsprockets.saprovider import SAProvider
 
 from myfedora.lib.base import BaseController
+from myfedora.controllers.apps import AppController
 
 log = logging.Logger(__name__)
 
@@ -35,10 +36,16 @@ log = logging.Logger(__name__)
 class RootController(BaseController):
 
     #admin = DBMechanic(SAProvider(metadata), '/admin')
+    apps = AppController()
 
     @expose()
     def join(self, feed, *args, **kw):
+        """ Join a specified data feed """
         print "join(%s, %s, %s)" % (feed, args, kw)
+        # Right now the names of the data feed are the names of the widgets
+        # themselves.  This needs to change.
+        # We also need to handle streaming data to logged in and anonymous
+        # users.
         if pylons.g.widgets.has_key(feed):
             pylons.g.datastreamer.join('bobvila', feed)
         else:
