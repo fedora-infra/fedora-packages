@@ -17,9 +17,7 @@
 #            John Palmieri <johnp@redhat.com>
 #            Toshio Kuratomi <tkuratom@redhat.com>
 
-from tg import identity
 # Is this right for tg2?
-# from TemplateContext import identity
 from pylons import config
 ### FIXME: Write this so saving works.
 #from fedora.client import ProxyClient
@@ -68,14 +66,14 @@ class AppFactory(object):
         :force_refresh: If True, reload the config regardless of any
             caching
         '''
-        if identity.current.anonymous:
+        if tmpl_context.identity.current.anonymous:
             ### FIXME: Define the default_config
             return self.__default_config
 
         fas = config['pylons.app_globals'].fas
 
         ### FIXME: fedora.accounts.fas2.AccountSystem method needed
-        configs = fas.get_configs_like(identity.current.username, 'myfedora',
+        configs = fas.get_configs_like(tmpl_context.identity.current.username, 'myfedora',
                 self.app_config_id)
 
         return configs
