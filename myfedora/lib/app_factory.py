@@ -97,8 +97,8 @@ class AppFactory(object):
         #fas = self._get_auth_fas()
         #fas.del_configs(configs)
 
-    property(config, load_configs, save_configs, del_configs,
-            'Config information for this AppFactory')
+    config = property(load_configs, save_configs, del_configs,
+                      'Config information for this AppFactory')
 
     def get_data(self, force_refresh=False):
         '''Retrieve data necessary to render the widget.
