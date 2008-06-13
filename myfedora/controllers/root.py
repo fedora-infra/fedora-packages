@@ -43,7 +43,7 @@ class RootController(BaseController):
         """ Join a specified data feed """
         print "join(%s, %s, %s)" % (feed, args, kw)
         # Right now the names of the data feed are the names of the widgets
-        # themsevles.  This needs to change.
+        # themselves.  This needs to change.
         # We also need to handle streaming data to logged in and anonymous
         # users.
         if pylons.g.widgets.has_key(feed):
