@@ -46,16 +46,23 @@ setup(
 
     [myfedora.widgets.home]
     rss = myfedora.widgets:FedoraPeopleWidget
+
     [myfedora.widgets.canvas]
     rss = myfedora.widgets:FedoraPeopleWidget
+
     [myfedora.widgets.profile]
     rss = myfedora.widgets:FedoraPeopleWidget
+
     [myfedora.widgets.preview]
     rss = myfedora.widgets:FedoraPeopleWidget
+
     [myfedora.widgets.config]
     rss = myfedora.widgets:FedoraPeopleWidget
 
     [myfedora.data]
     rss = myfedora.widgets:FedoraPeopleData
+
+    [myfedora.apps]
+    rss = myfedora.widgets:FedoraPeopleApps
     """,
 )
