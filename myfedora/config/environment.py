@@ -22,11 +22,13 @@ def template_loaded(template):
 
 def load_widgets():
     print "Loading Widgets"
-    for widget in pkg_resources.iter_entry_points('myfedora.widgets'):
-        if not config['pylons.app_globals'].widgets.has_key(widget.name):
-            config['pylons.app_globals'].widgets[widget.name] = \
-                    widget.load()(widget.name)
-            print config['pylons.app_globals'].widgets[widget.name]
+    for widget_type in ('home', 'canvas', 'profile', 'config', 'preview'):
+        our_widgets = config['pylons.app_globals'].widgets[widget_type]
+        entry_point_string = 'myfedora.widgets.%s' % widget_type
+        for widget in pkg_resources.iter_entry_points(entry_point_string):
+            if not our_widgets.has_key(widget.name):
+                our_widgets[widget.name] = widget.load()(widget.name)
+                print our_widgets.widgets[widget.name]
 
 def load_views():
     print "Loading MyFedora views"
