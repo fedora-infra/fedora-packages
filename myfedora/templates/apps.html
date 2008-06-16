@@ -16,6 +16,8 @@
 </head>
 
 <body>
-  ${tmpl_context.widget_factory['standalone'].render(standalone_data)}
+  <div py:for="id in standalone_data">
+     ${tmpl_context.show_app(id, standalone_data[id])}
+  </div>
 </body>
 </html>

@@ -25,6 +25,34 @@ from myfedora.lib.app_factory import AppFactory
 orbited_js = JSLink(link='http://localhost:8000/_/orbited.js')
 rsswidget_js = JSLink(link='/javascript/rsswidget.js')
 
+class HelloWorldApp(AppFactory):
+    entry_name = 'helloworld'
+    def __init__(self, app_config_id, width=None, height=None, view='home', **kw):
+        super(HelloWorldApp, self).__init__(app_config_id, 
+            width, height, view, **kw)
+
+    def get_data(self, force_refresh=False):
+        data = super(HelloWorldApp, self).get_data(force_refresh)
+
+        return data
+
+
+class HelloWorldWidget(Widget):
+   """ A sample widget for testing
+
+   This widget says hello to whatever string resides in the hello_to parameter
+   passed to it and then prints out its configuration.
+   """
+   params = ['hello_to']
+   template = 'genshi:myfedora.widgets.templates.helloworld'
+   javascript = [jquery_js]
+   data = None
+   event_cb = None
+
+   def update_params(self, d):
+        print d
+        d['greeting'] = 'Hello' 
+        return d
 
 class RSSWidget(Widget):
     """ A generic RSS widget.

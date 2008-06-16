@@ -1,16 +1,10 @@
 from tw.api import WidgetBunch
 import pylons
 
-class WidgetFactory(WidgetBunch):    
-    def render(self, data):
-        rendered_widgets = ""
-        for id, widget_data in data.items():
-            widget_id = widget_data['widget_id']
-            widget = self[widget_id]
-            rendered_widgets += widget.render(id=widget_id, 
-                                              **widget_data['app_data'])
+def show_app(id, data):
+    w = pylons.tmpl_context.w[data['config']['widget_id']]
 
-        return rendered_widgets
+    return w(id = id, **data)
 
 class AppBundle(object):
     def __init__(self, id):
@@ -31,19 +25,14 @@ class AppBundle(object):
         if app.config_id:
             return app.config_id
         else:
-            return app.name + '_' + id + '_' + str(self.read_counter())
+            return app.entry_name + '_' + self.id + '_' + str(self.read_counter())
 
-    def compose(self):
+    def serialize_apps(self, widget_bundle):
         formatted_data = {}
 
-        wf = WidgetFactory()
         for a in self.apps:
-            wf.add(a.get_widget())
-            formatted_data[self.get_app_id(app)] = app.get_data()
-           
-        #pylons.tmpl_context.widget_factory = 
-        #    pylons.tmpl_context.get('widget_factory', {})
-
-        pylons.tmpl_context.widget_factory[self.id] = wf
+            formatted_data[self.get_app_id(a)] = a.get_data()
+            w = a.get_widget() 
+            widget_bundle.append(w)
 
         return formatted_data

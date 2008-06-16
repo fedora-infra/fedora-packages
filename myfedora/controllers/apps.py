@@ -1,12 +1,12 @@
 from myfedora.lib.base import Controller
-from myfedora.lib.appbundle import AppBundle
+from myfedora.lib.appbundle import AppBundle, show_app
 from tg import expose
 import pylons
 
 class AppController(Controller):
     """AppController provide the base controller for serving applications"""
 
-    @expose('myfedora.templates.apps.html')    
+    @expose('myfedora.templates.apps')    
     def name(self, app_id, app_config_id=None, width=None, height=None, 
                 view='Home', **kw):
         """
@@ -32,18 +32,22 @@ class AppController(Controller):
             :LookupError: raised if we cannot find the app
         """
         app_bundle = AppBundle('standalone')
-        
         appclass = self._find_app(app_id)
-        
-        app = appclass(app_config_id, width, height, **kw)
-
+        app = appclass(app_config_id, width, height, view, **kw)
         app_bundle.add(app)
 
-        return dict(standalone_data = app_bundle.compose())
+        pylons.tmpl_context.show_app = show_app
+
+        return dict(standalone_data = app_bundle.serialize_apps(pylons.tmpl_context.w))
    
     @expose() 
     def list(self):
-        return '<br />'.join(pylons.g.apps.keys())
+        # quick list for now
+        result = "<ul>"
+        for key in pylons.g.apps.keys():
+            result += "<li><a href='name/%s'>%s</a></li>" % (key, key)
+        
+        return result 
                         
     def _find_app(self, app_id):
         """Find the app class in globals

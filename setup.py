@@ -46,23 +46,29 @@ setup(
 
     [myfedora.widgets.home]
     rss = myfedora.widgets:FedoraPeopleWidget
+    helloworld = myfedora.widgets:HelloWorldWidget
 
     [myfedora.widgets.canvas]
     rss = myfedora.widgets:FedoraPeopleWidget
-
+    helloworld = myfedora.widgets:HelloWorldWidget
+    
     [myfedora.widgets.profile]
     rss = myfedora.widgets:FedoraPeopleWidget
+    helloworld = myfedora.widgets:HelloWorldWidget
 
     [myfedora.widgets.preview]
     rss = myfedora.widgets:FedoraPeopleWidget
+    helloworld = myfedora.widgets:HelloWorldWidget
 
     [myfedora.widgets.config]
     rss = myfedora.widgets:FedoraPeopleWidget
+    helloworld = myfedora.widgets:HelloWorldWidget
 
     [myfedora.data]
     rss = myfedora.widgets:FedoraPeopleData
 
     [myfedora.apps]
     rss = myfedora.widgets:FedoraPeopleApp
+    helloworld = myfedora.widgets:HelloWorldApp
     """,
 )

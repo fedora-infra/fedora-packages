@@ -18,7 +18,7 @@
 #            Toshio Kuratomi <tkuratom@redhat.com>
 
 # Is this right for tg2?
-from pylons import config
+from pylons import config, tmpl_context
 ### FIXME: Write this so saving works.
 #from fedora.client import ProxyClient
 
@@ -37,7 +37,7 @@ class AppFactory(object):
 
     entry_name = '' # Subclasses must set this
 
-    def __init__(self, app_config_id, width=None, height=None, **kw):
+    def __init__(self, app_config_id, width=None, height=None, view='home', **kw):
         '''Create an ``AppFactory``.
         
         :Parameters:
@@ -45,8 +45,16 @@ class AppFactory(object):
                 the user is logged in
 
         :Keyword Parameters:
-            :width: width to display the app in (None = default)
-            :height: height to display the app in (None = default)
+            :width: width to display the app in (default = None)
+            :height: height to display the app in (default = None)
+            :view: the view to render this app as (default = 'home')
+                * Home - the app should display as if on a home page 
+                * Canvas - the app should display as if it has the full browser
+                    window
+                * Profile - the app should display as if the user is looking 
+                    at their profile
+                * Preview - the app should display random data
+                * Config - the app should display it's configuration UI
             :kw: arbitrary configuration info for the app 
         '''
         if not self.entry_name:
@@ -55,6 +63,11 @@ class AppFactory(object):
         self.width = width
         self.height = height 
         self.data = kw
+        self.view = view.lower()
+
+        widget_id = self.get_widget().id
+        self.data['config'] = {'widget_id': widget_id}
+        self.view = view.lower()
  
 ### FIXME: make ProxyClient work and then this can be used for saving configs
 #    def _get_auth_fas(self):
@@ -72,20 +85,20 @@ class AppFactory(object):
         :force_refresh: If True, reload the config regardless of any
             caching
         '''
-        if tmpl_context.identity.current.anonymous:
-            ### FIXME: Define the default_config
-            return self.__default_config
+        #if tmpl_context.identity.current.anonymous:
+        #    ### FIXME: Define the default_config
+        #    return self.__default_config
 
-        fas = config['pylons.app_globals'].fas
+        #fas = config['pylons.app_globals'].fas
 
         # set defaults
-        configs = dict(app_config_id = self.app_config_id,
+        configs = dict(config_id = self.config_id,
                        width = self.width, 
-                       height = self.width)
+                       height = self.height)
         ### FIXME: fedora.accounts.fas2.AccountSystem method needed
 
-        configs.update(fas.get_configs_like(tmpl_context.identity.current.username, 'myfedora',
-                self.app_config_id))
+        #configs.update(fas.get_configs_like(tmpl_context.identity.current.username, 'myfedora',
+        #        self.config_id))
 
         return configs
 
@@ -115,26 +128,18 @@ class AppFactory(object):
         '''
         data = dict(**self.data)
         
-        data.update(dict(config=self.config))
+        data['config'].update(self.load_configs())
         # If there's data other than configs from fas, get it here.
         return data
 
-    def get_widget(view='home'):
+    def get_widget(self):
         '''Returns the widget that renders this in that a specific view.
-
-        Keyword Arguments:
-        :view: view to show the app in can be show in
-            * Home - the app should display as if on a home page 
-            * Canvas - the app should display as if it has the full browser
-                window
-            * Profile - the app should display as if the user is looking 
-                at their profile
-            * Preview - the app should display random data
-            * Config - the app should display it's configuration UI
         '''
         try:
-            return config['pylons.app_globals'].widgets[view.lower()][ \
+            w = config['pylons.app_globals'].widgets[self.view][ \
                     self.entry_name]
+
+            return w
         except KeyError:
             ### FIXME: Raise a proper exception
-            raise Exception, 'Unknown view type %s' % view
+            raise Exception, 'Unknown view type %s' % self.view
