@@ -28,7 +28,7 @@ def load_widgets():
         for widget in pkg_resources.iter_entry_points(entry_point_string):
             if not our_widgets.has_key(widget.name):
                 our_widgets[widget.name] = widget.load()(widget.name)
-                print our_widgets.widgets[widget.name]
+                print our_widgets[widget.name]
 
 def load_views():
     print "Loading MyFedora views"

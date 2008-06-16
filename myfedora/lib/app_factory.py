@@ -28,12 +28,16 @@ class AppFactory(object):
     a widget with the data that the widget needs to render.  It is also
     responsible for retrieving the data.  The widget is usually precreated and
     the ``AppFactory`` merely forms the association.
+
+    :Class-property:
+        :entry_name: When subclassing AppFactory this class property must be
+            set to the setup.py base entrypoint for this app
     '''
     _user_fas = None
 
     entry_name = '' # Subclasses must set this
 
-    def __init__(app_config_id, width=None, height=None):
+    def __init__(self, app_config_id, width=None, height=None, **kw):
         '''Create an ``AppFactory``.
         
         :Parameters:
@@ -43,12 +47,14 @@ class AppFactory(object):
         :Keyword Parameters:
             :width: width to display the app in (None = default)
             :height: height to display the app in (None = default)
+            :kw: arbitrary configuration info for the app 
         '''
-        if not entry_name:
+        if not self.entry_name:
             raise NotYetImplementedError, 'class variable entry_name must be set before this class can be instantiated'
         self.config_id = app_config_id
         self.width = width
-        self.height = height
+        self.height = height 
+        self.data = kw
  
 ### FIXME: make ProxyClient work and then this can be used for saving configs
 #    def _get_auth_fas(self):
@@ -72,9 +78,14 @@ class AppFactory(object):
 
         fas = config['pylons.app_globals'].fas
 
+        # set defaults
+        configs = dict(app_config_id = self.app_config_id,
+                       width = self.width, 
+                       height = self.width)
         ### FIXME: fedora.accounts.fas2.AccountSystem method needed
-        configs = fas.get_configs_like(tmpl_context.identity.current.username, 'myfedora',
-                self.app_config_id)
+
+        configs.update(fas.get_configs_like(tmpl_context.identity.current.username, 'myfedora',
+                self.app_config_id))
 
         return configs
 
@@ -95,9 +106,6 @@ class AppFactory(object):
         #fas = self._get_auth_fas()
         #fas.del_configs(configs)
 
-    config = property(load_configs, save_configs, del_configs,
-                      'Config information for this AppFactory')
-
     def get_data(self, force_refresh=False):
         '''Retrieve data necessary to render the widget.
 
@@ -105,7 +113,9 @@ class AppFactory(object):
         :force_refresh: One day we'll implement caching.  This makes us
             disregard that when fetching data.
         '''
-        data = dict(config=self.config)
+        data = dict(**self.data)
+        
+        data.update(dict(config=self.config))
         # If there's data other than configs from fas, get it here.
         return data
 

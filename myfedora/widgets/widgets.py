@@ -72,13 +72,13 @@ class FedoraPeopleData(RSSDataStream):
 class FedoraPeopleApp(AppFactory):
     entry_name = 'fedorapeople'
     def __init__(self, app_config_id, width=None, height=None):
-        super(FedoraPeopleData, self).__init__(app_config_id, width, height)
+        super(FedoraPeopleApp, self).__init__(app_config_id, width, height)
         self.rss_stream = RSSDataStream()
         self.rss_stream.url = 'http://planet.fedoraproject.org/rss20.xml'
         self.rss_stream.id = 'fedorapeople'
 
     def get_data(self, force_refresh=False):
-        data = super(FedoraPeopleData, self).get_data(force_refresh)
+        data = super(FedoraPeopleApp, self).get_data(force_refresh)
         data['rss-stream'] = FedoraPeopleData()
         return data
 

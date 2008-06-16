@@ -63,6 +63,6 @@ setup(
     rss = myfedora.widgets:FedoraPeopleData
 
     [myfedora.apps]
-    rss = myfedora.widgets:FedoraPeopleApps
+    rss = myfedora.widgets:FedoraPeopleApp
     """,
 )

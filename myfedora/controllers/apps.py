@@ -35,7 +35,8 @@ class AppController(Controller):
         
         appclass = self._find_app(app_id)
         
-        app = appclass(app_config_id, width, height, kw)
+        app = appclass(app_config_id, width, height, **kw)
+
         app_bundle.add(app)
 
         return dict(standalone_data = app_bundle.compose())
