@@ -11,7 +11,7 @@ class Globals(object):
         variable
         """
         self.widgets = {'home': {}, 'canvas': {}, 'profile': {}, 'preview': {}, 'config':{}} # {viewtype: {name: Widget instance}}
-        self.views = {} # {name: View instance}
+        self.resourceviews = {} # {name: ResourceView instance}
         self.apps = {} # {name: App instance}
 
         # Our comet data streamer, responsible for polling the data

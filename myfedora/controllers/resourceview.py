@@ -4,12 +4,12 @@ from tg import expose
 from myfedora.lib.appbundle import AppBundle, show_app
 import pylons
 
-class ViewController(BaseController):
+class ResourceViewController(BaseController):
     def __init__(self):
-        super(ViewController, self).__init__() 
+        super(ResourceViewController, self).__init__() 
 
-    def _create_view_app(self, view):
-        return pylons.g.views[view](None, width="100%", height="100%")
+    def _create_view_app(self, resourceview):
+        return pylons.g.resourceviews[resourceview](None, width="100%", height="100%")
 
     def _init_context(self, view):
         view_app = self._create_view_app(view)
@@ -33,3 +33,6 @@ class ViewController(BaseController):
             app_bundle.serialize_apps(pylons.tmpl_context.w),
                 view=view, data_key=data_key, tool=tool, 
                     remainder=args, extra_kwds=kw)
+
+# name alias for TG2.0 controller loader
+ResourceviewController = ResourceViewController

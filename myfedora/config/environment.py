@@ -26,9 +26,9 @@ def make_default_route_map():
     # Setup a default route for the error controller:
     map.connect('error/:action/:id', controller='error')
 
-    for vname in config['pylons.app_globals'].views.keys():
+    for vname in config['pylons.app_globals'].resourceviews.keys():
         map.connect('/' + vname + '/name/:data/:tool/', 
-                    controller='view', data=None, tool=None) 
+                    controller='resourceview', data=None, tool=None) 
 
     # This route connects your root controller
     map.connect('*url', controller='root', action='routes_placeholder')
@@ -51,13 +51,13 @@ def load_widgets():
                 print widget.name, ":"
                 #print "\t", our_widgets[widget.name]
 
-def load_views():
-    print "Loading MyFedora view apps"
-    for view in pkg_resources.iter_entry_points('myfedora.plugins.views'):
-        if not config['pylons.app_globals'].views.has_key(view.name):
+def load_resourceviews():
+    print "Loading MyFedora resourceview apps"
+    for view in pkg_resources.iter_entry_points('myfedora.plugins.resourceviews'):
+        if not config['pylons.app_globals'].resourceviews.has_key(view.name):
             view_class = view.load()
             view_class.load_widgets()
-            config['pylons.app_globals'].views[view.name] = view_class
+            config['pylons.app_globals'].resourceviews[view.name] = view_class
             print view.name + " loaded"
 
 def load_fas():
@@ -97,8 +97,8 @@ def load_environment(global_conf, app_conf):
     # Load widgets from the myfedora.widgets entry point
     load_widgets()
 
-    # Load myfedora's View/Tool infrastructure
-    load_views()
+    # Load myfedora's ResourceView/Tool infrastructure
+    load_resourceviews()
 
     # Load all "Applications" from the myfedora.apps entry point
     load_apps()

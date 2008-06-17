@@ -20,7 +20,7 @@
 # Is this right for tg2?
 from pylons import config, tmpl_context
 import pkg_resources
-from myfedora.widgets.view import ViewWidget
+from myfedora.widgets.resourceview import ResourceViewWidget
 
 ### FIXME: Write this so saving works.
 #from fedora.client import ProxyClient
@@ -147,11 +147,11 @@ class AppFactory(object):
             ### FIXME: Raise a proper exception
             raise Exception, 'Unknown view type %s' % self.view
 
-class ViewAppFactory(AppFactory):
+class ResourceViewAppFactory(AppFactory):
     _widget = None
 
     def __init__(self, app_config_id, width=None, height=None, view='canvas', data_key=None, tool=None, **kw):
-        super(ViewAppFactory, self).__init__(app_config_id, 
+        super(ResourceViewAppFactory, self).__init__(app_config_id, 
             width, height, view, **kw)
 
         self.data_key = data_key
@@ -168,12 +168,12 @@ class ViewAppFactory(AppFactory):
 
     @classmethod
     def load_widgets(cls):
-        cls.tools_entry_point = "myfedora.plugins.views." + cls.entry_name + ".tools"
+        cls.tools_entry_point = "myfedora.plugins.resourceviews." + cls.entry_name + ".tools"
 
         child_tools = []
         for tool in pkg_resources.iter_entry_points(cls.tools_entry_point):
             child_tools.append(tool.load()(tool.name))
             
-        cls._widget = ViewWidget(cls.entry_name + '_view', children=child_tools)
-        print "View widget " + cls._widget.id + " loaded"
+        cls._widget = ResourceViewWidget(cls.entry_name + '_view', children=child_tools)
+        print "ReosurceView widget " + cls._widget.id + " loaded"
 

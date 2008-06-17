@@ -1,8 +1,8 @@
 from tw.api import Widget
 from tw.jquery import jquery_js
-class ViewWidget(Widget):
+class ResourceViewWidget(Widget):
     params = ['']
-    template = 'genshi:myfedora.plugins.views.templates.view'
+    template = 'genshi:myfedora.plugins.resourceviews.templates.view'
     javascript = [jquery_js]
     data = None
     event_cb = None
@@ -12,6 +12,6 @@ class ViewWidget(Widget):
             active_tool = self[d['tool']]
             d[active_tool]['active'] = True 
              
-        super(ViewWidget, self).update_params(d)
+        super(ResourceViewWidget, self).update_params(d)
 
         return d
