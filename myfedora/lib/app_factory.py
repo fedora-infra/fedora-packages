@@ -19,6 +19,9 @@
 
 # Is this right for tg2?
 from pylons import config, tmpl_context
+import pkg_resources
+from myfedora.widgets.view import ViewWidget
+
 ### FIXME: Write this so saving works.
 #from fedora.client import ProxyClient
 
@@ -64,10 +67,7 @@ class AppFactory(object):
         self.height = height 
         self.data = kw
         self.view = view.lower()
-
-        widget_id = self.get_widget().id
-        self.data['config'] = {'widget_id': widget_id}
-        self.view = view.lower()
+        self.data['config'] = {}
  
 ### FIXME: make ProxyClient work and then this can be used for saving configs
 #    def _get_auth_fas(self):
@@ -139,7 +139,41 @@ class AppFactory(object):
             w = config['pylons.app_globals'].widgets[self.view][ \
                     self.entry_name]
 
+            widget_id = w.id
+            self.data['config'].update({'widget_id': widget_id})
+
             return w
         except KeyError:
             ### FIXME: Raise a proper exception
             raise Exception, 'Unknown view type %s' % self.view
+
+class ViewAppFactory(AppFactory):
+    _widget = None
+
+    def __init__(self, app_config_id, width=None, height=None, view='canvas', data_key=None, tool=None, **kw):
+        super(ViewAppFactory, self).__init__(app_config_id, 
+            width, height, view, **kw)
+
+        self.data_key = data_key
+        self.tool = tool
+      
+    def get_widget(self, view=None):
+        if not view:
+            view = self.view
+        
+        widget_id = self._widget.id
+        self.data['config'].update({'widget_id': widget_id})
+ 
+        return self._widget
+
+    @classmethod
+    def load_widgets(cls):
+        cls.tools_entry_point = "myfedora.plugins.views." + cls.entry_name + ".tools"
+
+        child_tools = []
+        for tool in pkg_resources.iter_entry_points(cls.tools_entry_point):
+            child_tools.append(tool.load()(tool.name))
+            
+        cls._widget = ViewWidget(cls.entry_name + '_view', children=child_tools)
+        print "View widget " + cls._widget.id + " loaded"
+

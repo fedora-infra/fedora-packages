@@ -4,7 +4,7 @@ import pylons
 def show_app(id, data):
     w = pylons.tmpl_context.w[data['config']['widget_id']]
 
-    return w(id = id, **data)
+    return w.display(id = id, **data)
 
 class AppBundle(object):
     def __init__(self, id):

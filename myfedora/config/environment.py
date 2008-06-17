@@ -2,7 +2,6 @@
 import os
 import pkg_resources
 
-from tg import defaults
 from pylons import config
 from pylons.i18n import ugettext
 from genshi.filters import Translator
@@ -13,8 +12,29 @@ from fedora.accounts.fas2 import AccountSystem
 
 import myfedora.lib.app_globals as app_globals
 from myfedora.model import init_model, DBSession, metadata
+
+from routes import Mapper
 #import myfedora.lib.helpers
 #from myfedora.config.routing import make_map
+
+def make_default_route_map():
+    """Create, configure and return the routes Mapper"""
+    map = Mapper(directory=config['pylons.paths']['controllers'],
+                always_scan=config['debug'])
+
+
+    # Setup a default route for the error controller:
+    map.connect('error/:action/:id', controller='error')
+
+    for vname in config['pylons.app_globals'].views.keys():
+        map.connect('/' + vname + '/name/:data/:tool/', 
+                    controller='view', data=None, tool=None) 
+
+    # This route connects your root controller
+    map.connect('*url', controller='root', action='routes_placeholder')
+
+    return map
+
 
 def template_loaded(template):
     "Plug-in our i18n function to Genshi."
@@ -29,14 +49,16 @@ def load_widgets():
             if not our_widgets.has_key(widget.name):
                 our_widgets[widget.name] = widget.load()(widget.name)
                 print widget.name, ":"
-                print "\t", our_widgets[widget.name]
+                #print "\t", our_widgets[widget.name]
 
 def load_views():
-    print "Loading MyFedora views"
+    print "Loading MyFedora view apps"
     for view in pkg_resources.iter_entry_points('myfedora.plugins.views'):
         if not config['pylons.app_globals'].views.has_key(view.name):
-            config['pylons.app_globals'].views[view.name] = view.load()()
-            print config['pylons.app_globals'].views[view.name]
+            view_class = view.load()
+            view_class.load_widgets()
+            config['pylons.app_globals'].views[view.name] = view_class
+            print view.name + " loaded"
 
 def load_fas():
     '''Load an instance of the Fedora Account System object.
@@ -70,14 +92,7 @@ def load_environment(global_conf, app_conf):
     # Initialize config with the basic options
     config.init_app(global_conf, app_conf, package='myfedora', paths=paths)
 
-    # This setups up a set of default route that enables a standard
-    # TG2 style object dispatch.   Fell free to overide it with
-    # custom routes.  TODO: Link to TG2+routes doc.
-    make_map = defaults.make_default_route_map
-
-    config['routes.map'] = make_map()
     config['pylons.app_globals'] = app_globals.Globals()
-    #config['pylons.h'] = myfedora.lib.helpers
 
     # Load widgets from the myfedora.widgets entry point
     load_widgets()
@@ -87,6 +102,13 @@ def load_environment(global_conf, app_conf):
 
     # Load all "Applications" from the myfedora.apps entry point
     load_apps()
+
+    # This setups up a set of default route that enables a standard
+    # TG2 style object dispatch.   Fell free to overide it with
+    # custom routes.  TODO: Link to TG2+routes doc.
+    make_map = make_default_route_map
+
+    config['routes.map'] = make_map()
 
     # Start our DataStreamer thread
     config['pylons.app_globals'].datastreamer.start()

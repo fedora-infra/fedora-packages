@@ -35,8 +35,8 @@ setup(
     main = pylons.util:PylonsInstaller
 
     [myfedora.plugins.views]
-    packages = myfedora.plugins.views.packages:PackagesViewController
-    people = myfedora.plugins.views.people:PeopleViewController
+    packages = myfedora.plugins.views.packages:PackagesViewApp
+    people = myfedora.plugins.views.people:PeopleViewApp
 
     [myfedora.plugins.views.packages.tools]
     build = myfedora.plugins.tools.build:BuildToolWidget
