@@ -7,3 +7,8 @@ import pylons
 
 class PackagesViewApp(ResourceViewAppFactory):
     entry_name = 'packages'
+
+    def update_params(self, d):
+        d['package'] = d.get('data_key', None)
+
+        super(PackagesViewApp, self).update_params(d)

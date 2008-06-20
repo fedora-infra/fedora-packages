@@ -39,10 +39,11 @@ setup(
     people = myfedora.plugins.resourceviews.people:PeopleViewApp
 
     [myfedora.plugins.resourceviews.packages.tools]
-    build = myfedora.plugins.tools.build:BuildToolWidget
+    builds = myfedora.plugins.tools.builds:BuildsToolWidget
+    hello = myfedora.plugins.tools.helloworld:HelloWorldWidget
 
     [myfedora.plugins.resourceviews.people.tools]
-    build = myfedora.plugins.tools.build:BuildToolWidget
+    builds = myfedora.plugins.tools.builds:BuildsToolWidget
 
     [myfedora.widgets.home]
     rss = myfedora.widgets:FedoraPeopleWidget

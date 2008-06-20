@@ -1,4 +1,60 @@
+<?python
+import tg
+?>
+
 <div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/">
+     xmlns:py="http://genshi.edgewall.org/" 
+     id="resource_content">
    You are now displaying the build tool
+     <form name="builds_navigation_form" action="">
+       <a onClick="document.builds_navigation_form.direction.value='prev'; document.builds_navigation_form.submit()" href="#" py:if="previous_disabled != 'disabled'">&lt;-- prev </a>
+       <a onClick="document.builds_navigation_form.direction.value='next'; document.builds_navigation_form.submit()" href="#" py:if="next_disabled != 'disabled'">next --&gt; </a>
+       <input type="hidden" name="offset" value="${offset}" />
+       <input type="hidden" name="limit" value="${limit}" />
+       <input type="hidden" name="direction" value="next"/>
+     </form> 
+     <table class="content_table">
+        <thead>
+          <tr>
+            <th>Build ID</th>
+            <th>Name</th>
+            <th>Build By</th>
+            <th>Started</th>
+            <th>Finished</th>
+            <th>State</th>
+            <th>Release</th>
+          </tr>
+        </thead>
+        <tbody py:with="oe = 'odd'">
+        <span py:for="build in builds_list" 
+              py:with="build_id=str(build['build_id']); 
+                       build_state=str(build['state']); 
+                       task_id=str(build['task_id']); 
+                       message_id='message_' + build_id;">
+         <?python odd_or_even = oe?>
+         <tr class="${odd_or_even}">
+          <td>${build_id}</td>
+	  <td py:with="menu_id='menu_' + build_id" id="${build_id}_name_col">
+              <a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${str(build['nvr'])}</a>
+	  </td>
+          <td py:with="user = str(build['owner_name'])">
+               <a href="${tg.url('/people/name' + user + '/builds')}">${user}</a>
+          </td>
+          <td>${str(build['creation_time'])}</td>
+          <td>${str(build['completion_time'])}</td>
+          <td><img src="${str(build['mf_state_img'])}" /></td>
+          <td 
+              py:with="release_id='release_' + build_id"
+              id="${release_id}">
+          </td>
+        </tr>
+        <tr class="message_row, ${odd_or_even}">
+          <td> </td>
+          <td colspan="6" 
+              id="${message_id}">
+          </td>
+        </tr>
+       </span>
+      </tbody> 
+     </table> 
 </div>

@@ -66,6 +66,7 @@ class AppFactory(object):
         self.width = width
         self.height = height 
         self.data = kw
+        print kw
         self.view = view.lower()
         self.data['config'] = {}
  
@@ -150,13 +151,14 @@ class AppFactory(object):
 class ResourceViewAppFactory(AppFactory):
     _widget = None
 
-    def __init__(self, app_config_id, width=None, height=None, view='canvas', data_key=None, tool=None, **kw):
+    def __init__(self, app_config_id, width=None, height=None, view='canvas', 
+                data_key=None, tool=None, **kw):
         super(ResourceViewAppFactory, self).__init__(app_config_id, 
-            width, height, view, **kw)
+            width, height, view, data_key=data_key, tool=tool, **kw)
 
         self.data_key = data_key
         self.tool = tool
-      
+        
     def get_widget(self, view=None):
         if not view:
             view = self.view

@@ -1,7 +1,14 @@
 <div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/">
-    Soon to be Nav Links: 
-    <ul>
-      <li py:for="child in c">${child()}</li>
+     xmlns:py="http://genshi.edgewall.org/"> 
+  <div id="tabfloat">
+    <ul id="primary-links">
+      <span py:for="child in c">
+        <li>
+          <a href="${child._id}">${child.display_name}</a>
+        </li>
+      </span>
     </ul>
+  </div>
+  <h2 py:if="package">Package ${package}</h2><br />
+  ${active_child(resourceview=config['widget_id'], data_key=data_key)}
 </div>
