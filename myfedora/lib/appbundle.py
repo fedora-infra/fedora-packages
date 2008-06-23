@@ -1,11 +1,6 @@
 from tw.api import WidgetBunch
 import pylons
 
-def show_app(id, data):
-    w = pylons.tmpl_context.w[data['config']['widget_id']]
-
-    return w.display(id = id, **data)
-
 class AppBundle(object):
     def __init__(self, id):
         self.id = id
@@ -21,17 +16,19 @@ class AppBundle(object):
     def add(self, app_factory):
         self.apps.append(app_factory)
     
-    def get_app_id(self, app):
+    def get_app_uid(self, app):
         if app.config_id:
             return app.config_id
         else:
             return app.entry_name + '_' + self.id + '_' + str(self.read_counter())
 
     def serialize_apps(self, widget_bundle):
-        formatted_data = {}
-
+        formatted_data = []
         for a in self.apps:
-            formatted_data[self.get_app_id(a)] = a.get_data()
+            data = a.get_data()
+            data['config']['uid'] = self.get_app_uid(a)
+            formatted_data.append(data)
+
             w = a.get_widget() 
             widget_bundle.append(w)
 

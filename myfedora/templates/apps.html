@@ -16,8 +16,8 @@
 </head>
 
 <body>
-  <div py:for="id in standalone_data">
-     ${tmpl_context.show_app(id, standalone_data[id])}
+  <div py:for="app in standalone_data">
+     ${tmpl_context.show_app(app)}
   </div>
 </body>
 </html>

@@ -66,7 +66,6 @@ class AppFactory(object):
         self.width = width
         self.height = height 
         self.data = kw
-        print kw
         self.view = view.lower()
         self.data['config'] = {}
  
@@ -165,7 +164,12 @@ class ResourceViewAppFactory(AppFactory):
         
         widget_id = self._widget.id
         self.data['config'].update({'widget_id': widget_id})
- 
+
+        data_key = self.data['data_key']
+
+        for c in self._widget.children:
+            self.data.update({'child_args': {'data_key': data_key}})
+
         return self._widget
 
     @classmethod

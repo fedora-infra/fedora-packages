@@ -1,7 +1,7 @@
 from myfedora.lib.base import BaseController
 import tg
 from tg import expose
-from myfedora.lib.appbundle import AppBundle, show_app
+from myfedora.lib.appbundle import AppBundle
 import pylons
 
 class ResourceViewController(BaseController):
@@ -22,8 +22,6 @@ class ResourceViewController(BaseController):
         app_bundle = AppBundle('view_content')
         app_bundle.add(view_app)
    
-        pylons.tmpl_context.show_app = show_app
-
         return app_bundle
 
     def index(self, view, action, **kw):

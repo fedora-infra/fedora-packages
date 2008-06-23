@@ -119,9 +119,9 @@ class BuildsToolWidget(ToolWidget):
                      'order': '-creation_time'}
 
         if resourceview == 'people_view':
-            pkg_id = cs.getUser(data_key)['id']
+            user_id = cs.getUser(data_key)['id']
         elif resourceview == 'packages_view':
-            user_id = cs.getPackageID(data_key)
+            pkg_id = cs.getPackageID(data_key)
 
         builds_list = cs.listBuilds(packageID=pkg_id,
                                     userID=user_id, 

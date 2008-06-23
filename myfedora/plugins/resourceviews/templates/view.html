@@ -10,5 +10,5 @@
     </ul>
   </div>
   <h2 py:if="package">Package ${package}</h2><br />
-  ${active_child(resourceview=config['widget_id'], data_key=data_key)}
+  ${active_child(value_for(active_child), **args_for(active_child))}
 </div>

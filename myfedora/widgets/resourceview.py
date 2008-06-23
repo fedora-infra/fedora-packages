@@ -9,13 +9,15 @@ class ResourceViewWidget(Widget):
     event_cb = None
 
     def update_params(self, d):
+        super(ResourceViewWidget, self).update_params(d)
         if d.get('tool', None):
             active_tool = self.children[d['tool']]
             d['active_child'] = active_tool
-             
-        super(ResourceViewWidget, self).update_params(d)
-
-        print "resourceview.py: ",d
+            
+        for c in self.children:
+            d['child_args'][c.key] = \
+                dict(resourceview = d['config']['widget_id'],
+                     data_key = d['data_key']) 
         return d
 
 class ToolWidget(Widget):

@@ -5,11 +5,21 @@ Provides the BaseController class for subclassing.
 from tg import TGController, tmpl_context
 from pylons.templating import render_genshi as render
 
-
+from pylons import tmpl_context
 import myfedora.model as model
 
 from pylons.i18n import _, ungettext, N_
 from tw.api import WidgetBunch
+
+def show_app(app):
+    """Helper function for showing myfedora apps in a template
+       This gets injected into the tmpl_context by the controller
+    """ 
+    widget_id = app['config']['widget_id']
+    uid = app['config']['uid']
+    w = tmpl_context.w[widget_id]
+
+    return w.display(id = uid, **app)
 
 class Controller(object):
     """Base class for a web application's controller.
@@ -35,6 +45,7 @@ class BaseController(TGController):
         # in here will have their resources automatically included in the
         # template
         tmpl_context.w = WidgetBunch()
+        tmpl_context.show_app = show_app
         try:
             return TGController.__call__(self, environ, start_response)
         finally:

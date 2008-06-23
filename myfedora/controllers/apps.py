@@ -1,5 +1,5 @@
 from myfedora.lib.base import Controller
-from myfedora.lib.appbundle import AppBundle, show_app
+from myfedora.lib.appbundle import AppBundle
 from tg import expose
 import pylons
 
@@ -35,8 +35,6 @@ class AppController(Controller):
         appclass = self._find_app(app_id)
         app = appclass(app_config_id, width, height, view, **kw)
         app_bundle.add(app)
-
-        pylons.tmpl_context.show_app = show_app
 
         return dict(standalone_data = app_bundle.serialize_apps(pylons.tmpl_context.w))
    
