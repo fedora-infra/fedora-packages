@@ -16,8 +16,8 @@
 </head>
 
 <body>
-  <div py:for="id in view_content">
-     ${tmpl_context.show_app(id, view_content[id])}
+  <div py:for="app in view_content">
+     ${tmpl_context.show_app(app)}
   </div>
 </body>
 </html>

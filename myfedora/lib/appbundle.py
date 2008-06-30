@@ -1,5 +1,6 @@
 from tw.api import WidgetBunch
 import pylons
+from myfedora.lib.utils import pretty_print_array
 
 class AppBundle(object):
     def __init__(self, id):
@@ -29,7 +30,7 @@ class AppBundle(object):
             data['config']['uid'] = self.get_app_uid(a)
             formatted_data.append(data)
 
-            w = a.get_widget() 
+            w = a.get_widget()
             widget_bundle.append(w)
 
         return formatted_data

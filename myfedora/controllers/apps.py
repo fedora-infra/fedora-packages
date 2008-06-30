@@ -36,8 +36,10 @@ class AppController(Controller):
         app = appclass(app_config_id, width, height, view, **kw)
         app_bundle.add(app)
 
-        return dict(standalone_data = app_bundle.serialize_apps(pylons.tmpl_context.w))
-   
+        r = dict(standalone_data = app_bundle.serialize_apps(pylons.tmpl_context.w))
+        print "dududud", r
+        return r
+    
     @expose() 
     def list(self):
         # quick list for now

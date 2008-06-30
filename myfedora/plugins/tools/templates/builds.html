@@ -22,7 +22,6 @@ import tg
             <th>Started</th>
             <th>Finished</th>
             <th>State</th>
-            <th>Release</th>
           </tr>
         </thead>
         <tbody py:with="oe = 'odd'">
@@ -48,7 +47,16 @@ import tg
               id="${release_id}">
           </td>
         </tr>
-        <tr class="message_row, ${odd_or_even}">
+        <tr class="message_row, ${odd_or_even}, extention_point">
+          <extdescriptor>
+              {
+                 'type': 'build_message',
+                 'append_id': ${message_id},
+                 'build_id': ${build_id},
+                 'taks_id': ${task_id}, 
+                 'effect': 'fadeIn("fast")'
+              }
+          </extdescriptor>
           <td> </td>
           <td colspan="6" 
               id="${message_id}">

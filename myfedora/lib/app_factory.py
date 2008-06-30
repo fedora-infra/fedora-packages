@@ -17,10 +17,10 @@
 #            John Palmieri <johnp@redhat.com>
 #            Toshio Kuratomi <tkuratom@redhat.com>
 
-# Is this right for tg2?
-from pylons import config, tmpl_context
+import pylons
 import pkg_resources
 from myfedora.widgets.resourceview import ResourceViewWidget
+from myfedora.lib.utils import pretty_print_map
 
 ### FIXME: Write this so saving works.
 #from fedora.client import ProxyClient
@@ -35,10 +35,12 @@ class AppFactory(object):
     :Class-property:
         :entry_name: When subclassing AppFactory this class property must be
             set to the setup.py base entrypoint for this app
+        :view_widgets: This is set as widgets are registered 
     '''
     _user_fas = None
 
     entry_name = '' # Subclasses must set this
+    _view_widgets = {}
 
     def __init__(self, app_config_id, width=None, height=None, view='home', **kw):
         '''Create an ``AppFactory``.
@@ -129,16 +131,44 @@ class AppFactory(object):
         data = dict(**self.data)
         
         data['config'].update(self.load_configs())
+        data['name'] = self.entry_name
         # If there's data other than configs from fas, get it here.
         return data
+    
+    @staticmethod
+    def __get_namespace(cls):
+        ns_view = "%s.%s" % (cls.__module__, cls.__name__)
+        return ns_view
+         
+    @classmethod
+    def register_view(cls, view, view_cls):
+        ns = cls.__get_namespace(cls)
+        view_widgets = cls._view_widgets.get(ns, {})
+        view_widgets[view] = view_cls
+        cls._view_widgets[ns] = view_widgets
 
-    def get_widget(self):
+    @classmethod
+    def load_widgets(cls):
+        '''Register a widgets on a view if they haven't been already
+        '''
+        widgets = pylons.config['pylons.app_globals'].widgets
+        ns = cls.__get_namespace(cls)
+        for view, wcls in cls._view_widgets[ns].iteritems():
+            if not widgets.has_key(wcls):
+                name = cls.__get_namespace(wcls)
+                widgets[wcls] = wcls(name)
+
+    def get_widget(self, view = None):
         '''Returns the widget that renders this in that a specific view.
         '''
+        
+        if not view:
+            view = self.view
+            
         try:
-            w = config['pylons.app_globals'].widgets[self.view][ \
-                    self.entry_name]
-
+            ns = self.__get_namespace(self.__class__)
+            wcls = self._view_widgets[ns][view]
+            w = pylons.config['pylons.app_globals'].widgets[wcls]
             widget_id = w.id
             self.data['config'].update({'widget_id': widget_id})
 
@@ -172,6 +202,8 @@ class ResourceViewAppFactory(AppFactory):
 
         return self._widget
 
+    # fixme, perhaps we should align this to the parent class by putting the 
+    # widgets in the global namespace but this works fine
     @classmethod
     def load_widgets(cls):
         cls.tools_entry_point = "myfedora.plugins.resourceviews." + cls.entry_name + ".tools"

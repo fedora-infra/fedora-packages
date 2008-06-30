@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 try:
     from setuptools import setup, find_packages
 except ImportError:
@@ -45,31 +47,34 @@ setup(
     [myfedora.plugins.resourceviews.people.tools]
     builds = myfedora.plugins.tools.builds:BuildsToolWidget
 
-    [myfedora.widgets.home]
-    rss = myfedora.widgets:FedoraPeopleWidget
-    helloworld = myfedora.widgets:HelloWorldWidget
-
-    [myfedora.widgets.canvas]
-    rss = myfedora.widgets:FedoraPeopleWidget
-    helloworld = myfedora.widgets:HelloWorldWidget
-    
-    [myfedora.widgets.profile]
-    rss = myfedora.widgets:FedoraPeopleWidget
-    helloworld = myfedora.widgets:HelloWorldWidget
-
-    [myfedora.widgets.preview]
-    rss = myfedora.widgets:FedoraPeopleWidget
-    helloworld = myfedora.widgets:HelloWorldWidget
-
-    [myfedora.widgets.config]
-    rss = myfedora.widgets:FedoraPeopleWidget
-    helloworld = myfedora.widgets:HelloWorldWidget
-
     [myfedora.data]
-    rss = myfedora.widgets:FedoraPeopleData
+    rss = myfedora.apps.rss:FedoraPeopleData
 
     [myfedora.apps]
-    rss = myfedora.widgets:FedoraPeopleApp
-    helloworld = myfedora.widgets:HelloWorldApp
+    rss = myfedora.apps.rss:FedoraPeopleApp
+    helloworld = myfedora.apps.helloworld:HelloWorldApp
+    sandbox = myfedora.apps.sandbox:SandboxApp
+
+    [myfedora.apps.rss.views]
+    home = myfedora.apps.rss:FedoraPeopleWidget
+    canvas = myfedora.apps.rss:FedoraPeopleWidget 
+    profile = myfedora.apps.rss:FedoraPeopleWidget 
+    preview = myfedora.apps.rss:FedoraPeopleWidget
+    config = myfedora.apps.rss:FedoraPeopleWidget
+    
+    [myfedora.apps.helloworld.views]
+    home = myfedora.apps.helloworld:HelloWorldWidget
+    canvas = myfedora.apps.helloworld:HelloWorldWidget
+    profile = myfedora.apps.helloworld:HelloWorldWidget
+    preview = myfedora.apps.helloworld:HelloWorldWidget
+    config = myfedora.apps.helloworld:HelloWorldWidget
+    
+    [myfedora.apps.sandbox.views]
+    home = myfedora.apps.sandbox:SandboxHomeWidget
+    canvas = myfedora.apps.sandbox:SandboxHomeWidget
+    profile = myfedora.apps.sandbox:SandboxHomeWidget 
+    preview = myfedora.apps.sandbox:SandboxHomeWidget
+    config = myfedora.apps.sandbox:SandboxHomeWidget
+     
     """,
 )

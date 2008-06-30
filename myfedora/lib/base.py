@@ -18,7 +18,6 @@ def show_app(app):
     widget_id = app['config']['widget_id']
     uid = app['config']['uid']
     w = tmpl_context.w[widget_id]
-
     return w.display(id = uid, **app)
 
 class Controller(object):

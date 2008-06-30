@@ -8,8 +8,6 @@ from genshi.filters import Translator
 from genshi.template import TemplateLoader
 from sqlalchemy import engine_from_config
 
-from fedora.accounts.fas2 import AccountSystem
-
 import myfedora.lib.app_globals as app_globals
 from myfedora.model import init_model, DBSession, metadata
 
@@ -27,8 +25,8 @@ def make_default_route_map():
     map.connect('error/:action/:id', controller='error')
 
     for vname in config['pylons.app_globals'].resourceviews.keys():
-        map.connect('/' + vname + '/name/:data/:tool/', 
-                    controller='resourceview', data=None, tool=None) 
+        map.connect('/' + vname + '/name/:data_key/:tool', 
+                    controller='resourceview', data_key=None, tool=None)
 
     # This route connects your root controller
     map.connect('*url', controller='root', action='routes_placeholder')
@@ -40,16 +38,14 @@ def template_loaded(template):
     "Plug-in our i18n function to Genshi."
     template.filters.insert(0, Translator(ugettext))
 
-def load_widgets():
-    print "Loading Widgets"
-    for widget_type in ('home', 'canvas', 'profile', 'config', 'preview'):
-        our_widgets = config['pylons.app_globals'].widgets[widget_type]
-        entry_point_string = 'myfedora.widgets.%s' % widget_type
-        for widget in pkg_resources.iter_entry_points(entry_point_string):
-            if not our_widgets.has_key(widget.name):
-                our_widgets[widget.name] = widget.load()(widget.name)
-                print widget.name, ":"
-                #print "\t", our_widgets[widget.name]
+def load_widget_entry_points(app):
+
+    entry_point_string = 'myfedora.apps.%s.views' %  app.entry_name
+    print "Loading widgets for app %s on entry point %s" % (app.entry_name,
+                                                            entry_point_string)
+    
+    for widget_entry in pkg_resources.iter_entry_points(entry_point_string):
+        app.register_view(widget_entry.name, widget_entry.load())
 
 def load_resourceviews():
     print "Loading MyFedora resourceview apps"
@@ -73,10 +69,13 @@ def load_fas():
 
 def load_apps():
     print "Loading MyFedora apps"
-    for app in pkg_resources.iter_entry_points('myfedora.apps'):
-        if not config['pylons.app_globals'].apps.has_key(app.name):
-            config['pylons.app_globals'].apps[app.name] = app.load()
-        print config['pylons.app_globals'].apps[app.name]
+    for app_entry in pkg_resources.iter_entry_points('myfedora.apps'):
+        if not config['pylons.app_globals'].apps.has_key(app_entry.name):
+            app_class = app_entry.load()
+            config['pylons.app_globals'].apps[app_entry.name] = app_class
+            load_widget_entry_points(app_class)
+            app_class.load_widgets()
+            
 
 def load_environment(global_conf, app_conf):
     """Configure the Pylons environment via the ``pylons.config``
@@ -93,9 +92,6 @@ def load_environment(global_conf, app_conf):
     config.init_app(global_conf, app_conf, package='myfedora', paths=paths)
 
     config['pylons.app_globals'] = app_globals.Globals()
-
-    # Load widgets from the myfedora.widgets entry point
-    load_widgets()
 
     # Load myfedora's ResourceView/Tool infrastructure
     load_resourceviews()
