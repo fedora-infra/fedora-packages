@@ -37,7 +37,7 @@ class AppController(Controller):
         app_bundle.add(app)
 
         r = dict(standalone_data = app_bundle.serialize_apps(pylons.tmpl_context.w))
-        print "dududud", r
+
         return r
     
     @expose() 

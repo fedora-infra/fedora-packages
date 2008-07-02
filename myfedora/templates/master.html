@@ -9,6 +9,8 @@ import tg
 tg_flash = tg.get_flash()
 ?>
 <head py:match="head" py:attrs="select('@*')">
+    <script type="text/javascript" src="/javascript/myfedora.js"/>
+    
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
     <title py:replace="''">Your title goes here</title>
     <meta py:replace="select('*')"/>

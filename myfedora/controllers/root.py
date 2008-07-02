@@ -30,6 +30,7 @@ from pylons.i18n import ugettext as _
 from myfedora.lib.base import BaseController
 from myfedora.lib.appbundle import AppBundle
 from myfedora.controllers.apps import AppController
+from myfedora.controllers.extensions import ExtensionsController
 
 log = logging.Logger(__name__)
 
@@ -37,7 +38,8 @@ class RootController(BaseController):
 
     #admin = DBMechanic(SAProvider(metadata), '/admin')
     apps = AppController()
-
+    extensions = ExtensionsController()
+    
     @expose()
     def join(self, feed, *args, **kw):
         """ Join a specified data feed """

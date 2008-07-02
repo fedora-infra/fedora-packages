@@ -5,6 +5,7 @@ import tg
 <div xmlns="http://www.w3.org/1999/xhtml" 
      xmlns:py="http://genshi.edgewall.org/" 
      id="resource_content">
+     
    You are now displaying the build tool
      <form name="builds_navigation_form" action="">
        <a onClick="document.builds_navigation_form.direction.value='prev'; document.builds_navigation_form.submit()" href="#" py:if="previous_disabled != 'disabled'">&lt;-- prev </a>
@@ -47,16 +48,17 @@ import tg
               id="${release_id}">
           </td>
         </tr>
-        <tr class="message_row, ${odd_or_even}, extention_point">
-          <extdescriptor>
+        <tr class="message_row, ${odd_or_even}, extension_point">
+          <script type="text/x-myfedora-extpoint">
               {
                  'type': 'build_message',
-                 'append_id': ${message_id},
-                 'build_id': ${build_id},
-                 'taks_id': ${task_id}, 
-                 'effect': 'fadeIn("fast")'
+                 'placeholder_id': '${message_id}',
+                 'build_id': '${build_id}',
+                 'task_id': '${task_id}', 
+                 'effect': 'fadeIn("fast")',
+                 'run': 'whenReady'
               }
-          </extdescriptor>
+          </script>
           <td> </td>
           <td colspan="6" 
               id="${message_id}">
