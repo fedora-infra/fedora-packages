@@ -31,7 +31,7 @@ from myfedora.lib.base import BaseController
 from myfedora.lib.appbundle import AppBundle
 from myfedora.controllers.apps import AppController
 from myfedora.controllers.extensions import ExtensionsController
-
+from myfedora.controllers.proxy import ProxyController
 log = logging.Logger(__name__)
 
 class RootController(BaseController):
@@ -39,6 +39,7 @@ class RootController(BaseController):
     #admin = DBMechanic(SAProvider(metadata), '/admin')
     apps = AppController()
     extensions = ExtensionsController()
+    proxy = ProxyController()
     
     @expose()
     def join(self, feed, *args, **kw):
