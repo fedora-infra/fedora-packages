@@ -1,5 +1,6 @@
 from myfedora.widgets.resourceview import ToolWidget
 from datetime import datetime
+from tw.forms.datagrid import DataGrid
 import koji
 
 class BuildsToolWidget(ToolWidget):
@@ -7,7 +8,7 @@ class BuildsToolWidget(ToolWidget):
     display_name = "Builds"
     offset = 0
     limit = 10
-
+    
     def _time_delta_to_date_str(self, start, end):
         datetimestr = ""
 
@@ -18,7 +19,7 @@ class BuildsToolWidget(ToolWidget):
         elif delta.days < 7:
             datetimestr += datetime.strftime(start, "%a ")  
         else:
-            datetimestr += datetime.strftime(start, "%b %d ")
+            datetimestr += datetime.strftime(start, "%b %d @ ")
             if start.year != end.year:
                 datetimestr += str(start.year)
 
@@ -37,33 +38,17 @@ class BuildsToolWidget(ToolWidget):
         seconds = delta.seconds - minutes * 60
 
         if days:
-            elapsed_str += str(days) + " day"
-            if days > 1:
-                elapsed_str += "s "
-            else:
-                elapsed_str += " "
+            elapsed_str += str(days) + "d "
 
         if hours:
-            elapsed_str += str(hours) + " hour"
-            if hours > 1:
-                elapsed_str += "s "
-            else:
-                elapsed_str += " "
+            elapsed_str += str(hours) + "h "
 
         if minutes:
-            elapsed_str += str(minutes) + " minute"
-            if minutes > 1:
-                elapsed_str += "s "
-            else:
-                elapsed_str += " "
+            elapsed_str += str(minutes) + "m "
 
         if seconds:
-            elapsed_str += "and " + str(seconds) + " second"
-            if seconds > 1:
-                elapsed_str += "s "
-            else:
-                elapsed_str += " "
-
+            elapsed_str += str(seconds) + "s "
+    
         return elapsed_str
 
     def _make_delta_timestamps_human_readable(self, start, end):
@@ -83,7 +68,7 @@ class BuildsToolWidget(ToolWidget):
             end = datetime.strptime(end.split(".")[0], parse_format)
             end_str = self._time_delta_to_date_str(end, now)
             elapsed_str = self._time_delta_to_elapsed_str(start, end)
-            result_dict['end_time_display'] =  end_str + '(' + elapsed_str + ')'
+            result_dict['end_time_display'] =  end_str + ' (' + elapsed_str.strip() + ')'
 
         return result_dict
 
