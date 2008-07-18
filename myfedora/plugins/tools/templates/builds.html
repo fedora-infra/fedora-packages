@@ -6,7 +6,6 @@ import tg
      xmlns:py="http://genshi.edgewall.org/" 
      id="resource_content">
      
-   You are now displaying the build tool
      <form name="builds_navigation_form" action="">
        <a onClick="document.builds_navigation_form.direction.value='prev'; document.builds_navigation_form.submit()" href="#" py:if="previous_disabled != 'disabled'">&lt;-- prev </a>
        <a onClick="document.builds_navigation_form.direction.value='next'; document.builds_navigation_form.submit()" href="#" py:if="next_disabled != 'disabled'">next --&gt; </a>
@@ -19,53 +18,88 @@ import tg
           <tr>
             <th>Build ID</th>
             <th>Name</th>
-            <th>Build By</th>
+            <th>Built By</th>
             <th>Started</th>
             <th>Finished</th>
             <th>State</th>
+            <th>Release</th>
           </tr>
         </thead>
-        <tbody py:with="oe = 'odd'">
-        <span py:for="build in builds_list" 
+        <tbody>         
+         <span py:for="i, build in enumerate(builds_list)" 
               py:with="build_id=str(build['build_id']); 
                        build_state=str(build['state']); 
                        task_id=str(build['task_id']); 
-                       message_id='message_' + build_id;">
-         <?python odd_or_even = oe?>
-         <tr class="${odd_or_even}">
-          <td>${build_id}</td>
-	  <td py:with="menu_id='menu_' + build_id" id="${build_id}_name_col">
-              <a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${str(build['nvr'])}</a>
-	  </td>
-          <td py:with="user = str(build['owner_name'])">
-               <a href="${tg.url('/people/name' + user + '/builds')}">${user}</a>
-          </td>
-          <td>${str(build['creation_time'])}</td>
-          <td>${str(build['completion_time'])}</td>
-          <td><img src="${str(build['mf_state_img'])}" /></td>
-          <td 
-              py:with="release_id='release_' + build_id"
-              id="${release_id}">
-          </td>
-        </tr>
-        <tr class="message_row, ${odd_or_even}, extension_point">
-          <script type="text/x-myfedora-extpoint">
-              {
-                 'type': 'build_message',
-                 'placeholder_id': '${message_id}',
-                 'build_id': '${build_id}',
-                 'task_id': '${task_id}',
-                 'build_state': ${build_state}, 
-                 'effect': 'slideDown("slow")',
-                 'run': 'whenReady'
-              }
-          </script>
-          <td> </td>
-          <td colspan="6" 
-              id="${message_id}">
-          </td>
-        </tr>
-       </span>
+                       message_id='message_' + build_id;
+                       nvr=str(build['nvr']);
+                       odd_or_even=i%2 and 'row-odd' or 'row-even'"
+                       >
+            <tr class="${odd_or_even}">
+              <td>${build_id}</td>
+          
+    	      <td py:with="menu_id='menu_' + build_id" id="${build_id}_name_col">
+                  <div class="${odd_or_even}">
+                    <a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${nvr}</a>
+                      <ul id="${menu_id}" class="${odd_or_even}">
+                        <li><a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">View package details in Koji</a></li>
+                      </ul>
+                    <script type="text/x-myfedora-extpoint">
+                    {
+                      'type': 'build_details',
+                      'placeholder_id': '${menu_id}',
+                      'build_id': '${build_id}',
+                      'task_id': '${task_id}',
+                      'package_nvr':'${nvr}',
+                      'build_state': ${build_state},
+                      'ui': 'hover_menu',
+                      'show_effect': 'slideDown("fast")',
+                      'hide_effect': 'slideUp("fast")',
+                      'run': 'whenReady'
+                    }
+                    </script>
+                  </div>
+                  
+    	      </td>
+              <td py:with="user = str(build['owner_name'])">
+                   <a href="${tg.url('/people/name/' + user + '/builds')}">${user}</a>
+              </td>
+              <td>${str(build['creation_time'])}</td>
+              <td>${str(build['completion_time'])}</td>
+              <td><img src="${str(build['mf_state_img'])}" /></td>
+              <td py:with="release_id='release_' + build_id"
+                  id="${release_id}">
+                  &nbsp;
+                  <script type="text/x-myfedora-extpoint">
+                  {
+                     'type': 'release_info',
+                     'placeholder_id': '${release_id}',
+                     'build_id': '${build_id}',
+                     'package_nvr':'${nvr}',
+                     'build_state': ${build_state}, 
+                     'show_effect': 'fadeIn("slow")',
+                     'run': 'whenReady'
+                  }
+                  </script>
+              </td>
+            </tr>
+            <tr class="${odd_or_even}">
+              <script type="text/x-myfedora-extpoint">
+                  {
+                     'type': 'build_message',
+                     'placeholder_id': '${message_id}',
+                     'build_id': '${build_id}',
+                     'task_id': '${task_id}',
+                     'build_state': ${build_state}, 
+                     'show_effect': 'slideDown("slow")',
+                     'run': 'whenReady'
+                  }
+              </script>
+              <td colspan="6" 
+                  id="${message_id}"
+                  class="message_row">
+              </td>
+            </tr>
+        </span>
       </tbody> 
-     </table> 
+     </table>
 </div>

@@ -16,9 +16,9 @@ class Chunk(object):
         end = self.info.find(']', start)
         
         consumes = self.info[start + 1 : end]
-        print consumes
+    
         self.consumes = shlex.split(consumes)
-        print consumes  
+      
 
 class ExtensionsController(Controller):
     """
@@ -95,8 +95,6 @@ class ExtensionsController(Controller):
             c = Chunk()
             c.code = js[start:end]
             c.info = js[pull_info_start:pull_info_end + 1]
-            print c.code
-            print c.info
             
             c.parse_consumes_field()
             chunks.append(c)
@@ -110,6 +108,7 @@ class ExtensionsController(Controller):
         return chunks
     
     def load_extension(self, file):
+        print "Loading JavaScript extension %s" % file
         f = open(file,'r')
         js = f.read()
         

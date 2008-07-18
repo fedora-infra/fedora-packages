@@ -143,16 +143,19 @@ a img
 
 .content
 {
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 100px;
+  margin-left: 18px;
+  margin-right: 18px;
+  margin-bottom: 0px;
   color: #666666;
   background: #FFFFFF;
   display: inline-block;
 }
 
 /* Blame IE6 and the guillotine bug for this one */
-.content { display: block; }
+.content { 
+   display: block; 
+     
+}
 
 .content h2
 {
@@ -253,11 +256,10 @@ a img
 
 #footer
 {
-  position: relative;
+ 
   font: normal 1.5ex/1.5 sans-serif;
   text-align: center;
-  background: #FFFFFF url(../images/line-bottom.png) 0 0 repeat-x;
-  margin: -90px 0 0;
+  
   border-bottom: 10px solid #337ACC;
   height: 80px;
   color: #AAAAAA;
@@ -265,8 +267,9 @@ a img
 
 #bottom
 {
+  background: #FFFFFF url(../images/border-right.png) repeat-y scroll 100% 0pt;
   margin-left: 18px;
-  margin-right: 18px;
+  padding-right: 0px;
 }
 
 #footer ul
@@ -714,12 +717,36 @@ background-position:100% -24px;
 
 /*************** UI Elements ********************/
 .menu {
-  display: none; 
   position: absolute;
-  z-index: 2;
-  background-color: white;
+  margin-left: 10px;
+  border: 2px solid;
+  padding-right: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  display: none;  
 }
 
-.message_row {
-  display: none;
+ul, ol { 
+   margin-left: 1px; 
+   padding:0; 
+   position:relative; 
+}
+ 
+li { 
+   margin-top:0.25em;
+   margin-bottom:0.25em; 
+}
+ 
+ul ul, ul ol, 
+ol ol, ol ul { 
+   margin-left:1em; 
+   padding-left:0; 
+}
+ 
+ul li, ol li { 
+   margin-left:2em; 
+}
+ 
+li li { 
+   margin-left:1em; 
 }

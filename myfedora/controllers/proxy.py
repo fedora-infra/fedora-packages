@@ -76,7 +76,7 @@ class KojiQuery(Controller):
 
     @expose("json")
     def get_files(self, *args, **kw):
-        results = {'logs':{}, 'downloads':{}}
+        results = {'logs':{'count':0}, 'downloads':{'count':0}}
         task_id = int(kw.get('task_id', '0'))
         state = int(kw.get('state', '0'))
 
@@ -88,17 +88,16 @@ class KojiQuery(Controller):
             for child in task_children:
                 child_task_id = child['id']
                 child_label = child['label']
-                child_files = cs.listTaskOutput(child_task_id, stat=True)
+                child_files = cs.listTaskOutput(child_task_id, stat=False)
                 
                 last_log = (None, None)
 
-                cf_keys = [] 
+                cf_keys = child_files
+                
                 if isinstance(child_files, dict):
                     cf_keys = child_files.keys()
 
                 for f_name in cf_keys:
-                    f_info = child_files[f_name]
-
                     f_type = 'downloads'
                     if not f_name.endswith('rpm'):
                         f_type = 'logs'
@@ -106,15 +105,16 @@ class KojiQuery(Controller):
                     if not results[f_type].has_key(child_label):
                         results[f_type][child_label] = []
 
-                    url = koji_url_handler.get_file_url(child_task_id, f_name)
+                    url = koji_getfile + '?taskID=' + str(child_task_id) + '&name=' + f_name
                     file_result = {'name': f_name, 'url': url}
  
                     results[f_type][child_label].append(file_result)
+                    results[f_type]['count'] += 1
 
                     results[f_type][child_label].sort(lambda a, b: cmp(a['name'], b['name']))
 
-        return {'files': results}
 
+        return {'files': results}
 
 class ProxyController(Controller):
     koji = KojiQuery()
