@@ -54,6 +54,7 @@ setup(
     rss = myfedora.apps.rss:FedoraPeopleApp
     helloworld = myfedora.apps.helloworld:HelloWorldApp
     sandbox = myfedora.apps.sandbox:SandboxApp
+    navigation = myfedora.apps.navigation:NavigationApp
 
     [myfedora.apps.rss.views]
     home = myfedora.apps.rss:FedoraPeopleWidget
@@ -75,6 +76,13 @@ setup(
     profile = myfedora.apps.sandbox:SandboxHomeWidget 
     preview = myfedora.apps.sandbox:SandboxHomeWidget
     config = myfedora.apps.sandbox:SandboxHomeWidget
-     
+
+
+    [myfedora.apps.navigation.views]
+    home = myfedora.apps.navigation:NavigationWidget
+    canvas = myfedora.apps.navigation:NavigationWidget 
+    profile = myfedora.apps.navigation:NavigationWidget
+    preview = myfedora.apps.navigation:NavigationWidget
+    config = myfedora.apps.navigation:NavigationWidget
     """,
 )

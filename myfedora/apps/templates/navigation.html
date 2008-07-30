@@ -1,0 +1,14 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:py="http://genshi.edgewall.org/"
+     style="max-width:${config.width};max-height:${config.height};border:medium double rgb(250,0,255)"
+     id="${id}"
+     class="navigation">
+  <ul>
+    <li py:for="item in navigation_list"
+        py:with="image=item.get('icon', 'generic_link.png')">
+      <a href="${item['href']}">
+        <img src="${image}" border="0" /> ${item['label']}
+      </a>
+    </li>
+  </ul>
+</div>
