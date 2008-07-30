@@ -67,3 +67,10 @@ tr.row-odd td:last-child, tr.row-even td:last-child {
   display: none;
 }
 
+.paragraph_block tr td {
+  padding-top: 10px;
+}
+
+.paragraph_block tr td:last_child {
+  padding: 10px;
+}

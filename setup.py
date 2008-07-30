@@ -41,8 +41,8 @@ setup(
     people = myfedora.plugins.resourceviews.people:PeopleViewApp
 
     [myfedora.plugins.resourceviews.packages.tools]
+    info = myfedora.plugins.tools.packageinfo:PackageInfoToolWidget
     builds = myfedora.plugins.tools.builds:BuildsToolWidget
-    hello = myfedora.plugins.tools.helloworld:HelloWorldWidget
 
     [myfedora.plugins.resourceviews.people.tools]
     builds = myfedora.plugins.tools.builds:BuildsToolWidget

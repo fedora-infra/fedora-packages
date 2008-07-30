@@ -1,0 +1,37 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      id="resource_content"> 
+  <?python import tg ?>
+  
+  <table class="content_table">
+    <thead>
+      <tr>
+        <th>
+          <h2>${package_data['summary']}</h2>
+        </th>
+      </tr>
+    </thead>
+    <tbody class="paragraph_block">
+      <tr class="row-even">
+        <td>
+          <h3>Description:</h3>
+          <ul>
+            <li>${package_data['description']}</li>
+          </ul>
+        </td>
+      </tr>
+      <tr class="row-even">
+        <td>
+          <h3>Collections:</h3>
+          <ul>
+            <li py:for="c in package_data['collection_list']">
+              ${c['fullname']} - <a href="${tg.url('/people/' + c['package_owner_id'])}">${c['package_owner_name']}</a>
+
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

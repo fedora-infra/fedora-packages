@@ -2,7 +2,7 @@
      xmlns:py="http://genshi.edgewall.org/"> 
   <div id="tabfloat">
     <ul id="primary-links">
-      <span py:for="child in c">
+      <span py:for="child in reversed(c)">
         <li>
           <a href="${child._id}">${child.display_name}</a>
         </li>
