@@ -35,11 +35,15 @@ class AppFactory(object):
     :Class-property:
         :entry_name: When subclassing AppFactory this class property must be
             set to the setup.py base entrypoint for this app
+        :display_name:When subclassing AppFactory this class property should be
+            set to a text string which can be displayed to reference this app
         :view_widgets: This is set as widgets are registered 
     '''
     _user_fas = None
 
     entry_name = '' # Subclasses must set this
+    display_name = '' # Subclass should set this
+    
     _view_widgets = {}
 
     def __init__(self, app_config_id, width=None, height=None, view='home', **kw):
@@ -179,9 +183,14 @@ class AppFactory(object):
 
 class ResourceViewAppFactory(AppFactory):
     _widget = None
+    controller = None # this must be set by the child class
 
     def __init__(self, app_config_id, width=None, height=None, view='canvas', 
                 data_key=None, tool=None, **kw):
+        
+        if not self.controller:
+            raise NotYetImplementedError, 'class variable controller must be set before this class can be instantiated'
+        
         super(ResourceViewAppFactory, self).__init__(app_config_id, 
             width, height, view, data_key=data_key, tool=tool, **kw)
 
@@ -215,3 +224,11 @@ class ResourceViewAppFactory(AppFactory):
         cls._widget = ResourceViewWidget(cls.entry_name + '_view', children=child_tools)
         print "ReosurceView widget " + cls._widget.id + " loaded"
 
+    @classmethod
+    def load_controller(cls):
+        cls.controller = cls.controller(cls)
+        
+    @classmethod
+    def load_resources(cls):
+        cls.load_controller()
+        cls.load_widgets()

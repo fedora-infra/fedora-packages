@@ -13,6 +13,8 @@ class ResourceViewWidget(Widget):
         if d.get('tool', None):
             active_tool = self.children[d['tool']]
             d['active_child'] = active_tool
+        else:
+            d['active_child'] = self.children[0]
             
         for c in self.children:
             d['child_args'][c.key] = \

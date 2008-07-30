@@ -25,8 +25,12 @@ def make_default_route_map():
     map.connect('error/:action/:id', controller='error')
 
     for vname in config['pylons.app_globals'].resourceviews.keys():
-        map.connect('/' + vname + '/name/:data_key/:tool', 
-                    controller='resourceview', data_key=None, tool=None)
+        map.connect('/' + vname, 
+                    controller='resourcelocator',
+                    action='lookup')
+        map.connect('/' + vname + '/*url', 
+                    controller='resourcelocator',
+                    action='lookup')
 
     # This route connects your root controller
     map.connect('*url', controller='root', action='routes_placeholder')
@@ -52,7 +56,7 @@ def load_resourceviews():
     for view in pkg_resources.iter_entry_points('myfedora.plugins.resourceviews'):
         if not config['pylons.app_globals'].resourceviews.has_key(view.name):
             view_class = view.load()
-            view_class.load_widgets()
+            view_class.load_resources()
             config['pylons.app_globals'].resourceviews[view.name] = view_class
             print view.name + " loaded"
 
