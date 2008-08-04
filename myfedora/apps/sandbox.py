@@ -14,6 +14,8 @@ class SandboxHomeWidget(Widget):
     url = None
 
     def update_params(self, d):
+        super(SandboxHomeWidget, self).update_params(d)
+        
         if d.get('url', None):
             self.add_call("""$('document').ready(
                                  function() {

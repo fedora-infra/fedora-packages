@@ -28,5 +28,6 @@ class HelloWorldWidget(Widget):
    event_cb = None
 
    def update_params(self, d):
+        super(HelloWorldWidget, self).update_params(d)
         d['greeting'] = 'Hello' 
         return d

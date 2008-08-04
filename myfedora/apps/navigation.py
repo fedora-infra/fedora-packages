@@ -8,12 +8,13 @@ class NavigationApp(AppFactory):
     entry_name = 'navigation'
 
 class NavigationWidget(Widget):
-    params = []
-
+    params=[]
     template = 'genshi:myfedora.apps.templates.navigation'
     javascript = [jquery_js]
 
     def update_params(self, d):
+        super(NavigationWidget, self).update_params(d)
+        
         # right now just work with resource views but we should also work with
         # user defined links and other controllers
         rvs = app_globals.resourceviews
