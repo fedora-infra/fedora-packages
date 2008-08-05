@@ -97,7 +97,7 @@ class FasMiddleware(object):
         if path_info[-1] == '/':
             path_info = path_info[:-1]
             
-        if path_info == '/login_handler' or :
+        if path_info == '/login_handler':
             ident = Identity(username=req.params['login'],
                              password=req.params['password'])
             
