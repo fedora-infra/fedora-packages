@@ -69,8 +69,8 @@ class RootController(BaseController):
         
         url = "http://gmodules.com/ig/ifr?url=http://www.cammap.net/tvlive/livetvint.xml&amp;up_kanaal=BBC%20World&amp;up_autoplay=Yes&amp;up_none=-%20Fill%20in%20below%20-&amp;up_statn=&amp;up_urls=&amp;up_urlw=http%3A%2F%2F&amp;synd=open&amp;w=285&amp;h=272&amp;title=Live+TV+channels&amp;border=%23ffffff%7C3px%2C1px+solid+%23999999&amp;output=js"
 
-        sandbox2 = pylons.g.apps['sandbox'](None, '285px', '272px', 'Home', url=url)
-        col3_apps.add(sandbox2)
+        #sandbox2 = pylons.g.apps['sandbox'](None, '285px', '272px', 'Home', url=url)
+        #col3_apps.add(sandbox2)
 
 
         col1_apps = col1_apps.serialize_apps(pylons.tmpl_context.w)
@@ -97,6 +97,7 @@ class RootController(BaseController):
 
     @expose('myfedora.templates.login')
     def login(self, **kw):
-        came_from = kw.get('came_from', '/')
+        came_from = kw.get('came_from', 
+                            pylons.request.headers.get('REFERER', '/'))
         return dict(page='login', header=lambda *arg: None,
                     footer=lambda *arg: None, came_from=came_from)
