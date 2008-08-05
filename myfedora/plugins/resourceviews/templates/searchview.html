@@ -1,0 +1,26 @@
+<div xmlns="http://www.w3.org/1999/xhtml" 
+     xmlns:py="http://genshi.edgewall.org/"> 
+  <?python import tg ?>
+  <div id="tabfloat">
+    <ul id="primary-links">
+      <span py:for="child in reversed(c)">
+        <li>
+          <a href="${child._id}">${child.display_name}</a>
+        </li>
+      </span>
+    </ul>
+  </div>
+  <div class="centered">
+    
+    <form action="${tg.url('/search/' + active_child._id)}" method="get">
+      Search Fedora ${active_child.display_name}<br/>
+      
+      <input type="text" class="largesearch" name="data_key" value="${data_key}"></input>
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  
+  <ul class="spacing">
+    ${active_child(value_for(active_child), search_string=data_key, **args_for(active_child))}
+  </ul>
+</div>

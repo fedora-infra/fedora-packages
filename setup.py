@@ -39,6 +39,7 @@ setup(
     [myfedora.plugins.resourceviews]
     packages = myfedora.plugins.resourceviews.packages:PackagesViewApp
     people = myfedora.plugins.resourceviews.people:PeopleViewApp
+    search = myfedora.plugins.resourceviews.search:SearchViewApp
 
     [myfedora.plugins.resourceviews.packages.tools]
     info = myfedora.plugins.tools.packageinfo:PackageInfoToolWidget
@@ -46,7 +47,10 @@ setup(
 
     [myfedora.plugins.resourceviews.people.tools]
     builds = myfedora.plugins.tools.builds:BuildsToolWidget
-
+    
+    [myfedora.plugins.resourceviews.search.tools]
+    packages = myfedora.plugins.tools.packagesearch:PackageSearchToolWidget
+    
     [myfedora.data]
     rss = myfedora.apps.rss:FedoraPeopleData
 
