@@ -50,6 +50,7 @@ setup(
     
     [myfedora.plugins.resourceviews.search.tools]
     packages = myfedora.plugins.tools.packagesearch:PackageSearchToolWidget
+    people = myfedora.plugins.tools.peoplesearch:PeopleSearchToolWidget
     
     [myfedora.data]
     rss = myfedora.apps.rss:FedoraPeopleData
