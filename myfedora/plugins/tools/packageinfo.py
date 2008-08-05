@@ -36,7 +36,7 @@ class PackageInfoToolWidget(ToolWidget):
         return -result
 
     def update_params(self, d):
-        super(ToolWidget, self).update_params(d)
+        super(PackageInfoToolWidget, self).update_params(d)
         package = d.get('data_key', None)
 
         pkgdb_client = PkgdbClient('https://admin.fedoraproject.org/pkgdb/')

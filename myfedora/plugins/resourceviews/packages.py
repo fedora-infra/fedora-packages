@@ -4,10 +4,14 @@ from myfedora.controllers.resourceview import ResourceViewController
 from tw.jquery import jquery_js, jQuery
 from tw.api import Widget, JSLink, js_function, js_callback
 
+from tg import expose
+
 import pylons
 
 class PackagesViewController(ResourceViewController):
-    pass
+    @expose('genshi:myfedora.plugins.resourceviews.templates.packagesindex')
+    def index(self):
+        return {}
 
 class PackagesViewApp(ResourceViewAppFactory):
     entry_name = 'packages'

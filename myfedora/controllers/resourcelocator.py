@@ -9,7 +9,11 @@ class ResourcelocatorController(BaseController):
     @expose()
     def lookup(self, *args):
         resource = args[0]
+        
         r = pylons.app_globals.resourceviews.get(resource, None)
         
         if r:
+            if len(args) == 1:
+                return r.controller, []
+        
             return r.controller, list(args)

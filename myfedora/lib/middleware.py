@@ -93,8 +93,11 @@ class FasMiddleware(object):
         
         fas = FasClient(fasurl, sc)
 
-        
-        if environ['PATH_INFO'] == '/login_handler':
+        path_info = environ['PATH_INFO']
+        if path_info[-1] == '/':
+            path_info = path_info[:-1]
+            
+        if path_info == '/login_handler' or :
             ident = Identity(username=req.params['login'],
                              password=req.params['password'])
             
@@ -106,10 +109,11 @@ class FasMiddleware(object):
             exc = HTTPSeeOther(location=go_to)
             resp_app = exc
             
-        elif environ['PATH_INFO'] == '/logout':
+        elif path_info == '/logout':
             r = fas.logout()
+            sc = r[0]
             
-            go_to = req.GET.get('came_from', '/');
+            go_to = req.headers.get('REFERER', '/')
             exc = HTTPSeeOther(location=go_to)
             resp_app = exc
             

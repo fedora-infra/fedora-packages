@@ -14,7 +14,7 @@ from tw.api import make_middleware as tw_middleware
 
 from myfedora.config.environment import load_environment
 from tg.ext.repoze.who.middleware import make_who_middleware
-from myfedora.lib.middleware import JsonFasMiddleware
+from myfedora.lib.middleware import FasMiddleware
 from myfedora.model import User, Group, Permission, DBSession
 
 # the criterion (ie instance of column) against which to mach
