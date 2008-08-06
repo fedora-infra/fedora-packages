@@ -36,7 +36,7 @@ def weighted_sort(a, b):
 
     return result
 
-class PeopleSearchToolWidget(ToolWidget):
+class SearchPeopleToolWidget(ToolWidget):
     params=['search_string', 'results']
     template = 'genshi:myfedora.plugins.tools.templates.peoplesearch'
     display_name = 'People'

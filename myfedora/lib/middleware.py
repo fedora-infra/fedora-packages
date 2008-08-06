@@ -37,10 +37,13 @@ import paste
 import webob
 from webob.exc import *
 
+import time
 import logging
+
 log = logging.getLogger('turbogears.identity.safasprovider')
 
 fasurl = 'https://admin.fedoraproject.org/accounts'
+FAS_CACHE_TIMEOUT = 5 #seconds
 
 class FasClient(ProxyClient):
     visit_name = 'tg-visit'
@@ -60,6 +63,12 @@ class FasClient(ProxyClient):
             auth_params = {'cookie': self.visit_cookie}
             
         return self.send_request("logout", auth_params = auth_params)
+
+    def keep_alive(self):
+        auth_params = {}
+        if self.visit_cookie and self.visit_cookie.get('tg-visit', None):
+            auth_params = {'cookie': self.visit_cookie}
+            self.send_request('', auth_params = auth_params)
 
 class FasMiddleware(object):
     '''
@@ -86,6 +95,7 @@ class FasMiddleware(object):
 
         session_id = req.cookies.get('session_id', None)
         tg_visit = req.cookies.get('tg_visit', None)
+        keep_alive = req.cookies.get('fas_keep_alive', None)
         
         sc = SimpleCookie()
         for key, value in req.cookies.iteritems():
@@ -104,6 +114,7 @@ class FasMiddleware(object):
             
             r = fas.login(ident)
             sc = r[0]
+            sc['fas_keep_alive'] = time.time() + FAS_CACHE_TIMEOUT
             
             go_to = req.GET.get('came_from', '/');
             exc = HTTPSeeOther(location=go_to)
@@ -111,15 +122,28 @@ class FasMiddleware(object):
             
         elif path_info == '/logout':
             r = fas.logout()
-            sc = r[0]
+            sc['tg-visit'] = None
+            sc['fas_keep_alive'] = None
             
             go_to = req.headers.get('REFERER', '/')
             exc = HTTPSeeOther(location=go_to)
             resp_app = exc
+        else:
+            keep_alive = sc.get('fas_keep_alive', '')
+            
+            try:
+                keep_alive = float(keep_alive.value)
+            except:
+                keep_alive = ''
+            
+            if keep_alive and keep_alive < time.time():
+                fas.keep_alive()
+                sc['fas_keep_alive'] = time.time() + FAS_CACHE_TIMEOUT
             
         resp = req.get_response(resp_app)
-        resp.set_cookie('session_id', sc['session_id'])
-        resp.set_cookie('tg-visit', sc['tg-visit'])
+        resp.set_cookie('session_id', sc.get('session_id', None))
+        resp.set_cookie('tg-visit', sc.get('tg-visit', None))
+        resp.set_cookie('fas_keep_alive', sc.get('fas_keep_alive', None))
         
         userid = None
         identity = None

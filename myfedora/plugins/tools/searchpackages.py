@@ -25,9 +25,9 @@ class PkgdbClient(BaseClient):
     def search(self, search_term):
         return self.send_request("search/package", req_params={'searchwords': search_term})
 
-class PackageSearchToolWidget(ToolWidget):
+class SearchPackagesToolWidget(ToolWidget):
     params=['search_string', 'results']
-    template = 'genshi:myfedora.plugins.tools.templates.packagesearch'
+    template = 'genshi:myfedora.plugins.tools.templates.searchpackages'
     display_name = 'Packages'
     
     def search(self, search_terms, timeout_in_seconds=5):
@@ -113,7 +113,7 @@ class PackageSearchToolWidget(ToolWidget):
     
     
     def update_params(self, d):
-        super(PackageSearchToolWidget, self).update_params(d)
+        super(SearchPackagesToolWidget, self).update_params(d)
         
         results = d.get('results', [])
         
