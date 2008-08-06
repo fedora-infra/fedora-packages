@@ -49,6 +49,7 @@ setup(
     builds = myfedora.plugins.tools.builds:BuildsToolWidget
     
     [myfedora.plugins.resourceviews.search.tools]
+    all = myfedora.plugins.tools.searchall:SearchAllToolWidget
     packages = myfedora.plugins.tools.searchpackages:SearchPackagesToolWidget
     people = myfedora.plugins.tools.searchpeople:SearchPeopleToolWidget
     

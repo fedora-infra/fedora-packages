@@ -38,7 +38,7 @@ def weighted_sort(a, b):
 
 class SearchPeopleToolWidget(ToolWidget):
     params=['search_string', 'results']
-    template = 'genshi:myfedora.plugins.tools.templates.peoplesearch'
+    template = 'genshi:myfedora.plugins.tools.templates.searchpeople'
     display_name = 'People'
     
     def search(self, search_terms, timeout_in_seconds=5):
@@ -131,7 +131,9 @@ class SearchPeopleToolWidget(ToolWidget):
         user_list = []
         for user in weighted_user_list:
             user_name = user[0]['username']
-            item = {'url': tg.url('/people/name/' + user_name)}
+            item = {'url': tg.url('/people/name/' + user_name),
+                    'weight': user[1],
+                    'widget_id': self.id}
             item.update(user[0])
             user_list.append(item)
 
@@ -139,7 +141,7 @@ class SearchPeopleToolWidget(ToolWidget):
     
     # TODO: move this to a common search class
     def update_params(self, d):
-        super(PeopleSearchToolWidget, self).update_params(d)
+        super(SearchPeopleToolWidget, self).update_params(d)
         
         results = d.get('results', [])
         

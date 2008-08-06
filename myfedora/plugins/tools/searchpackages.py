@@ -101,8 +101,8 @@ class SearchPackagesToolWidget(ToolWidget):
         for pkg in weighted_pkg_list:
             pkg_hash = pkg[0]
             pkg_hash.update({'url': tg.url('/packages/name/' + pkg_hash['name']),
-                                    'weight': pkg[1]
-                                   })
+                             'weight': pkg[1],
+                             'widget_id': self.id})
             item = pkg_hash
                                   
             pkg_list.append(item)
@@ -118,11 +118,11 @@ class SearchPackagesToolWidget(ToolWidget):
         results = d.get('results', [])
         
         search_string = d.get('search_string', d.get('data_key',None))
-        print search_string
+        
         if search_string:
             results = self.search(search_string)
-            print results
         
+        print results
         d['results'] = results 
         
         return d
