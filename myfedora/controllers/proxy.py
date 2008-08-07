@@ -3,11 +3,14 @@ from tg import expose
 
 import koji
 import re
+import urllib2
 
 # FIXME: get from configuration
 koji_url = 'http://koji.fedoraproject.org'
 koji_xmlrpc = koji_url + '/kojihub'
 koji_getfile = koji_url + '/koji/getfile'
+
+cvs_url = 'http://cvs.fedoraproject.org/'
 
 def _mock_error_code_to_log_file(err_code):
     log_file = ''
@@ -19,6 +22,11 @@ def _mock_error_code_to_log_file(err_code):
         print "Unhandled error code :", err_code
 
     return log_file
+
+class CvsQuery(Controller):
+    @expose()
+    def get_page(self, *path):
+        return urllib2.urlopen(cvs_url + '/'.join(path)).read()
 
 class KojiQuery(Controller):
     @expose("json")
@@ -118,4 +126,5 @@ class KojiQuery(Controller):
 
 class ProxyController(Controller):
     koji = KojiQuery()
+    cvs = CvsQuery()
     #bodhi = BodhiQuery()

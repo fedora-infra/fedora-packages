@@ -6,8 +6,8 @@
   <table class="content_table">
     <thead>
       <tr>
-        <th>
-          <h2>${package_data['summary']}</h2>
+        <th colspan="2">
+          <h2>Package: ${package} - ${package_data['summary']}</h2>
         </th>
       </tr>
     </thead>
@@ -19,6 +19,17 @@
             <li>${package_data['description']}</li>
           </ul>
         </td>
+        <td rowspan="2" id="more_info">
+          <script type="text/x-myfedora-extpoint">
+            {
+              'type': 'package_info',
+              'placeholder_id': 'more_info',
+              'package': '${package}',
+              'show_effect': 'fadeIn("fast")',
+              'hide_effect': 'fadeOut("fast")'
+            }
+          </script>
+        </td>
       </tr>
       <tr class="row-even">
         <td>
@@ -26,7 +37,7 @@
           <ul>
             <li py:for="c in package_data['collection_list']">
               ${c['fullname']} - <a href="${tg.url('/people/' + c['package_owner_id'])}">${c['package_owner_name']}</a>
-
+              
             </li>
           </ul>
         </td>
