@@ -4,7 +4,14 @@ _extensions.prototype = {
     _extension_cache: {},
     _extension_deferred: {},
     _extension_uid_counter: 0,
-        
+    get_uid: function()
+      {
+          uid = this._extension_uid_counter + 
+            "_" + (Math.floor(Math.random() * 10000000));
+          this._extension_uid_counter++;
+          
+          return uid;
+      },
     grep_extensions: function()
       {
         var extension_points = jQuery('script[type=text/x-myfedora-extpoint]');
@@ -52,9 +59,7 @@ _extensions.prototype = {
         for(var i = 0; i < obj_list.length; i++) {
           //clone our data and generate our uid so we are unique
           var d = new myfedora.shallow_clone(data);
-          d.uid = "extension_" + this._extension_uid_counter + 
-            "_" + (Math.floor(Math.random() * 10000000));
-          this._extension_uid_counter++;
+          d.uid = "extension_" + this.get_uid();
             
           //create a place to put this extension that they can call their own
           var div = block_element.attr("id", d.uid);
@@ -109,28 +114,20 @@ _extensions.prototype = {
           }
         
         this._extension_deferred[data.type] = new Array();
-        jQuery.get("/extensions?exttype=" + data.type, 
-          function (js_string, err)
-            {
-              // we trust the server so we can just eval the js
-              // it should be a list of objects with a run method
-              var js = eval(js_string);
-              
-              // run this callback's extention
-              myfedora.extensions.run_extensions(js, data);
-              
-              // now run the deferred extensions queued up while the scripts
-              // were being downloaded
-              var d = myfedora.extensions._extension_deferred[data.type].shift();
-              while(d)
-                {
-                  myfedora.extensions.run_extensions(js, d);
-                  d = myfedora.extensions._extension_deferred[data.type].shift();
-                }
-                
-              myfedora.extensions._extension_cache[data.type] = js;
-            } 
-         );
+        this._extension_deferred[data.type].push(data);
+        
+        // we trust the server so we can just script inject the js
+        // it should be a list of objects with a run method and code to execute
+        // the modules   
+        var js_script_tag = jQuery('<script />');
+        
+        var attrs ={'type':'text/javascript',
+                    'src': '/extensions?' + 'exttype=' + data.type
+                   };
+                   
+        js_script_tag.attr(attrs);
+                                   
+        jQuery('head:first').append(js_script_tag);
       }
 };
 

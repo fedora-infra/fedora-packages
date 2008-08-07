@@ -140,6 +140,28 @@ class ExtensionsController(Controller):
             self.__extension_cache[key] = s
                 
     @expose()
-    def default(self, exttype):
-        return self.__extension_cache.get(exttype, "");
+    def default(self, exttype=None, _=None):
+        # _ is a jsonp thing
+        
+        if not exttype:
+            return ''
+        
+        extensions_data = self.__extension_cache.get(exttype, "")
+        extensions_str = ','.join(extensions_data)
+        
+        script = 'var mf_loaded_extensions ='
+        script += extensions_data
+        script += ';'
+        # now run the deferred extensions queued up while the scripts
+        # were being downloaded
+        
+        script += 'myfedora.extensions._extension_cache["' + exttype +'"] = mf_loaded_extensions;'
+        script += 'var deferred=myfedora.extensions._extension_deferred["' + exttype +'"];'
+        script += 'var d=deferred.shift();'
+        script += 'while(d){' 
+        script +=   'myfedora.extensions.run_extensions(mf_loaded_extensions, d);'
+        script +=   'd = deferred.shift();'
+        script += '}'
+        
+        return script
         
