@@ -15,6 +15,7 @@ from tw.api import make_middleware as tw_middleware
 from myfedora.config.environment import load_environment
 from tg.ext.repoze.who.middleware import make_who_middleware
 from myfedora.lib.middleware import FasMiddleware
+from myfedora.lib.faswhoplugin import fas_make_who_middleware
 from myfedora.model import User, Group, Permission, DBSession
 
 # the criterion (ie instance of column) against which to mach
@@ -64,7 +65,8 @@ def make_app(global_conf, full_stack=True, **app_conf):
     # Identity Middleware
     #app = make_who_middleware(app, config, User, user_criterion, user_id_col,
     #        DBSession)
-    app = FasMiddleware(app, config)
+    #app = FasMiddleware(app, config)
+    app = fas_make_who_middleware(app, config)
 
     if asbool(full_stack):
         # Handle Python exceptions
