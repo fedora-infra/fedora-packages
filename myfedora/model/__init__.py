@@ -6,7 +6,7 @@ from sqlalchemy import MetaData
 
 # Global session manager.  DBSession() returns the session object
 # appropriate for the current web request.
-DBSession = scoped_session(sessionmaker(autoflush=True, transactional=True))
+DBSession = scoped_session(sessionmaker(autoflush=True, autocommit=False))
 
 # Global metadata. If you have multiple databases with overlapping table
 # names, you'll need a metadata for each database.
@@ -39,7 +39,6 @@ def init_model(engine):
     #mapper(Reflected, t_reflected)
 
 # Import your model modules here. 
-from identity import User, Group, Permission 
-from identity import users_table, groups_table, permissions_table, \
-              user_group_table, group_permission_table
+from blogcache import Blogs
+from blogcache import blog_table
 

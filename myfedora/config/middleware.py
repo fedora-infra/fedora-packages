@@ -16,13 +16,6 @@ from myfedora.config.environment import load_environment
 from tg.ext.repoze.who.middleware import make_who_middleware
 from myfedora.lib.middleware import FasMiddleware
 from myfedora.lib.faswhoplugin import fas_make_who_middleware
-from myfedora.model import User, Group, Permission, DBSession
-
-# the criterion (ie instance of column) against which to mach
-# the user name coming from a tentative login form
-user_criterion = User.user_name
-# the name of the column which is used as a unique identifier
-user_id_col = 'user_id'
 
 def make_app(global_conf, full_stack=True, **app_conf):
     """Create a Pylons WSGI application and return it
@@ -63,8 +56,6 @@ def make_app(global_conf, full_stack=True, **app_conf):
         })
 
     # Identity Middleware
-    #app = make_who_middleware(app, config, User, user_criterion, user_id_col,
-    #        DBSession)
     #app = FasMiddleware(app, config)
     app = fas_make_who_middleware(app, config)
 
