@@ -15,6 +15,8 @@ from repoze.who.interfaces import IChallenger, IIdentifier
 
 from Cookie import SimpleCookie
 
+import pkg_resources
+
 import os
 import sys
 
@@ -93,6 +95,10 @@ class FASWhoPlugin(object):
     def __init__(self, url):
         self.url = url
         self._session_cache = {}
+        self._metadata_plugins = []
+        
+        for entry in pkg_resources.iter_entry_points('fas.repoze.who.metadata_plugins'):
+            self._metadata_plugins.append(entry.load())
         
     def identify(self, environ):
         req = webob.Request(environ)
@@ -169,6 +175,9 @@ class FASWhoPlugin(object):
 
         if info is not None:
             identity.update(info[1])
+            
+        for plugin in self._metadata_plugins:
+            plugin(identity)
 
     def __repr__(self):
         return '<%s %s>' % (self.__class__.__name__, id(self))
