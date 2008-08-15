@@ -60,7 +60,7 @@ _menu_base.prototype = {
   },
   
   set_hide_effect: function(effect) {
-    this.hide_effect = effect;
+     this.hide_effect = effect;
   }
   
 };
@@ -92,12 +92,89 @@ _hover_menu.prototype = {
 /******** construct the click menu class ********/
 
 
+/******** construct the ellipsized text class ********/
+var _ellipsized_text = function(blockid, morelink_text, lesslink_text, max_len) {
+  this.div = jQuery('#' + blockid);
+  this.morelink_text = morelink_text;
+  this.lesslink_text = lesslink_text;
+  this.max_len = max_len;
+
+};
+
+_ellipsized_text.prototype =  {
+  calc_ellipse: function(html, size) {
+    var text = this.div.text();
+    
+    if (text.length > this.max_len)
+        text = text.substr(0, this.max_len) + '...';
+        
+    var result = jQuery('<span />');
+    result.append(text);
+    
+    return result
+  },
+  
+  sanitize_tags: function() {
+    // add a blank target to links
+    var a = jQuery('a', this.div);
+    a.attr('target', '_blank');
+  },
+  
+  show: function() {
+    var self = this;  
+    this.div.hide();
+    
+    var s = jQuery('<span/>').text('[');
+    var a = jQuery('<a/>').attr('href', '#').text(this.lesslink_text);
+    a.click(function() {self.ellipsize(self); return false;});
+    s.append(a);
+    s.append(']');
+    
+    this.html = jQuery('<span/>').append(this.div.html());
+    this.html.append(s);
+    
+    this.sanitize_tags();
+
+    var el = this.calc_ellipse(this.div, this.max_len);
+      
+      
+    s = jQuery('<span />').text(' [');
+    a = jQuery('<a/>').attr('href', '#').text(this.morelink_text);
+      
+    this.lessdiv = el
+      
+    this.div.html(el);
+      
+      
+    a.click(function() {self.unellipsize(self); return false;});
+    s.append(a);
+    s.append(']');
+    el.append(s);
+    
+    this.div.show();
+  },
+  
+  unellipsize: function(self) {
+    self.div.hide();
+    self.div.html(self.html);
+    self.div.slideDown('fast');
+  },
+  
+  ellipsize: function(self) {
+
+    self.div.html(self.lessdiv);
+    self.div.show();
+  },
+};
+
+
 /******** construct the UI module ********/
 var _ui = function(){};
 
 _ui = {
   menu_base: _menu_base, 
-  hover_menu: _hover_menu 
+  hover_menu: _hover_menu,
+  ellipsized_text: _ellipsized_text 
 };
 
 myfedora.ui = _ui;
