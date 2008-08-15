@@ -36,6 +36,9 @@ setup(
     [paste.app_install]
     main = pylons.util:PylonsInstaller
 
+    [fas.repoze.who.metadata_plugins]
+    blog_info = myfedora.plugins.identity.bloginfo:add_metadata
+
     [myfedora.plugins.resourceviews]
     packages = myfedora.plugins.resourceviews.packages:PackagesViewApp
     people = myfedora.plugins.resourceviews.people:PeopleViewApp
@@ -57,17 +60,17 @@ setup(
     rss = myfedora.apps.rss:FedoraPeopleData
 
     [myfedora.apps]
-    rss = myfedora.apps.rss:FedoraPeopleApp
+    planetfedora = myfedora.apps.planetfedora:PlanetFedoraApp
     helloworld = myfedora.apps.helloworld:HelloWorldApp
     sandbox = myfedora.apps.sandbox:SandboxApp
     navigation = myfedora.apps.navigation:NavigationApp
-
-    [myfedora.apps.rss.views]
-    home = myfedora.apps.rss:FedoraPeopleWidget
-    canvas = myfedora.apps.rss:FedoraPeopleWidget 
-    profile = myfedora.apps.rss:FedoraPeopleWidget 
-    preview = myfedora.apps.rss:FedoraPeopleWidget
-    config = myfedora.apps.rss:FedoraPeopleWidget
+    
+    [myfedora.apps.planetfedora.views]
+    home = myfedora.apps.planetfedora:PlanetFedoraHomeWidget
+    canvas = myfedora.apps.planetfedora:PlanetFedoraCanvasWidget
+    profile = myfedora.apps.planetfedora:PlanetFedoraHomeWidget
+    preview = myfedora.apps.planetfedora:PlanetFedoraHomeWidget
+    config = myfedora.apps.planetfedora:PlanetFedoraHomeWidget
     
     [myfedora.apps.helloworld.views]
     home = myfedora.apps.helloworld:HelloWorldWidget
