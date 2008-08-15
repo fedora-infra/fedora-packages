@@ -19,4 +19,7 @@ from tg import url
 from tw.api import Widget, JSLink, js_function, js_callback
 from tw.jquery import jquery_js, jQuery
 
-# generic widgets here
+myfedora_js = JSLink(link='/javascript/myfedora.js')
+
+class GlobalResourceInjectionWidget(Widget):
+    javascript=[myfedora_js]

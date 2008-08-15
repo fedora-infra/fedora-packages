@@ -11,6 +11,8 @@ import myfedora.model as model
 from pylons.i18n import _, ungettext, N_
 from tw.api import WidgetBunch
 
+from myfedora.widgets import GlobalResourceInjectionWidget
+
 def show_app(app):
     """Helper function for showing myfedora apps in a template
        This gets injected into the tmpl_context by the controller
@@ -33,6 +35,7 @@ class BaseController(TGController):
     Your web application should have one of these. The root of
     your application is used to compute URLs used by your app.
     """
+    _global_resource_injection = GlobalResourceInjectionWidget()
     
     def __call__(self, environ, start_response):
         """Invoke the Controller"""
@@ -45,6 +48,8 @@ class BaseController(TGController):
         # template
         tmpl_context.w = WidgetBunch()
         tmpl_context.show_app = show_app
+        self._global_resource_injection.register_resources()
+        
         try:
             return TGController.__call__(self, environ, start_response)
         finally:
