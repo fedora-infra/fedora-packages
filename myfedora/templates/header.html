@@ -1,27 +1,47 @@
 <html xmlns:py="http://genshi.edgewall.org/"
       xmlns:xi="http://www.w3.org/2001/XInclude">
+
 <py:def function="header">
   <div id="header">
      <div class="head">
-        <h1><a href="http://fedoraproject.org/index.html">Fedora</a></h1>
-        <div class="mainsearch">
-          <form action="${tg.url('/search/results.html')}" method="get">
-            <input type="text" name="search_string" />
-          </form> 
-        </div>
-      </div>
-      <div id="top_ticker">
-        <div class="usernav">
-          <!-- <span py:if="tg.identity.anonymous"> -->
-          <span>
-            You are not logged in yet <a class="loginButton" href="${tg.url('/login/')}">login</a>
-          </span>
-          <!-- <span py:if="not tg.identity.anonymous"> -->
-          <span>
-            <a href="${tg.url('/users/info/')}">profile</a> |
-            <a class="loginButton" href="${tg.url('/logout/')}">logout</a>
-          </span>
-        </div>
+       <table width="100%">
+         <tr>
+           <td>
+             <h1><a href="/">Fedora Community</a></h1>
+           </td>
+           <td>
+             <div id="top_ticker">
+                <table>
+                  <tr>
+                    <form class="mainsearch" action="${tg.url('/search/all')}" method="get">
+                    <td>
+                      <input type="text" name="data_key" />
+                    </td>
+                    <td>
+                      <input type="submit" name="submit" value="search" />
+                    </td>
+                    </form>
+                    <td>&nbsp;</td>
+                    <td>
+                      <span py:if="not tmpl_context.identity">
+                        You are not logged in yet <form class="login_button" action="${tg.url('/login')}"><input type="submit"  value="login" /></form>
+                      </span>
+                      <span py:if="tmpl_context.identity.person">
+                        LOGGED IN: <strong><a href="${tg.url('/profile')}">${tmpl_context.identity['person']['human_name']}</a></strong>
+                        <form class="login_button" action="${tg.url('/logout')}"><input type="submit"  value="logout" /></form>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <a href="${tg.url('/search')}" >Advanced...</a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
   </div>
 </py:def>    

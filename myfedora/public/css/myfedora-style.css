@@ -38,14 +38,17 @@ a img
   background: #FFFFFF url(../images/line.png) 0 100% repeat-x;
 }
 
+.head h1
+{
+  display:inline;
+}
 .head h1 a
 {
   display: block;
   text-indent: -9999px;
   background: url(../images/fedora-logo.png) 20px 50% no-repeat;
-  height: 73px;
-  width: 138px;
-  overflow: hidden;
+  height: 76px;
+  width: 236px;
 }
 
 #sidebar
@@ -469,6 +472,16 @@ ul#resources li.resource-download
 
 #top_ticker {
   padding: 5px;
+  text-align:right;
+  float:right;
+  vertical-align:top;
+  display:inline;
+}
+
+#top_ticker>table {
+  display: inline;
+  width:100%;
+  height:100%;
 }
 
 ul#primary-links {
@@ -620,13 +633,14 @@ background-position:100% -24px;
 }
 
 .mainsearch 
-  {
-  top: 18px;
-  right: 28px;
-  z-index:2;
-  width: 300;
-  z-index:2;
-  position:absolute;
+{
+  width:300;
+  display:inline;
+}
+
+.login_button
+{
+  display:inline;
 }
 
 /*********** My Fedora Widget stuff *************/
@@ -701,7 +715,6 @@ background-position:100% -24px;
 }
 
 .usernav {
-  margin-bottom: 10px;
   text-align: right;
 }
 

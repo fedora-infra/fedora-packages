@@ -31,7 +31,11 @@
         </ul>
       </div>
     <div class="col" id="col2">
-      <h1>Welcome</h1><!--${tg.identity.user_name}!</h1>-->
+      <h1><span py:if="tmpl_context.identity.person"> 
+         <img src="${tmpl_context.identity.person['hackergotchi_url']}" 
+             style="float:left"/>
+         ${tmpl_context.identity.person['human_name']}</span></h1>
+      
       <ul class="widget_list">
         <li py:for="app in col2_apps">
           ${tmpl_context.show_app(app)}
