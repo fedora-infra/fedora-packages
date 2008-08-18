@@ -15,7 +15,7 @@ class PackagesViewController(ResourceViewController):
 
 class PackagesViewApp(ResourceViewAppFactory):
     entry_name = 'packages'
-    display_name = 'Packages'
+    display_name = 'Package Maintenance'
     controller = PackagesViewController
 
     def update_params(self, d):
