@@ -1,0 +1,78 @@
+/* positioning for header elements */
+
+#head {
+  height: 			65px;
+}
+
+#head h1 {
+  width:			200px;
+  float: 			left;
+}
+
+#head #toolbar {
+  width: 			50%;
+  float: 			right;
+  margin-top: 			9px;
+}
+
+#login-toolbar {
+  float: 			right;
+}
+
+#content {
+  padding-top: 			20px;
+  clear: 			right;
+}
+
+#sidebar {
+  clear: 			both;
+}
+
+/* styling for login toolbar */
+
+#toolbar {
+  vertical-align:		middle;
+}
+
+#toolbar .username {
+  color: 			#2b81d6;
+  font-weight: 			700;
+  text-transform:		none;
+  padding:			5px;
+  font-size:			1.1em !important;
+}
+
+#toolbar input {
+  background-color:		white;
+  color:			#ccc;
+  font-size:			.9em;
+  padding:			5px;
+  border:			1px solid #aaa;
+}
+
+#toolbar input.button {
+  margin-left: 			5px;
+  text-transform:		uppercase;
+  font-size:			.9em;
+  vertical-align:		middle;
+  color:			white;
+  background-color:		#888;
+  padding:			2px;
+}
+
+#toolbar {
+  vertical-align: 		middle;
+  color: 			#888;
+  text-transform:		uppercase;
+  font-size:			.9em;
+}
+
+/** content area styling **/
+#content {
+  border-top: 4px solid #2b80d6;
+  border-left: 1px solid #eee;
+}
+
+
+/* left navbar tabs styling */
+

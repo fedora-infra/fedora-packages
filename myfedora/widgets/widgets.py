@@ -16,10 +16,18 @@
 # Author(s): Luke Macken <lmacken@redhat.com>
 
 from tg import url
-from tw.api import Widget, JSLink, js_function, js_callback
+from tw.api import Widget, JSLink, CSSLink, js_function, js_callback
 from tw.jquery import jquery_js, jQuery
 
 myfedora_js = JSLink(link='/javascript/myfedora.js')
+fedora_css = CSSLink(link='http://fedoraproject.org/static/css/fedora.css')
+myfedora_table_css = CSSLink(link='/css/myfedora-style-tables.css')
+myfedora_appchrome_css = CSSLink(link='/css/application-chrome.css')
+myfedora_branding_css = CSSLink(link='/css/myfedora-branding.css')
 
 class GlobalResourceInjectionWidget(Widget):
     javascript=[myfedora_js]
+    css=[fedora_css, 
+         myfedora_table_css, 
+         myfedora_appchrome_css, 
+         myfedora_branding_css]
