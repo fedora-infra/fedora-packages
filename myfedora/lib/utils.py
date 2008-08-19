@@ -34,3 +34,42 @@ def _print_array(array, depth):
 
 pretty_print_map = lambda m : _print_map(m, 0)
 pretty_print_array = lambda a : _print_array(a, 0)
+
+class odict(dict):
+    
+    def __init__(self):
+        dict.__init__(self)
+        self._keys = []
+        self._data = {}
+        
+    def __setitem__(self, key, value):
+        if key not in self._data:
+            self._keys.append(key)
+            
+        self._data[key] = value
+        
+    def __getitem__(self, key):
+        return self._data[key]
+    
+    def __delitem__(self, key):
+        del self._data[key]
+        self._keys.remove(key)
+        
+    def __iter__(self):
+        for key in self._keys:
+            yield key
+        
+    def keys(self):
+        return list(self._keys)
+    
+    def copy(self):
+        copyDict = odict()
+        copyDict._data = self._data.copy()
+        copyDict._keys = self._keys[:]
+        return copyDict
+
+    def __repr__(self):
+        result = []
+        for key in self._keys:
+            result.append('(%s, %s)' % (repr(key), repr(self._data[key])))
+        return ''.join(['OrderedDict', '([', ', '.join(result), '])'])
