@@ -24,7 +24,7 @@ class ResourceViewController(BaseController):
    
         return app_bundle
 
-    @expose()
+    @expose('genshi:myfedora.templates.view')
     def index(self):
         app_bundle = self._init_context(None, None)
         data = app_bundle.serialize_apps(pylons.tmpl_context.w)
