@@ -64,6 +64,8 @@ setup(
     helloworld = myfedora.apps.helloworld:HelloWorldApp
     sandbox = myfedora.apps.sandbox:SandboxApp
     navigation = myfedora.apps.navigation:NavigationApp
+    login = myfedora.apps.login:LoginApp
+    placeholder = myfedora.apps.placeholder:PlaceholderApp
     
     [myfedora.apps.planetfedora.views]
     home = myfedora.apps.planetfedora:PlanetFedoraHomeWidget
@@ -93,5 +95,13 @@ setup(
     profile = myfedora.apps.navigation:NavigationWidget
     preview = myfedora.apps.navigation:NavigationWidget
     config = myfedora.apps.navigation:NavigationWidget
+    
+    [myfedora.apps.login.views]
+    home = myfedora.apps.login:LoginWidget
+    canvas = myfedora.apps.login:LoginWidget 
+    
+    [myfedora.apps.placeholder.views]
+    home = myfedora.apps.placeholder:PlaceholderHomeWidget
+    canvas = myfedora.apps.placeholder:PlaceholderCanvasWidget 
     """,
 )

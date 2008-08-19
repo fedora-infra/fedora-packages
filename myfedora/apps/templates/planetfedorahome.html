@@ -1,0 +1,29 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:py="http://genshi.edgewall.org/"
+     style="max-width:${config.width};max-height:${config.height};border:medium double rgb(250,0,255)"
+     id="${id}"
+     class="navigation">
+  <ul>
+    <li py:for="entry in entries" >
+      <div style="float:none">
+          <span style="float:left">
+            <div><img src="${entry.author_detail.hackergotchi}" height="40" width="40" /></div>
+            <a href="${entry.author_detail.href}" target="_blank">${entry.author_detail.name}</a>
+          </span>
+          <span style="float:left">
+            <a href="${entry.link}" target="_blank">${entry.title}</a>
+            <div id="${entry['uid']}">
+              ${HTML(entry.content[0].value)}
+            </div>
+          </span>
+      </div>
+      <script type="text/javascript">
+        var et = new myfedora.ui.ellipsized_text('${entry['uid']}',
+                                         'Show more...',
+                                         'Show less...',  
+                                         55, 5);
+        et.show();
+      </script>
+    </li>
+  </ul>
+</div>
