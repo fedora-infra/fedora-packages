@@ -2,34 +2,27 @@
       xmlns:xi="http://www.w3.org/2001/XInclude">
 
 <py:def function="header">
-  <div id="header">
-    <div class="head">
-      <div style="float:left">
-        <h1><a href="/">Fedora Community</a></h1>
+  <div id="head">
+    <h1><a href="/">Fedora Community</a></h1>
+    <div id="toolbar">
+      <div id="login-toolbar" py:if="tmpl_context.identity.person">
+        <form class="login_button" action="${tg.url('/logout')}">
+          Logged In: <span class="username"><a href="${tg.url('/profile')}">${tmpl_context.identity['person']['human_name']}</a></span>
+          <input type="submit"  class="button" value="Log Out" />
+        </form>
       </div>
-      <div id="top_ticker">
-        <span style="float:right" py:if="tmpl_context.identity.person">
-          LOGGED IN: <strong><a href="${tg.url('/profile')}">${tmpl_context.identity['person']['human_name']}</a></strong>
-          <form class="login_button" action="${tg.url('/logout')}"><input type="submit"  value="logout" /></form>
-        </span>
-        <span py:if="not tmpl_context.identity" style="float:right">
-          You are not logged in yet <form class="login_button" action="${tg.url('/login')}"><input type="submit"  value="login" /></form>
-        </span>
-        <form py:if="not header_hide_search" class="mainsearch" action="${tg.url('/search/all')}" method="get" style="float:right">  
-          <span style="float:right">
-            <input type="submit" name="submit" value="search" />
-          </span>
-          <span style="float:right">
-            <div>
-              <input type="text" name="data_key" />
-            </div>
-            <div>
-              <a href="${tg.url('/search')}" >Advanced...</a>
-            </div>
-          </span>       
-        </form>              
+      <div id="login-toolbar" py:if="not tmpl_context.identity">
+        <form action="${tg.url('/login')}">
+          You are not logged in yet  <input type="submit"  value="Login" class="button"/>
+        </form>
+      </div>
+      <div id="search-toolbar">
+        <form action="${tg.url('/search/')}">
+           Search: <input type="text" name="data_key" value="Type search terms here." />
+           <input class="button" type="submit" value="Search" />
+        </form>
       </div>
     </div>
   </div>
-</py:def>    
+</py:def>
 </html>

@@ -34,8 +34,8 @@ a img
 .head
 {
   border-top: 10px solid #337ACC;
-  padding: 1ex 2ex 17px;
-  background: #FFFFFF url(../images/line.png) 0 100% repeat-x;
+  padding: 2px 2px 100px;
+
 }
 
 .head h1
@@ -669,7 +669,7 @@ background-position:100% -24px;
 }
 
 #col1 {
-  width: 280px;
+  width: 200px;
   height: 100%;
 }
 

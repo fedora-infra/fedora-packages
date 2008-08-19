@@ -6,12 +6,14 @@ from tg import TGController, tmpl_context
 from pylons.templating import render_genshi as render
 
 from pylons import tmpl_context
+import pylons
 import myfedora.model as model
 
 from pylons.i18n import _, ungettext, N_
 from tw.api import WidgetBunch
 
 from myfedora.widgets import GlobalResourceInjectionWidget
+from myfedora.lib.appbundle import AppBundle
 
 def show_app(app):
     """Helper function for showing myfedora apps in a template
@@ -48,7 +50,15 @@ class BaseController(TGController):
         # template
         tmpl_context.w = WidgetBunch()
         tmpl_context.show_app = show_app
+        
         self._global_resource_injection.register_resources()
+        tmpl_context.identity =  pylons.request.environ.get('repoze.who.identity')
+        
+        #this can be overwritten by the child controller
+        nav = pylons.g.apps['navigation'](None, '320px', '200px', 'Home')
+        apps = AppBundle('sidebarapps')
+        apps.add(nav)
+        tmpl_context.sidebar_apps = apps.serialize_apps(pylons.tmpl_context.w)
         
         try:
             return TGController.__call__(self, environ, start_response)
@@ -56,5 +66,4 @@ class BaseController(TGController):
             #after everything is done clear out the Database Session
             #to eliminate possible cross request DBSession polution.
             model.DBSession.remove()
-        tmpl_context.identity =  request.environ.get('repoze.who.identity') 
         

@@ -19,7 +19,11 @@ class NavigationWidget(Widget):
         # user defined links and other controllers
         rvs = app_globals.resourceviews
         nav = []
-        for name, view in rvs.iteritems():
+        
+        print rvs
+        
+        for name in rvs.keys():
+            view = rvs[name]
             item = {'label': '',
                     'icon': None,
                     'href': ''}

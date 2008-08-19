@@ -61,16 +61,22 @@ class RootController(BaseController):
         col2_apps = AppBundle("col2")
         col3_apps = AppBundle("col3")
 
-        nav = pylons.g.apps['navigation'](None, '320px', '200px', 'Home')
-        col1_apps.add(nav)
-
-        #rss = pylons.g.apps['rss'](None, '320px', '200px', 'Home')
-        #col3_apps.add(rss)
+        if not pylons.tmpl_context.identity:
+            placeholder = pylons.g.apps['placeholder'](None, '285px', '272px', 'Canvas', placeholder_label='Fedora is Cool banner')
+            col2_apps.add(placeholder)
+            
+            login = pylons.g.apps['login'](None, '320px', '200px', 'Home')
+            col3_apps.add(login)
+        
+        placeholder = pylons.g.apps['placeholder'](None, '285px', '272px', 'Home', placeholder_label='Alerts Placeholder')
+        col3_apps.add(placeholder)
         
         url = "http://gmodules.com/ig/ifr?url=http://www.cammap.net/tvlive/livetvint.xml&amp;up_kanaal=BBC%20World&amp;up_autoplay=Yes&amp;up_none=-%20Fill%20in%20below%20-&amp;up_statn=&amp;up_urls=&amp;up_urlw=http%3A%2F%2F&amp;synd=open&amp;w=285&amp;h=272&amp;title=Live+TV+channels&amp;border=%23ffffff%7C3px%2C1px+solid+%23999999&amp;output=js"
 
-        #sandbox2 = pylons.g.apps['sandbox'](None, '285px', '272px', 'Home', url=url)
-        #col3_apps.add(sandbox2)
+        #planet_fedora = pylons.g.apps['planetfedora'](None, '285px', '272px', 'Canvas', url=url)
+        #col2_apps.add(planet_fedora)
+        
+        
 
 
         col1_apps = col1_apps.serialize_apps(pylons.tmpl_context.w)
