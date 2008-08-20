@@ -1,5 +1,7 @@
 from tw.api import Widget
 from tw.jquery import jquery_js
+from widgets import myfedora_ui_js
+from widgets import myfedora_extentions_js
 
 class ResourceViewWidget(Widget):
     params = ['display_name']
@@ -26,7 +28,7 @@ class ToolWidget(Widget):
     params = ['active']
 
     active = False
-    javascript = [jquery_js]
+    javascript = [jquery_js, myfedora_ui_js, myfedora_extentions_js]
     data = None
     event_cb = None
 

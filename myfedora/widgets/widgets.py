@@ -20,6 +20,9 @@ from tw.api import Widget, JSLink, CSSLink, js_function, js_callback
 from tw.jquery import jquery_js, jQuery
 
 myfedora_js = JSLink(link='/javascript/myfedora.js')
+myfedora_ui_js = JSLink(link='/javascript/myfedora.ui.js')
+myfedora_extentions_js = JSLink(link='/javascript/myfedora.extentions.js')
+
 fedora_css = CSSLink(link='http://fedoraproject.org/static/css/fedora.css')
 myfedora_table_css = CSSLink(link='/css/myfedora-style-tables.css')
 myfedora_appchrome_css = CSSLink(link='/css/application-chrome.css')
