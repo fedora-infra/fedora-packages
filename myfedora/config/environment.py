@@ -44,7 +44,7 @@ def template_loaded(template):
 
 def load_widget_entry_points(app):
 
-    entry_point_string = 'myfedora.apps.%s.views' %  app.entry_name
+    entry_point_string = 'myfedora.plugins.apps.%s.views' %  app.entry_name
     print "Loading widgets for app %s on entry point %s" % (app.entry_name,
                                                             entry_point_string)
     
@@ -57,6 +57,7 @@ def load_resourceviews():
         if not config['pylons.app_globals'].resourceviews.has_key(view.name):
             view_class = view.load()
             view_class.load_resources()
+        
             config['pylons.app_globals'].resourceviews[view.name] = view_class
             print view.name + " loaded"
 
@@ -73,7 +74,7 @@ def load_fas():
 
 def load_apps():
     print "Loading MyFedora apps"
-    for app_entry in pkg_resources.iter_entry_points('myfedora.apps'):
+    for app_entry in pkg_resources.iter_entry_points('myfedora.plugins.apps'):
         if not config['pylons.app_globals'].apps.has_key(app_entry.name):
             app_class = app_entry.load()
             config['pylons.app_globals'].apps[app_entry.name] = app_class
@@ -100,7 +101,7 @@ def load_environment(global_conf, app_conf):
     # Load myfedora's ResourceView/Tool infrastructure
     load_resourceviews()
 
-    # Load all "Applications" from the myfedora.apps entry point
+    # Load all "Applications" from the myfedora.plugins.apps entry point
     load_apps()
 
     # This setups up a set of default route that enables a standard

@@ -4,7 +4,7 @@ from tw.forms.datagrid import DataGrid
 import koji
 
 class BuildsToolWidget(ToolWidget):
-    template = 'genshi:myfedora.plugins.tools.templates.builds'
+    template = 'genshi:myfedora.plugins.apps.tools.templates.builds'
     display_name = "Builds"
     offset = 0
     limit = 10

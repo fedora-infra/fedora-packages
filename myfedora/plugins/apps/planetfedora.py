@@ -47,10 +47,10 @@ class PlanetFedoraBaseWidget(Widget):
         return "<%s %s>" % (self.__class__.__name__, self.id)
 
 class PlanetFedoraHomeWidget(PlanetFedoraBaseWidget):
-    template = 'genshi:myfedora.apps.templates.planetfedorahome'
+    template = 'genshi:myfedora.plugins.apps.templates.planetfedorahome'
 
 class PlanetFedoraCanvasWidget(PlanetFedoraBaseWidget):
-    template = 'genshi:myfedora.apps.templates.planetfedoracanvas'
+    template = 'genshi:myfedora.plugins.apps.templates.planetfedoracanvas'
 
 class PlanetFedoraApp(AppFactory):
     entry_name = 'planetfedora'

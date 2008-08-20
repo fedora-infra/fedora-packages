@@ -15,7 +15,7 @@ def weighted_sort(a, b):
 
 class SearchAllToolWidget(ToolWidget):
     params=['search_string', 'results']
-    template = 'genshi:myfedora.plugins.tools.templates.searchall'
+    template = 'genshi:myfedora.plugins.apps.tools.templates.searchall'
     display_name = 'All'
     
     def search(self, search_terms, timeout_in_seconds=-1):

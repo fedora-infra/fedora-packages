@@ -6,7 +6,7 @@ class PkgdbClient(BaseClient):
         return self.send_request("packages/name", req_params={'packageName': name})
 
 class PackageInfoToolWidget(ToolWidget):
-    template = 'genshi:myfedora.plugins.tools.templates.packageinfo'
+    template = 'genshi:myfedora.plugins.apps.tools.templates.packageinfo'
     display_name = "Info"
 
     def _compare_collection_versions(self, a, b):

@@ -8,7 +8,7 @@ class SandboxApp(AppFactory):
 class SandboxHomeWidget(Widget):
     params = ['url', 'script']
 
-    template = 'genshi:myfedora.apps.templates.sandbox'
+    template = 'genshi:myfedora.plugins.apps.templates.sandbox'
     javascript = [jquery_js]
     html = ''
     url = None

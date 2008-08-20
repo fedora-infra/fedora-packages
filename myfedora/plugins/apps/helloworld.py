@@ -22,7 +22,7 @@ class HelloWorldWidget(Widget):
    passed to it and then prints out its configuration.
    """
    params = ['hello_to']
-   template = 'genshi:myfedora.apps.templates.helloworld'
+   template = 'genshi:myfedora.plugins.apps.templates.helloworld'
    javascript = [jquery_js]
    data = None
    event_cb = None

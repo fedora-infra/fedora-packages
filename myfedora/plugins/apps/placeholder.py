@@ -5,7 +5,7 @@ class PlaceholderApp(AppFactory):
     entry_name = 'placeholder'
 
 class PlaceholderCanvasWidget(Widget):
-    template = 'genshi:myfedora.apps.templates.placeholder_canvas'
+    template = 'genshi:myfedora.plugins.apps.templates.placeholder_canvas'
 
     def update_params(self, d):
         super(PlaceholderCanvasWidget, self).update_params(d)
@@ -16,4 +16,4 @@ class PlaceholderCanvasWidget(Widget):
         return d
     
 class PlaceholderHomeWidget(PlaceholderCanvasWidget):
-    template = 'genshi:myfedora.apps.templates.placeholder_home'
+    template = 'genshi:myfedora.plugins.apps.templates.placeholder_home'

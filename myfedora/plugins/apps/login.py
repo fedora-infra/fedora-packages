@@ -9,7 +9,7 @@ class LoginApp(AppFactory):
 
 class LoginWidget(Widget):
     params=['username', 'password']
-    template = 'genshi:myfedora.apps.templates.login'
+    template = 'genshi:myfedora.plugins.apps.templates.login'
     javascript = [jquery_js]
 
     def update_params(self, d):

@@ -224,12 +224,17 @@ class ResourceViewAppFactory(AppFactory):
             
         cls._widget = cls.widget_class(cls.entry_name + '_view', children=child_tools)
         print "ReosurceView widget " + cls._widget.id + " loaded"
+        
+        return child_tools
 
     @classmethod
     def load_controller(cls):
         cls.controller = cls.controller(cls)
+        return cls.controller
         
     @classmethod
     def load_resources(cls):
-        cls.load_controller()
-        cls.load_widgets()
+        controller = cls.load_controller()
+        widgets = cls.load_widgets()
+        return {'controller':controller,
+                'widgets': widgets}

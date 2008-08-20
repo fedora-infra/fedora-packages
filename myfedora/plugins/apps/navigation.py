@@ -9,7 +9,7 @@ class NavigationApp(AppFactory):
 
 class NavigationWidget(Widget):
     params=[]
-    template = 'genshi:myfedora.apps.templates.navigation'
+    template = 'genshi:myfedora.plugins.apps.templates.navigation'
     javascript = [jquery_js]
 
     def update_params(self, d):

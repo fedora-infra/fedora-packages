@@ -11,6 +11,7 @@ import pylons
 class PackagesViewController(ResourceViewController):
     @expose('genshi:myfedora.plugins.resourceviews.templates.packagesindex')
     def index(self):
+        
         return {}
 
 class PackagesViewApp(ResourceViewAppFactory):

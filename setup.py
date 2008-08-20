@@ -40,68 +40,69 @@ setup(
     blog_info = myfedora.plugins.identity.bloginfo:add_metadata
 
     [myfedora.plugins.resourceviews]
+    profile = myfedora.plugins.resourceviews.profile:ProfileViewApp
     packages = myfedora.plugins.resourceviews.packages:PackagesViewApp
     people = myfedora.plugins.resourceviews.people:PeopleViewApp
     search = myfedora.plugins.resourceviews.search:SearchViewApp
 
     [myfedora.plugins.resourceviews.packages.tools]
-    info = myfedora.plugins.tools.packageinfo:PackageInfoToolWidget
-    builds = myfedora.plugins.tools.builds:BuildsToolWidget
+    info = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolWidget
+    builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
 
     [myfedora.plugins.resourceviews.people.tools]
-    builds = myfedora.plugins.tools.builds:BuildsToolWidget
+    builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
     
     [myfedora.plugins.resourceviews.search.tools]
-    all = myfedora.plugins.tools.searchall:SearchAllToolWidget
-    packages = myfedora.plugins.tools.searchpackages:SearchPackagesToolWidget
-    people = myfedora.plugins.tools.searchpeople:SearchPeopleToolWidget
+    all = myfedora.plugins.apps.tools.searchall:SearchAllToolWidget
+    packages = myfedora.plugins.apps.tools.searchpackages:SearchPackagesToolWidget
+    people = myfedora.plugins.apps.tools.searchpeople:SearchPeopleToolWidget
     
     [myfedora.data]
-    rss = myfedora.apps.rss:FedoraPeopleData
+    rss = myfedora.plugins.apps.rss:FedoraPeopleData
 
-    [myfedora.apps]
-    planetfedora = myfedora.apps.planetfedora:PlanetFedoraApp
-    helloworld = myfedora.apps.helloworld:HelloWorldApp
-    sandbox = myfedora.apps.sandbox:SandboxApp
-    navigation = myfedora.apps.navigation:NavigationApp
-    login = myfedora.apps.login:LoginApp
-    placeholder = myfedora.apps.placeholder:PlaceholderApp
+    [myfedora.plugins.apps]
+    planetfedora = myfedora.plugins.apps.planetfedora:PlanetFedoraApp
+    helloworld = myfedora.plugins.apps.helloworld:HelloWorldApp
+    sandbox = myfedora.plugins.apps.sandbox:SandboxApp
+    navigation = myfedora.plugins.apps.navigation:NavigationApp
+    login = myfedora.plugins.apps.login:LoginApp
+    placeholder = myfedora.plugins.apps.placeholder:PlaceholderApp
     
-    [myfedora.apps.planetfedora.views]
-    home = myfedora.apps.planetfedora:PlanetFedoraHomeWidget
-    canvas = myfedora.apps.planetfedora:PlanetFedoraCanvasWidget
-    profile = myfedora.apps.planetfedora:PlanetFedoraHomeWidget
-    preview = myfedora.apps.planetfedora:PlanetFedoraHomeWidget
-    config = myfedora.apps.planetfedora:PlanetFedoraHomeWidget
+    [myfedora.plugins.apps.planetfedora.views]
+    home = myfedora.plugins.apps.planetfedora:PlanetFedoraHomeWidget
+    canvas = myfedora.plugins.apps.planetfedora:PlanetFedoraCanvasWidget
+    profile = myfedora.plugins.apps.planetfedora:PlanetFedoraHomeWidget
+    preview = myfedora.plugins.apps.planetfedora:PlanetFedoraHomeWidget
+    config = myfedora.plugins.apps.planetfedora:PlanetFedoraHomeWidget
     
-    [myfedora.apps.helloworld.views]
-    home = myfedora.apps.helloworld:HelloWorldWidget
-    canvas = myfedora.apps.helloworld:HelloWorldWidget
-    profile = myfedora.apps.helloworld:HelloWorldWidget
-    preview = myfedora.apps.helloworld:HelloWorldWidget
-    config = myfedora.apps.helloworld:HelloWorldWidget
+    [myfedora.plugins.apps.helloworld.views]
+    home = myfedora.plugins.apps.helloworld:HelloWorldWidget
+    canvas = myfedora.plugins.apps.helloworld:HelloWorldWidget
+    profile = myfedora.plugins.apps.helloworld:HelloWorldWidget
+    preview = myfedora.plugins.apps.helloworld:HelloWorldWidget
+    config = myfedora.plugins.apps.helloworld:HelloWorldWidget
     
-    [myfedora.apps.sandbox.views]
-    home = myfedora.apps.sandbox:SandboxHomeWidget
-    canvas = myfedora.apps.sandbox:SandboxHomeWidget
-    profile = myfedora.apps.sandbox:SandboxHomeWidget 
-    preview = myfedora.apps.sandbox:SandboxHomeWidget
-    config = myfedora.apps.sandbox:SandboxHomeWidget
+    [myfedora.plugins.apps.sandbox.views]
+    home = myfedora.plugins.apps.sandbox:SandboxHomeWidget
+    canvas = myfedora.plugins.apps.sandbox:SandboxHomeWidget
+    profile = myfedora.plugins.apps.sandbox:SandboxHomeWidget 
+    preview = myfedora.plugins.apps.sandbox:SandboxHomeWidget
+    config = myfedora.plugins.apps.sandbox:SandboxHomeWidget
 
 
-    [myfedora.apps.navigation.views]
-    home = myfedora.apps.navigation:NavigationWidget
-    canvas = myfedora.apps.navigation:NavigationWidget 
-    profile = myfedora.apps.navigation:NavigationWidget
-    preview = myfedora.apps.navigation:NavigationWidget
-    config = myfedora.apps.navigation:NavigationWidget
+    [myfedora.plugins.apps.navigation.views]
+    home = myfedora.plugins.apps.navigation:NavigationWidget
+    canvas = myfedora.plugins.apps.navigation:NavigationWidget 
+    profile = myfedora.plugins.apps.navigation:NavigationWidget
+    preview = myfedora.plugins.apps.navigation:NavigationWidget
+    config = myfedora.plugins.apps.navigation:NavigationWidget
     
-    [myfedora.apps.login.views]
-    home = myfedora.apps.login:LoginWidget
-    canvas = myfedora.apps.login:LoginWidget 
+    [myfedora.plugins.apps.login.views]
+    home = myfedora.plugins.apps.login:LoginWidget
+    canvas = myfedora.plugins.apps.login:LoginWidget 
     
-    [myfedora.apps.placeholder.views]
-    home = myfedora.apps.placeholder:PlaceholderHomeWidget
-    canvas = myfedora.apps.placeholder:PlaceholderCanvasWidget 
+    [myfedora.plugins.apps.placeholder.views]
+    home = myfedora.plugins.apps.placeholder:PlaceholderHomeWidget
+    canvas = myfedora.plugins.apps.placeholder:PlaceholderCanvasWidget 
     """,
 )
