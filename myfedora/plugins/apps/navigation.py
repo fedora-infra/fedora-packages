@@ -2,7 +2,10 @@ from tw.api import Widget, js_function
 from tw.jquery import JQuery,jquery_js
 from myfedora.lib.app_factory import AppFactory
 from pylons import app_globals
+from pylons import request
 from tg import url
+
+from urlparse import urlparse
 
 class NavigationApp(AppFactory):
     entry_name = 'navigation'
@@ -20,18 +23,23 @@ class NavigationWidget(Widget):
         rvs = app_globals.resourceviews
         nav = []
         
-        print rvs
+        url_path = urlparse(request.environ['PATH_INFO']).path
+        
         
         for name in rvs.keys():
             view = rvs[name]
             item = {'label': '',
                     'icon': None,
-                    'href': ''}
+                    'href': '',
+                    'state': 'inactive'}
             
             item['label'] = view.display_name
             item['href'] = url('/' + view.entry_name)
+            link_path = urlparse(item['href']).path
+            if url_path.startswith(link_path):
+                item['state'] = 'active'
+            
             nav.append(item)
-        
         
         d.update({'navigation_list': nav})
         return d

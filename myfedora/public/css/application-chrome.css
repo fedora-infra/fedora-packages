@@ -24,7 +24,7 @@
   clear: 			right;
 }
 
-#sidebar {
+#app-sidebar {
   clear: 			both;
 }
 
@@ -76,3 +76,124 @@
 
 /* left navbar tabs styling */
 
+pp-sidebar #nav ul li {
+  list-style: none;
+  border-bottom: 1px solid #eee;
+  padding-right: 0px;
+  margin-right: 0px;
+  padding-top: 5px;
+  padding-bottom: 3px;
+}
+
+#app-sidebar #nav ul {
+  margin-right: none;
+  width: 100%;
+}
+
+#app-sidebar #nav a:link,
+#app-sidebar #nav a:visited,
+#app-sidebar #nav a:active {
+  text-decoration: none;
+}
+
+#app-sidebar #nav a.active:link,
+#app-sidebar #nav a.active:visited,
+#app-sidebar #nav a.active:active {
+  color: white;
+  background-color: #6aa6e2;
+  padding: 8px 2px;
+  padding-left: 12px;
+  -moz-border-radius: 12px 0px 0px 12px;
+  margin-right: 0px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+#app-sidebar #nav a.inactive:link,
+#app-sidebar #nav a.inactive:visited,
+#app-sidebar #nav a.inactive:active {
+  padding-left: 8px
+}
+
+#content {
+  padding-left: 22px !important;
+  margin-left: 200px;
+}
+
+#app-sidebar {
+  float: left;
+  width: 200px;
+  padding: 0px;
+  border-right: 1px solid #eee;
+  min-height: 650px;
+  height: 100%;
+}
+
+#app-sidebar #nav {
+  margin: 0px;
+  padding: 0px; 
+}
+
+#app-sidebar #nav ul {
+  margin-left: 15px;
+  margin-top: 12px;
+  width: 187px;
+}
+
+#app-sidebar #nav li {
+  margin: 0px !important;
+  list-style-image: none;
+  list-style-type: none;
+  border-bottom: 1px solid #eee;
+  padding: 5px 2px;
+  padding-left: 6px;
+}
+
+#app-sidebar {
+  background: repeat-y right url(/images/vertical-gradient.png);
+}
+
+/** content div horiztonal tabs **/
+
+#content-nav ul {
+  width: 100%;
+  margin: 0px;
+  border-bottom: 1px solid #eee;
+  padding: 0px;
+  padding-bottom: 24px;
+  background: #FFFFFF url(http://fedoraproject.org/static/images/line.png) repeat-x scroll 0pt 100%;
+/* 22px because #content padding is 22px */
+  margin-left: -22px; 
+  padding-left: 22px;
+  margin-bottom: 12px;
+}
+
+#content-nav li {
+  float: left;
+  margin-right: 24px;
+  list-style: none;
+}
+
+#content-nav li a:link,
+#content-nav li a:active,
+#content-nav li a:visited {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 11pt;
+}
+
+#content-nav li a.active:link,
+#content-nav li a.active:active,
+#content-nav li a.active:visited {
+  color: white;
+  padding: 4px 12px;
+  padding-top: 6px;
+  background-color: #5499dd;
+  -moz-border-radius: 12px 12px 0px 0px;
+}
+
+/*
+div {
+  border: 1px solid red;
+}
+*/
