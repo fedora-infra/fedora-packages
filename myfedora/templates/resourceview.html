@@ -2,7 +2,7 @@
      xmlns:py="http://genshi.edgewall.org/"> 
   <div id="content-nav">
     <ul>
-      <span py:for="child in c">
+      <span py:for="child in visible_children">
         <li>
           <a py:if="active_child == child" href="${child._id}" class="active">${child.display_name}</a>
           <a py:if="active_child != child" href="${child._id}" class="inactive">${child.display_name}</a>

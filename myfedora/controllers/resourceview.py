@@ -18,6 +18,9 @@ class ResourceViewController(BaseController):
     def _init_context(self, data_key, tool):
         view_app = self._create_view_app(data_key, tool)
 
+        if not view_app:
+            return None
+        
         # may be used later on for extensions
         app_bundle = AppBundle('view_content')
         app_bundle.add(view_app)
@@ -40,6 +43,9 @@ class ResourceViewController(BaseController):
             tool = view_action
             
         app_bundle = self._init_context(data_key=data_key, tool=tool)
+        if not app_bundle:
+            return None
+        
         data = app_bundle.serialize_apps(pylons.tmpl_context.w)
         return dict(view_content = data,
                     view = view, 

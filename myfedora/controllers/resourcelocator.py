@@ -13,7 +13,7 @@ class ResourcelocatorController(BaseController):
         r = pylons.app_globals.resourceviews.get(resource, None)
         
         if r:
-            if len(args) == 1:
+            if len(args) == 1 or not args[1]:
                 return r.controller, []
         
             return r.controller, list(args)

@@ -8,6 +8,7 @@ class BuildsToolWidget(ToolWidget):
     display_name = "Builds"
     offset = 0
     limit = 10
+    requires_data_key = False
     
     def _time_delta_to_date_str(self, start, end):
         datetimestr = ""
