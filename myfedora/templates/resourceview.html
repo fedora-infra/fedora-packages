@@ -1,10 +1,11 @@
 <div xmlns="http://www.w3.org/1999/xhtml" 
      xmlns:py="http://genshi.edgewall.org/"> 
-  <div id="tabfloat">
-    <ul id="primary-links">
-      <span py:for="child in reversed(c)">
+  <div id="content-nav">
+    <ul>
+      <span py:for="child in c">
         <li>
-          <a href="${child._id}">${child.display_name}</a>
+          <a py:if="active_child == child" href="${child._id}" class="active">${child.display_name}</a>
+          <a py:if="active_child != child" href="${child._id}" class="inactive">${child.display_name}</a>
         </li>
       </span>
     </ul>

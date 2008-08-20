@@ -5,7 +5,7 @@ from widgets import myfedora_extentions_js
 
 class ResourceViewWidget(Widget):
     params = ['display_name']
-    template = 'genshi:myfedora.plugins.resourceviews.templates.view'
+    template = 'genshi:myfedora.templates.resourceview'
     javascript = [jquery_js]
     data = None
     event_cb = None

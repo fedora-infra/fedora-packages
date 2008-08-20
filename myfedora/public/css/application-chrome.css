@@ -76,7 +76,38 @@
 
 /* left navbar tabs styling */
 
-pp-sidebar #nav ul li {
+.nav {
+margin:0 1.5ex;
+padding:0 1.5ex;
+}
+.nav h2 {
+border-bottom:1px dotted #AAAAAA;
+color:#444444;
+font-size:0.9em;
+font-weight:normal;
+margin:2ex 0 1ex;
+text-transform:uppercase;
+}
+.nav ul {
+list-style-image:url(../images/arrow.png);
+list-style-position:outside;
+list-style-type:disc;
+margin-left:15px;
+}
+.nav li {
+color:#777777;
+font-size:0.9em;
+margin:0.25ex 1ex;
+}
+.nav a {
+color:#729FCF;
+display:block;
+font-size:1.1em;
+font-weight:bold;
+margin-right:0.75ex;
+}
+
+pp-sidebar .nav ul li {
   list-style: none;
   border-bottom: 1px solid #eee;
   padding-right: 0px;
@@ -85,20 +116,20 @@ pp-sidebar #nav ul li {
   padding-bottom: 3px;
 }
 
-#app-sidebar #nav ul {
+#app-sidebar .nav ul {
   margin-right: none;
   width: 100%;
 }
 
-#app-sidebar #nav a:link,
-#app-sidebar #nav a:visited,
-#app-sidebar #nav a:active {
+#app-sidebar .nav a:link,
+#app-sidebar .nav a:visited,
+#app-sidebar .nav a:active {
   text-decoration: none;
 }
 
-#app-sidebar #nav a.active:link,
-#app-sidebar #nav a.active:visited,
-#app-sidebar #nav a.active:active {
+#app-sidebar .nav a.active:link,
+#app-sidebar .nav a.active:visited,
+#app-sidebar .nav a.active:active {
   color: white;
   background-color: #6aa6e2;
   padding: 8px 2px;
@@ -109,9 +140,9 @@ pp-sidebar #nav ul li {
   margin-bottom: 2px;
 }
 
-#app-sidebar #nav a.inactive:link,
-#app-sidebar #nav a.inactive:visited,
-#app-sidebar #nav a.inactive:active {
+#app-sidebar .nav a.inactive:link,
+#app-sidebar .nav a.inactive:visited,
+#app-sidebar .nav a.inactive:active {
   padding-left: 8px
 }
 
@@ -129,18 +160,18 @@ pp-sidebar #nav ul li {
   height: 100%;
 }
 
-#app-sidebar #nav {
+#app-sidebar .nav {
   margin: 0px;
   padding: 0px; 
 }
 
-#app-sidebar #nav ul {
+#app-sidebar .nav ul {
   margin-left: 15px;
   margin-top: 12px;
   width: 187px;
 }
 
-#app-sidebar #nav li {
+#app-sidebar .nav li {
   margin: 0px !important;
   list-style-image: none;
   list-style-type: none;
