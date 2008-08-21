@@ -1,5 +1,7 @@
 from searchbase import SearchBaseWidget
 from fedora.tg.client import BaseClient
+from myfedora.lib.app_factory import AppFactory
+
 import time
 import tg
 
@@ -8,6 +10,9 @@ MEDIUM_WEIGHT=50
 LIGHT_WEIGHT=25
 
 searchurl = 'https://admin.fedoraproject.org/pkgdb'
+
+class SearchPackagesToolApp(AppFactory):
+    entry_name = "tools.searchpackages"
 
 # sort based on weight, each element is of the form [package_name, weight]
 def weighted_sort(a, b):

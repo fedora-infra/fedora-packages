@@ -1,9 +1,13 @@
 from myfedora.widgets.resourceview import ToolWidget
 from fedora.tg.client import BaseClient
+from myfedora.lib.app_factory import AppFactory
 
 class PkgdbClient(BaseClient):
     def packages_name(self, name):
         return self.send_request("packages/name", req_params={'packageName': name})
+
+class PackageInfoToolApp(AppFactory):
+    entry_name = "tools.packageinfo"
 
 class PackageInfoToolWidget(ToolWidget):
     template = 'genshi:myfedora.plugins.apps.tools.templates.packageinfo'

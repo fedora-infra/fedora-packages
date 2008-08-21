@@ -4,12 +4,16 @@ import time
 import tg
 import pylons
 from Cookie import SimpleCookie
+from myfedora.lib.app_factory import AppFactory
 
 FULL_WEIGHT=100
 MEDIUM_WEIGHT=50
 LIGHT_WEIGHT=25
 
 searchurl = 'https://admin.fedoraproject.org/accounts'
+
+class SearchPeopleToolApp(AppFactory):
+    entry_name = "tools.searchpeople"
 
 class FasClient(ProxyClient):
     visit_name = 'tg-visit'

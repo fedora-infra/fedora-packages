@@ -1,7 +1,12 @@
 from searchbase import SearchBaseWidget
 from fedora.tg.client import BaseClient
+from myfedora.lib.app_factory import AppFactory
+
 import time
 import tg
+
+class SearchAllToolApp(AppFactory):
+    entry_name = "tools.searchall"
 
 # sort based on weight, each element
 def weighted_sort(a, b):

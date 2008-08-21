@@ -1,7 +1,12 @@
 from myfedora.widgets.resourceview import ToolWidget
 from datetime import datetime
 from tw.forms.datagrid import DataGrid
+from myfedora.lib.app_factory import AppFactory
+
 import koji
+
+class BuildsToolApp(AppFactory):
+    entry_name = 'tools.builds'
 
 class BuildsToolWidget(ToolWidget):
     template = 'genshi:myfedora.plugins.apps.tools.templates.builds'

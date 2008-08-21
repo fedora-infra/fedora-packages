@@ -68,6 +68,14 @@ setup(
     login = myfedora.plugins.apps.login:LoginApp
     placeholder = myfedora.plugins.apps.placeholder:PlaceholderApp
     
+    #TOOLS:
+    tools.packageinfo = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolApp
+    tools.builds = myfedora.plugins.apps.tools.builds:BuildsToolApp
+    tools.helloworld = myfedora.plugins.apps.tools.helloworld:HelloWorldToolApp
+    tools.searchall = myfedora.plugins.apps.tools.searchall:SearchAllToolApp
+    tools.searchpackages = myfedora.plugins.apps.tools.searchpackages:SearchPackagesToolApp
+    tools.searchpeople = myfedora.plugins.apps.tools.searchpeople:SearchPeopleToolApp
+    
     [myfedora.plugins.apps.planetfedora.views]
     home = myfedora.plugins.apps.planetfedora:PlanetFedoraHomeWidget
     canvas = myfedora.plugins.apps.planetfedora:PlanetFedoraCanvasWidget
@@ -103,6 +111,30 @@ setup(
     
     [myfedora.plugins.apps.placeholder.views]
     home = myfedora.plugins.apps.placeholder:PlaceholderHomeWidget
-    canvas = myfedora.plugins.apps.placeholder:PlaceholderCanvasWidget 
+    canvas = myfedora.plugins.apps.placeholder:PlaceholderCanvasWidget
+    
+    [myfedora.plugins.apps.tools.packageinfo.views]
+    home = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolWidget
+    canvas = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolWidget
+    
+    [myfedora.plugins.apps.tools.builds.views]
+    home = myfedora.plugins.apps.tools.builds:BuildsToolWidget
+    canvas = myfedora.plugins.apps.tools.builds:BuildsToolWidget
+    
+    [myfedora.plugins.apps.tools.helloworld.views] 
+    home = myfedora.plugins.apps.tools.helloworld:HelloWorldToolWidget
+    canvas = myfedora.plugins.apps.tools.helloworld:HelloWorldToolWidget
+    
+    [myfedora.plugins.apps.tools.searchall.views] 
+    home = myfedora.plugins.apps.tools.searchall:SearchAllToolWidget
+    canvas = myfedora.plugins.apps.tools.searchall:SearchAllToolWidget
+    
+    [myfedora.plugins.apps.tools.searchpackages.views] 
+    home = myfedora.plugins.apps.tools.searchpackages:SearchPackagesToolWidget
+    canvas = myfedora.plugins.apps.tools.searchpackages:SearchPackagesToolWidget
+
+    [myfedora.plugins.apps.tools.searchpeople.views] 
+    home = myfedora.plugins.apps.tools.searchpeople:SearchPeopleToolWidget
+    canvas = myfedora.plugins.apps.tools.searchpeople:SearchPeopleToolWidget
     """,
 )
