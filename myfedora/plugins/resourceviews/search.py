@@ -11,7 +11,7 @@ class SearchViewController(ResourceViewController):
 
 class SearchViewWidget(ResourceViewWidget):
     template='genshi:myfedora.plugins.resourceviews.templates.searchview'
-    params=['search_string']
+    data_keys=['data_key', 'search']
 
 class SearchViewApp(ResourceViewAppFactory):
     entry_name = 'search'
@@ -21,6 +21,6 @@ class SearchViewApp(ResourceViewAppFactory):
     
     def update_params(self, d):
         super(SearchViewApp, self).update_params(d)
-        d['data_key'] = d.get('search_string', None)
+        
 
     

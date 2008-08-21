@@ -10,14 +10,15 @@
       </span>
     </ul>
   </div>
-  <div class="centered">
-    
+  <div class="content-searchbox">
+    <div>
     <form action="${tg.url('/search/' + active_child._id)}" method="get">
       Search Fedora ${active_child.display_name}<br/>
       
-      <input type="text" class="largesearch" name="data_key" value="${data_key}"></input>
-      <button type="submit">Search</button>
+      <input type="text" name="data_key" value="${data_key}" />
+      <input class="button" type="submit" value="Search"/>
     </form>
+    </div>
   </div>
   
   <ul class="spacing">

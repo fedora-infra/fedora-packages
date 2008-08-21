@@ -103,7 +103,7 @@ margin:0.25ex 1ex;
 color:#729FCF;
 display:block;
 font-size:1.1em;
-font-weight:bold;
+font-weight:bold; 
 margin-right:0.75ex;
 }
 
@@ -115,7 +115,7 @@ pp-sidebar .nav ul li {
   padding-top: 5px;
   padding-bottom: 3px;
 }
-
+ 
 #app-sidebar .nav ul {
   margin-right: none;
   width: 100%;
@@ -125,6 +125,7 @@ pp-sidebar .nav ul li {
 #app-sidebar .nav a:visited,
 #app-sidebar .nav a:active {
   text-decoration: none;
+  font-size: 11pt;
 }
 
 #app-sidebar .nav a.active:link,
@@ -221,6 +222,19 @@ pp-sidebar .nav ul li {
   padding-top: 6px;
   background-color: #5499dd;
   -moz-border-radius: 12px 12px 0px 0px;
+}
+
+.content-searchbox {
+  background-color: #eee;
+  -moz-border-radius: 12px;
+  padding: 6px 12px;
+  margin: auto;
+}
+
+.content-searchbox div {
+  margin-left: auto;
+  margin-right: auto;
+  width: %50;
 }
 
 /*

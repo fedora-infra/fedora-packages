@@ -8,15 +8,16 @@ class ResourceViewController(BaseController):
         super(ResourceViewController, self).__init__() 
         self.app_class = app_class
 
-    def _create_view_app(self, data_key, tool):
+    def _create_view_app(self, data_key, tool, **kw):
         return self.app_class(None, 
                               width="100%", 
                               height="100%",
                               data_key=data_key,
-                              tool=tool)
+                              tool=tool,
+                              **kw)
 
-    def _init_context(self, data_key, tool):
-        view_app = self._create_view_app(data_key, tool)
+    def _init_context(self, data_key, tool, **kw):
+        view_app = self._create_view_app(data_key, tool, **kw)
 
         if not view_app:
             return None
@@ -42,9 +43,7 @@ class ResourceViewController(BaseController):
         elif view_action != 'name': 
             tool = view_action
             
-        app_bundle = self._init_context(data_key=data_key, tool=tool)
-        if not app_bundle:
-            return None
+        app_bundle = self._init_context(data_key=data_key, tool=tool, **kw)
         
         data = app_bundle.serialize_apps(pylons.tmpl_context.w)
         return dict(view_content = data,

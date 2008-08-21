@@ -4,12 +4,28 @@ from widgets import myfedora_ui_js
 from widgets import myfedora_extentions_js
 
 class ResourceViewWidget(Widget):
-    params = ['display_name']
+    params = ['data_key']
+    data_keys = ['data_key']
     template = 'genshi:myfedora.templates.resourceview'
+    
     javascript = [jquery_js]
     data = None
     event_cb = None
+    
+    def get_data_key(self, d):
+        print self.data_keys
+        s = super(ResourceViewWidget, self)
+        if getattr(s, 'get_data_key', None):
+            data_key = s.get_data_key()
 
+        if data_key:
+            return data_key
+        
+        for dk in self.data_keys:
+            data_key = d[dk]
+            if data_key:
+                return data_key
+    
     def update_params(self, d):
         super(ResourceViewWidget, self).update_params(d)
         if d.get('tool', None):
@@ -31,7 +47,9 @@ class ResourceViewWidget(Widget):
             d['active_child'] = active_child
          
         visible_children = []
-        data_key = d['data_key']   
+        
+        data_key = self.get_data_key(d)
+        
         for c in self.children:
             if c.requires_data_key and not data_key:
                 continue

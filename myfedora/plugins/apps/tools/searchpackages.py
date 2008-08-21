@@ -1,4 +1,4 @@
-from myfedora.widgets.resourceview import ToolWidget
+from searchbase import SearchBaseWidget
 from fedora.tg.client import BaseClient
 import time
 import tg
@@ -25,7 +25,7 @@ class PkgdbClient(BaseClient):
     def search(self, search_term):
         return self.send_request("search/package", req_params={'searchwords': search_term})
 
-class SearchPackagesToolWidget(ToolWidget):
+class SearchPackagesToolWidget(SearchBaseWidget):
     params=['search_string', 'results']
     template = 'genshi:myfedora.plugins.apps.tools.templates.searchpackages'
     display_name = 'Packages'
@@ -110,22 +110,4 @@ class SearchPackagesToolWidget(ToolWidget):
         results = pkg_list
     
         return results
-    
-    
-    def update_params(self, d):
-        super(SearchPackagesToolWidget, self).update_params(d)
-        
-        results = d.get('results', [])
-        
-        search_string = d.get('search_string', d.get('data_key',None))
-        
-        if search_string:
-            results = self.search(search_string)
-        
-        print results
-        d['results'] = results 
-        
-        return d
-    
-    
     

@@ -1,4 +1,4 @@
-from myfedora.widgets.resourceview import ToolWidget
+from searchbase import SearchBaseWidget
 from fedora.tg.client import BaseClient
 import time
 import tg
@@ -13,7 +13,7 @@ def weighted_sort(a, b):
 
     return result
 
-class SearchAllToolWidget(ToolWidget):
+class SearchAllToolWidget(SearchBaseWidget):
     params=['search_string', 'results']
     template = 'genshi:myfedora.plugins.apps.tools.templates.searchall'
     display_name = 'All'
@@ -28,26 +28,6 @@ class SearchAllToolWidget(ToolWidget):
     
         return weighted_pkg_list
     
-    
-    def update_params(self, d):
-        super(SearchAllToolWidget, self).update_params(d)
-        
-        results = d.get('results', [])
-        
-        search_string = d.get('search_string', d.get('data_key',None))
-        print search_string
-        if search_string:
-            results = self.search(search_string)
-        
-        d['results'] = results
-        
-        widgets = {}
-        for child in self.parent.children:
-            widgets[child.id] = child
-        
-        d['widgets'] = widgets
-        
-        return d
     
     
     

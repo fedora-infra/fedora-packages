@@ -1,4 +1,4 @@
-from myfedora.widgets.resourceview import ToolWidget
+from searchbase import SearchBaseWidget
 from fedora.client import ProxyClient
 import time
 import tg
@@ -36,7 +36,7 @@ def weighted_sort(a, b):
 
     return result
 
-class SearchPeopleToolWidget(ToolWidget):
+class SearchPeopleToolWidget(SearchBaseWidget):
     params=['search_string', 'results']
     template = 'genshi:myfedora.plugins.apps.tools.templates.searchpeople'
     display_name = 'People'
@@ -138,17 +138,3 @@ class SearchPeopleToolWidget(ToolWidget):
             user_list.append(item)
 
         return user_list
-    
-    # TODO: move this to a common search class
-    def update_params(self, d):
-        super(SearchPeopleToolWidget, self).update_params(d)
-        
-        results = d.get('results', [])
-        
-        search_string = d.get('search_string', d.get('data_key',None))
-        if search_string:
-            results = self.search(search_string)
-        
-        d['results'] = results 
-        
-        return d
