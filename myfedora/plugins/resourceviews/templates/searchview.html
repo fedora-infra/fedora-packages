@@ -11,14 +11,14 @@
     </ul>
   </div>
   <div class="content-searchbox">
-    <div>
     <form action="${tg.url('/search/' + active_child._id)}" method="get">
-      Search Fedora ${active_child.display_name}<br/>
       
-      <input type="text" name="data_key" value="${data_key}" />
+      <span class="label">Search Fedora</span>
+      <div class="content-searchinput">
+        <input class="searchinput" type="text" name="search" value="${data_key}" />
+      </div>
       <input class="button" type="submit" value="Search"/>
     </form>
-    </div>
   </div>
   
   <ul class="spacing">

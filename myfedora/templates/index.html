@@ -15,33 +15,20 @@
 </head>
 
 <body>
-    <div class="col-group">
-    <div class="col" id="col1">
-        <ul class="widget_list">
-          <li py:for="app in col1_apps">
-            ${tmpl_context.show_app(app)}
-          </li>
-        </ul> 
-      </div>
-      <div class="col" id="col3">
-        <ul class="widget_list">
-          <li py:for="app in col3_apps">
-            ${tmpl_context.show_app(app)}
-          </li>
-        </ul>
-      </div>
-    <div class="col" id="col2">
-      <h1><span py:if="tmpl_context.identity.person"> 
+  <div id="left-content-column">
+    <h1><span py:if="tmpl_context.identity.person"> 
          <img src="${tmpl_context.identity.person['hackergotchi_url']}" 
              style="float:left"/>
          ${tmpl_context.identity.person['human_name']}</span></h1>
-      
-      <ul class="widget_list">
-        <li py:for="app in col2_apps">
-          ${tmpl_context.show_app(app)}
-        </li>
-      </ul>
-    </div>
+    <div py:for="app in leftcol_apps">
+      ${tmpl_context.show_app(app)}
+    </div> 
   </div>
+  <div id="right-content-column">
+    <div py:for="app in rightcol_apps">
+      ${tmpl_context.show_app(app)}
+    </div> 
+  </div>
+
 </body>
 </html>

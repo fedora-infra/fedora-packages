@@ -224,21 +224,86 @@ pp-sidebar .nav ul li {
   -moz-border-radius: 12px 12px 0px 0px;
 }
 
+/** content searchbox **/
+
+
 .content-searchbox {
+  float: left;
+  width: 98%;
   background-color: #eee;
   -moz-border-radius: 12px;
-  padding: 6px 12px;
+  padding: 8px;
+  padding-top: 11px;
   margin: auto;
 }
 
-.content-searchbox div {
-  margin-left: auto;
-  margin-right: auto;
-  width: %50;
+.content-searchbox form {
+  margin: auto !important;
 }
 
-/*
-div {
-  border: 1px solid red;
+.content-searchbox form * {
+  float: left;
 }
-*/
+
+.content-searchbox input.searchinput {
+  width: 230px;
+}
+
+.content-searchinput {
+  width: 240px;
+  padding-right: 10px;
+}
+
+.content-searchinput .small-text {
+  float: right;
+  clear: left;
+}
+
+.small-text {
+  font-size: 8pt;
+}
+
+.content-searchbox form {
+  margin: auto;
+  width: 450px;
+}
+
+.content-searchbox input {
+  padding: 2px 5px;
+  vertical-align: middle;
+  line-height: 1.5 em;
+  font-size: 10pt;
+  color: #333;
+}
+
+.content-searchbox .button {
+  color: white;
+  padding-bottom: 1px;
+  padding-top: 1px;
+}
+
+.content-searchbox span.label {
+  font-size: 11pt;
+  margin-right: 4px;
+}
+
+#left-content-column,
+#right-content-column {
+  padding: 0px;
+}
+
+#left-content-column {
+/*  float: left;*/
+  width: 60%;
+}
+
+#right-content-column {
+  float: right;
+  background-color: yellow;
+}
+
+h3 {
+  line-height: 100%;
+  margin: 0px;
+  color: #666 !important;
+}

@@ -13,7 +13,7 @@ class ResourceViewWidget(Widget):
     event_cb = None
     
     def get_data_key(self, d):
-        print self.data_keys
+        data_key = None
         s = super(ResourceViewWidget, self)
         if getattr(s, 'get_data_key', None):
             data_key = s.get_data_key()
@@ -22,7 +22,7 @@ class ResourceViewWidget(Widget):
             return data_key
         
         for dk in self.data_keys:
-            data_key = d[dk]
+            data_key = d.get(dk, None)
             if data_key:
                 return data_key
     
@@ -73,7 +73,5 @@ class ToolWidget(Widget):
     event_cb = None
     requires_data_key = True
 
-    def __init__(self, id, *args, **kwargs):
+    def __init__(self, id=None, *args, **kwargs):
         super(ToolWidget, self).__init__(id, *args, **kwargs)
-        if not self.display_name:
-            self.display_name = id
