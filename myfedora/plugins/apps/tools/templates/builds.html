@@ -4,16 +4,10 @@ import tg
 
 <div xmlns="http://www.w3.org/1999/xhtml" 
      xmlns:py="http://genshi.edgewall.org/" 
-     id="resource_content">
+     class="list header-list">
      
-     <form name="builds_navigation_form" action="">
-       <a onClick="document.builds_navigation_form.direction.value='prev'; document.builds_navigation_form.submit()" href="#" py:if="previous_disabled != 'disabled'">&lt;-- prev </a>
-       <a onClick="document.builds_navigation_form.direction.value='next'; document.builds_navigation_form.submit()" href="#" py:if="next_disabled != 'disabled'">next --&gt; </a>
-       <input type="hidden" name="offset" value="${offset}" />
-       <input type="hidden" name="limit" value="${limit}" />
-       <input type="hidden" name="direction" value="next"/>
-     </form> 
-     <table class="content_table">
+     <h3>Builds</h3>
+     <table>
         <thead>
           <tr>
             <th>Build ID</th>
@@ -39,7 +33,9 @@ import tg
           
     	      <td py:with="menu_id='menu_' + build_id" id="${build_id}_name_col">
                   <div class="${odd_or_even}">
-                    <a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${nvr}</a>
+                    <span class="package-name"> 
+                      <a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${nvr}</a>
+                    </span>
                       <ul id="${menu_id}" class="${odd_or_even}">
                         <li><a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">View package details in Koji</a></li>
                       </ul>
@@ -60,8 +56,8 @@ import tg
                   </div>
                   
     	      </td>
-              <td py:with="user = str(build['owner_name'])">
-                   <a href="${tg.url('/people/name/' + user + '/builds')}">${user}</a>
+              <td py:with="user = str(build['owner_name'])" >
+                   <span class="person-name"><a href="${tg.url('/people/name/' + user + '/builds')}">${user}</a></span>
               </td>
               <td>${str(build['creation_time'])}</td>
               <td>${str(build['completion_time'])}</td>
