@@ -21,8 +21,6 @@ class SearchBaseWidget(ToolWidget):
         
         d['results'] = results
         
-        print results
-        
         widgets = {}
         for child in self.parent.children:
             widgets[child.id] = child

@@ -5,6 +5,8 @@ import tg
 import pylons
 from Cookie import SimpleCookie
 from myfedora.lib.app_factory import AppFactory
+from myfedora.plugins.identity import bloginfo
+from myfedora.lib.utils import HRElapsedTime
 
 FULL_WEIGHT=100
 MEDIUM_WEIGHT=50
@@ -76,6 +78,8 @@ class SearchPeopleToolWidget(SearchBaseWidget):
             for user_map in hash['people']:
                 user = user_map['username']
                 name = user_map['human_name']
+                if not name:
+                    name = ''
                 cmp_user = user.upper()
                 cmp_name = name.upper()
 
@@ -135,9 +139,27 @@ class SearchPeopleToolWidget(SearchBaseWidget):
         user_list = []
         for user in weighted_user_list:
             user_name = user[0]['username']
+            
             item = {'url': tg.url('/people/name/' + user_name),
                     'weight': user[1],
                     'widget_id': self.id}
+            
+            # get hackergotchi
+            b = bloginfo.get_metadata(user_name)
+            if b:
+                item.update(b)
+                
+            # calc time
+            hret = HRElapsedTime()
+            hret.set_start_timestr(user[0]['last_seen'])
+            hret.set_end_time_to_now()
+            line0 = hret.get_hr_elapsed_time()
+            line1 = None
+            if line0 == 'Today' or line0 == 'Yesterday':
+                line1 = hret.get_hr_start_time()
+                
+            item.update({'last_seen_hr_0':line0,'last_seen_hr_1':line1})
+                
             item.update(user[0])
             user_list.append(item)
 

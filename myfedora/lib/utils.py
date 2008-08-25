@@ -73,3 +73,66 @@ class odict(dict):
         for key in self._keys:
             result.append('(%s, %s)' % (repr(key), repr(self._data[key])))
         return ''.join(['OrderedDict', '([', ', '.join(result), '])'])
+
+from datetime import datetime
+
+class HRElapsedTime():
+    def __init__(self):
+        start = None
+        end = None
+        
+    def time_from_string(self, timestr):
+        parse_format = '%Y-%m-%d %H:%M:%S'
+
+        timep = datetime.strptime(timestr.split('.')[0], parse_format)
+        return timep
+    
+    def set_start_timestr(self, timestr):
+        self.start = self.time_from_string(timestr)
+        
+    def set_start_time(self, time):
+        self.start = time
+        
+    def set_end_timestr(self, timestr):
+        self.end = self.time_from_string(timestr)
+        
+    def set_end_time(self, time):
+        self.end = time
+        
+    def set_end_time_to_now(self):
+        self.end = datetime.now()
+        
+    def get_hr_elapsed_time(self):
+        delta = self.end - self.start
+        if delta.days < 1 and start.day == end.day:
+            dstr = 'Today'
+        elif delta.days < 2 and (end.day - start.day) == 1:
+            dstr = 'Yesterday'
+        elif delta.days < 7:
+            dstr = str(delta.days) + ' days ago'
+        elif delta.days < 31:
+            weeks = int(delta.days/7)
+            dstr = 'over ' + str(weeks) + ' week'
+            if weeks > 1:
+               dstr += 's '
+            dstr += 'ago'
+        elif delta.days < 365:
+            months = int(delta.days/31)
+            dstr = 'over ' + str(months) + ' month'
+            if months > 1:
+                dstr += 's '
+            dstr += 'ago'
+        else:
+            years = int(delta.days/365)
+            dstr = 'over ' + str(years) + ' year'
+            if years > 1:
+                dstr += 's '
+            dstr += 'ago'
+            
+        return dstr
+            
+    def get_hr_start_time(self):
+        datetime.strftime(self.start, "%l:%M %P")
+        
+    def get_hr_end_time(self):
+        datetime.strftime(self.end, "%l:%M %P")
