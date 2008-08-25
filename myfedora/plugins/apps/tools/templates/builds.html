@@ -13,7 +13,7 @@ import tg
             <th>Build ID</th>
             <th>Name</th>
             <th>Built By</th>
-            <th>Started</th>
+            <th>Time</th>
             <th>Finished</th>
             <th>State</th>
             <th>Release</th>
@@ -59,8 +59,15 @@ import tg
               <td py:with="user = str(build['owner_name'])" >
                    <span class="person-name"><a href="${tg.url('/people/name/' + user + '/builds')}">${user}</a></span>
               </td>
-              <td>${str(build['creation_time'])}</td>
-              <td>${str(build['completion_time'])}</td>
+              <td>${build['elapsed_build_time']}</td>
+              <td>
+                <div>
+                  ${build['finished_line_0']}
+                </div>
+                <span class="timestamp">
+                  ${build['finished_line_1']}
+                </span>
+              </td>
               <td><img src="${str(build['mf_state_img'])}" /></td>
               <td py:with="release_id='release_' + build_id"
                   id="${release_id}">

@@ -86,6 +86,7 @@ class HRElapsedTime():
         parse_format = '%Y-%m-%d %H:%M:%S'
 
         timep = datetime.strptime(timestr.split('.')[0], parse_format)
+        
         return timep
     
     def set_start_timestr(self, timestr):
@@ -106,7 +107,7 @@ class HRElapsedTime():
     def get_hr_elapsed_time(self):
         
         delta = self.end - self.start
-        if delta.days < 1 and start.day == end.day:
+        if delta.days < 1 and self.start.day == self.end.day:
             dstr = 'Today'
             self.longdate = False
         elif delta.days < 2 and (end.day - start.day) == 1:
@@ -118,20 +119,20 @@ class HRElapsedTime():
             weeks = int(delta.days/7)
             dstr = 'over ' + str(weeks) + ' week'
             if weeks > 1:
-               dstr += 's '
-            dstr += 'ago'
+               dstr += 's'
+            dstr += ' ago'
         elif delta.days < 365:
             months = int(delta.days/31)
             dstr = 'over ' + str(months) + ' month'
             if months > 1:
-                dstr += 's '
-            dstr += 'ago'
+                dstr += 's'
+            dstr += ' ago'
         else:
             years = int(delta.days/365)
             dstr = 'over ' + str(years) + ' year'
             if years > 1:
-                dstr += 's '
-            dstr += 'ago'
+                dstr += 's'
+            dstr += ' ago'
         
         
         return dstr

@@ -2,6 +2,7 @@ from myfedora.widgets.resourceview import ToolWidget
 from datetime import datetime
 from tw.forms.datagrid import DataGrid
 from myfedora.lib.app_factory import AppFactory
+from myfedora.lib.utils import HRElapsedTime
 from tg import url
 import koji
 
@@ -139,12 +140,35 @@ class BuildsToolWidget(ToolWidget):
                     build['mf_arches'] = arches
 
             # convert timestamps to human readable entries
-            time_dict = self._make_delta_timestamps_human_readable(
-                            build['creation_time'],
-                            build['completion_time'])
+            try:
+                hret = HRElapsedTime()
+                hret.set_start_timestr(build['completion_time'])
+                hret.set_end_time_to_now()
+                finished_line_0 =  hret.get_hr_elapsed_time()
+                finished_line_1 =  hret.get_hr_start_time()
 
-            build['creation_time'] = time_dict['start_time_display']
-            build['completion_time'] = time_dict['end_time_display']
+                build['finished_line_0'] = finished_line_0
+                build['finished_line_1'] = finished_line_1
+            except Exception, e:
+                build['finished_line_0'] = ''
+                build['finished_line_1'] = ''
+                
+            try:
+                hret = HRElapsedTime()
+                hret.set_start_timestr(build['creation_time'])
+                
+                ct = build['completion_time']
+                if ct:
+                    hret.set_end_timestr(ct)
+                else:
+                    hret.set_end_time_to_now()
+                
+                # FIXME: move this into the HRElapsedTime class and refactor method names
+                elapsed_build_time = self._time_delta_to_elapsed_str(hret.start, hret.end)
+                
+                build['elapsed_build_time'] =elapsed_build_time
+            except Exception, e:
+                build['elapsed_build_time'] = ''
 
         d['offset'] = self.offset
         d['limit'] = self.limit
