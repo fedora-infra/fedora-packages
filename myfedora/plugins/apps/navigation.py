@@ -21,11 +21,11 @@ class NavigationWidget(Widget):
         # right now just work with resource views but we should also work with
         # user defined links and other controllers
         rvs = app_globals.resourceviews
-        nav = []
-        
+         
         url_path = urlparse(request.environ['PATH_INFO']).path
         
-        
+        has_active = False
+        nav = []
         for name in rvs.keys():
             view = rvs[name]
             item = {'label': '',
@@ -38,8 +38,20 @@ class NavigationWidget(Widget):
             link_path = urlparse(item['href']).path
             if url_path.startswith(link_path):
                 item['state'] = 'active'
+                has_active = True
             
             nav.append(item)
+        
+        state = 'inactive'
+        if not has_active:
+            state = 'active'
+             
+        nav.insert(0, {'label': 'Home',
+                       'icon': None,
+                       'href':url('/'),
+                       'state': state
+                       }
+                  )
         
         d.update({'navigation_list': nav})
         return d
