@@ -53,7 +53,6 @@ setup(
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
     
     [myfedora.plugins.resourceviews.search.tools]
-    all = myfedora.plugins.apps.tools.searchall:SearchAllToolWidget
     packages = myfedora.plugins.apps.tools.searchpackages:SearchPackagesToolWidget
     people = myfedora.plugins.apps.tools.searchpeople:SearchPeopleToolWidget
     
@@ -96,7 +95,6 @@ setup(
     profile = myfedora.plugins.apps.sandbox:SandboxHomeWidget 
     preview = myfedora.plugins.apps.sandbox:SandboxHomeWidget
     config = myfedora.plugins.apps.sandbox:SandboxHomeWidget
-
 
     [myfedora.plugins.apps.navigation.views]
     home = myfedora.plugins.apps.navigation:NavigationWidget

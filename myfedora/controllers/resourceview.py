@@ -29,11 +29,16 @@ class ResourceViewController(BaseController):
         return app_bundle
 
     @expose('genshi:myfedora.templates.resourceviewcontainer')
-    def index(self):
-        app_bundle = self._init_context(None, None)
+    def index(self, **kw):
+        tool = kw.pop('tool', None)
+        data_key = kw.pop('data_key', None)
+        app_bundle = self._init_context(data_key, tool, **kw)
         data = app_bundle.serialize_apps(pylons.tmpl_context.w)
-        return dict(view_content = data,
-                    view = None)
+        result = {}
+        result.update(kw)
+        result.update(dict(view_content = data,
+                           view = None))
+        return result
         
     @expose('genshi:myfedora.templates.resourceviewcontainer')
     def default(self, view, view_action=None, data_key=None, tool=None, *args, **kw):

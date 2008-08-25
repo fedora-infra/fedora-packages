@@ -12,15 +12,24 @@ class SearchViewController(ResourceViewController):
 class SearchViewWidget(ResourceViewWidget):
     template='genshi:myfedora.plugins.resourceviews.templates.searchview'
     data_keys=['data_key', 'search']
+    
+    def update_params(self, d):
+        super(SearchViewWidget, self).update_params(d)
+        search_children = []
+        for c in self.children:
+            key = c._id + '_checkbox'
+            
+            if d.get(key, None) == 'checked':
+                search_children.append(c)
+                
+            if not search_children and d.get('data_key', None):
+                # search all 
+                search_children = d['visible_children']
+                
+        d['search_children'] = search_children
 
 class SearchViewApp(ResourceViewAppFactory):
     entry_name = 'search'
     display_name = 'Search'
     controller = SearchViewController
     widget_class = SearchViewWidget
-    
-    def update_params(self, d):
-        super(SearchViewApp, self).update_params(d)
-        
-
-    

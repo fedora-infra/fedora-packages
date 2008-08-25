@@ -1,27 +1,26 @@
 <div xmlns="http://www.w3.org/1999/xhtml" 
      xmlns:py="http://genshi.edgewall.org/"> 
   <?python import tg ?>
-  <div id="tabfloat">
-    <ul id="primary-links">
-      <span py:for="child in reversed(c)">
-        <li>
-          <a href="${child._id}">${child.display_name}</a>
-        </li>
-      </span>
-    </ul>
-  </div>
   <div class="content-searchbox">
-    <form action="${tg.url('/search/' + active_child._id)}" method="get">
+    <form action="${tg.url('/search/' + (tool or ''))}" method="get"> 
       
-      <span class="label">Search Fedora</span>
+      <span class="label">Search Fedora <span py:if="tool">${active_child.display_name}</span></span>
       <div class="content-searchinput">
         <input class="searchinput" type="text" name="search" value="${data_key}" />
+        <span py:if="not tool" py:for="c in visible_children" class="small-text">
+          <input  name="${c._id}_checkbox" type="checkbox" value="checked">
+            <a href="/search/${c._id}/">${c.display_name}</a>
+          </input>&nbsp;
+        </span>
       </div>
       <input class="button" type="submit" value="Search"/>
     </form>
   </div>
   
-  <ul class="spacing">
+  <div py:if="tool">
     ${active_child(value_for(active_child), search_string=data_key, **args_for(active_child))}
-  </ul>
+  </div>
+  <div py:if="not tool" py:for="c in search_children" >
+    ${c(value_for(c), search_string=data_key, **args_for(c))}
+  </div>
 </div>
