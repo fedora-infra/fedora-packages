@@ -431,3 +431,39 @@ span.timestamp {
 .panel td {
   border: none !important;
 }
+
+/* UI Elements */
+.hover_menu {
+  position: absolute;
+  margin-left: 10px;
+  border: 2px solid;
+  padding-right: 10px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  display: none;
+}
+
+.hover_menu ul, .hover_menu ol { 
+   margin-left: 1px; 
+   padding:0; 
+   position:relative; 
+}
+ 
+.hover_menu li { 
+   margin-top:0.25em;
+   margin-bottom:0.25em; 
+}
+ 
+.hover_menu ul ul, .hover_menu ul ol, 
+.hover_menu ol ol, .hover_menu ol ul { 
+   margin-left:1em; 
+   padding-left:0; 
+}
+ 
+.hover_menu ul li, .hover_menu ol li { 
+   margin-left:2em; 
+}
+ 
+.hover_menu li li { 
+   margin-left:1em; 
+}
