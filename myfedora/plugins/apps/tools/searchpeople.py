@@ -154,9 +154,7 @@ class SearchPeopleToolWidget(SearchBaseWidget):
             hret.set_start_timestr(user[0]['last_seen'])
             hret.set_end_time_to_now()
             line0 = hret.get_hr_elapsed_time()
-            line1 = None
-            if line0 == 'Today' or line0 == 'Yesterday':
-                line1 = hret.get_hr_start_time()
+            line1 = hret.get_hr_start_time()
                 
             item.update({'last_seen_hr_0':line0,'last_seen_hr_1':line1})
                 

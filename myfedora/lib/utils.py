@@ -78,8 +78,9 @@ from datetime import datetime
 
 class HRElapsedTime():
     def __init__(self):
-        start = None
-        end = None
+        self.start = None
+        self.end = None
+        self.longdate = True
         
     def time_from_string(self, timestr):
         parse_format = '%Y-%m-%d %H:%M:%S'
@@ -103,11 +104,14 @@ class HRElapsedTime():
         self.end = datetime.now()
         
     def get_hr_elapsed_time(self):
+        
         delta = self.end - self.start
         if delta.days < 1 and start.day == end.day:
             dstr = 'Today'
+            self.longdate = False
         elif delta.days < 2 and (end.day - start.day) == 1:
             dstr = 'Yesterday'
+            self.longdate = False
         elif delta.days < 7:
             dstr = str(delta.days) + ' days ago'
         elif delta.days < 31:
@@ -128,11 +132,18 @@ class HRElapsedTime():
             if years > 1:
                 dstr += 's '
             dstr += 'ago'
-            
+        
+        
         return dstr
             
+    def get_hr_time(self, time):
+        if self.longdate:
+            return datetime.strftime(time, "%e %b %Y")
+        else:
+            return datetime.strftime(time, "%l:%M %P")
+        
     def get_hr_start_time(self):
-        datetime.strftime(self.start, "%l:%M %P")
+        return self.get_hr_time(self.start)
         
     def get_hr_end_time(self):
-        datetime.strftime(self.end, "%l:%M %P")
+        return self.get_hr_time(self.end)
