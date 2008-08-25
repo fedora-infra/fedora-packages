@@ -15,13 +15,13 @@ class SearchBaseWidget(ToolWidget):
         results = d.get('results', [])
         
         search_string = d.get('data_key', None)
-        
-        print search_string
 
         if search_string:
             results = self.search(search_string)
         
         d['results'] = results
+        
+        print results
         
         widgets = {}
         for child in self.parent.children:

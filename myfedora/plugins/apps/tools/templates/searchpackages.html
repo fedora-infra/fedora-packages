@@ -1,9 +1,21 @@
 <div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/">
-  <li py:for="pkg in results">
-    <a href="${pkg['url']}">${pkg['name']}</a> - ${pkg['summary']}
-    <ul>
-      <li>${pkg['description']}</li>
-    </ul>
-  </li>
+     xmlns:py="http://genshi.edgewall.org/"
+     class="list header-list icon-list">
+  <h3>Packages</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Package</th>
+        <th>Summary</th>
+      </tr>
+    </thead>
+    <tbody>
+      <rowgroup py:for="pkg in results">
+        <tr>
+          <td><img src="/images/16_package.png" /> <span class="package-name"><a href="${pkg['url']}" title="${pkg['description']}">${pkg['name']}</a></span></td>
+          <td>${pkg['summary']}</td>
+        </tr>
+      </rowgroup>
+    </tbody>
+  </table>
 </div>
