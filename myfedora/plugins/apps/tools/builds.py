@@ -2,7 +2,7 @@ from myfedora.widgets.resourceview import ToolWidget
 from datetime import datetime
 from tw.forms.datagrid import DataGrid
 from myfedora.lib.app_factory import AppFactory
-
+from tg import url
 import koji
 
 class BuildsToolApp(AppFactory):
@@ -82,13 +82,13 @@ class BuildsToolWidget(ToolWidget):
     def _get_state_img_src(self, state):
         src = ''
         if state == koji.BUILD_STATES['COMPLETE']:
-            src = 'http://koji.fedoraproject.org/koji-static/images/complete.png'
+            src = url('/images/16_success_build.png')
         elif state == koji.BUILD_STATES['CANCELED']:
             src = 'http://koji.fedoraproject.org/koji-static/images/canceled.png'
         elif state == koji.BUILD_STATES['DELETED']:
             src = 'http://koji.fedoraproject.org/koji-static/images/deleted.png'
         elif state == koji.BUILD_STATES['FAILED']:
-            src = 'http://koji.fedoraproject.org/koji-static/images/failed.png'
+            src = url('/images/16_failure_build.png')
         elif state == koji.BUILD_STATES['BUILDING']:
             src = 'http://koji.fedoraproject.org/koji-static/images/building.png'
         return src
