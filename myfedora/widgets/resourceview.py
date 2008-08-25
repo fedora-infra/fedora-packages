@@ -28,16 +28,17 @@ class ResourceViewWidget(Widget):
     
     def update_params(self, d):
         super(ResourceViewWidget, self).update_params(d)
+        data_key = d.get('data_key')
         if d.get('tool', None):
             active_tool = self.children[d['tool']]
-            if active_tool.requires_data_key:
+            if active_tool.requires_data_key and not data_key:
                 return None
             
             d['active_child'] = active_tool
         else:
             active_child = None 
             for child in self.children:
-                if not child.requires_data_key:
+                if not child.requires_data_key or data_key:
                     active_child = child
                     break
                 
