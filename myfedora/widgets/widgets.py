@@ -21,7 +21,7 @@ from tw.jquery import jquery_js, jQuery
 
 myfedora_js = JSLink(link='/javascript/myfedora.js')
 myfedora_ui_js = JSLink(link='/javascript/myfedora.ui.js')
-myfedora_extentions_js = JSLink(link='/javascript/myfedora.extentions.js')
+myfedora_extentions_js = JSLink(link='/javascript/myfedora.extensions.js')
 
 fedora_css = CSSLink(link='http://fedoraproject.org/static/css/fedora.css')
 myfedora_table_css = CSSLink(link='/css/myfedora-style-tables.css')
