@@ -3,9 +3,9 @@ import tg
 ?>
 
 <div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/" 
-     class="list header-list">
+     xmlns:py="http://genshi.edgewall.org/">
      
+  <div class="list header-list" py:if="builds_list">
      <h3>Builds</h3>
      <table>
         <thead>
@@ -105,4 +105,13 @@ import tg
         </span>
       </tbody> 
      </table>
+  </div>
+  
+  <!-- used if there is no data -->
+  <div py:if="not builds_list and packages">
+     There are no build for the ${package} package
+  </div>
+  <div py:if="not builds_list and person">
+     Fedora user ${person} has not built anything in the Fedora build systems
+  </div>
 </div>

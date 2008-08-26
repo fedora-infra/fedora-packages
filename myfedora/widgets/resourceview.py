@@ -12,6 +12,15 @@ class ResourceViewWidget(Widget):
     data = None
     event_cb = None
     
+    def syncronize_data_keys(self, d, data_key):
+        result = {}
+        for dk in self.data_keys:
+            result[dk] = data_key
+
+        d.update(result)
+        
+        return result
+                
     def get_data_key(self, d):
         data_key = None
         s = super(ResourceViewWidget, self)
@@ -28,7 +37,8 @@ class ResourceViewWidget(Widget):
     
     def update_params(self, d):
         super(ResourceViewWidget, self).update_params(d)
-        data_key = d.get('data_key')
+        data_key = self.get_data_key(d)
+        childargs = self.syncronize_data_keys(d, data_key)
         if d.get('tool', None):
             active_tool = self.children[d['tool']]
             if active_tool.requires_data_key and not data_key:
@@ -49,16 +59,13 @@ class ResourceViewWidget(Widget):
          
         visible_children = []
         
-        data_key = self.get_data_key(d)
-        
         for c in self.children:
             if c.requires_data_key and not data_key:
                 continue
-                
-            d['child_args'][c.key] = \
-                dict(resourceview = d['config']['widget_id'],
-                     data_key = data_key) 
+             
+            childargs.update({'resourceview': d['config']['widget_id']})
             
+            d['child_args'][c.key] = childargs
             visible_children.append(c)
             
         d['visible_children'] = visible_children
