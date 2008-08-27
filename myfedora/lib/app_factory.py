@@ -20,10 +20,26 @@
 import pylons
 import pkg_resources
 from myfedora.widgets.resourceview import ResourceViewWidget
-from myfedora.lib.utils import pretty_print_map
+from myfedora.lib.utils import pretty_print_map, odict
 
 ### FIXME: Write this so saving works.
 #from fedora.client import ProxyClient
+
+class AppFactoryDict(odict):
+    def itervisible(self):
+        for app_name in self:
+            app = self[app_name]
+            if app.is_visible():
+                yield app
+            
+    def visible(self):
+        list = []
+        
+        for app in self.itervisible():
+            list.append(app)
+        
+        return list
+        
 
 class AppFactory(object):
     '''
@@ -75,6 +91,20 @@ class AppFactory(object):
         self.data = kw
         self.view = view.lower()
         self.data['config'] = {}
+ 
+    @classmethod
+    def is_visible(cls):
+        if not cls.requires_auth:
+            return True
+        else:
+            try:
+                person = pylons.tmpl_context.identity['person']
+                if person['username']:
+                    return True
+            except Exception, e:
+                return False
+        
+        return False
  
 ### FIXME: make ProxyClient work and then this can be used for saving configs
 #    def _get_auth_fas(self):

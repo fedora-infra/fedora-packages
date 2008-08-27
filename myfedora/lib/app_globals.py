@@ -1,5 +1,7 @@
 """The application's Globals object"""
 
+from app_factory import AppFactoryDict
+
 class Globals(object):
     """Globals acts as a container for objects available throughout the
     life of the application
@@ -11,8 +13,8 @@ class Globals(object):
         variable
         """
         self.widgets = {'home': {}, 'canvas': {}, 'profile': {}, 'preview': {}, 'config':{}} # {viewtype: {name: Widget instance}}
-        self.resourceviews = {} # {name: ResourceView instance}
-        self.apps = {} # {name: App instance}
+        self.resourceviews = AppFactoryDict() # {name: ResourceView instance}
+        self.apps =  AppFactoryDict() # {name: App instance}
 
         # Our comet data streamer, responsible for polling the data
         # streams, and providing data to the widgets

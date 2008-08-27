@@ -21,13 +21,12 @@ class NavigationWidget(Widget):
         # right now just work with resource views but we should also work with
         # user defined links and other controllers
         rvs = app_globals.resourceviews
-         
+        
         url_path = urlparse(request.environ['PATH_INFO']).path
         
         has_active = False
         nav = []
-        for name in rvs.keys():
-            view = rvs[name]
+        for view in rvs.itervisible():
             item = {'label': '',
                     'icon': None,
                     'href': '',
