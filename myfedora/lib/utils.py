@@ -1,3 +1,5 @@
+from UserDict import DictMixin
+
 def _print_map(map, depth):
     tabstop = ''
     for i in xrange(depth):
@@ -35,10 +37,9 @@ def _print_array(array, depth):
 pretty_print_map = lambda m : _print_map(m, 0)
 pretty_print_array = lambda a : _print_array(a, 0)
 
-class odict(dict):
+class odict(DictMixin):
     
     def __init__(self):
-        dict.__init__(self)
         self._keys = []
         self._data = {}
         
@@ -49,6 +50,7 @@ class odict(dict):
         self._data[key] = value
         
     def __getitem__(self, key):
+        print key, "=", self._data[key]
         return self._data[key]
     
     def __delitem__(self, key):
