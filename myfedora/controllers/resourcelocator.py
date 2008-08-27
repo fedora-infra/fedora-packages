@@ -1,5 +1,5 @@
 from myfedora.lib.base import BaseController
-from tg import expose
+from tg import expose, redirect
 import pylons
 
 class ResourcelocatorController(BaseController):
@@ -9,6 +9,12 @@ class ResourcelocatorController(BaseController):
     @expose()
     def lookup(self, *args):
         resource = args[0]
+        
+        # if we don't have a slash at the end redirect to it so relative links work 
+        last_arg = args[-1]
+        if last_arg:
+            path = pylons.request.environ.get('PATH_INFO') + '/'
+            redirect(path)
         
         r = pylons.app_globals.resourceviews.get(resource, None)
         
