@@ -28,7 +28,6 @@ class ResourceViewController(BaseController):
    
         return app_bundle
 
-    @expose('genshi:myfedora.templates.resourceviewcontainer')
     def index(self, **kw):
         tool = kw.pop('tool', None)
         data_key = kw.pop('data_key', None)
@@ -41,11 +40,11 @@ class ResourceViewController(BaseController):
         return result
         
     @expose('genshi:myfedora.templates.resourceviewcontainer')
-    def default(self, view, view_action=None, data_key=None, tool=None, *args, **kw):
-        if not view_action:
-            return self.index()
-        
-        elif view_action != 'name': 
+    def default(self, view=None, view_action=None, data_key=None, tool=None, *args, **kw):
+        if not view:
+            view = self.app_class.entry_name
+            
+        if view_action != 'name': 
             tool = view_action
             
         app_bundle = self._init_context(data_key=data_key, tool=tool, **kw)

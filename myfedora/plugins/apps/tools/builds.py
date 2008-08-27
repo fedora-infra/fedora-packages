@@ -110,12 +110,11 @@ class BuildsToolWidget(ToolWidget):
                      'limit': self.limit + 1, 
                      'order': '-creation_time'}
 
-        if resourceview == 'people_view':
+        if resourceview == 'people_view' or resourceview == 'profile_view':
             user = cs.getUser(data_key)
             if user:
-                user_is = user['id']
+                user_id = user['id']
             else:
-                print d
                 return d
                 
         elif resourceview == 'packages_view':
