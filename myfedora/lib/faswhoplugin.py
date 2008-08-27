@@ -2,7 +2,8 @@ import paste
 import webob
 import time
 import logging
-from fedora.client import ProxyClient, FedoraServiceError
+from fedora.client import ProxyClient, FedoraServiceError, AuthError
+import urllib2
 
 from repoze.who.interfaces import IIdentifier
 from repoze.who.interfaces import IChallenger
@@ -81,15 +82,27 @@ class FasClient(ProxyClient):
         return self.send_request("logout", auth_params = auth_params)
 
     def keep_alive(self, cookie, get_user_info):
-        if cookie and not isinstance(cookie, SimpleCookie):
-            cookie = self.convert_cookie(cookie)
+        if cookie:
+            if not cookie.get('tg-visit', None):
+                return None
+            
+            if not isinstance(cookie, SimpleCookie):
+                cookie = self.convert_cookie(cookie)
         
         method = ''
         if get_user_info:
             method = 'user/view'
             
         auth_params = {'cookie': cookie}
-        return self.send_request(method, auth_params = auth_params)
+        
+        result = None
+        try:
+            result = self.send_request(method, auth_params = auth_params)
+        except AuthError, e:
+            
+            print e
+
+        return result
 
 class FASWhoPlugin(object):    
     def __init__(self, url):
@@ -109,10 +122,10 @@ class FASWhoPlugin(object):
             return None
         else:
             fas = FasClient(self.url)
-            try:
-                linfo = fas.keep_alive(req.cookies, True)
-            except Exception, e:
-                print e
+            
+            linfo = fas.keep_alive(req.cookies, True)
+            if not linfo:
+                self.forget(environ, None)
                 return None
                     
         if not isinstance(linfo, tuple):
@@ -141,6 +154,10 @@ class FASWhoPlugin(object):
 
     def forget(self, environ, identity):
         # return a expires Set-Cookie header
+        req = webob.Request(environ)
+                    
+        req.cookies['tg-visit'] = None
+        
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
             cookies = linfo[0]
@@ -150,6 +167,8 @@ class FASWhoPlugin(object):
                            name)
                 result.append(('Set-Cookie', expired))
                 environ['FAS_LOGIN_INFO'] = None
+                
+                cookies['tg-visit'] = None
             return result
         return None
     
