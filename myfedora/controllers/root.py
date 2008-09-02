@@ -19,7 +19,6 @@ import pylons
 import logging
 
 from tg import expose, flash
-from tgrepozewho import authorize
 from pylons.i18n import ugettext as _
 
 #from tg import redirect, validate

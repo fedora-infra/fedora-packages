@@ -13,7 +13,6 @@ from routes.middleware import RoutesMiddleware
 from tw.api import make_middleware as tw_middleware
 
 from myfedora.config.environment import load_environment
-from tg.ext.repoze.who.middleware import make_who_middleware
 from myfedora.lib.middleware import FasMiddleware
 from myfedora.lib.faswhoplugin import fas_make_who_middleware
 
