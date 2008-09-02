@@ -89,12 +89,12 @@ class RootController(BaseController):
         return dict(page='about')
 
     @expose('myfedora.templates.about')
-    @authorize.require(authorize.has_permission('manage'))
+    #@authorize.require(authorize.has_permission('manage'))
     def manage_permission_only(self, **kw):
         return dict(page='about')
 
     @expose('myfedora.templates.about')
-    @authorize.require(authorize.is_user('editor'))
+    #@authorize.require(authorize.is_user('editor'))
     def editor_user_only(self, **kw):
         return dict(page='about')
 
