@@ -112,7 +112,7 @@ def load_environment(global_conf, app_conf):
     config['routes.map'] = make_map()
 
     # Start our DataStreamer thread
-    config['pylons.app_globals'].datastreamer.start()
+    #config['pylons.app_globals'].datastreamer.start()
 
     # Create the Genshi TemplateLoader
     config['pylons.app_globals'].genshi_loader = TemplateLoader(
