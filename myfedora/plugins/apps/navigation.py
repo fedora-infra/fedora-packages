@@ -33,9 +33,10 @@ class NavigationWidget(Widget):
                     'state': 'inactive'}
             
             item['label'] = view.display_name
-            item['href'] = url('/' + view.entry_name)
-            link_path = urlparse(item['href']).path
-            if url_path.startswith(link_path):
+            tool_dir = '/' + view.entry_name
+            item['href'] = url(tool_dir)
+
+            if url_path.startswith(tool_dir):
                 item['state'] = 'active'
                 has_active = True
             
