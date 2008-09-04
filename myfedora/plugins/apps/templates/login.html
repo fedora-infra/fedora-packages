@@ -3,8 +3,9 @@
      style="max-width:${config.width};max-height:${config.height};"
      id="${id}"
      class="login">
+  <%python import tg %>
   Log In
-  <form action="/login_handler?came_from=${came_from}" method="POST">
+  <form action="${tg.url('/login_handler?came_from=%s'% came_from)" method="POST">
     <div>
       User Name
     </div>
