@@ -53,6 +53,7 @@ setup(
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
     
     [myfedora.plugins.resourceviews.profile.tools]
+    info = myfedora.plugins.apps.tools.profileinfo:ProfileInfoToolWidget
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
     
     [myfedora.plugins.resourceviews.search.tools]
