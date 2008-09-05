@@ -1,0 +1,211 @@
+#!/bin/bash
+
+PROJNAME=myfedora
+BRANCH=tg2
+
+BASEPATH="/community"
+HOST="localhost"
+
+RUN_USER="apache"
+APP_CONFIG="development.ini"
+
+YUM_BOOTSTRAP="python-setuptools-devel git bzr hg python-fedora mod_ssl mod_wsgi"
+EASY_INSTALL_BOOTSTRAP="virtualenv"
+
+function usage {
+  echo "Usage: $0 bootstrap|build <dir>"
+  echo 
+  echo "bootstrap -"
+  echo "    Installs a number of support packages via yum along with some other"  echo "    easy install packages as root."
+  echo 
+  echo "    Yum Packages -" 
+  echo "        $YUM_BOOTSTRAP"
+  echo
+  echo "    Easy Install Packages - WARNING these packages have to be" 
+  echo "    uninstalled manually. Once this is packaged move it to Yum Install."  echo "        $EASY_INSTALL_BOOTSTRAP"
+  echo
+  echo "build -"
+  echo "    Build the virtualenv and apache mod_wsgi files needed to run $PROJNAME" 
+}
+
+function output_apache_conf {
+  NAME=$1
+  DIR=$2
+
+  cat <<EOF >>$DIR/$NAME/sample.mod_wsgi.$NAME.conf
+# This is a sample of how to configure mod_wsgi for $NAME's virtualenv.
+# It should run out of the box by copying this file to /etc/httpd/conf.d
+# and renaming it $NAME.conf
+#
+# Note: If things don't run the most likely cause is bad permissions
+
+Alias /css $DIR/$NAME/$NAME/public/css
+Alias /javascript $DIR/$NAME/$NAME/public/javascript
+Alias /images $DIR/$NAME/$NAME/public/images
+
+WSGIDaemonProcess $NAME user=$RUN_USER maximum-requests=1000 display-name=$NAME
+WSGISocketPrefix run/wsgi
+WSGIRestrictStdout Off 
+WSGIRestrictSignal Off
+WSGIPythonOptimize 2
+
+WSGIPythonHome $DIR/$NAME/tg2/BASELINE
+WSGIScriptAlias $BASEPATH $DIR/$NAME/apache/$NAME.wsgi
+
+<Location /community>
+  SSLOptions +StrictRequire
+  SSLRequireSSL
+  SSLRequire %{HTTP_HOST} eq "$HOST"
+  ErrorDocument 403 https://$HOST$BASEPATH
+</Location>
+
+<Directory $DIR/$NAME/apache/>
+  WSGIProcessGroup myfedora
+  Order deny,allow
+  Allow from all
+</Directory>
+EOF
+
+}
+
+function output_wsgi_app {
+  NAME=$1
+  DIR=$2
+ 
+  mkdir $DIR/$NAME/apache
+  mkdir $DIR/$NAME/data
+  mkdir $DIR/$NAME/data/.${NAME}_egg_cache
+  chown -R $RUN_USER $DIR/$NAME/data  
+
+  cat <<EOF >>$DIR/$NAME/apache/$NAME.wsgi
+import os, sys
+os.environ['PYTHON_EGG_CACHE'] = '$DIR/$NAME/data/.${NAME}_egg_cache'
+
+import site
+
+site.addsitedir('$DIR/$NAME/tg2/lib/python2.5/site-packages/')
+
+from paste.deploy import appconfig
+from pylons import config
+from $NAME.config.environment import load_environment
+
+from paste.deploy import loadapp
+application = loadapp('config:$DIR/$NAME/development.ini')
+EOF
+
+  chmod +x $DIR/$NAME/apache/$NAME.wsgi
+}
+
+function output_mod_wsgi_conf {
+  DIR=$1
+
+  output_apache_conf $PROJNAME $DIR
+  output_wsgi_app $PROJNAME $DIR
+}
+
+function print_end_instructions {
+  echo "$PROJNAME installed to $DIR"
+  echo "During testing make sure se-linux is turned off and copy the sample"
+  echo "mod_wsgi apache config to the /etc/httpd/conf.d directory. You may"
+  echo "want to make changes depending how you are deploying the application."
+  echo 
+  echo "To start the application simply start apache as root."
+  echo "(e.g. sudo /sbin/service httpd start)"
+}
+
+case "$1" in
+  bootstrap)
+    echo "Setup requires to install some things as root";
+    sudo yum install -y $YUM_BOOTSTRAP;
+    # as this eventually becomes a package yum install it instead
+    sudo easy_install $EASY_INSTALL_BOOTSTRAP;
+    ;; 
+  build)
+    if [ "x$2" = "x" ]; then
+      echo "You did not specify a directory:"
+      usage
+      exit
+    fi
+  
+    if [ ! -d "$2" ]; then
+      echo "Directory '$2' does not exist. Please create it first."
+      exit
+    fi
+
+    if [ -x "$2/$PROJNAME" ]; then
+      echo "$2/$PROJNAME exists already.  Please remove directory first."
+      exit
+    fi
+    
+    DIR=$(readlink -f $2)
+   
+    cd $DIR 
+    git clone git://git.fedoraproject.org/git/$PROJNAME.git;
+    cd $PROJNAME;
+
+    if [ ! "x$BRANCH" = "x" ]; then
+      git-checkout origin/tg2 -b tg2;
+    fi
+
+    virtualenv tg2 --no-site-packages;
+    cd tg2;
+
+    # build clean baseline python env
+    virtualenv --no-site-packages BASELINE
+
+    source bin/activate
+
+    git clone git://git.fedorahosted.org/git/koji
+    (cd koji/koji; make install;)
+
+    ln -s /usr/lib/python2.5/site-packages/rpm lib/python2.5/site-packages/rpm
+    ln -s /usr/lib/python2.5/site-packages/rpmUtils lib/python2.5/site-packages/rpmUtils
+    
+    ln -s /usr/lib/python2.5/site-packages/urlgrabber lib/python2.5/site-packages/urlgrabber
+    ln -s /usr/lib/python2.5/site-packages/OpenSSL lib/python2.5/site-packages/OpenSSL
+    ln -s /usr/lib/python2.5/site-packages/yum lib/python2.5/site-packages/yum
+    ln -s /usr/lib/python2.5/site-packages/sqlitecachec.py lib/python2.5/site-packages/
+    ln -s /usr/lib/python2.5/site-packages/_sqlitecache.so  lib/python2.5/site-packages/
+
+    git clone git://git.fedoraproject.org/git/fas.git
+    (cd fas; python setup.py build; python setup.py develop;)
+    svn co http://svn.python.org/projects/sandbox/trunk/setuptools/
+    (cd setuptools; python setup.py develop;);
+    
+    easy_install python-cjson
+    easy_install simplejson
+    easy_install turbojson
+    easy_install pyorbited
+    easy_install feedparser
+    easy_install iniparse
+    
+    hg clone http://pylonshq.com/hg/webhelpers webhelpers;
+    (cd webhelpers; python setup.py develop;);
+    hg clone http://pylonshq.com/hg/pylons-dev Pylons;
+    (cd Pylons; python setup.py develop;);
+    hg clone http://toscawidgets.org/hg/ToscaWidgets/
+    (cd ToscaWidgets; python setup.py develop;);
+    hg clone http://toscawidgets.org/hg/tw.jquery/
+    (cd tw.jquery; python setup.py develop;);
+    easy_install Paver;
+    svn co http://svn.turbogears.org/projects/tg.devtools/trunk tgdev;
+    svn co http://svn.turbogears.org/trunk tg2;
+    svn co http://tgtools.googlecode.com/svn/projects/tg.ext.repoze.who/trunk tg.ext.repoze.who;
+    (cd tg.ext.repoze.who;python setup.py develop;)
+    (cd tg2; python setup.py develop;)
+    (cd tgdev; python setup.py develop;)
+    
+    bzr branch bzr://bzr.fedorahosted.org/bzr/python-fedora/python-fedora-devel 
+    (cd python-fedora-devel; paver develop;)
+
+    output_mod_wsgi_conf $DIR
+
+    (cd $DIR/$PROJNAME; python setup.py develop;)
+
+    print_end_instructions
+    ;;
+
+  *)
+    usage;
+    ;;
+esac
