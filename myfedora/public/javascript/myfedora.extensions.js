@@ -101,12 +101,11 @@ _extensions.prototype = {
         var baseurl='/'
         
         // first one wins
-        var s = jQuery('base :first');
-        console.log(s);
+        var s = jQuery('base');  
         if (s) 
           {
             var burl = s.attr('href');
-            console.log(burl);
+
             if (burl)
               baseurl = burl;
           }
