@@ -23,14 +23,12 @@ myfedora_js = JSLink(link='/javascript/myfedora.js')
 myfedora_ui_js = JSLink(link='/javascript/myfedora.ui.js')
 myfedora_extentions_js = JSLink(link='/javascript/myfedora.extensions.js')
 
-fedora_css = CSSLink(link='http://fedoraproject.org/static/css/fedora.css')
-myfedora_table_css = CSSLink(link='/css/myfedora-style-tables.css')
+fedora_css = CSSLink(link='https://fedoraproject.org/static/css/fedora.css')
 myfedora_appchrome_css = CSSLink(link='/css/application-chrome.css')
 myfedora_branding_css = CSSLink(link='/css/myfedora-branding.css')
 
 class GlobalResourceInjectionWidget(Widget):
     javascript=[myfedora_js]
-    css=[fedora_css, 
-         myfedora_table_css, 
+    css=[fedora_css,
          myfedora_appchrome_css, 
          myfedora_branding_css]

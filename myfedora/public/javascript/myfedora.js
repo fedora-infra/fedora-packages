@@ -4,6 +4,46 @@ var _myfedora = window.myfedora;
 var myfedora = window.myfedora = function () {};
 
 myfedora = {
+    parse_query_string: function (url)
+      {
+        var result = {};
+
+        var queryString = undefined;
+        var urlComponents = url.split(/\?/);
+        if (urlComponents.length == 2)
+          {
+            queryString = urlComponents[1];
+          }
+        else
+          {
+            return undefined;
+          }
+          
+        if (queryString.charAt(0) == '?') queryString = queryString.substring(1);
+
+        // replace plus signs in the query string with spaces
+        queryString = queryString.replace('+', ' ');
+
+        // split the query string around ampersands and semicolons
+        var queryComponents = queryString.split(/[&;]/g);
+
+        for (var i = 0; i < queryComponents.length; i++)
+          {
+          
+            var keyValuePair = queryComponents[i].split('=');
+            var key = decodeURIComponent(keyValuePair[0]);
+            var value = decodeURIComponent(keyValuePair[1]);
+
+            if (!result[key]) 
+              result[key] = [];
+              
+            result[key].push((keyValuePair.length == 1) ? '' : value);
+          
+          }
+
+        return result;
+      },
+    
     safe_json_parse: function(s) 
       {
         try 

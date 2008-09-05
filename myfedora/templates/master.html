@@ -12,6 +12,7 @@ tg_flash = tg.get_flash()
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
     <title py:replace="''">Your title goes here</title>
     <meta py:replace="select('*')"/>
+    <base href="${tg.url('/')}" />
     
     <link href="${tg.url('/images/favicon.ico')}"
       type="image/vnd.microsoft.icon" rel="shortcut icon" /> 

@@ -93,6 +93,24 @@ _extensions.prototype = {
         var ext_code = this._extension_cache[data.type];
         var ext_deferred = this._extension_deferred[data.type];
         
+        /* find the query string w/ baseurl so we can reference extentions
+           mounted under a path other than root
+        */
+        
+        // default is '/'
+        var baseurl='/'
+        
+        // first one wins
+        var s = jQuery('base :first');
+        console.log(s);
+        if (s) 
+          {
+            var burl = s.attr('href');
+            console.log(burl);
+            if (burl)
+              baseurl = burl;
+          }
+        
         /* prep ui if this extention point is a ui element */
         var use_ui = data.ui;
         
@@ -122,7 +140,7 @@ _extensions.prototype = {
         var js_script_tag = jQuery('<script />');
         
         var attrs ={'type':'text/javascript',
-                    'src': '/extensions?' + 'exttype=' + data.type
+                    'src': baseurl + 'extensions?' + 'exttype=' + data.type
                    };
                    
         js_script_tag.attr(attrs);
