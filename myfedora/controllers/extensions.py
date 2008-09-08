@@ -3,6 +3,7 @@ from tg import expose
 import pylons
 import shlex
 import os
+import pkg_resources
 
 class Chunk(object):
     def __init__(self):
@@ -51,7 +52,7 @@ class ExtensionsController(Controller):
         self.__extension_cache = {}
         
         # FIXME: use pkg_resources to find the extensions directories 
-        self.load_extensions('myfedora/plugins/extensions')
+        self.load_extensions('myfedora', 'plugins/extensions')
     
     def chunk_code(self, js, filename):
         start = js.find('{')
@@ -126,8 +127,9 @@ class ExtensionsController(Controller):
                 code.append(c.code)
                 self.__extension_cache[exttype] = code
         
-    def load_extensions(self, dir):
-        for root, dirs, files in os.walk(dir):
+    def load_extensions(self, module, dir):
+        real_dir = pkg_resources.resource_filename(module, dir)
+        for root, dirs, files in os.walk(real_dir):
             for name in files:
                 if name.endswith('js'):
                     path = os.path.join(root, name)
