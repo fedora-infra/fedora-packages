@@ -21,7 +21,7 @@
     <table>
       <tr py:for="c in package_data['collection_list']">
         <td>
-          ${c['fullname']} - <span class="person-name"><a href="${tg.url('/people/' + c['package_owner_id'])}">${c['package_owner_name']}</a></span>    
+          ${c['fullname']} - <span class="person-name"><a href="${tg.url('/people/name/' + c['package_owner_id'])}">${c['package_owner_name']}</a></span>    
         </td>
       </tr>
     </table>
