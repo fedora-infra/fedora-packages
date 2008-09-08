@@ -9,11 +9,11 @@ HOST="localhost"
 RUN_USER="apache"
 APP_CONFIG="development.ini"
 
-YUM_BOOTSTRAP="python-setuptools-devel git bzr hg python-fedora mod_ssl mod_wsgi"
+YUM_BOOTSTRAP="python-setuptools-devel git bzr hg python-fedora mod_nss mod_wsgi"
 EASY_INSTALL_BOOTSTRAP="virtualenv"
 
 function usage {
-  echo "Usage: $0 bootstrap|build <dir>"
+  echo "Usage: $0 bootstrap|build <dir>|gen-cert <domain name>"
   echo 
   echo "bootstrap -"
   echo "    Installs a number of support packages via yum along with some other"  echo "    easy install packages as root."
@@ -26,6 +26,9 @@ function usage {
   echo
   echo "build -"
   echo "    Build the virtualenv and apache mod_wsgi files needed to run $PROJNAME" 
+  echo
+  echo "gen-cert -"
+  echo "    Generate an NSS SSL cert and db"
 }
 
 function output_apache_conf {
@@ -205,6 +208,40 @@ case "$1" in
     print_end_instructions
     ;;
 
+  gen-cert)
+    if [ "x$2" = "x" ]; then
+      echo "You did not specify a domian name to generate the cert for:"
+      usage
+      exit
+    fi
+
+    DOMAIN=$2
+    PROJ_TMP_DIR=/etc/${PROJNAME}_test/
+    PROJ_NSS_DIR=$PROJ_TMP_DIR/nss
+    PASSWDFILE=${PROJ_TMP_DIR}/pwdfile.txt
+    echo "This needs to run as root"
+
+    sudo mkdir -p $PROJ_NSS_DIR
+    sudo su -c "echo '' > $PASSWDFILE"
+    sudo certutil -N -d $PROJ_NSS_DIR -f $PASSWDFILE
+    sudo certutil -S -n "CA certificate" -s "cn=$PROJNAME Test CA cert" -x -t "CT,," -m 1000 -v 120 -d $PROJ_NSS_DIR -f $PASSWDFILE
+    sudo certutil -S -n "Server-Cert" -s "cn=$DOMAIN" -c "CA certificate" -t "u,u,u" -m 1001 -v 120 -d $PROJ_NSS_DIR -f $PASSWDFILE
+
+    sudo su -c "certutil -L -d $PROJ_NSS_DIR -n 'CA certificate' -a > $PROJ_TMP_DIR/${PROJNAME}_cacert.asc"
+    sudo pk12util -d $PROJ_NSS_DIR -o $PROJ_TMP_DIR/$PROJNAME.p12 -n Server-Cert1 -w $PASSWDFILE -k $PASSWDFILE
+
+    # TO import these files into an already established db run these commands
+    #sudo certutil -A -d /db/dir/to/import/to -n "CA certificate" -t "CT,," -a -i $PROJ_TMP_DIR/${PROJNAME}_cacert.asc
+    #sudo pk12util -i $PROJ_TMP_DIR/$PROJNAME.p12 -d /db/dir/to/import/to -w $PASSWDFILE
+
+    chgrp -R apache $PROJ_TMP_DIR
+    chmod -R o-rwx $PROJ_TMP_DIR/*
+    chmod g+r $PROJ_TMP_DIR/*
+    chmod g+r $PROJ_NSS_DIR/*
+    chmod g+x $PROJ_NSS_DIR
+    echo "Key database was created in $PROJ_NSS_DIR.  You now need to either"
+    echo "modify /etc/httpd/conf.d/nss.conf to point to this key DB or import"
+    echo "the generated keys into the master key DB"
   *)
     usage;
     ;;
