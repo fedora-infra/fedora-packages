@@ -35,7 +35,6 @@ _extensions.prototype = {
       },
     run_extensions: function (js, data)
       {
-      
         if (!js)
           {
             return;
