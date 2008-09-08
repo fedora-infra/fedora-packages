@@ -95,9 +95,10 @@
       }
       
     /* get the tags to process */
+    var burl = myfedora.get_page_base_url();
     params = {'task_id' : data.task_id,
               'state': data.build_state}
-    jQuery.getJSON('http://localhost:8080/proxy/koji/get_files',
+    jQuery.getJSON(burl + 'proxy/koji/get_files',
                    params,
                    render);
     

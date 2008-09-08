@@ -4,6 +4,28 @@ var _myfedora = window.myfedora;
 var myfedora = window.myfedora = function () {};
 
 myfedora = {
+    get_page_base_url: function ()
+      {
+       /* find the base tag so we can reference extentions
+           mounted under a path other than root
+        */
+        
+        // default is '/'
+        var baseurl='/'
+        
+        // first one wins
+        var s = jQuery('base');  
+        if (s) 
+          {
+            var burl = s.attr('href');
+
+            if (burl)
+              baseurl = burl;
+          }
+          
+        return baseurl;
+      },
+      
     parse_query_string: function (url)
       {
         var result = {};

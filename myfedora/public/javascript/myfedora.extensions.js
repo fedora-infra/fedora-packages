@@ -93,22 +93,7 @@ _extensions.prototype = {
         var ext_code = this._extension_cache[data.type];
         var ext_deferred = this._extension_deferred[data.type];
         
-        /* find the query string w/ baseurl so we can reference extentions
-           mounted under a path other than root
-        */
-        
-        // default is '/'
-        var baseurl='/'
-        
-        // first one wins
-        var s = jQuery('base');  
-        if (s) 
-          {
-            var burl = s.attr('href');
-
-            if (burl)
-              baseurl = burl;
-          }
+        var baseurl=myfedora.get_page_base_url()
         
         /* prep ui if this extention point is a ui element */
         var use_ui = data.ui;

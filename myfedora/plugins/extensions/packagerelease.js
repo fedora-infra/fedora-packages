@@ -61,8 +61,9 @@
       }
       
     /* get the tags to process */
+    var burl = myfedora.get_page_base_url();
     params = {'build_id' : data.build_id}
-    jQuery.getJSON('http://localhost:8080/proxy/koji/get_tags',
+    jQuery.getJSON(burl + 'proxy/koji/get_tags',
                    params,
                    render);
     

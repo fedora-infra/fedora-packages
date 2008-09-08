@@ -45,8 +45,9 @@
         msg_div.fadeIn("slow");
       }
       
-    params = {'task_id' : data.task_id}
-    jQuery.getJSON('http://localhost:8080/proxy/koji/get_error_log',
+    var params = {'task_id' : data.task_id}
+    var burl = myfedora.get_page_base_url();
+    jQuery.getJSON(burl + 'proxy/koji/get_error_log',
                    params,
                    render);
                    
