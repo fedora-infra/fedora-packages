@@ -16,6 +16,7 @@ class PackagesViewController(ResourceViewController):
     
 class PackagesViewWidget(ResourceViewWidget):
     data_keys=['data_key', 'package']
+    template='genshi:myfedora.plugins.resourceviews.templates.packagesview'
 
 class PackagesViewApp(ResourceViewAppFactory):
     entry_name = 'packages'

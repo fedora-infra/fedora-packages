@@ -23,7 +23,7 @@ class ProfileViewController(ResourceViewController):
         return d
     
 class ProfileViewWidget(ResourceViewWidget):
-    template='genshi:myfedora.plugins.resourceviews.templates.profileindex'
+    template='genshi:myfedora.plugins.resourceviews.templates.profileview'
     params=['person']
     data_keys=['data_key', 'person']
 

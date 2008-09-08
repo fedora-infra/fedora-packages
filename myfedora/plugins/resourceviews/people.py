@@ -11,6 +11,7 @@ class PeopleViewController(ResourceViewController):
 
 class PeopleViewWidget(ResourceViewWidget):
     data_keys=['data_key', 'person']
+    template='genshi:myfedora.plugins.resourceviews.templates.peopleview'
 
 class PeopleViewApp(ResourceViewAppFactory):
     entry_name = 'people'
