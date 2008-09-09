@@ -16,6 +16,6 @@ class LoginWidget(Widget):
         super(LoginWidget, self).update_params(d)
         
         if not 'came_from' in d:
-            d['came_from'] = request.environ.get('PATH_INFO')
+            d['came_from'] = url(request.environ.get('PATH_INFO'))
         
         return d

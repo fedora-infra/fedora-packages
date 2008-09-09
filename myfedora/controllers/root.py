@@ -102,5 +102,11 @@ class RootController(BaseController):
     def login(self, **kw):
         came_from = kw.get('came_from', 
                             pylons.request.headers.get('REFERER', '/'))
+        
+        apps = AppBundle('apps')
+        login = pylons.g.apps['login'](None, '320px', '200px', 'Canvas', came_from=came_from);
+        apps.add(login)
+        apps = apps.serialize_apps(pylons.tmpl_context.w)
+        
         return dict(page='login', header=lambda *arg: None,
-                    footer=lambda *arg: None, came_from=came_from)
+                    footer=lambda *arg: None, came_from=came_from, apps=apps)
