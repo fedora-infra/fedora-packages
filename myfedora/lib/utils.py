@@ -50,7 +50,6 @@ class odict(DictMixin):
         self._data[key] = value
         
     def __getitem__(self, key):
-        print key, "=", self._data[key]
         return self._data[key]
     
     def __delitem__(self, key):

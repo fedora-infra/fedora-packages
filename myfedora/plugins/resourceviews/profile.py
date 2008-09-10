@@ -15,11 +15,9 @@ class ProfileViewController(ResourceViewController):
 
         kw.update({'data_key': pylons.tmpl_context.identity['person']['username'],
                    'person': pylons.tmpl_context.identity['person']['username']})
-        print pylons.tmpl_context.identity['person']
         
         d = super(ProfileViewController, self).default(*args, **kw)
 
-        print d
         return d
     
 class ProfileViewWidget(ResourceViewWidget):
