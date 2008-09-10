@@ -51,10 +51,12 @@ setup(
 
     [myfedora.plugins.resourceviews.people.tools]
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
+    fedoramemberships = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
     
     [myfedora.plugins.resourceviews.profile.tools]
     info = myfedora.plugins.apps.tools.profileinfo:ProfileInfoToolWidget
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
+    fedoramemberships = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
     
     [myfedora.plugins.resourceviews.search.tools]
     packages = myfedora.plugins.apps.tools.searchpackages:SearchPackagesToolWidget
@@ -78,7 +80,8 @@ setup(
     tools.searchall = myfedora.plugins.apps.tools.searchall:SearchAllToolApp
     tools.searchpackages = myfedora.plugins.apps.tools.searchpackages:SearchPackagesToolApp
     tools.searchpeople = myfedora.plugins.apps.tools.searchpeople:SearchPeopleToolApp
-    
+    tools.fedoramemberships = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolApp
+
     [myfedora.plugins.apps.planetfedora.views]
     home = myfedora.plugins.apps.planetfedora:PlanetFedoraHomeWidget
     canvas = myfedora.plugins.apps.planetfedora:PlanetFedoraCanvasWidget
@@ -138,5 +141,9 @@ setup(
     [myfedora.plugins.apps.tools.searchpeople.views] 
     home = myfedora.plugins.apps.tools.searchpeople:SearchPeopleToolWidget
     canvas = myfedora.plugins.apps.tools.searchpeople:SearchPeopleToolWidget
+    
+    [myfedora.plugins.apps.tools.fedoramemberships.views]
+    home = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
+    canvas = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
     """,
 )

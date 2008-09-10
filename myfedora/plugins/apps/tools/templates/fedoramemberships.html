@@ -1,0 +1,46 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      id="resource_content">     
+      
+  Needs an join group quickbar
+  <div class="list header-list">
+    <h3>Memberships</h3>
+    
+    <div py:if="unapproved_memberships">
+    <h4>Pending</h4>
+    <table py:for="grouping_name in unapproved_memberships">
+      <thead>
+        <tr>
+          <th>${grouping_name}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <rowgroup py:for="group in unapproved_memberships[grouping_name]">
+          <tr>
+            <td>${group['display_name']}</td><td><a href="${group['url']}" target="_blank">Web Link Placeholder</a></td>
+          </tr>
+        </rowgroup>
+      </tbody>
+      
+    </table>
+    </div>
+    <div>
+    <h4>Approved</h4>
+    <table py:for="grouping_name in approved_memberships">
+      <thead>
+        <tr>
+          <th>${grouping_name}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <rowgroup py:for="group in approved_memberships[grouping_name]">
+          <tr>
+            <td>${group['display_name']}</td><td><a href="${group['url']}" target="_blank">Web Link Placeholder</a></td><td py:if="group['user_can_remove']">Leave Group Placeholder</td>
+          </tr>
+        </rowgroup>
+      </tbody>
+      
+    </table>
+    </div>
+  </div>
+</div>
