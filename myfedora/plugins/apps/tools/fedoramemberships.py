@@ -1,9 +1,8 @@
-from pylons import tmpl_context, request
+from pylons import tmpl_context
 
 from myfedora.widgets.resourceview import ToolWidget
 from myfedora.lib.app_factory import AppFactory
-from fedora.client import ProxyClient
-from Cookie import SimpleCookie
+from myfedora.lib.proxy import FasClient
 
 class FedoraMembershipsToolApp(AppFactory):
     entry_name = "tools.fedoramemberships"
@@ -51,32 +50,17 @@ class FedoraMembershipsToolWidget(ToolWidget):
         except Exception, e:
             return {}
         
-    def convert_cookie(self, cookie):
-        sc = SimpleCookie()
-        for key, value in cookie.iteritems():
-            sc[key] = value
-            
-        return sc
+    
     
     def get_user_data(self, user):
-        cookies = request.cookies
-        cookies = self.convert_cookie(cookies)
-        
-        #FIXME: get url from config and have standard fas object
-        fas = ProxyClient('https://admin.fedoraproject.org/accounts')
-        auth_params = {'cookie': cookies}
-        result = fas.send_request('user/view/' + user, 
-                                  auth_params = auth_params)
-        print "**************", result
-        
+    
+        fc = FasClient()
+        result = fc.get_user_info(user)     
         if not result:
             return {}
-        
-        if len(result) > 1:
-            p = result[1]['person']
-        else:
-            p = result[0]['person']
-            
+
+        p = result['person']
+       
         return {'approved_memberships': self.group_membership_data(p['approved_memberships']), 
                 'unapproved_memberships': self.group_membership_data(p['unapproved_memberships'])}
 
