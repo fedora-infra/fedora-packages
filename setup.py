@@ -50,6 +50,7 @@ setup(
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
 
     [myfedora.plugins.resourceviews.people.tools]
+    info = myfedora.plugins.apps.tools.userinfo:UserInfoToolWidget
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
     fedoramemberships = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
     

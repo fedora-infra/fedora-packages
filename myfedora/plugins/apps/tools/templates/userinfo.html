@@ -1,0 +1,11 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      id="resource_content"> 
+  <?python from pylons import tmpl_context ?>
+  
+  <div id="left-content-column">
+    <div py:for="field in person.iterkeys()">
+      <strong>${field}: </strong>${person[field]}
+    </div>  
+  </div>
+</div>
