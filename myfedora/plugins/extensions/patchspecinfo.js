@@ -16,7 +16,7 @@
   },
   run: function (data) {
     var CVS_URL = 'http://cvs.fedoraproject.org/'
-    var PROXY_CVS_URL = '/proxy/cvs/get_page';
+    var PROXY_CVS_URL = myfedora.get_page_base_url() + '/proxy/cvs/get_page';
     var PKGCVS_PATH = '/viewcvs/rpms/';
     
     /************* Renders the HTML ***************/                    
