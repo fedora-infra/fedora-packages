@@ -22,25 +22,16 @@ class PlanetFedoraBaseWidget(Widget):
         entry_list = []
         
         atomfeed = feedparser.parse(self.atomurl)
+        show = d.get('show', None)
 
-        show = d.get('show')
-        
-        try:
-            show = int(show)
-        except:
-            show = None;
-        
-        c = 0
-        for atomentry in atomfeed.entries:
+        for c, atomentry in enumerate(atomfeed.entries):
             if not view_users_list or entry.author.name in view_users_list:
                 atomentry['uid'] = d['config']['uid'] + '_' + str(c)
                 atomentry.author_detail['hackergotchi'] = 'http://planet.fedoraproject.org/images/heads/default.png'
                 entry_list.append(atomentry)
-                c+=1
-                
-                if show and c >= show: 
-                    break;
-            
+                if show and c >= show:
+                    break
+
         d.update({'entries': entry_list})
 
     def __str__(self):
