@@ -2,23 +2,43 @@ from fedora.client import ProxyClient
 from Cookie import SimpleCookie
 from pylons import request
 
-def convert_to_simple_cookie(cookie):
-    sc = SimpleCookie()
-    for key, value in cookie.iteritems():
-        sc[key] = value
+class MFProxyClient(ProxyClient):
+    def __init__(self, base_url, useragent=None, debug=False, return_auth=False):
+        super(MFProxyClient, self).__init__(base_url, 
+                                            useragent=useragent, 
+                                            debug=debug)
+        self._return_auth = return_auth
+        
+    def convert_to_simple_cookie(self, cookie):
+        sc = SimpleCookie()
+        for key, value in cookie.iteritems():
+            sc[key] = value
             
-    return sc
+        return sc
 
-class FasClient(ProxyClient):
+    def get_current_proxy_cookies(self):
+        cookies = request.cookies
+        cookies = self.convert_to_simple_cookie(cookies)
+        return cookies
+    
+    def send_authenticated_request(self, method, req_params=None):
+        auth_params = {'cookie': self.get_current_proxy_cookies()}
+        result = self.send_request(method,
+                                   req_params = req_params,
+                                   auth_params = auth_params)
+        
+        if not self._return_auth:
+            result = result[1]
+            
+        return result
+
+class FasClient(MFProxyClient):
     def __init__(self, baseURL='https://admin.fedoraproject.org/accounts'):
         super(FasClient, self).__init__(baseURL)
     
     def get_user_info(self, user, full_results=False):
-        cookies = request.cookies
-        cookies = convert_to_simple_cookie(cookies)
-        auth_params = {'cookie': cookies}
-        result = self.send_request('user/view/' + user, 
-                                    auth_params = auth_params)
+        result = self.send_authenticated_request('user/view/' + user, 
+                                                 auth_params = auth_params)
         
         if full_results:
             return result
@@ -27,3 +47,15 @@ class FasClient(ProxyClient):
                 return result[1]
             else:
                 return result[0]
+            
+class PkgdbClient(MFProxyClient):
+    def __init__(self, baseURL='https://admin.fedoraproject.org/pkgdb'):
+        super(PkgdbClient, self).__init__(baseURL)
+        
+    def get_package_info(self, name):
+        result = self.send_authenticated_request("packages/name", 
+                                               req_params={'packageName': name})
+        
+        return result
+    
+        

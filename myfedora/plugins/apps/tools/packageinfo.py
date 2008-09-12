@@ -1,10 +1,7 @@
 from myfedora.widgets.resourceview import ToolWidget
 from fedora.tg.client import BaseClient
 from myfedora.lib.app_factory import AppFactory
-
-class PkgdbClient(BaseClient):
-    def packages_name(self, name):
-        return self.send_request("packages/name", req_params={'packageName': name})
+from myfedora.lib.proxy import PkgdbClient
 
 class PackageInfoToolApp(AppFactory):
     entry_name = "tools.packageinfo"
@@ -44,8 +41,8 @@ class PackageInfoToolWidget(ToolWidget):
         package = d.get('data_key', None)
         d['package'] = package
 
-        pkgdb_client = PkgdbClient('https://admin.fedoraproject.org/pkgdb/')
-        json_data = pkgdb_client.packages_name(package)
+        pkgdb_client = PkgdbClient()
+        json_data = pkgdb_client.get_package_info(package)
         
         data = {}
         collection_list = []
