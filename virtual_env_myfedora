@@ -242,6 +242,7 @@ case "$1" in
     echo "Key database was created in $PROJ_NSS_DIR.  You now need to either"
     echo "modify /etc/httpd/conf.d/nss.conf to point to this key DB or import"
     echo "the generated keys into the master key DB"
+    ;;
   *)
     usage;
     ;;
