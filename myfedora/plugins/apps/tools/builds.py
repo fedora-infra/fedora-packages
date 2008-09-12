@@ -3,6 +3,8 @@ from datetime import datetime
 from tw.forms.datagrid import DataGrid
 from myfedora.lib.app_factory import AppFactory
 from myfedora.lib.utils import HRElapsedTime
+from myfedora.lib.appbundle import AppBundle
+import pylons
 from tg import url
 import koji
 
@@ -110,8 +112,13 @@ class BuildsToolWidget(ToolWidget):
                      'limit': self.limit + 1, 
                      'order': '-creation_time'}
 
+        username = None
         if resourceview == 'people_view' or resourceview == 'profile_view':
             user = cs.getUser(data_key)
+        
+            if resourceview != 'profile_view':
+                username = data_key
+                
             if user:
                 user_id = user['id']
             else:
@@ -188,5 +195,17 @@ class BuildsToolWidget(ToolWidget):
         d['previous_disabled'] = 'disabled'
         if self.offset != 0:
             d['previous_disabled'] = ''
+
+        right_col_apps = AppBundle("rightcol")
+        nav_class = pylons.g.apps['packagesnav']
+        nav_app = nav_class(None, 
+                            '320px', 
+                            '200px', 
+                            'Home',
+                            flags=nav_class.BUILDS_SUBNAV_FLAG,
+                            user=username)
+        
+        right_col_apps.add(nav_app)
+        d.update({'rightcol':right_col_apps.serialize_apps(pylons.tmpl_context.w)})
 
         return d

@@ -1,10 +1,12 @@
 <?python
 import tg
+from pylons import tmpl_context
 ?>
 
 <div xmlns="http://www.w3.org/1999/xhtml" 
      xmlns:py="http://genshi.edgewall.org/">
      
+  <div id='left-content-column'>
   <div class="list header-list" py:if="builds_list">
      <h3>Builds</h3>
      <table>
@@ -113,5 +115,11 @@ import tg
   </div>
   <div py:if="not builds_list and person">
      Fedora user ${person} has not built anything in the Fedora build systems
+  </div>
+  </div>
+  <div id="right-content-column">
+    <div py:for="app in rightcol" class="panel">
+      ${tmpl_context.show_app(app)}
+    </div>
   </div>
 </div>
