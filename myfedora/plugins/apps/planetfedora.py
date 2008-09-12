@@ -3,8 +3,11 @@ from tw.api import Widget, JSLink
 from tw.jquery import jquery_js, jQuery
 from myfedora.lib.app_factory import AppFactory
 import feedparser
+import re
 
 ui_js = JSLink(link='/javascript/myfedora.ui.js')
+
+src_re = re.compile('src\s*=\s*"([^"]*)"')
 
 class PlanetFedoraBaseWidget(Widget):
     """ The base widget for the Fedora People view.
@@ -27,7 +30,22 @@ class PlanetFedoraBaseWidget(Widget):
         for c, atomentry in enumerate(atomfeed.entries):
             if not view_users_list or entry.author.name in view_users_list:
                 atomentry['uid'] = d['config']['uid'] + '_' + str(c)
-                atomentry.author_detail['hackergotchi'] = 'http://planet.fedoraproject.org/images/heads/default.png'
+                
+                value = atomentry.content[0].value.lstrip()
+                if value.startswith('<img'):
+                    pos = value.find('/>') + 2
+                
+                    img_tag = value[0:pos]
+                    atomentry.content[0].value=value[pos:]
+                    
+                    m = src_re.search(img_tag)
+                    atomentry.author_detail['hackergotchi'] = 'http://planet.fedoraproject.org/images/heads/default.png'
+                    
+                    try:
+                        atomentry.author_detail['hackergotchi'] = m.group(1)
+                    except Exception, e:
+                        print e
+                    
                 entry_list.append(atomentry)
                 if show and c >= show:
                     break
