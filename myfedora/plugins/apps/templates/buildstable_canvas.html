@@ -1,0 +1,116 @@
+<?python
+import tg
+?>
+
+<div xmlns="http://www.w3.org/1999/xhtml" 
+     xmlns:py="http://genshi.edgewall.org/">
+  <div class="list header-list" py:if="builds_list">
+     <h3>Builds</h3>
+     <table>
+        <thead>
+          <tr>
+            <th>Build ID</th>
+            <th>Name</th>
+            <th>Built By</th>
+            <th>Time</th>
+            <th>Finished</th>
+            <th>State</th>
+            <th>Release</th>
+          </tr>
+        </thead>
+        <tbody>         
+         <span py:for="i, build in enumerate(builds_list)" 
+              py:with="build_id=str(build['build_id']); 
+                       build_state=str(build['state']); 
+                       task_id=str(build['task_id']); 
+                       message_id='message_' + build_id;
+                       nvr=str(build['nvr']);
+                       odd_or_even=i%2 and 'row-odd' or 'row-even'"
+                       >
+            <tr class="${odd_or_even}">
+              <td>${build_id}</td>
+          
+    	      <td py:with="menu_id='menu_' + build_id" id="${build_id}_name_col"> 
+                  <div class="${odd_or_even}">
+                    <span class="package-name"> 
+                      <a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${nvr}</a>
+                    </span>
+                      <ul id="${menu_id}" class="hover_menu">
+                        <li><a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">View package details in Koji</a></li>
+                      </ul>
+                    <script type="text/x-myfedora-extpoint">
+                    {
+                      'type': 'build_details',
+                      'placeholder_id': '${menu_id}',
+                      'build_id': '${build_id}',
+                      'task_id': '${task_id}',
+                      'package_nvr':'${nvr}',
+                      'build_state': ${build_state},
+                      'ui': 'hover_menu',
+                      'show_effect': 'slideDown("fast")',
+                      'hide_effect': 'slideUp("fast")',
+                      'run': 'whenReady'
+                    }
+                    </script>
+                  </div>
+                  
+    	      </td>
+              <td py:with="user = str(build['owner_name'])" >
+                   <span class="person-name"><a href="${tg.url('/people/name/' + user + '/builds')}">${user}</a></span>
+              </td>
+              <td>${build['elapsed_build_time']}</td>
+              <td>
+                <div>
+                  ${build['finished_line_0']}
+                </div>
+                <span class="timestamp">
+                  ${build['finished_line_1']}
+                </span>
+              </td>
+              <td><img src="${str(build['mf_state_img'])}" /></td>
+              <td py:with="release_id='release_' + build_id"
+                  id="${release_id}">
+                  &nbsp;
+                  <script type="text/x-myfedora-extpoint">
+                  {
+                     'type': 'release_info',
+                     'placeholder_id': '${release_id}',
+                     'build_id': '${build_id}',
+                     'package_nvr':'${nvr}',
+                     'build_state': ${build_state}, 
+                     'show_effect': 'fadeIn("slow")',
+                     'run': 'whenReady'
+                  }
+                  </script>
+              </td>
+            </tr>
+            <tr class="${odd_or_even}">
+              <script type="text/x-myfedora-extpoint">
+                  {
+                     'type': 'build_message',
+                     'placeholder_id': '${message_id}',
+                     'build_id': '${build_id}',
+                     'task_id': '${task_id}',
+                     'build_state': ${build_state}, 
+                     'show_effect': 'slideDown("slow")',
+                     'run': 'whenReady'
+                  }
+              </script>
+              <td colspan="6" 
+                  id="${message_id}"
+                  class="message_row">
+              </td>
+            </tr>
+        </span>
+      </tbody> 
+     </table>
+  </div>
+  
+  <!-- used if there is no data -->
+  <div py:if="not builds_list and packages">
+     There are no build for the ${package} package
+  </div>
+  <div py:if="not builds_list and person">
+     Fedora user ${person} has not built anything in the Fedora build systems
+  </div>
+</div>
