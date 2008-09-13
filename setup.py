@@ -73,6 +73,8 @@ setup(
     navigation = myfedora.plugins.apps.navigation:NavigationApp
     login = myfedora.plugins.apps.login:LoginApp
     placeholder = myfedora.plugins.apps.placeholder:PlaceholderApp
+    packagesnav = myfedora.plugins.apps.packagesnav:PackagesNavApp
+    buildstable = myfedora.plugins.apps.buildstable:BuildsTableApp
     
     #TOOLS:
     tools.packageinfo = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolApp
@@ -118,6 +120,13 @@ setup(
     [myfedora.plugins.apps.placeholder.views]
     home = myfedora.plugins.apps.placeholder:PlaceholderHomeWidget
     canvas = myfedora.plugins.apps.placeholder:PlaceholderCanvasWidget
+    
+    [myfedora.plugins.apps.packagesnav.views]
+    home =  myfedora.plugins.apps.packagesnav:PackagesNavWidget
+    canvas = myfedora.plugins.apps.packagesnav:PackagesNavWidget
+    
+    [myfedora.plugins.apps.buildstable.views]
+    canvas = myfedora.plugins.apps.buildstable:BuildsTableWidget
     
     [myfedora.plugins.apps.tools.packageinfo.views]
     home = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolWidget

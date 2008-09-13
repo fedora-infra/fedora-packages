@@ -1,0 +1,15 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:py="http://genshi.edgewall.org/"
+     style="max-width:${config.width};max-height:${config.height};"
+     id="${id}">
+  <h3>Package Lists</h3>
+
+  <div py:for="item in nav.itervalues()">
+    <h4>${item['label']}</h4>
+    <table py:if="item['subnav']">
+      <tr py:for="subitem in item['subnav'].itervalues()">
+        <td>&nbsp;</td><td>${subitem['label']}</td>
+      </tr>
+    </table>
+  </div>
+</div>

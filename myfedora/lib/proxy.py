@@ -37,17 +37,10 @@ class FasClient(MFProxyClient):
         super(FasClient, self).__init__(baseURL)
     
     def get_user_info(self, user, full_results=False):
-        result = self.send_authenticated_request('user/view/' + user, 
-                                                 auth_params = auth_params)
+        result = self.send_authenticated_request('user/view/' + user)
         
-        if full_results:
-            return result
-        else:
-            if len(result) > 1:
-                return result[1]
-            else:
-                return result[0]
-            
+        return result
+    
 class PkgdbClient(MFProxyClient):
     def __init__(self, baseURL='https://admin.fedoraproject.org/pkgdb'):
         super(PkgdbClient, self).__init__(baseURL)
@@ -58,4 +51,7 @@ class PkgdbClient(MFProxyClient):
         
         return result
     
+    def get_user_packages(self, user):
+        result = self.send_authenticated_request("users/packages/" + user)
         
+        return result
