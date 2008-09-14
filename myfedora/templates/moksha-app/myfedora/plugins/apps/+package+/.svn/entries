@@ -1,0 +1,98 @@
+9
+
+dir
+5418
+http://svn.turbogears.org/projects/tg.devtools/trunk/devtools/templates/turbogears/+package+
+http://svn.turbogears.org
+
+
+
+2008-09-05T12:08:47.527361Z
+5358
+Gustavo
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+77541ad4-5f01-0410-9ede-a1b63cd9a898
+
+i18n
+dir
+
+model
+dir
+
+websetup.py_tmpl
+file
+
+
+
+
+2008-08-17T04:48:27.000000Z
+227030dcc9790d5586203b7b9106fb99
+2008-08-10T21:46:41.584712Z
+5130
+mramm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1533
+
+tests
+dir
+
+__init__.py_tmpl
+file
+
+
+
+
+2008-05-31T22:44:28.000000Z
+d41d8cd98f00b204e9800998ecf8427e
+2008-04-24T01:09:54.342336Z
+4479
+mramm
+
+config
+dir
+
+controllers
+dir
+
+lib
+dir
+
+public
+dir
+
+templates
+dir
+

@@ -155,5 +155,9 @@ setup(
     [myfedora.plugins.apps.tools.fedoramemberships.views]
     home = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
     canvas = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
+
+    [paste.paster_create_template]
+    moksha-app = myfedora.pastetemplate:MokshaAppTemplate
+
     """,
 )

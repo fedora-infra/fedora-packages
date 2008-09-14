@@ -39,3 +39,10 @@ Then you are ready to go.
 Run the Server
 ==============
 paster serve config.ini
+
+
+==========================
+Creating a new application
+==========================
+
+    paster create --template=moksha-app <name>
