@@ -5,15 +5,14 @@ class {{package.title()}}App(AppFactory):
     entry_name = '{{package}}'
 
     def __init__(self, app_config_id, width=None, height=None, view='home', **kw):
-        super({{package.title()}}App, self).__init__(app_config_id, width,
-                                                     height, view, **kw)
+        super({{package.title()}}App, self).__init__(app_config_id, width, height, view, **kw)
 
     def get_data(self, force_refresh=False):
         data = super({{package.title()}}App, self).get_data(force_refresh)
         return data
 
 class {{package.title()}}Widget(Widget):
-    """ An skeleton Moksha Widget """
+    """ A skeleton Moksha Widget """
     params = ['hello']
     template = 'genshi:myfedora.plugins.apps.{{package}}.templates.{{package}}'
     javascript = []
@@ -24,4 +23,3 @@ class {{package.title()}}Widget(Widget):
     def update_params(self, d):
         super({{package.title()}}Widget, self).update_params(d)
         d['hello'] = 'Hello World!'
-        return d
