@@ -46,3 +46,5 @@ Creating a new application
 ==========================
 
     paster create --template=moksha-app <name>
+    cd <name>
+    python setup.py develop

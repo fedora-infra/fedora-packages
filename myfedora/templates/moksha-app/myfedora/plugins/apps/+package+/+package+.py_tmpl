@@ -15,7 +15,7 @@ class {{package.title()}}App(AppFactory):
 class {{package.title()}}Widget(Widget):
     """ An skeleton Moksha Widget """
     params = ['hello']
-    template = 'genshi:myfedora.plugins.apps.{{package}}.templates.widget'
+    template = 'genshi:myfedora.plugins.apps.{{package}}.templates.{{package}}'
     javascript = []
     css = []
     data = None
