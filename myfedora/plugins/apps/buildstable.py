@@ -101,6 +101,23 @@ class BuildsTableWidget(Widget):
     def update_params(self, d):
         super(BuildsTableWidget, self).update_params(d)
 
+        offset = self.offset
+
+        page = d.get('page', None)
+        page_prev = None
+        page_next = 2
+        if page:
+            try:
+                page_num = int(page)
+                if page_num > 1:
+                    page_prev = page_num - 1
+                    
+                page_next = page_num + 1
+                
+                offset = (page_num - 1) * self.limit
+            except:
+                page = None
+                
         profile = d.get('profile', None)
         person = d.get('person', None)
         package = d.get('package', None)
@@ -112,7 +129,7 @@ class BuildsTableWidget(Widget):
         # get the list
         cs = koji.ClientSession('http://koji.fedoraproject.org/kojihub')
 
-        queryOpts = {'offset': self.offset, 
+        queryOpts = {'offset': offset, 
                      'limit': self.limit + 1, 
                      'order': '-creation_time'}
 
@@ -133,6 +150,8 @@ class BuildsTableWidget(Widget):
         if package:
             pkg_id = cs.getPackageID(package)
 
+        import datetime
+        a = datetime.datetime.now()
         builds_list = cs.listBuilds(packageID=pkg_id,
                                     userID=user_id, 
                                     queryOpts=queryOpts)
@@ -185,21 +204,17 @@ class BuildsTableWidget(Widget):
                 elapsed_build_time = self._time_delta_to_elapsed_str(hret.start, hret.end)
                 
                 build['elapsed_build_time'] =elapsed_build_time
-            except Exception, e:
+            except Exception, e:    
                 build['elapsed_build_time'] = ''
 
-        d['offset'] = self.offset
-        d['limit'] = self.limit
-
-        d['next_disabled'] = 'disabled'
         if list_count > self.limit:
-            d['next_disabled'] = ''
+            d['page_next'] = page_next
+            print page_next
             d['builds_list'] = builds_list[0:-1]
         else:
             d['builds_list'] = builds_list
 
-        d['previous_disabled'] = 'disabled'
-        if self.offset != 0:
-            d['previous_disabled'] = ''
+        if page_prev:
+            d['page_prev'] = page_prev
 
         return d

@@ -174,7 +174,40 @@ var _ui = function(){};
 _ui = {
   menu_base: _menu_base, 
   hover_menu: _hover_menu,
-  ellipsized_text: _ellipsized_text 
+  ellipsized_text: _ellipsized_text,
+  
+  generate_widget_param_url: function(id, req_params) {
+    var query_string = document.location.search;
+    var path = document.location.pathname;
+    var elements = myfedora.parse_query_string(query_string);
+    
+    if (! elements) {
+      elements = {};
+    }
+    
+    for (var k in req_params) {
+      var kid = id + "_" + k;
+      elements[kid] = req_params[k];
+    }
+    
+    query_string = "?";
+    var add_amp = false;
+    for (var k in elements) {
+      if (add_amp) { 
+        k += "&"; 
+      } else {
+        add_amp = true;
+      }
+      
+      query_string += k + "=" + elements[k];
+    }
+    
+    return path + query_string;
+  },
+  
+  go_to: function(id, req_params) {
+    document.location.href = myfedora.ui.generate_widget_param_url(id, req_params);
+  }
 };
 
 myfedora.ui = _ui;

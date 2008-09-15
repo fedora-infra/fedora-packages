@@ -3,9 +3,14 @@ import tg
 ?>
 
 <div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/">
+     xmlns:py="http://genshi.edgewall.org/"
+     id="${id}">
   <div class="list header-list" py:if="builds_list">
      <h3>Builds</h3>
+     <a py:if="page_prev" onClick="myfedora.ui.go_to('${id}', {'page':${page_prev}})" href="#">Prev</a>
+     <span py:if="not page_prev">Prev</span>
+     <a py:if="page_next" onClick="myfedora.ui.go_to('${id}', {'page':${page_next}})" href="#">Next</a>
+     <span py:if="not page_next">Next</span>
      <table>
         <thead>
           <tr>
