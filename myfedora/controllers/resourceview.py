@@ -44,6 +44,8 @@ class ResourceViewController(BaseController):
         if not view:
             view = self.app_class.entry_name
             
+        pylons.tmpl_context.resource_view = view
+            
         if view_action != 'name': 
             tool = view_action
             

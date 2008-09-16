@@ -60,7 +60,7 @@ class BaseController(TGController):
         # template
         tmpl_context.w = WidgetBunch()
         tmpl_context.show_app = show_app
-        
+        tmpl_context.resource_view = ''
         self._global_resource_injection.register_resources()
         tmpl_context.identity =  pylons.request.environ.get('repoze.who.identity')
         

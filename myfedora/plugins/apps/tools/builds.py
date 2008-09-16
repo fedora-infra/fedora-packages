@@ -53,7 +53,9 @@ class BuildsToolWidget(ToolWidget):
                             '200px', 
                             'Home',
                             flags=nav_class.BUILDS_SUBNAV_FLAG,
-                            user=username)
+                            user=username,
+                            package=package,
+                            tool=d.get('tool','builds'))
         
         right_col_apps.add(nav_app)
         d.update({'rightcol': right_col_apps.serialize_apps(pylons.tmpl_context.w),
