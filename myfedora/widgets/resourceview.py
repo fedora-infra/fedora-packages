@@ -2,6 +2,8 @@ from tw.api import Widget
 from tw.jquery import jquery_js
 from widgets import myfedora_ui_js
 from widgets import myfedora_extentions_js
+from pylons import tmpl_context, request
+import tg
 
 class ResourceViewWidget(Widget):
     params = ['data_key']
@@ -58,6 +60,7 @@ class ResourceViewWidget(Widget):
             d['active_child'] = active_child
          
         visible_children = []
+        childurls = {}
         
         for c in self.children:
             if c.requires_data_key and not data_key:
@@ -68,7 +71,22 @@ class ResourceViewWidget(Widget):
             d['child_args'][c.key] = childargs
             visible_children.append(c)
             
+            path = request.environ['PATH_INFO']
+            path_elements = path.split('/')
+            path_count = len(path_elements) - path_elements.count('')
+            print "**************", path_elements, path_count
+            if data_key and path_count > 2 :
+                childurls[c._id] = tg.url("/%s/name/%s/%s" % (tmpl_context.resource_view,
+                                                       data_key,
+                                                       c._id)
+                                         )
+            else:
+                childurls[c._id] = tg.url("/%s/%s" % (tmpl_context.resource_view,
+                                                      c._id)
+                                         )
+            
         d['visible_children'] = visible_children
+        d['childurls'] = childurls
         
         return d
 

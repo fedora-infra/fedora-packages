@@ -6,8 +6,8 @@
       <ul>
         <span py:for="child in visible_children">
           <li>
-            <a py:if="active_child == child" href="${child._id}" class="active">${child.display_name}</a>
-            <a py:if="active_child != child" href="${child._id}" class="inactive">${child.display_name}</a>
+            <a py:if="active_child == child" href="${childurls[child._id]}" class="active">${child.display_name}</a>
+            <a py:if="active_child != child" href="${childurls[child._id]}" class="inactive">${child.display_name}</a>
           </li>
         </span>
       </ul>
