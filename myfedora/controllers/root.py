@@ -59,17 +59,21 @@ class RootController(BaseController):
         leftcol_apps = AppBundle("leftcol")
         rightcol_apps = AppBundle("rightcol")
 
-        if not pylons.tmpl_context.identity:
-            placeholder = pylons.g.apps['placeholder'](None, '285px', '272px', 'Canvas', placeholder_label='Fedora is Cool banner')
-            leftcol_apps.add(placeholder)
-            planetfedora = pylons.g.apps['planetfedora'](None, '285px', '272px', 'Canvas', show=5)
-            leftcol_apps.add(planetfedora)
+        announce = pylons.g.apps['fedoraannounce'](None, 
+                                                   None, 
+                                                   None, 
+                                                   'Canvas',
+                                                   show=1)
+        leftcol_apps.add(announce)
+        planetfedora = pylons.g.apps['planetfedora'](None, '285px', '272px', 'Canvas', show=5)
+        leftcol_apps.add(planetfedora)
             
+        if not pylons.tmpl_context.identity:
             login = pylons.g.apps['login'](None, '320px', '200px', 'Home')
             rightcol_apps.add(login)
         
-        placeholder = pylons.g.apps['placeholder'](None, '285px', '272px', 'Home', placeholder_label='Alerts Placeholder')
-        rightcol_apps.add(placeholder)
+        announce = pylons.g.apps['fedoraannounce'](None, '285px', '272px', 'Home', show=5)
+        rightcol_apps.add(announce)
         
         
         #url = "http://gmodules.com/ig/ifr?url=http://www.cammap.net/tvlive/livetvint.xml&amp;up_kanaal=BBC%20World&amp;up_autoplay=Yes&amp;up_none=-%20Fill%20in%20below%20-&amp;up_statn=&amp;up_urls=&amp;up_urlw=http%3A%2F%2F&amp;synd=open&amp;w=285&amp;h=272&amp;title=Live+TV+channels&amp;border=%23ffffff%7C3px%2C1px+solid+%23999999&amp;output=js"

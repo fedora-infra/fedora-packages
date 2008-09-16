@@ -1,0 +1,23 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:py="http://genshi.edgewall.org/"
+     id="${id}"
+     class="list">
+  <h3><a href="${url}" target="_blank">Announce</a></h3>
+  <table>
+  <tr py:for="entry in entries">
+  <td>
+  <h4><a href="${entry.link}" target="_blank">${entry.title}</a></h4>
+  <div id="${entry['uid']}">
+    ${HTML(entry.content[0].value)}
+  </div>
+  <script type="text/javascript">
+        var et = new myfedora.ui.ellipsized_text('${entry['uid']}',
+                                         'Show more...',
+                                         'Show less...',  
+                                         ${charcount}, 5);
+        et.show();
+  </script>
+  </td>
+  </tr>
+  </table>
+</div>

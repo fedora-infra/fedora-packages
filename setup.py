@@ -75,6 +75,8 @@ setup(
     placeholder = myfedora.plugins.apps.placeholder:PlaceholderApp
     packagesnav = myfedora.plugins.apps.packagesnav:PackagesNavApp
     buildstable = myfedora.plugins.apps.buildstable:BuildsTableApp
+    fedoraannounce = myfedora.plugins.apps.fedoraannounce:FedoraAnnounceApp
+
     
     #TOOLS:
     tools.packageinfo = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolApp
@@ -127,6 +129,10 @@ setup(
     
     [myfedora.plugins.apps.buildstable.views]
     canvas = myfedora.plugins.apps.buildstable:BuildsTableWidget
+    
+    [myfedora.plugins.apps.fedoraannounce.views]
+    home = myfedora.plugins.apps.fedoraannounce:FedoraAnnounceHomeWidget
+    canvas = myfedora.plugins.apps.fedoraannounce:FedoraAnnounceCanvasWidget
     
     [myfedora.plugins.apps.tools.packageinfo.views]
     home = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolWidget
