@@ -193,5 +193,5 @@ class PackagesNavWidget(Widget):
         
         
         d.update({'nav': nav})
-        print (d)
+
         return d

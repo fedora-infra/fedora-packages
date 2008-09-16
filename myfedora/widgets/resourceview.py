@@ -74,7 +74,6 @@ class ResourceViewWidget(Widget):
             path = request.environ['PATH_INFO']
             path_elements = path.split('/')
             path_count = len(path_elements) - path_elements.count('')
-            print "**************", path_elements, path_count
             if data_key and path_count > 2 :
                 childurls[c._id] = tg.url("/%s/name/%s/%s" % (tmpl_context.resource_view,
                                                        data_key,
