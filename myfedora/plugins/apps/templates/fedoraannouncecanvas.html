@@ -5,19 +5,22 @@
   <h3><a href="${url}" target="_blank">Announce</a></h3>
   <table>
   <tr py:for="entry in entries">
-  <td>
+  <td id="${entry['uid']}">
   <h4><a href="${entry.link}" target="_blank">${entry.title}</a></h4>
-  <div id="${entry['uid']}">
+  <div id="${entry['uid']}_content">
+    ${HTML(entry.content[0].value)}
+  </div>
+  </td>
+  <div id="${entry['uid']}_lightbox">
+    <h2><a href="${entry.link}" target="_blank">${entry.title}</a></h2>
     ${HTML(entry.content[0].value)}
   </div>
   <script type="text/javascript">
-        var et = new myfedora.ui.ellipsized_text('${entry['uid']}',
-                                         'Show more...',
-                                         'Show less...',  
-                                         ${charcount}, 5);
+        var et = new myfedora.ui.ellipsized_text('${entry['uid']}_content',  
+                                                 ${charcount}, 
+                                                 '${entry['uid']}_lightbox');
         et.show();
   </script>
-  </td>
   </tr>
   </table>
 </div>

@@ -4,7 +4,7 @@
      class="list">
   <h3>Planet Fedora</h3>
   <table>
-    <tr py:for="entry in entries" >
+    <tr py:for="entry in entries" id="${entry['uid']}">
       <td>
         <div>
           <img src="${entry.author_detail.hackergotchi}" height="40" />
@@ -14,17 +14,38 @@
       </td>
       <td>
         <a href="${entry.link}" target="_blank">${entry.title}</a>
-        <div id="${entry['uid']}">
+        <div id="${entry['uid']}_text">
           ${HTML(entry.content[0].value)}
         </div>
       </td>
-      <script type="text/javascript">
-        var et = new myfedora.ui.ellipsized_text('${entry['uid']}',
-                                         'Show more...',
-                                         'Show less...',  
-                                         55, 5);
-        et.show();
-      </script>
     </tr>
   </table>
+
+      <div py:for="entry in entries">
+        <table id="${entry['uid']}_lightbox">
+          <tr>
+            <td>
+              <div>
+                <img src="${entry.author_detail.hackergotchi}"/>
+              </div>
+              <a href="${entry.author_detail.href}" target="_blank">${entry.author_detail.name}</a>
+            </td>
+            <td>
+              <a href="${entry.link}" target="_blank"><h2>${entry.title}</h2></a>
+              <div>
+                ${HTML(entry.content[0].value)}
+              </div>
+            </td>
+          </tr>
+        </table>
+        <script type="text/javascript">
+        var et = new myfedora.ui.ellipsized_text("${entry['uid']}_text",
+                                                 55,
+                                                 "${entry['uid']}_lightbox");
+        et.show();
+      </script>
+      </div>
+      
+      
+    
 </div>

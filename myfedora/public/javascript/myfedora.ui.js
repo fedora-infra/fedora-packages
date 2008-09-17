@@ -113,9 +113,11 @@ var _lightbox = function(block_id, zindex) {
                                        
   dark_box.hide()
   
-  var content = this.block.replaceWith(dark_box);
+  var content = this.block;
   content.show();
+  content.parent().append(dark_box);
   this.block = dark_box;
+  
   
   var light_box = jQuery("<div />").css({"background-color": "white",
                                          "opacity": "1",
@@ -145,10 +147,21 @@ _lightbox.prototype = {
 };
 
 /******** ellipsized text class ********/
-var _ellipsized_text = function(blockid, morelink_text, lesslink_text, max_len) {
+var _ellipsized_text = function(blockid, max_len, lightbox_blockid, show_lightbox_text) {
+  
+  this.lightbox_div = undefined;
+  if (lightbox_blockid) {
+    this.lightbox_div = jQuery('#' + lightbox_blockid);
+    this.lightbox_div.hide();
+    
+    if (!show_lightbox_text) {
+      show_lightbox_text = 'more...'
+    }
+  }
+  
   this.div = jQuery('#' + blockid);
-  this.morelink_text = morelink_text;
-  this.lesslink_text = lesslink_text;
+  this.show_lightbox_text = show_lightbox_text;
+ 
   this.max_len = max_len;
 
 };
@@ -169,48 +182,45 @@ _ellipsized_text.prototype =  {
   sanitize_tags: function() {
     // add a blank target to links
     var a = jQuery('a', this.div);
+    
     a.attr('target', '_blank');
+    
+    if (this.lightbox_div) {
+      a = jQuery('a', this.lightbox_div);
+      a.attr('target', '_blank');
+    }
   },
   
   show: function() {
     var self = this;  
     this.div.hide();
     
-    this.html = jQuery('<div/>').html(this.div.html());
-
-    this.div.parent().append(this.html);
-    this.light_box = new myfedora.ui.lightbox(this.html, 5);
-    this.light_box.show_effect = 'fadeIn()'
-    this.light_box.hide_effect = 'fadeOut()'
     this.sanitize_tags();
 
     var el = this.calc_ellipse(this.div, this.max_len);
-      
-      
-    s = jQuery('<span />').text(' [');
-    a = jQuery('<a/>').attr('href', '#').text(this.morelink_text);
       
     this.lessdiv = el
       
     this.div.html(el);
       
-      
-    a.click(function() {self.unellipsize(self); return false;});
-    s.append(a);
-    s.append(']');
-    el.append(s);
+    if (this.lightbox_div) {
+      this.lightbox = new myfedora.ui.lightbox(this.lightbox_div, 5);
+      this.lightbox.show_effect = 'fadeIn()'
+      this.lightbox.hide_effect = 'fadeOut()'  
+    
+      s = jQuery('<span />').text(' [');
+      a = jQuery('<a/>').attr('href', '#').text(this.show_lightbox_text);
+      a.click(function() {self.show_lightbox(self); return false;});
+      s.append(a);
+      s.append(']');
+      el.append(s);
+    }
     
     this.div.show();
   },
   
-  unellipsize: function(self) {
-    self.light_box.fancy_show();
-  },
-  
-  ellipsize: function(self) {
-
-    self.div.html(self.lessdiv);
-    self.div.show();
+  show_lightbox: function(self) {
+    self.lightbox.fancy_show();
   },
 };
 
