@@ -39,6 +39,5 @@ def init_model(engine):
     #mapper(Reflected, t_reflected)
 
 # Import your model modules here. 
-from blogcache import Blogs
-from blogcache import blog_table
-
+from blogcache import Blogs, blog_table
+from comments import Comments, comments_table

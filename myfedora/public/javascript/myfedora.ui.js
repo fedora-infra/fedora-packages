@@ -1,35 +1,35 @@
 
 
-/******** construct the menu base class ********/
-var _menu_base = function(menu_id) {
+/******** base widget class ********/
+var _base_widget = function(block_id) {
   if (typeof(menu_id) == "string")
     {
-      this.menu = jQuery("#" + menu_id);
+      this.block = jQuery("#" + block_id);
     } 
   else
     {
-      this.menu = menu_id;
+      this.block = block_id;
     }
 };
 
-_menu_base.prototype = {
-  menu: undefined,
+_base_widget.prototype = {
+  block: undefined,
   show_effect: undefined,
   hide_effect: undefined, 
   setup: function() {
-    this.menu.addClass("menu");
+    this.hide();
   },
   
   hide: function() {
-    this.menu.hide();
+    this.block.hide();
   },
   
   show: function() {
-    this.menu.show();
+    this.block.show();
   },
   
   fancy_hide: function() {
-    var menu = this.menu;
+    var block = this.block;
     
     if (!this.hide_effect)
       {
@@ -38,12 +38,12 @@ _menu_base.prototype = {
     else
       {
         
-        eval("menu." + this.hide_effect);
+        eval("block." + this.hide_effect);
       }
   },
   
   fancy_show: function() {
-    var menu = this.menu;
+    var block = this.block;
     
     if (!this.show_effect)
       {
@@ -51,7 +51,7 @@ _menu_base.prototype = {
       }
     else
       {
-        eval("menu." + this.show_effect);
+        eval("block." + this.show_effect);
       }
   },
   
@@ -65,9 +65,9 @@ _menu_base.prototype = {
   
 };
 
-/******** construct the hover menu class ********/
+/******** hover menu class ********/
 var _hover_menu = function(menu_id) {
-  var parent = new _menu_base(menu_id);
+  var parent = new _base_widget(menu_id);
   myfedora.inherit(this, parent);
   this.setup();
   
@@ -89,10 +89,62 @@ var _hover_menu = function(menu_id) {
 _hover_menu.prototype = {
 };
 
-/******** construct the click menu class ********/
+/******** click menu class ********/
 
 
-/******** construct the ellipsized text class ********/
+/******** lightbox class **********/
+
+var _lightbox = function(block_id, zindex) {
+  this.index = zindex;
+  var parent = new _base_widget(block_id);
+  myfedora.inherit(this, parent);
+  this.setup();
+  
+  
+  var dark_box = jQuery("<div />").css({"z-index": zindex,
+                                        "background-color": "black",
+                                        "opacity": "1",
+                                        "position": "absolute",
+                                        "height": "100%",
+                                        "width": "100%",
+                                        "left": 0,
+                                        "top": 0,
+                                       });
+                                       
+  dark_box.hide()
+  
+  var content = this.block.replaceWith(dark_box);
+  content.show();
+  this.block = dark_box;
+  
+  var light_box = jQuery("<div />").css({"background-color": "white",
+                                         "opacity": "1",
+                                         "height": "80%",
+                                         "width": "90%",
+                                         "margin-left": "auto",
+                                         "margin-right": "auto",
+                                         "padding": "20px"
+                                        });
+  var content_box = jQuery("<div />").css({"overflow":"auto", "height":"90%"});
+  content_box.append(content);
+  
+  var self = this;
+  var hide = function (){
+    self.fancy_hide(); 
+    return false;
+  }
+  
+  var close_link = jQuery("<a href='#'/>").text("[X]Close").click(hide);           
+  light_box.append(close_link);
+  light_box.append(content_box);
+  light_box.append(close_link.clone(true));
+  dark_box.append(light_box);
+};
+
+_lightbox.prototype = {
+};
+
+/******** ellipsized text class ********/
 var _ellipsized_text = function(blockid, morelink_text, lesslink_text, max_len) {
   this.div = jQuery('#' + blockid);
   this.morelink_text = morelink_text;
@@ -124,15 +176,12 @@ _ellipsized_text.prototype =  {
     var self = this;  
     this.div.hide();
     
-    var s = jQuery('<span/>').text('[');
-    var a = jQuery('<a/>').attr('href', '#').text(this.lesslink_text);
-    a.click(function() {self.ellipsize(self); return false;});
-    s.append(a);
-    s.append(']');
-    
-    this.html = jQuery('<span/>').append(this.div.html());
-    this.html.append(s);
-    
+    this.html = jQuery('<div/>').html(this.div.html());
+
+    this.div.parent().append(this.html);
+    this.light_box = new myfedora.ui.lightbox(this.html, 5);
+    this.light_box.show_effect = 'fadeIn()'
+    this.light_box.hide_effect = 'fadeOut()'
     this.sanitize_tags();
 
     var el = this.calc_ellipse(this.div, this.max_len);
@@ -155,9 +204,7 @@ _ellipsized_text.prototype =  {
   },
   
   unellipsize: function(self) {
-    self.div.hide();
-    self.div.html(self.html);
-    self.div.slideDown('fast');
+    self.light_box.fancy_show();
   },
   
   ellipsize: function(self) {
@@ -172,8 +219,9 @@ _ellipsized_text.prototype =  {
 var _ui = function(){};
 
 _ui = {
-  menu_base: _menu_base, 
+  base_widget: _base_widget, 
   hover_menu: _hover_menu,
+  lightbox: _lightbox,
   ellipsized_text: _ellipsized_text,
   
   generate_widget_param_url: function(id, req_params) {
