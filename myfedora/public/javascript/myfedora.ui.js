@@ -2,7 +2,7 @@
 
 /******** base widget class ********/
 var _base_widget = function(block_id) {
-  if (typeof(menu_id) == "string")
+  if (typeof(block_id) == "string")
     {
       this.block = jQuery("#" + block_id);
     } 
@@ -21,33 +21,24 @@ _base_widget.prototype = {
   },
   
   hide: function() {
-    this.block.hide();
-  },
-  
-  show: function() {
-    this.block.show();
-  },
-  
-  fancy_hide: function() {
     var block = this.block;
     
     if (!this.hide_effect)
       {
-        this.hide();
+        this.block.hide();
       }
     else
-      {
-        
+      {    
         eval("block." + this.hide_effect);
       }
   },
   
-  fancy_show: function() {
+  show: function() {
     var block = this.block;
     
     if (!this.show_effect)
       {
-        this.show();
+        this.block.show();
       }
     else
       {
@@ -76,12 +67,12 @@ var _hover_menu = function(menu_id) {
   var self = this;
   this.menu_parent.hover(function() {
                            
-                           self.fancy_show();
+                           self.show();
                            
                          },
                          function() {
                            
-                           self.fancy_hide();
+                           self.hide();
                     
                          });
 };
@@ -132,7 +123,7 @@ var _lightbox = function(block_id, zindex) {
   
   var self = this;
   var hide = function (){
-    self.fancy_hide(); 
+    self.hide(); 
     return false;
   }
   
@@ -147,20 +138,19 @@ _lightbox.prototype = {
 };
 
 /******** ellipsized text class ********/
-var _ellipsized_text = function(blockid, max_len, lightbox_blockid, show_lightbox_text) {
+var _ellipsized_text = function(blockid, max_len, show_more_object, show_more_text) {
   
-  this.lightbox_div = undefined;
-  if (lightbox_blockid) {
-    this.lightbox_div = jQuery('#' + lightbox_blockid);
-    this.lightbox_div.hide();
+  this.show_more_object = undefined;
+  if (show_more_object) {
+    this.show_more_object = show_more_object;
     
-    if (!show_lightbox_text) {
-      show_lightbox_text = 'more...'
+    if (!show_more_text) {
+      show_more_text = 'more...'
     }
   }
   
   this.div = jQuery('#' + blockid);
-  this.show_lightbox_text = show_lightbox_text;
+  this.show_more_text = show_more_text;
  
   this.max_len = max_len;
 
@@ -203,24 +193,16 @@ _ellipsized_text.prototype =  {
       
     this.div.html(el);
       
-    if (this.lightbox_div) {
-      this.lightbox = new myfedora.ui.lightbox(this.lightbox_div, 5);
-      this.lightbox.show_effect = 'fadeIn()'
-      this.lightbox.hide_effect = 'fadeOut()'  
-    
+    if (this.show_more_object) {
       s = jQuery('<span />').text(' [');
-      a = jQuery('<a/>').attr('href', '#').text(this.show_lightbox_text);
-      a.click(function() {self.show_lightbox(self); return false;});
+      a = jQuery('<a/>').attr('href', '#').text(this.show_more_text);
+      a.click(function() {self.show_more_object.show(); return false;});
       s.append(a);
       s.append(']');
       el.append(s);
     }
     
     this.div.show();
-  },
-  
-  show_lightbox: function(self) {
-    self.lightbox.fancy_show();
   },
 };
 
