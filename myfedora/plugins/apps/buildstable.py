@@ -207,9 +207,11 @@ class BuildsTableWidget(Widget):
             except Exception, e:    
                 build['elapsed_build_time'] = ''
 
+        d['page_prev'] = None
+        d['page_next'] = None
+
         if list_count > self.limit:
             d['page_next'] = page_next
-            print page_next
             d['builds_list'] = builds_list[0:-1]
         else:
             d['builds_list'] = builds_list
