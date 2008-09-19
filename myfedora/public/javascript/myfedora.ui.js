@@ -62,7 +62,7 @@ var _hover_menu = function(menu_id) {
   myfedora.inherit(this, parent);
   this.setup();
   
-  this.menu_parent = this.menu.parent();
+  this.menu_parent = this.block.parent();
  
   var self = this;
   this.menu_parent.hover(function() {
@@ -95,7 +95,7 @@ var _lightbox = function(block_id, zindex) {
   var dark_box = jQuery("<div />").css({"z-index": zindex,
                                         "background-color": "black",
                                         "opacity": "1",
-                                        "position": "absolute",
+                                        "position": "fixed",
                                         "height": "100%",
                                         "width": "100%",
                                         "left": 0,
