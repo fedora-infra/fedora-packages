@@ -1,6 +1,8 @@
 from myfedora.lib.base import Controller, BaseController
 from tg import expose
 
+from myfedora.lib.proxy import BodhiClient
+
 import koji
 import re
 import urllib2
@@ -124,7 +126,14 @@ class KojiQuery(Controller):
 
         return {'files': results}
 
+class BodhiQuery(Controller):
+    @expose("json")
+    def get_info(self, package='', get_auth=False): 
+        bc = BodhiClient()
+        return bc.get_info(package=package, get_auth=get_auth)
+
 class ProxyController(Controller):
     koji = KojiQuery()
+    bodhi = BodhiQuery()
     cvs = CvsQuery()
     #bodhi = BodhiQuery()

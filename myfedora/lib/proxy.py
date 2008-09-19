@@ -55,3 +55,14 @@ class PkgdbClient(MFProxyClient):
         result = self.send_authenticated_request("users/packages/" + user)
         
         return result
+    
+class BodhiClient(MFProxyClient):
+    def __init__(self, baseURL='https://admin.fedoraproject.org/updates'):
+        super(BodhiClient, self).__init__(baseURL)
+        
+    def get_info(self, package='', get_auth=False):
+         result = self.send_authenticated_request("list/",
+                                                  req_params={'package': package,
+                                                              'get_auth': get_auth}
+                                                  )
+         return result

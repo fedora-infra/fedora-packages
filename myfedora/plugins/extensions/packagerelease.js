@@ -19,6 +19,13 @@
   
   run: function (data) {
     
+    /************* Renders the release info into HTML ***************/                    
+ 
+    render_updates = function(json)
+      {
+        console.log(json);
+      };
+    
     /************* Renders the releases into HTML ***************/                    
     render = function(json) 
       {
@@ -46,7 +53,12 @@
     
         if (query_updates)
           { 
-     
+            var burl = myfedora.get_page_base_url();
+            params = {'package' : data.package_nvr,
+                      'get_auth': true};
+            jQuery.getJSON(burl + 'proxy/bodhi/get_info',
+                           params,
+                           render_updates);
           }
           
         var block = jQuery('#' + data.uid);
