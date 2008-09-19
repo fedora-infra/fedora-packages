@@ -5,6 +5,12 @@ from widgets import myfedora_extentions_js
 from pylons import tmpl_context, request
 import tg
 
+# use for now but figure out better way to add extra tabs
+class DummyToolWidget(object):
+    def __init__(self, _id, display_name):
+        self._id = _id
+        self.display_name = display_name 
+
 class ResourceViewWidget(Widget):
     params = ['data_key']
     data_keys = ['data_key']
@@ -58,10 +64,15 @@ class ResourceViewWidget(Widget):
                 return None
             
             d['active_child'] = active_child
-         
+
         visible_children = []
         childurls = {}
         
+        if data_key == None:
+            ov = DummyToolWidget('overview', 'Overview')
+            visible_children = [ov]
+            childurls = {ov._id: '/%s/' % tmpl_context.resource_view}
+            
         for c in self.children:
             if c.requires_data_key and not data_key:
                 continue

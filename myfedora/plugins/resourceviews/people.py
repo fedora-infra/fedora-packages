@@ -7,7 +7,7 @@ from tg import expose
 class PeopleViewController(ResourceViewController):
     @expose('genshi:myfedora.plugins.resourceviews.templates.peopleindex')
     def index(self, **kw):
-        return {}
+        return super(PeopleViewController, self).index(**kw)
 
 class PeopleViewWidget(ResourceViewWidget):
     data_keys=['data_key', 'person']

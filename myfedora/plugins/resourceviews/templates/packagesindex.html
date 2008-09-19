@@ -8,11 +8,14 @@
        where your template is being included from.  Perhaps we should just move to all
        widgets. -->
   <xi:include href="../../../templates/base.html" />
+  <xi:include href="../../../templates/resourceview.html" />
+  
   <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
     <title>Packages</title>
   </head>
   <body>
+    ${show_tool_nav()}
     <div class="content-searchbox">
         <div>Search Packages 
           <form action="${tg.url('/search/packages/')}">

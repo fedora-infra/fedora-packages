@@ -1,6 +1,7 @@
 from myfedora.lib.base import BaseController
-from tg import expose, redirect
+from tg import expose, redirect, url
 from myfedora.lib.appbundle import AppBundle
+from myfedora.widgets.resourceview import DummyToolWidget
 import pylons
 
 class ResourceViewController(BaseController):
@@ -29,15 +30,29 @@ class ResourceViewController(BaseController):
         return app_bundle
 
     def index(self, **kw):
-        tool = kw.pop('tool', None)
-        data_key = kw.pop('data_key', None)
-        app_bundle = self._init_context(data_key, tool, **kw)
-        data = app_bundle.serialize_apps(pylons.tmpl_context.w)
-        result = {}
-        result.update(kw)
-        result.update(dict(view_content = data,
-                           view = None))
-        return result
+        # this is ugly, figure out how to support a different index page
+        app = self.app_class
+        child_widgets = app._widget.children
+        
+        ov = DummyToolWidget('overview', 'Overview')
+        visible_children = [ov]
+        childurls = {ov._id: '/%s/' % app.entry_name}
+        for c in child_widgets:
+            if c.requires_data_key:
+                continue
+            
+            visible_children.append(c)
+            
+            path = pylons.request.environ['PATH_INFO']
+            path_elements = path.split('/')
+            path_count = len(path_elements) - path_elements.count('')
+            childurls[c._id] = url("/%s/%s" % (app.entry_name,
+                                   c._id)
+                                  )
+        
+        return dict(visible_children=visible_children,
+                    active_child=ov,
+                    childurls=childurls)
         
     @expose('genshi:myfedora.templates.resourceviewcontainer')
     def default(self, view=None, view_action=None, data_key=None, tool=None, *args, **kw):

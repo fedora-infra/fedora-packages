@@ -5,14 +5,14 @@ from myfedora.widgets.resourceview import ResourceViewWidget
 from tw.jquery import jquery_js, jQuery
 from tw.api import Widget, JSLink, js_function, js_callback
 
-from tg import expose
+from tg import expose, url
 
 import pylons
 
 class PackagesViewController(ResourceViewController):
     @expose('genshi:myfedora.plugins.resourceviews.templates.packagesindex')
     def index(self, **kw):
-        return {}
+        return super(PackagesViewController, self).index(**kw)
     
 class PackagesViewWidget(ResourceViewWidget):
     data_keys=['data_key', 'package']
