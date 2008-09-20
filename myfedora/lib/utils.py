@@ -111,7 +111,7 @@ class HRElapsedTime():
         if delta.days < 1 and self.start.day == self.end.day:
             dstr = 'Today'
             self.longdate = False
-        elif delta.days < 2 and (end.day - start.day) == 1:
+        elif delta.days < 2 and (self.end.day - self.start.day) == 1:
             dstr = 'Yesterday'
             self.longdate = False
         elif delta.days < 7:

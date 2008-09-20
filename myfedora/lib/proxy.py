@@ -36,6 +36,18 @@ class FasClient(MFProxyClient):
     def __init__(self, baseURL='https://admin.fedoraproject.org/accounts'):
         super(FasClient, self).__init__(baseURL)
     
+    def user_list(self, search):
+        result = self.send_authenticated_request('user/list/',
+                                                 req_params = {'search': search})
+        
+        return result
+    
+    def group_list(self, search):
+        result = self.send_authenticated_request('group/list/',
+                                                 req_params = {'search': search})
+        
+        return result
+    
     def get_user_info(self, user, full_results=False):
         result = self.send_authenticated_request('user/view/' + user)
         

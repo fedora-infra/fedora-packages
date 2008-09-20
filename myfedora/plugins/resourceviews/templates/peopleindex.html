@@ -24,5 +24,11 @@
           </form>
         </div>
     </div>
+    <div id="left-content-column">
+      <div py:for="app in leftcol_apps">
+      
+       ${tmpl_context.show_app(app)}
+      </div>
+    </div>
   </body>
 </html>
