@@ -109,6 +109,7 @@ class BuildsTableWidget(Widget):
         if page:
             try:
                 page_num = int(page)
+                d['page'] = page_num
                 if page_num > 1:
                     page_prev = page_num - 1
                     
@@ -128,6 +129,8 @@ class BuildsTableWidget(Widget):
 
         # get the list
         cs = koji.ClientSession('http://koji.fedoraproject.org/kojihub')
+
+        countQueryOpts = {'countOnly': True}
 
         queryOpts = {'offset': offset, 
                      'limit': self.limit + 1, 
@@ -150,12 +153,19 @@ class BuildsTableWidget(Widget):
         if package:
             pkg_id = cs.getPackageID(package)
 
-        import datetime
-        a = datetime.datetime.now()
-        builds_list = cs.listBuilds(packageID=pkg_id,
-                                    userID=user_id, 
-                                    queryOpts=queryOpts)
+        cs.multicall = True
+        cs.listBuilds(packageID=pkg_id,
+                      userID=user_id,
+                      queryOpts=countQueryOpts)
+        cs.listBuilds(packageID=pkg_id,
+                      userID=user_id, 
+                      queryOpts=queryOpts)
 
+        results = cs.multiCall()
+        builds_list = results[1][0]
+        total_count = results[0][0]
+        
+        d['page_count'] = int (total_count / self.limit + 1)
         # process list
         list_count = len(builds_list)
         for build in builds_list:
