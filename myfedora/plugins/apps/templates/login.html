@@ -2,24 +2,24 @@
      xmlns:py="http://genshi.edgewall.org/"
      style="max-width:${config.width};max-height:${config.height};"
      id="${id}"
-     class="login">
+     class="login panel">
   <?python import tg ?>
-  Log In
+  <h3>Log In</h3>
   <form action="${tg.url('/login_handler?came_from=%s'% came_from)}" method="POST">
-    <div>
-      User Name
-    </div>
     <div> 
+      <span>
+        User Name
+      </span>
       <input type="text" name="login"></input>
     </div>
     <div>
-      Password
-    </div>
-    <div>
+      <span>
+        Password
+      </span>
       <input type="password" name="password"></input>
     </div>
     <div>
-      <input type="submit" name="Go"/>
+      <input class="button" type="submit" value="Login"/>
     </div>
   </form>
 </div>
