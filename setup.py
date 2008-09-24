@@ -77,6 +77,7 @@ setup(
     buildstable = myfedora.plugins.apps.buildstable:BuildsTableApp
     fedoraannounce = myfedora.plugins.apps.fedoraannounce:FedoraAnnounceApp
     peoplealphalist = myfedora.plugins.apps.peoplealphalist:PeopleAlphaListApp
+    useralerts = myfedora.plugins.apps.useralerts:UserAlertsApp
     
     #TOOLS:
     tools.packageinfo = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolApp
@@ -138,6 +139,9 @@ setup(
     home = myfedora.plugins.apps.peoplealphalist:PeopleAlphaListWidget
     canvas = myfedora.plugins.apps.peoplealphalist:PeopleAlphaListWidget
 
+    [myfedora.plugins.apps.useralerts.views]
+    home = myfedora.plugins.apps.useralerts:UserAlertsWidget
+    canvas = myfedora.plugins.apps.useralerts:UserAlertsWidget
     
     [myfedora.plugins.apps.tools.packageinfo.views]
     home = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolWidget

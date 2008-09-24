@@ -1,8 +1,10 @@
 from myfedora.lib.base import Controller, BaseController
-from tg import expose
-
+from myfedora.lib.utils import HRElapsedTime
 from myfedora.lib.proxy import BodhiClient
 
+import time
+
+from tg import expose
 import koji
 import re
 import urllib2
@@ -39,7 +41,62 @@ class KojiQuery(Controller):
         tags = cs.listTags(build = build_id)
 
         return {'tags': tags}
-
+    
+    @expose("json")
+    def list_builds(self, user, offset=None,
+                                limit=None, 
+                                state=None,
+                                complete_before=None, 
+                                complete_after=None,
+                                order=None,
+                                epoch = False):
+        
+        cs = koji.ClientSession(koji_xmlrpc)
+        user = cs.getUser(user)
+        id = user['id']
+        queryOpts = None
+        
+        if complete_before:
+            complete_before = int(complete_before)
+            
+        if complete_after:
+            complete_after = int(complete_after)
+        
+        if state:
+            state = int(state)
+        
+        qo = {}
+        if offset:
+          qo['offset'] = offset
+          
+        if limit:
+            qo['limit'] = limit
+            
+        if order:
+            qo['order'] = order
+            
+        if qo:
+            queryOpts = qo
+        
+        builds = cs.listBuilds(userID = id,
+                             completeBefore = complete_before,
+                             completeAfter = complete_after,
+                             state = state,
+                             queryOpts = queryOpts)
+        
+        if epoch:
+            for b in builds:
+                if b['completion_time']:
+                    t = HRElapsedTime.time_from_string(b['completion_time'])
+                    t = time.mktime(t.timetuple())
+                    b['completion_time'] = t
+                
+                t = HRElapsedTime.time_from_string(b['creation_time'])
+                t = time.mktime(t.timetuple())
+                b['creation_time'] = t
+                
+        return {'builds': builds}
+        
     @expose("json")
     def get_error_log(self, *args, **kw):
         results = {'log_url':'', 'log_name':'', 'task_id':''}

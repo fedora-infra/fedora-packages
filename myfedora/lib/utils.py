@@ -82,12 +82,14 @@ class HRElapsedTime():
         self.start = None
         self.end = None
         self.longdate = True
-        
-    def time_from_string(self, timestr):
-        parse_format = '%Y-%m-%d %H:%M:%S'
 
+    @staticmethod        
+    def time_from_string(timestr):
+        parse_format = '%Y-%m-%d %H:%M:%S'
+        
         timep = datetime.strptime(timestr.split('.')[0], parse_format)
         
+            
         return timep
     
     def set_start_timestr(self, timestr):

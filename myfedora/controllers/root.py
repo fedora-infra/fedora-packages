@@ -71,6 +71,10 @@ class RootController(BaseController):
         if not pylons.tmpl_context.identity:
             login = pylons.g.apps['login'](None, '320px', '200px', 'Home')
             rightcol_apps.add(login)
+        else:
+            alerts = pylons.g.apps['useralerts'](None, None, None, 'Home')
+            rightcol_apps.add(alerts)
+            
         
         announce = pylons.g.apps['fedoraannounce'](None, '285px', '272px', 'Home', show=5)
         rightcol_apps.add(announce)
