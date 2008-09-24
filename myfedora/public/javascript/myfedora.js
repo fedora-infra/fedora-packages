@@ -79,6 +79,7 @@ myfedora = {
           {
             console.log("Error parsing json in safe_json_parse - ");
             console.log(e);
+            console.log(s);
             return false;
           }
        },
