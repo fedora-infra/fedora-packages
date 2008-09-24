@@ -2,7 +2,7 @@ from datetime import datetime
 from tw.api import Widget
 from myfedora.lib.app_factory import AppFactory
 from myfedora.lib.utils import HRElapsedTime
-from pylons import tmpl_context
+from pylons import tmpl_context, request
 from tg import url
 import koji
 
@@ -118,6 +118,15 @@ class BuildsTableWidget(Widget):
                 offset = (page_num - 1) * self.limit
             except:
                 page = None
+        
+        state = None        
+        filter_failed = request.params.get('filter_failed', False)
+        filter_successful = request.params.get('filter_successful', False)
+        if filter_successful:
+            state = koji.BUILD_STATES['COMPLETE']
+        
+        if filter_failed:
+            state = koji.BUILD_STATES['FAILED']
                 
         profile = d.get('profile', None)
         person = d.get('person', None)
@@ -137,28 +146,35 @@ class BuildsTableWidget(Widget):
                      'order': '-creation_time'}
 
         username = None
-        if profile and tmpl_context.identity:
-            username = tmpl_context.identity['person']['username']
-        elif person:
+        
+        print person
+        if person:
             username = person
+        elif profile and tmpl_context.identity:
+            username = tmpl_context.identity['person']['username']
             
+        print username
         if username:
             user = cs.getUser(username)
-                
+            print user
             if user:
                 user_id = user['id']
             else:
                 return d
                 
+        print user_id
+        
         if package:
             pkg_id = cs.getPackageID(package)
 
         cs.multicall = True
         cs.listBuilds(packageID=pkg_id,
                       userID=user_id,
+                      state=state,
                       queryOpts=countQueryOpts)
         cs.listBuilds(packageID=pkg_id,
-                      userID=user_id, 
+                      userID=user_id,
+                      state=state,
                       queryOpts=queryOpts)
 
         results = cs.multiCall()

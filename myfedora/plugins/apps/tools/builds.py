@@ -22,26 +22,22 @@ class BuildsToolWidget(ToolWidget):
         resourceview = d.get('resourceview', None)
 
         dk = d.get('data_key', None)
-        people = d.get('people', None)
+        person = d.get('person', None)
         profile = d.get('profile', None)
         package = d.get('package', None)
         username = None
         
         if resourceview == 'people_view':
-            people = dk
-            username = people
+            username = person
             
         elif resourceview == 'profile_view':
             profile = True
-                
-        elif resourceview == 'packages_view':
-            package = dk
 
         left_col_apps = AppBundle("leftcol")
         build_table_class = pylons.g.apps['buildstable']
         build_table_app = build_table_class(None, 
                                             view='Canvas',
-                                            people=people,
+                                            person=person,
                                             package=package,
                                             profile=profile)
         left_col_apps.add(build_table_app)
