@@ -103,7 +103,7 @@ class BuildsTableWidget(Widget):
 
         offset = self.offset
 
-        page = d.get('page', None)
+        page = d.get('page', 0)
         page_prev = None
         page_next = 2
         if page:
@@ -117,8 +117,10 @@ class BuildsTableWidget(Widget):
                 
                 offset = (page_num - 1) * self.limit
             except:
-                page = None
-        
+                d['page'] = 1
+        else:
+            d['page'] = 1
+            
         state = None        
         filter_failed = request.params.get('filter_failed', False)
         filter_successful = request.params.get('filter_successful', False)
