@@ -1,5 +1,6 @@
 from datetime import datetime
 from tw.api import Widget
+from myfedora.widgets import PagerWidget
 from myfedora.lib.app_factory import AppFactory
 from myfedora.lib.utils import HRElapsedTime
 from pylons import tmpl_context, request
@@ -19,6 +20,10 @@ class BuildsTableWidget(Widget):
     template = 'genshi:myfedora.plugins.apps.templates.buildstable_canvas'
     offset = 0
     limit = 10
+    
+    def __init__(self, *args, **kw):
+        super(BuildsTableWidget, self).__init__(*args, **kw)
+        self.pager = PagerWidget('pager', parent=self)
     
     def _time_delta_to_date_str(self, start, end):
         datetimestr = ""
@@ -103,24 +108,17 @@ class BuildsTableWidget(Widget):
 
         offset = self.offset
 
-        page = d.get('page', 0)
-        page_prev = None
-        page_next = 2
+        page = d.get('page', 1)
         if page:
             try:
                 page_num = int(page)
-                d['page'] = page_num
-                if page_num > 1:
-                    page_prev = page_num - 1
-                    
-                page_next = page_num + 1
-                
+                d['page'] = page_num    
                 offset = (page_num - 1) * self.limit
             except:
                 d['page'] = 1
         else:
             d['page'] = 1
-            
+    
         state = None        
         filter_failed = request.params.get('filter_failed', False)
         filter_successful = request.params.get('filter_successful', False)
@@ -144,18 +142,16 @@ class BuildsTableWidget(Widget):
         countQueryOpts = {'countOnly': True}
 
         queryOpts = {'offset': offset, 
-                     'limit': self.limit + 1, 
+                     'limit': self.limit, 
                      'order': '-creation_time'}
 
         username = None
         
-        print person
         if person:
             username = person
         elif profile and tmpl_context.identity:
             username = tmpl_context.identity['person']['username']
             
-        print username
         if username:
             user = cs.getUser(username)
             print user
@@ -163,8 +159,6 @@ class BuildsTableWidget(Widget):
                 user_id = user['id']
             else:
                 return d
-                
-        print user_id
         
         if package:
             pkg_id = cs.getPackageID(package)
@@ -183,7 +177,7 @@ class BuildsTableWidget(Widget):
         builds_list = results[1][0]
         total_count = results[0][0]
         
-        d['page_count'] = int (total_count / self.limit + 1)
+        last_page = int (total_count / self.limit + 1)
         # process list
         list_count = len(builds_list)
         for build in builds_list:
@@ -235,16 +229,12 @@ class BuildsTableWidget(Widget):
             except Exception, e:    
                 build['elapsed_build_time'] = ''
 
-        d['page_prev'] = None
-        d['page_next'] = None
-
-        if list_count > self.limit:
-            d['page_next'] = page_next
-            d['builds_list'] = builds_list[0:-1]
-        else:
-            d['builds_list'] = builds_list
-
-        if page_prev:
-            d['page_prev'] = page_prev
+       
+        d['builds_list'] = builds_list
+        d['child_args'] = {'pager':{'last_page': last_page,
+                                     'page': page,
+                                     'parent_dom_id': d['id']
+                                   }
+                          }
 
         return d
