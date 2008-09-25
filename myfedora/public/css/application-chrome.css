@@ -24,10 +24,6 @@
   clear: 			right;
 }
 
-#app-sidebar {
-  clear: 			both;
-}
-
 /* styling for login toolbar */
 
 #toolbar {
@@ -76,38 +72,7 @@
 
 /* left navbar tabs styling */
 
-.nav {
-margin:0 1.5ex;
-padding:0 1.5ex;
-}
-.nav h2 {
-border-bottom:1px dotted #AAAAAA;
-color:#444444;
-font-size:0.9em;
-font-weight:normal;
-margin:2ex 0 1ex;
-text-transform:uppercase;
-}
-.nav ul {
-list-style-image:url(../images/arrow.png);
-list-style-position:outside;
-list-style-type:disc;
-margin-left:15px;
-}
-.nav li {
-color:#777777;
-font-size:0.9em;
-margin:0.25ex 1ex;
-}
-.nav a {
-color:#729FCF;
-display:block;
-font-size:1.1em;
-font-weight:bold; 
-margin-right:0.75ex;
-}
-
-pp-sidebar .nav ul li {
+pp-sidebar #nav ul li {
   list-style: none;
   border-bottom: 1px solid #eee;
   padding-right: 0px;
@@ -115,22 +80,22 @@ pp-sidebar .nav ul li {
   padding-top: 5px;
   padding-bottom: 3px;
 }
- 
-#app-sidebar .nav ul {
+
+#app-sidebar #nav ul {
   margin-right: none;
   width: 100%;
 }
 
-#app-sidebar .nav a:link,
-#app-sidebar .nav a:visited,
-#app-sidebar .nav a:active {
+#app-sidebar #nav a:link,
+#app-sidebar #nav a:visited,
+#app-sidebar #nav a:active {
   text-decoration: none;
   font-size: 11pt;
 }
 
-#app-sidebar .nav a.active:link,
-#app-sidebar .nav a.active:visited,
-#app-sidebar .nav a.active:active {
+#app-sidebar #nav a.active:link,
+#app-sidebar #nav a.active:visited,
+#app-sidebar #nav a.active:active {
   color: white;
   background-color: #6aa6e2;
   padding: 8px 2px;
@@ -141,9 +106,9 @@ pp-sidebar .nav ul li {
   margin-bottom: 2px;
 }
 
-#app-sidebar .nav a.inactive:link,
-#app-sidebar .nav a.inactive:visited,
-#app-sidebar .nav a.inactive:active {
+#app-sidebar #nav a.inactive:link,
+#app-sidebar #nav a.inactive:visited,
+#app-sidebar #nav a.inactive:active {
   padding-left: 8px
 }
 
@@ -154,25 +119,25 @@ pp-sidebar .nav ul li {
 
 #app-sidebar {
   float: left;
-  width: 170px;
+  width: 170px; 
   padding: 0px;
   border-right: 1px solid #eee;
   min-height: 650px;
   height: 100%;
 }
 
-#app-sidebar .nav {
+#app-sidebar #nav {
   margin: 0px;
   padding: 0px;
 }
 
-#app-sidebar .nav ul {
+#app-sidebar #nav ul {
   margin-left: 15px;
   margin-top: 12px;
   width: 157px;
 }
 
-#app-sidebar .nav li {
+#app-sidebar #nav li {
   margin: 0px !important;
   list-style-image: none;
   list-style-type: none;
@@ -182,7 +147,7 @@ pp-sidebar .nav ul li {
 }
 
 #app-sidebar {
-  background: repeat-y right url(/images/vertical-gradient.png);
+  background: repeat-y right url(/webdesign/My%20Fedora/html/img/vertical-gradient.png);
 }
 
 /** content div horiztonal tabs **/
@@ -359,10 +324,10 @@ span.more-items {
 
 .header-list table th {
   border-top: 1px solid white !important;
-  background-color: #f5f5f5 !important;
+  background-color: #f0f0f0 !important;
   vertical-align: top;
   text-align: left;
-  padding: 2px 5px !important;
+  padding: 2px 5px 3px 5px!important;
 }
 
 .header-list table td {
@@ -384,21 +349,47 @@ span.timestamp {
   color: #bbb;
 }
 
+/** simple list for side panel **/
+
+
+.panel .list ul {
+  margin-left: 0px !important;
+  width: 100%; 
+}
+
+.panel .list li {
+  list-style: inside url('http://duffy.fedorapeople.org/temp/announcement.png');
+  margin-left: 2px;
+  border-bottom: dotted 1px #ddd;
+  padding-top: 3px;
+}
+  
+
 /** float clearing **/
 
 .clear {
-  clear:        both;
+  clear:		both;
   /** the rest is for older browsers **/
-  height:       1px;
-  line-height:      1px;
-  font-size:        1px;
-  margin-top:       -1px;
+  height:		1px;
+  line-height:		1px;
+  font-size:		1px;
+  margin-top:		-1px;
 }
 
 /** right sidebar column styles **/
 
-.panel {
+div.panel {
   width: 96%;
+  margin-top: 12px;
+  border: none !important;
+}
+
+div.panel td {
+  padding: 4px 0px 4px 10px !important;
+}
+
+div.icon-panel td {
+  padding: 0px 0px 2px 10px !important;
 }
 
 .panel a {
@@ -408,62 +399,58 @@ span.timestamp {
 .panel h3,
 .panel h4 {
   margin: 0px !important;
-  padding: 4px 6px;
 }
 
 .panel h3 {
-  margin-top: 10px;
   background-color: #d2d2d2;
   -moz-border-radius: 12px 12px 0px 0px;
   color: white !important;
+  font-size: 1em !important;
+  padding: 8px 6px 6px 6px;
+  text-transform: uppercase;
 }
 
 .panel h4 {
   background-color: #e6e6e6;
+  font-size: small !important;
+  padding: 3px 6px;
 }
 
 .panel table {
   width: 100%;
   border: none !important;
   background-color: #f9f9f9;
+  border-collapse: collapse;
 }
 
 .panel td {
   border: none !important;
 }
 
-/* UI Elements */
-.hover_menu {
-  position: absolute;
-  margin-left: 10px;
-  border: 2px solid;
-  padding-right: 10px;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  display: none;
+/** login box styles **/
+
+div.login {
+ background-color: #5f94c9;
+  -moz-border-radius: 10px;
+  padding: 8px 12px;
 }
 
-.hover_menu ul, .hover_menu ol { 
-   margin-left: 1px; 
-   padding:0; 
-   position:relative; 
+div.login h3 {
+  background: none !important;
+  padding: 2px 2px 5px 0px;
 }
- 
-.hover_menu li { 
-   margin-top:0.25em;
-   margin-bottom:0.25em; 
+
+div.login form span {
+ color: white;
+ font-size: .8em;
 }
- 
-.hover_menu ul ul, .hover_menu ul ol, 
-.hover_menu ol ol, .hover_menu ol ul { 
-   margin-left:1em; 
-   padding-left:0; 
+
+div.login form input {
+  margin-bottom: 5px;
 }
- 
-.hover_menu ul li, .hover_menu ol li { 
-   margin-left:2em; 
-}
- 
-.hover_menu li li { 
-   margin-left:1em; 
+
+div.login form .button {
+  background-color: #777;
+  color: white;
+  border: 1px solid #555;
 }
