@@ -32,3 +32,68 @@ class GlobalResourceInjectionWidget(Widget):
     css=[fedora_css,
          myfedora_appchrome_css, 
          myfedora_branding_css]
+    
+class PagerWidget(Widget):
+    template = "genshi:myfedora.widgets.templates.pager"
+    params = ['page', 'last_page', 'show', 'parent_dom_id']
+    show = 10
+    page = 1
+    
+    def update_params(self, d):
+        super(PagerWidget, self).update_params(d)
+        
+        page = int(d['page'])
+        last_page = int(d['last_page'])
+        
+        # how many of the main set do we show
+        show = int(d['show'])
+        
+        parent_id = d['parent_dom_id']
+        
+        front_set = []
+        back_set = []
+        main_set = []
+        
+        fmax_block_num = float(last_page) / show
+        max_block_num = int(fmax_block_num)
+        if (fmax_block_num - max_block_num) > 0:
+            max_block_num += 1
+        
+        # figure out main set
+        block_num = page / show
+        print page, '/', show, '=', block_num
+        start = block_num * show + 1
+        last_in_set = start + show
+        if last_in_set >= last_page:
+            start = last_page - show + 1
+            last_in_set = last_page + 1
+            block_num = max_block_num
+            
+        main_set = range(start, last_in_set)
+        
+        # do we need a front set
+        if block_num > 0:
+            front_set = [1]
+        
+        # do we need a back set
+        if block_num < max_block_num:
+            back_set = [last_page]
+            
+        prev_page = None
+        if page > 1:
+            prev_page = page - 1
+            
+        next_page = None
+        if page < last_page:
+            next_page = page + 1
+            
+        d.update({'front_set': front_set,
+                  'back_set': back_set,
+                  'main_set': main_set,
+                  'prev_page': prev_page,
+                  'next_page': next_page,
+                  'parent_id': parent_id,
+                  'page': page,
+                  'last_page': page,
+                  'show': show})
+        
