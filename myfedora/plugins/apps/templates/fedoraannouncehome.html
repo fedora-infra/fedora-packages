@@ -3,11 +3,9 @@
      id="${id}"
      class="list">
   <h3><a href="${url}" target="_blank">Fedora Announcements</a></h3>
-  <table>
-    <tr py:for="entry in entries">
-      <td>
-        <h4><a href="${entry.link}" target="_blank">${entry.title}</a></h4>
-      </td>
-    </tr>
-  </table>
+  <ul>
+    <li py:for="entry in entries">
+        <a href="${entry.link}" target="_blank">${entry.title}</a>
+      </li>
+    </ul>
 </div>
