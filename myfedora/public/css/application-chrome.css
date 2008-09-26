@@ -86,10 +86,7 @@
 
 #app-sidebar .nav li {
   margin: 0px !important;
-  list-style-image: none;
-  list-style-type: none;
-  border-bottom: 1px solid #eee;
-  padding: 5px 2px;
+  list-style: none;
   padding-left: 6px;
 }
 
@@ -98,6 +95,7 @@
   font-weight: bold;
   color: #729FCF;
   margin-right: 0.75ex;
+  border-bottom: 1px solid #eee;
 }
 
 #app-sidebar .nav a:link,
