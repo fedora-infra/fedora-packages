@@ -126,18 +126,18 @@ pp-sidebar #nav ul li {
   height: 100%;
 }
 
-#app-sidebar #nav {
+#app-sidebar .nav {
   margin: 0px;
   padding: 0px;
 }
 
-#app-sidebar #nav ul {
+#app-sidebar .nav ul {
   margin-left: 15px;
   margin-top: 12px;
   width: 157px;
 }
 
-#app-sidebar #nav li {
+#app-sidebar .nav li {
   margin: 0px !important;
   list-style-image: none;
   list-style-type: none;
