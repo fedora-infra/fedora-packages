@@ -89,13 +89,14 @@
   list-style: none;
   padding: 5px 2px 5px 6px;
   border-bottom: 1px solid #eee;
+  display: block;
 }
 
 #app-sidebar .nav a {
   display: block;
   font-weight: bold;
   color: #729FCF;
-  margin-right: 0.75ex;
+  margin-right: 0px;
 }
 
 #app-sidebar .nav a:link,
