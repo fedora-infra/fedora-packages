@@ -177,6 +177,7 @@
   text-decoration: none;
   font-weight: bold;
   font-size: 11pt;
+  display: block;
 }
 
 #content-nav li a.active:link,
