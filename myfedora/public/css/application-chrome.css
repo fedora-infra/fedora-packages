@@ -72,22 +72,32 @@
 
 /* left navbar tabs styling */
 
+#app-sidebar .nav {
+  margin: 0px;
+  padding: 0px;
+}
+
+#app-sidebar .nav ul {
+  margin-left: 15px;
+  margin-right: none;
+  margin-top: 12px;
+  width: 157px; 
+}
+
+#app-sidebar .nav li {
+  margin: 0px !important;
+  list-style-image: none;
+  list-style-type: none;
+  border-bottom: 1px solid #eee;
+  padding: 5px 2px;
+  padding-left: 6px;
+}
+
 #app-sidebar .nav a {
   display: block;
-}
-/*
-#app-sidebar .nav ul li {
-  list-style: none;
-  border-bottom: 1px solid #eee;
-  padding-right: 0px;
-  margin-right: 0px;
-  padding-top: 5px;
-  padding-bottom: 3px;
-}
-*/
-#app-sidebar .nav ul {
-  margin-right: none;
-  width: 100%;
+  font-weight: bold;
+  color: #729FCF;
+  margin-right: 0.75ex;
 }
 
 #app-sidebar .nav a:link,
@@ -129,27 +139,6 @@
   min-height: 650px;
   height: 100%;
 }
-
-#app-sidebar .nav {
-  margin: 0px;
-  padding: 0px;
-}
-
-#app-sidebar .nav ul {
-  margin-left: 15px;
-  margin-top: 12px;
-  width: 157px;
-}
-
-#app-sidebar .nav li {
-  margin: 0px !important;
-  list-style-image: none;
-  list-style-type: none;
-  border-bottom: 1px solid #eee;
-  padding: 5px 2px;
-  padding-left: 6px;
-}
-
 #app-sidebar {
   background: repeat-y right url(/webdesign/My%20Fedora/html/img/vertical-gradient.png);
 }
