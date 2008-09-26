@@ -72,7 +72,7 @@
 
 /* left navbar tabs styling */
 
-pp-sidebar .nav ul li {
+#app-sidebar .nav ul li {
   list-style: none;
   border-bottom: 1px solid #eee;
   padding-right: 0px;
