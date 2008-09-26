@@ -6,7 +6,7 @@
     <li py:for="item in navigation_list"
         py:with="image=item.get('icon', 'generic_link.png')">
       <a href="${item['href']}" class="${item['state']}">
-        <img src="${image}" border="0" /> ${item['label']}
+        ${item['label']}
       </a>
     </li>
   </ul>
