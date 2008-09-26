@@ -241,9 +241,6 @@
   margin-right: 4px;
 }
 
-/** simple list **/
-
-
 #left-content-column,
 #right-content-column {
   padding: 0px;
@@ -368,7 +365,6 @@ span.timestamp {
 /** right sidebar column styles **/
 
 div.panel {
-  width: 96%;
   margin-top: 12px;
   border: none !important;
 }
