@@ -72,6 +72,10 @@
 
 /* left navbar tabs styling */
 
+#app-sidebar .nav a {
+  display: block;
+}
+/*
 #app-sidebar .nav ul li {
   list-style: none;
   border-bottom: 1px solid #eee;
@@ -80,7 +84,7 @@
   padding-top: 5px;
   padding-bottom: 3px;
 }
-
+*/
 #app-sidebar .nav ul {
   margin-right: none;
   width: 100%;
@@ -177,7 +181,6 @@
   text-decoration: none;
   font-weight: bold;
   font-size: 11pt;
-  display: block;
 }
 
 #content-nav li a.active:link,
