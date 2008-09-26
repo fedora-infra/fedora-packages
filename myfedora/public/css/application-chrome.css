@@ -445,3 +445,13 @@ div.login form .button {
   border: 1px solid #555;
 }
 
+div.login a.small-text:link,
+div.login a.small-text:active,
+div.login a.small-text:visited {
+  color: #9ecfff !important;
+
+}
+
+.small-text {
+  font-size: 8pt;
+}
