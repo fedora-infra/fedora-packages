@@ -429,6 +429,10 @@ div.login h3 {
 div.login form span {
  color: white;
  font-size: .8em;
+ display: block;
+ float: left;
+ margin-right: 10px;
+ width: 60px;
 }
 
 div.login form input {
