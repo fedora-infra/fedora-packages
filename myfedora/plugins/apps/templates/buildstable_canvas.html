@@ -37,10 +37,10 @@ import tg
     	      <td py:with="menu_id='menu_' + build_id" id="${build_id}_name_col"> 
                   <div class="${odd_or_even}">
                     <span class="package-name"> 
-                      <a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${nvr}</a>
+                      <a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${nvr}</a>
                     </span>
                       <ul id="${menu_id}" class="hover_menu">
-                        <li><a href="https://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">View package details in Koji</a></li>
+                        <li><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">View package details in Koji</a></li>
                       </ul>
                     <script type="text/x-myfedora-extpoint">
                     {
