@@ -1,6 +1,6 @@
 from myfedora.lib.base import Controller, BaseController
 from myfedora.lib.utils import HRElapsedTime
-from myfedora.lib.proxy import BodhiClient
+from myfedora.lib.proxy import BodhiClient, FasClient
 
 import time
 
@@ -189,8 +189,19 @@ class BodhiQuery(Controller):
         bc = BodhiClient()
         return bc.get_info(package=package, get_auth=get_auth)
 
+class FasQuery(Controller):
+    @expose("json")
+    def user_list(self, search):
+        c = FasClient()
+        return c.user_list(search)
+        
+    @expose("json")
+    def group_list(self, search, groups_only=False):
+        c = FasClient()
+        return c.group_list(search, groups_only)
+
 class ProxyController(Controller):
     koji = KojiQuery()
     bodhi = BodhiQuery()
     cvs = CvsQuery()
-    #bodhi = BodhiQuery()
+    fas = FasQuery()

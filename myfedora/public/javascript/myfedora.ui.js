@@ -82,6 +82,139 @@ _hover_menu.prototype = {
 
 /******** click menu class ********/
 
+/******** autocomplete entry class **********/
+var _autocomplete_entry = function(entry_id, min_chars, js_search_callback) {
+  this.entry_box = jQuery("#" + entry_id);
+  var menu = jQuery("<div />").css({"z-index": 100,
+                                    "background-color": "white",
+                                    "position": "absolute",
+                                    "overflow": "auto",
+                                    "max-height": "200px",
+                                    "border": "1px"
+                                    });
+                                         
+  this.entry_box.parent().append(menu);
+  this.entry_box.attr("autocomplete", "off");                               
+                                       
+  var parent = new _base_widget(menu);
+  myfedora.inherit(this, parent);
+  this.setup();
+  
+  this.min_chars = min_chars
+  this.menu = menu
+  var current_highlight = undefined;
+  var self = this;
+  var change_cb = function(e) 
+    {
+      switch (e.keyCode)
+        {
+          case 14:
+          case 40:
+          case 38:
+            return false;
+        }
+        
+      current_highlight = undefined;
+      console.log(self.entry_box[0].offsetLeft);
+      self.menu.css("left", self.entry_box[0].offsetLeft + "px");
+      self.menu.css("top", self.entry_box[0].offsetTop + self.entry_box[0].height + "px");
+      var entry = e.currentTarget
+      var got_values = function(list) 
+        {
+          var s = entry.value;
+          if (list && s)
+            {
+              var modified = false;
+              var html_list = jQuery("<ul />").attr("id", entry_id + "_list");
+              for (i in list) 
+                {
+                  var key = list[i][1]
+                  if (key.indexOf(s) == 0)
+                    { 
+                      modified = true;
+                      var label = list[i][0]
+                      var li = jQuery("<li />");
+                      li.append("<div>" + label + "</div><div class='key'>" + key + "</div><hr />");
+                  
+                      html_list.append(li);
+                    }
+                }
+                
+              if (modified)
+                {
+                  self.block.html(html_list);
+                  self.show();
+                }
+              else
+                {
+                  self.hide();
+                }
+            }
+          else
+            {
+              self.hide();
+            }
+        }
+      
+      if (js_search_callback && (entry.value.length) >= self.min_chars)
+        {
+          js_search_callback(entry.value, got_values);
+        }
+      else
+        {
+          self.hide();
+        }
+    }
+  
+  var keypress_cb = function(e)
+    {
+      var ul = jQuery("#" + entry_id + "_list");
+      console.log(ul);
+      var c = jQuery("li", ul);
+      var matched = false;
+      switch(e.keyCode)
+        {
+          case 40: // down
+            matched = true;
+            if (current_highlight != undefined)
+              current_highlight++;
+            else
+              current_highlight = 0;
+            break;
+          case 38: // up
+            matched = true;
+            if (current_highlight != undefined)
+              current_highlight--;
+            else
+              current_highlight = -1;
+            break;
+          case 13: // enter
+            matched = true;
+            self.entry_box.form.submit();
+            break;
+        }
+        
+        if (current_highlight == undefined)
+          return !matched;
+          
+        if (current_highlight < 0)
+          current_highlight = c.length - 1;
+        else if (current_highlight >= c.length)
+          current_highlight = 0;
+        
+        c.css("background-color", "white");  
+        var h = jQuery(c[current_highlight]);
+        h.css("background-color", "blue");
+        self.entry_box[0].value = jQuery(".key", h).text();
+        
+        console.log(self.entry_box);
+        return !matched;
+    }
+  
+  self.entry_box.keyup(change_cb);
+  self.entry_box.keypress(keypress_cb);
+}
+  
 
 /******** lightbox class **********/
 
@@ -213,6 +346,7 @@ var _ui = function(){};
 _ui = {
   base_widget: _base_widget, 
   hover_menu: _hover_menu,
+  autocomplete_entry: _autocomplete_entry,
   lightbox: _lightbox,
   ellipsized_text: _ellipsized_text,
   

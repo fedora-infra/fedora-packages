@@ -42,9 +42,11 @@ class FasClient(MFProxyClient):
         
         return result
     
-    def group_list(self, search):
+    def group_list(self, search, groups_only=False):
         result = self.send_authenticated_request('group/list/',
                                                  req_params = {'search': search})
+        if groups_only:
+            result = {'groups': result['groups']} 
         
         return result
     
