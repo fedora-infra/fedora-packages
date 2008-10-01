@@ -137,7 +137,7 @@
   height: 100%;
 }
 #app-sidebar {
-  background: repeat-y right url(/webdesign/My%20Fedora/html/img/vertical-gradient.png);
+  background: repeat-y right url(../images/vertical-gradient.png);
 }
 
 /** content div horiztonal tabs **/
@@ -345,7 +345,7 @@ span.timestamp {
 }
 
 .panel .list li {
-  list-style: inside url('http://duffy.fedorapeople.org/temp/announcement.png');
+  list-style: inside url('../images/16_announcement.png');
   margin-left: 2px;
   border-bottom: dotted 1px #ddd;
   padding-top: 3px;

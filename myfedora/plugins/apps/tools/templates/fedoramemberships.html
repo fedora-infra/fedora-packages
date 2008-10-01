@@ -47,7 +47,7 @@
          if (!cached_list)
            {
              cache[search_chars] = 'loading';
-             jQuery.getJSON('/proxy/fas/group_list', {'search': text[0] + '*',
+             jQuery.getJSON(myfedora.get_page_base_url() +  'proxy/fas/group_list', {'search': text[0] + '*',
                                                       'groups_only': true}, results);
            }
          else if (cached_list != 'loading')
