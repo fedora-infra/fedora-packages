@@ -196,6 +196,10 @@ case "$1" in
     bzr branch bzr://bzr.fedorahosted.org/bzr/python-fedora/python-fedora-devel 
     (cd python-fedora-devel; paver develop;)
 
+    easy_install TurboGears
+    git clone git://git.fedoraproject.org/git/fas.git
+    (cd fas; python setup.py build; python setup.py develop;)
+
     output_mod_wsgi_conf $DIR
 
     (cd $DIR/$PROJNAME; python setup.py develop;)
