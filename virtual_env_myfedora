@@ -9,8 +9,7 @@ HOST="localhost"
 RUN_USER="apache"
 APP_CONFIG="development.ini"
 
-YUM_BOOTSTRAP="python-setuptools-devel git bzr hg python-fedora mod_nss mod_wsgi"
-EASY_INSTALL_BOOTSTRAP="virtualenv"
+YUM_BOOTSTRAP="python-setuptools-devel git bzr hg python-fedora mod_nss mod_wsgi python-virtualenv"
 
 function usage {
   echo "Usage: $0 bootstrap|build <dir>|gen-cert <domain name>"
@@ -20,9 +19,6 @@ function usage {
   echo 
   echo "    Yum Packages -" 
   echo "        $YUM_BOOTSTRAP"
-  echo
-  echo "    Easy Install Packages - WARNING these packages have to be" 
-  echo "    uninstalled manually. Once this is packaged move it to Yum Install."  echo "        $EASY_INSTALL_BOOTSTRAP"
   echo
   echo "build -"
   echo "    Build the virtualenv and apache mod_wsgi files needed to run $PROJNAME" 
@@ -120,8 +116,6 @@ case "$1" in
   bootstrap)
     echo "Setup requires to install some things as root";
     sudo yum install -y $YUM_BOOTSTRAP;
-    # as this eventually becomes a package yum install it instead
-    sudo easy_install $EASY_INSTALL_BOOTSTRAP;
     ;; 
   build)
     if [ "x$2" = "x" ]; then
