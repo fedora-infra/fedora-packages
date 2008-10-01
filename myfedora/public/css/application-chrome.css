@@ -137,7 +137,7 @@
   height: 100%;
 }
 #app-sidebar {
-  background: repeat-y right url(/webdesign/My%20Fedora/html/img/vertical-gradient.png);
+  background: repeat-y right url(../images/vertical-gradient.png);
 }
 
 /** content div horiztonal tabs **/
