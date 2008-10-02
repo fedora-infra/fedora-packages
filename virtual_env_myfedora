@@ -9,8 +9,7 @@ HOST="localhost"
 RUN_USER="apache"
 APP_CONFIG="development.ini"
 
-YUM_BOOTSTRAP="python-setuptools-devel git bzr hg python-fedora mod_nss mod_wsgi"
-EASY_INSTALL_BOOTSTRAP="virtualenv"
+YUM_BOOTSTRAP="python-setuptools-devel git bzr hg python-fedora mod_nss mod_wsgi python-virtualenv"
 
 function usage {
   echo "Usage: $0 bootstrap|build <dir>|gen-cert <domain name>"
@@ -20,9 +19,6 @@ function usage {
   echo 
   echo "    Yum Packages -" 
   echo "        $YUM_BOOTSTRAP"
-  echo
-  echo "    Easy Install Packages - WARNING these packages have to be" 
-  echo "    uninstalled manually. Once this is packaged move it to Yum Install."  echo "        $EASY_INSTALL_BOOTSTRAP"
   echo
   echo "build -"
   echo "    Build the virtualenv and apache mod_wsgi files needed to run $PROJNAME" 
@@ -120,8 +116,6 @@ case "$1" in
   bootstrap)
     echo "Setup requires to install some things as root";
     sudo yum install -y $YUM_BOOTSTRAP;
-    # as this eventually becomes a package yum install it instead
-    sudo easy_install $EASY_INSTALL_BOOTSTRAP;
     ;; 
   build)
     if [ "x$2" = "x" ]; then
@@ -161,17 +155,18 @@ case "$1" in
     git clone git://git.fedorahosted.org/git/koji
     (cd koji/koji; make install;)
 
-    ln -s /usr/lib/python2.5/site-packages/rpm lib/python2.5/site-packages/rpm
-    ln -s /usr/lib/python2.5/site-packages/rpmUtils lib/python2.5/site-packages/rpmUtils
-    
-    ln -s /usr/lib/python2.5/site-packages/urlgrabber lib/python2.5/site-packages/urlgrabber
-    ln -s /usr/lib/python2.5/site-packages/OpenSSL lib/python2.5/site-packages/OpenSSL
-    ln -s /usr/lib/python2.5/site-packages/yum lib/python2.5/site-packages/yum
-    ln -s /usr/lib/python2.5/site-packages/sqlitecachec.py lib/python2.5/site-packages/
-    ln -s /usr/lib/python2.5/site-packages/_sqlitecache.so  lib/python2.5/site-packages/
+    export SITELIB=$(/usr/bin/python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
+    export SITEARCH=$(/usr/bin/python -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")
 
-    git clone git://git.fedoraproject.org/git/fas.git
-    (cd fas; python setup.py build; python setup.py develop;)
+    ln -s $SITELIB/yum lib/python2.5/site-packages/yum
+    ln -s $SITELIB/urlgrabber lib/python2.5/site-packages/urlgrabber
+    ln -s $SITELIB/rpmUtils lib/python2.5/site-packages/rpmUtils
+
+    ln -s $SITEARCH/rpm lib/python2.5/site-packages/rpm
+    ln -s $SITEARCH/OpenSSL lib/python2.5/site-packages/OpenSSL
+    ln -s $SITEARCH/sqlitecachec.py lib/python2.5/site-packages/
+    ln -s $SITEARCH/_sqlitecache.so  lib/python2.5/site-packages/
+
     svn co http://svn.python.org/projects/sandbox/trunk/setuptools/
     (cd setuptools; python setup.py develop;);
     
@@ -200,6 +195,10 @@ case "$1" in
     
     bzr branch bzr://bzr.fedorahosted.org/bzr/python-fedora/python-fedora-devel 
     (cd python-fedora-devel; paver develop;)
+
+    easy_install TurboGears
+    git clone git://git.fedoraproject.org/git/fas.git
+    (cd fas; python setup.py build; python setup.py develop;)
 
     output_mod_wsgi_conf $DIR
 
