@@ -3,23 +3,23 @@
      id="${id}"
      class="list">
   <h3>Planet Fedora</h3>
-  <table>
-    <tr py:for="entry in entries" id="${entry['uid']}">
-      <td>
-        <div>
-          <img src="${entry.author_detail.hackergotchi}" height="40" />
-        </div>
-        
-        <a href="${entry.author_detail.href}" target="_blank">${entry.author_detail.name}</a>
-      </td>
-      <td>
-        <a href="${entry.link}" target="_blank">${entry.title}</a>
-        <div id="${entry['uid']}_text">
+<div class="entry" py:for="entry in entries" id="${entry['uid']}">
+  <div class="person-info">
+    <a title="${entry.author_detail.name}'s blog" href="${entry.author_detail.href}"> 
+         <img src="${entry.author_detail.hackergotchi}" height="40" />
+         <br />
+         <a href="${entry.author_detail.href}" target="_blank">${entry.author_detail.name}</a>
+    </div>
+    <div class="post">
+      <div class="post-header">
+        <h3 class="post-title">
+          <a href="${entry.link}" target="_blank">${entry.title}</a>
+      </div>
+      <div class="post-contents" id="${entry['uid']}_text">
           ${HTML(entry.content[0].value)}
-        </div>
-      </td>
-    </tr>
-  </table>
+      </div>
+      <div class="post-footer">
+      </div>      
 
       <div py:for="entry in entries">
         <table id="${entry['uid']}_lightbox">
