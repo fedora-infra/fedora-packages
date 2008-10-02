@@ -8,8 +8,8 @@
     <a title="${entry.author_detail.name}'s blog" href="${entry.author_detail.href}"> 
          <img src="${entry.author_detail.hackergotchi}" height="40" />
          ${entry.author_detail.name}</a>
-    </div>
-    <div class="post">
+  </div>
+  <div class="post">
       <div class="post-header">
         <h3 class="post-title">
           <a href="${entry.link}" target="_blank">${entry.title}</a>
@@ -28,6 +28,7 @@
       <b class="cr tr" />
       <b class="cr bl" />
       <b class="cr br" />
+  </div>
 </div>
       <div py:for="entry in entries">
         <table id="${entry['uid']}_lightbox">
@@ -56,7 +57,4 @@
         et.show();
       </script>
       </div>
-      
-      
-    
 </div>
