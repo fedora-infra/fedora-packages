@@ -192,6 +192,14 @@
   margin: auto;
 }
 
+.content-searchbox .button {
+  background-color:#888888;
+  color:white;
+  padding:2px;
+  text-transform:uppercase;
+  vertical-align:middle;
+}
+
 .content-searchbox form {
   margin: auto !important;
 }
