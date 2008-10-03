@@ -1,0 +1,121 @@
+/* mad props to Steven Garrity who did the original html/css for Planet GNOME's bubbles, which heavily inspired this. */
+
+div.entry {
+  clear: none;
+  margin-bottom: 1em;
+}
+
+div.person-info {
+  background: transparent url(http://rapier.bos.redhat.com/community/images/planet-bubbles/point.png) no-repeat scroll right;
+  float: left;
+  bottom: 18px;
+  left: 0px;
+  margin-left: -1em !important;
+  margin-top: 8px !important;
+  padding: 0 1em 0 1em;
+  position: relative;
+  text-align: center;
+  width: 6em;
+  z-index: 1; 
+}
+
+div.person-info a img {
+  border: 0 none;
+  margin-bottom: .25em;
+  padding: 0px 12px;
+}
+
+div.post {
+  margin-left: 6.5em;
+  margin-top: 2.2em;
+  padding: .25em 1.5em;
+  position: relative;
+  min-height: 68px;
+}
+
+h3.post-title {
+  font-size: large;
+  margin-top: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.post-contents {
+  line-height: 140%;
+  overflow: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.post-footer {
+  margin-top: 1em;
+}
+
+b.lt {
+  background-position: left top;
+  left: 0;
+  top: 0;
+}
+
+b.vt {
+  background: transparent url(http://rapier.bos.redhat.com/community/images/planet-bubbles/vert.png) repeat-y scroll 0 0;
+  height:100%;
+  position: absolute;
+  width: 5px;
+}
+
+b.rt {
+  background-position: right top;
+  right: 0;
+  top: 0;
+}
+
+b.to {
+  background-position: left top;
+  left: 0;
+  top: 0;
+}
+
+b.hz {
+  background: transparent url(http://rapier.bos.redhat.com/community/images/planet-bubbles/horiz.png) repeat-x scroll 0 0;
+  height: 8px;
+  position: absolute;
+  width: 100%;
+}
+
+b.bo {
+  background-position: left bottom;
+  bottom: 0;
+  left: 0;
+}
+
+b.tl {
+  background-position: left top;
+  left: 0;
+  top: 0;
+}
+
+b.cr {
+  background-image: url(http://rapier.bos.redhat.com/community/images/planet-bubbles/corners.png);
+  height: 50px;
+  position: absolute;
+  width: 50px;
+}
+
+b.tr {
+  background-position: right top;
+  right: 0;
+  top: 0;
+}
+
+b.bl {
+  background-position: left bottom;
+  bottom: 0;
+  left: 0;
+}
+
+b.br {
+  background-position: right bottom;
+  bottom: 0;
+  right: 0;
+}

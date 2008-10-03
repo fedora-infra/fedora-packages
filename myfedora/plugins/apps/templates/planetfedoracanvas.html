@@ -2,17 +2,24 @@
      xmlns:py="http://genshi.edgewall.org/"
      id="${id}"
      class="list">
-  <h3>Planet Fedora</h3>
-<div class="entry" py:for="entry in entries" id="${entry['uid']}">
+  <h3><a href="http://planet.fedoraproject.org">Planet Fedora</a></h3>
+
+<?python last_time = None ?> 
+<div class="entry" py:for="entry in entries">
+  <div class="small-text label-rule" py:if="last_time != entry.elapsed_time">
+    ${entry.elapsed_time}
+    <?python last_time = entry.elapsed_time ?>
+  </div>
+  <div id="${entry['uid']}">
   <div class="person-info">
     <a title="${entry.author_detail.name}'s blog" href="${entry.author_detail.href}"> 
          <img src="${entry.author_detail.hackergotchi}" height="40" />
-         ${entry.author_detail.name}</a>
+         ${entry.author_detail.name}</a> 
   </div>
   <div class="post">
       <div class="post-header">
         <h3 class="post-title">
-          <a href="${entry.link}" target="_blank">${entry.title}</a>
+          <a href="${entry.link}" target="_blank">${entry.title}</a><span class="small-text">${entry.time}</span>
         </h3>
       </div>
       <div class="post-contents" id="${entry['uid']}_text">
@@ -29,7 +36,9 @@
       <b class="cr bl" />
       <b class="cr br" />
   </div>
+  </div>
 </div>
+      <?python last_time = 4 ?>
       <div py:for="entry in entries">
         <table id="${entry['uid']}_lightbox">
           <tr>

@@ -11,19 +11,23 @@ from repoze.who.plugins.form import RedirectingFormPlugin
 from repoze.who.classifiers import default_request_classifier
 from repoze.who.classifiers import default_challenge_decider
 from repoze.who.middleware import PluggableAuthenticationMiddleware
+from beaker.cache import Cache
 
 from repoze.who.interfaces import IChallenger, IIdentifier
 
 from Cookie import SimpleCookie
+
+import beaker   
 
 import pkg_resources
 
 import os
 import sys
 
-FAS_CACHE_TIMEOUT=5
+FAS_CACHE_TIMEOUT=20 #in seconds
 
 fasurl = 'https://admin.fedoraproject.org/accounts'
+fas_cache = Cache('fas_repozewho_cache')
 
 def fas_make_who_middleware(app, config):
     faswho = FASWhoPlugin(fasurl)
@@ -113,6 +117,14 @@ class FASWhoPlugin(object):
         for entry in pkg_resources.iter_entry_points('fas.repoze.who.metadata_plugins'):
             self._metadata_plugins.append(entry.load())
         
+        
+    def keep_alive(self, cookies):
+        print "************ cache miss *****************"
+        fas = FasClient(self.url)    
+        linfo = fas.keep_alive(cookies, True)
+        
+        return linfo
+    
     def identify(self, environ):
         req = webob.Request(environ)
                     
@@ -120,25 +132,28 @@ class FASWhoPlugin(object):
 
         if cookie is None:
             return None
-        else:
-            fas = FasClient(self.url)
-            
-            linfo = fas.keep_alive(req.cookies, True)
-            if not linfo:
-                self.forget(environ, None)
-                return None
+        
+        print "Request identify for cookie " + cookie
+        linfo = fas_cache.get_value(key=cookie + "_identity",
+                                    createfunc=lambda: self.keep_alive(req.cookies),
+                                    type="memory", 
+                                    expiretime=FAS_CACHE_TIMEOUT)
+
+        if not linfo:
+            self.forget(environ, None)
+            return None
                     
         if not isinstance(linfo, tuple):
             return None
-        else:
-            try:
-                me = linfo[1]
-                me.update({'repoze.who.userid':me['person']['username']})
-                environ['FAS_LOGIN_INFO'] = linfo
-                return linfo[1]
-            except Exception, e:
-                print e, linfo
-                return None
+        
+        try:
+            me = linfo[1]
+            me.update({'repoze.who.userid':me['person']['username']})
+            environ['FAS_LOGIN_INFO'] = linfo
+            return linfo[1]
+        except Exception, e:
+            print e, linfo
+            return None
         
     def remember(self, environ, identity):
         linfo = environ.get('FAS_LOGIN_INFO')
@@ -155,8 +170,6 @@ class FASWhoPlugin(object):
     def forget(self, environ, identity):
         # return a expires Set-Cookie header
         req = webob.Request(environ)
-                    
-        req.cookies['tg-visit'] = None
         
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
@@ -171,7 +184,7 @@ class FASWhoPlugin(object):
                 cookies['tg-visit'] = None
             return result
         return None
-    
+     
     # IAuthenticatorPlugin
     def authenticate(self, environ, identity):
         try:
@@ -189,14 +202,34 @@ class FASWhoPlugin(object):
     
         return None
     
-    def add_metadata(self, environ, identity):
+    def get_metadata(self, environ):
+        print "**************** metadata cache miss **********************"
         info = environ.get('FAS_LOGIN_INFO')
-
+        identity = {}
+        
         if info is not None:
             identity.update(info[1])
             
         for plugin in self._metadata_plugins:
             plugin(identity)
+            
+        return identity
+        
+    def add_metadata(self, environ, identity):
+        req = webob.Request(environ)
+                    
+        cookie = req.cookies.get('tg-visit')
+
+        if cookie is None:
+            return None
+        
+        print "Request metadata for cookie " + cookie
+        
+        info = fas_cache.get_value(key=cookie + '_metadata',
+                                   createfunc=lambda: self.get_metadata(environ),
+                                   type="memory",
+                                   expiretime=FAS_CACHE_TIMEOUT)
+        identity.update(info)
 
     def __repr__(self):
         return '<%s %s>' % (self.__class__.__name__, id(self))

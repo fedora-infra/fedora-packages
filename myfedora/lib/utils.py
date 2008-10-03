@@ -81,25 +81,29 @@ class HRElapsedTime():
     def __init__(self):
         self.start = None
         self.end = None
-        self.longdate = True
+        self.output_format = '%l:%M %P'
+        self.parse_format = '%Y-%m-%d %H:%M:%S'
 
+    def set_parse_format(self, format):
+        self.parse_format = format 
+        
+    def set_output_format(self, format):
+        self.output_format = format
+        
     @staticmethod        
-    def time_from_string(timestr):
-        parse_format = '%Y-%m-%d %H:%M:%S'
-        
-        timep = datetime.strptime(timestr.split('.')[0], parse_format)
-        
+    def time_from_string(timestr, parse_format = '%Y-%m-%d %H:%M:%S'):
+        timep = datetime.strptime(timestr.split('.')[0], parse_format)    
             
         return timep
     
     def set_start_timestr(self, timestr):
-        self.start = self.time_from_string(timestr)
+        self.start = self.time_from_string(timestr, self.parse_format)
         
     def set_start_time(self, time):
         self.start = time
         
     def set_end_timestr(self, timestr):
-        self.end = self.time_from_string(timestr)
+        self.end = self.time_from_string(timestr, self.parse_format)
         
     def set_end_time(self, time):
         self.end = time
@@ -120,31 +124,27 @@ class HRElapsedTime():
             dstr = str(delta.days) + ' days ago'
         elif delta.days < 31:
             weeks = int(delta.days/7)
-            dstr = 'over ' + str(weeks) + ' week'
+            dstr = str(weeks) + ' week'
             if weeks > 1:
                dstr += 's'
             dstr += ' ago'
         elif delta.days < 365:
             months = int(delta.days/31)
-            dstr = 'over ' + str(months) + ' month'
+            dstr = str(months) + ' month'
             if months > 1:
                 dstr += 's'
             dstr += ' ago'
         else:
             years = int(delta.days/365)
-            dstr = 'over ' + str(years) + ' year'
+            dstr = str(years) + ' year'
             if years > 1:
                 dstr += 's'
             dstr += ' ago'
         
-        
         return dstr
             
     def get_hr_time(self, time):
-        if self.longdate:
-            return datetime.strftime(time, "%e %b %Y")
-        else:
-            return datetime.strftime(time, "%l:%M %P")
+        return datetime.strftime(time, self.output_format)
         
     def get_hr_start_time(self):
         return self.get_hr_time(self.start)
