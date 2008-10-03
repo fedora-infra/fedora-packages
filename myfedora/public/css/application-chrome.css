@@ -454,3 +454,11 @@ div.login a.small-text:visited {
 .small-text {
   font-size: 8pt;
 }
+
+/* greeter h1, so you can have an image or icon in the left of it */
+h1#greeter img {
+  float: left;
+  height: 50px;
+  margin: 0px !important;
+  margin-right: 8px !important;
+}
