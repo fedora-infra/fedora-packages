@@ -1,7 +1,6 @@
 /* mad props to Steven Garrity who did the original html/css for Planet GNOME's bubbles, which heavily inspired this. */
 
 div.entry {
-  clear: both;
   margin-bottom: 1em;
 }
 
@@ -27,6 +26,7 @@ div.person-info a img {
 
 div.post {
   margin-left: 6.5em;
+  margin-top: 7.6em;
   padding: .25em 1.5em;
   position: relative;
 }
