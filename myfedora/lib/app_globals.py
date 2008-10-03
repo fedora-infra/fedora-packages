@@ -18,5 +18,14 @@ class Globals(object):
 
         # Our comet data streamer, responsible for polling the data
         # streams, and providing data to the widgets
-        from myfedora.streams import DataStreamer
-        self.datastreamer = DataStreamer()
+        #from myfedora.streams import DataStreamer
+        #self.datastreamer = DataStreamer()
+
+        FEED_CACHE = "/tmp/moksha-feeds"
+
+        from shove import Shove
+        from feedcache.cache import Cache
+
+        # is this not multi-process safe? or even thread safe?
+        self.feed_storage = Shove('file://' + FEED_CACHE)
+        self.feed_cache = Cache(self.feed_storage)
