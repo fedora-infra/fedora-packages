@@ -6,6 +6,7 @@ import feedparser
 import re
 
 ui_js = JSLink(link='/javascript/myfedora.ui.js')
+planet_css = CSSLink(link='/css/planet-fedora-bubbles.css')
 
 src_re = re.compile('src\s*=\s*"([^"]*)"')
 
@@ -14,6 +15,7 @@ class PlanetFedoraBaseWidget(Widget):
     """
     params = []
     javascript=[jquery_js, ui_js]
+    css=[planet_css]
     
     atomurl = 'http://planet.fedoraproject.org/atom.xml'
     rssurl = 'http://planet.fedoraproject.org/rss20.xml'
