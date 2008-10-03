@@ -192,6 +192,14 @@
   margin: auto;
 }
 
+.content-searchbox .button {
+  background-color:#888888;
+  color:white;
+  padding:2px;
+  text-transform:uppercase;
+  vertical-align:middle;
+}
+
 .content-searchbox form {
   margin: auto !important;
 }
@@ -458,4 +466,12 @@ div.login a.small-text:visited {
 .label-rule {
   border-bottom: 1px solid;
   border-color: #B3B3B3 -moz-use-text-color;
+}
+
+/* greeter h1, so you can have an image or icon in the left of it */
+h1#greeter img {
+  float: left;
+  height: 50px;
+  margin: 0px !important;
+  margin-right: 8px !important;
 }
