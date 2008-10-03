@@ -9,7 +9,7 @@
   <?python from pylons import tmpl_context ?>
   
   <div>
-      <img src="${tmpl_context.identity.person['hackergotchi_url']}" 
+      <img src="${tmpl_context.identity.person.get('hackergotchi_url', '')}" 
              style="float:left"/>
          <h1>${tmpl_context.identity.person['human_name']}'s Profile</h1>
   </div>
