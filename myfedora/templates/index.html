@@ -15,6 +15,11 @@
 </head>
 
 <body>
+ <div id="right-content-column">
+    <div py:for="app in rightcol_apps" class="panel icon-panel">
+      ${tmpl_context.show_app(app)}
+    </div> 
+  </div>
   <div id="left-content-column">
     <h1><span py:if="tmpl_context.identity and tmpl_context.identity.person"> 
          <img src="${tmpl_context.identity.person.get('hackergotchi_url', '')}" 
@@ -24,11 +29,5 @@
       ${tmpl_context.show_app(app)}
     </div> 
   </div>
-  <div id="right-content-column">
-    <div py:for="app in rightcol_apps" class="panel icon-panel">
-      ${tmpl_context.show_app(app)}
-    </div> 
-  </div>
-
 </body>
 </html>
