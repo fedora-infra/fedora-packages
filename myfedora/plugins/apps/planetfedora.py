@@ -1,5 +1,5 @@
 from tg import url
-from tw.api import Widget, JSLink
+from tw.api import Widget, JSLink, CSSLink
 from tw.jquery import jquery_js, jQuery
 from myfedora.lib.app_factory import AppFactory
 import feedparser
