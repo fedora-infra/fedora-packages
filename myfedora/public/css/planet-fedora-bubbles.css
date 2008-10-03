@@ -2,32 +2,32 @@
 
 div.entry {
   clear: both;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 
 div.person-info {
   background: transparent url(http://rapier.bos.redhat.com/community/images/planet-bubbles/point.png) no-repeat scroll right;
   float: left;
-  bottom: 16px;
-  left: 12px;
+  bottom: 18px;
+  left: 0px;
   margin-left: -1em !important;
-  margin-top: 25px !important;
+  margin-top: 8px !important;
   padding: 0 1em 0 1em;
   position: relative;
   text-align: center;
-  width: 8.5em;
+  width: 6em;
   z-index: 1; 
 }
 
 div.person-info a img {
   border: 0 none;
-  margin-bottom: 1ex;
+  margin-bottom: .25em;
   padding: 0px 12px;
 }
 
 div.post {
-  margin-left: 10em;
-  padding: 2em;
+  margin-left: 6.5em;
+  padding: .25em 1.5em;
   position: relative;
 }
 
