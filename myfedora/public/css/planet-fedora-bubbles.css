@@ -1,6 +1,7 @@
 /* mad props to Steven Garrity who did the original html/css for Planet GNOME's bubbles, which heavily inspired this. */
 
 div.entry {
+  clear: none;
   margin-bottom: 1em;
 }
 
