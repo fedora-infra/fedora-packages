@@ -30,6 +30,7 @@ div.post {
   margin-top: 2.2em;
   padding: .25em 1.5em;
   position: relative;
+  min-height: 68px;
 }
 
 h3.post-title {
