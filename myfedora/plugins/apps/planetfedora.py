@@ -2,8 +2,11 @@ from tg import url
 from tw.api import Widget, JSLink, CSSLink
 from tw.jquery import jquery_js, jQuery
 from myfedora.lib.app_factory import AppFactory
+from myfedora.lib.utils import HRElapsedTime
 import feedparser
 import re
+
+from pylons import cache
 
 ui_js = JSLink(link='/javascript/myfedora.ui.js')
 planet_css = CSSLink(link='/css/planet-fedora-bubbles.css')
@@ -20,13 +23,22 @@ class PlanetFedoraBaseWidget(Widget):
     atomurl = 'http://planet.fedoraproject.org/atom.xml'
     rssurl = 'http://planet.fedoraproject.org/rss20.xml'
     
+    def get_atom_entries(self):
+        atomfeed = feedparser.parse(self.atomurl)
+        return atomfeed
+        
     def update_params(self, d):
         super(PlanetFedoraBaseWidget, self).update_params(d)
         
         view_users_list = d['view_users_list']
         entry_list = []
+
+        c = cache.get_cache('myfedora')        
+        atomfeed = c.get_value(key='planetfedora',
+                               createfunc=self.get_atom_entries,
+                               type="memory",
+                               expiretime=60)
         
-        atomfeed = feedparser.parse(self.atomurl)
         show = d.get('show', None)
 
         for c, atomentry in enumerate(atomfeed.entries):
@@ -47,7 +59,18 @@ class PlanetFedoraBaseWidget(Widget):
                         atomentry.author_detail['hackergotchi'] = m.group(1)
                     except Exception, e:
                         print e
-                    
+            
+                # make time look nice
+                hret = HRElapsedTime()
+                hret.set_parse_format('%Y-%m-%dT%H:%M:%S+00:00')
+                hret.set_output_format('%H:%M UTC')
+                hret.long_date = False
+                hret.set_start_timestr(atomentry.updated)
+                hret.set_end_time_to_now()
+                
+                atomentry['elapsed_time'] = hret.get_hr_elapsed_time()
+                atomentry['time'] = hret.get_hr_start_time()
+                
                 entry_list.append(atomentry)
                 if show and c >= show:
                     break

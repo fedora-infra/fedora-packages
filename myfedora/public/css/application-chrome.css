@@ -454,3 +454,8 @@ div.login a.small-text:visited {
 .small-text {
   font-size: 8pt;
 }
+
+.label-rule {
+  border-bottom: 1px solid;
+  border-color: #B3B3B3 -moz-use-text-color;
+}
