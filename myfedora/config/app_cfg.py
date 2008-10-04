@@ -81,8 +81,11 @@ base_config.model = myfedora.model
 base_config.DBSession = myfedora.model.DBSession
 
 # Configure the authentication backend
-#base_config.auth_backend = 'fas'
+
+# Setting this to 'sqlalchemy' ensures that our
+# MyFedoraConfig.add_auth_middleware will get called.
 base_config.auth_backend = 'sqlalchemy'
+
 #base_config.sa_auth = Bunch()
 #base_config.sa_auth.dbsession = model.DBSession
 #base_config.sa_auth.user_class = model.User
