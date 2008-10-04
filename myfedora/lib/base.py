@@ -69,11 +69,29 @@ class BaseController(TGController):
         apps = AppBundle('sidebarapps')
         apps.add(nav)
         tmpl_context.sidebar_apps = apps.serialize_apps(pylons.tmpl_context.w)
-        
-        try:
-            return TGController.__call__(self, environ, start_response)
-        finally:
-            #after everything is done clear out the Database Session
-            #to eliminate possible cross request DBSession polution.
-            model.DBSession.remove()
-        
+
+        return TGController.__call__(self, environ, start_response)
+
+class SecureController(BaseController):
+    """this is a SecureController implementation for the
+    tg.ext.repoze.who plugin.
+    it will permit to protect whole controllers with a single predicate
+    placed at the controller level.
+    The only thing you need to have is a 'require' attribute which must
+    be a callable. This callable will only be authorized to return True
+    if the user is allowed and False otherwise. This may change to convey info
+    when securecontroller is fully debugged...
+    """
+
+    def check_security(self):
+        errors = []
+        environ = request.environ
+        identity = environ.get('repoze.who.identity')
+        if not hasattr(self, "require") or \
+            self.require is None or \
+            self.require.eval_with_object(identity, errors):
+            return True
+
+        # if we did not return this is an error :)
+        # TODO: do something with the errors variable like informing our user...
+        return False
