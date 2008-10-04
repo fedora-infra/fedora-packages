@@ -12,8 +12,10 @@ import myfedora.model as model
 from pylons.i18n import _, ungettext, N_
 from tw.api import WidgetBunch
 
-from myfedora.widgets import GlobalResourceInjectionWidget
 from myfedora.lib.appbundle import AppBundle
+from myfedora.widgets import GlobalResourceInjectionWidget
+
+global_resource_injection = GlobalResourceInjectionWidget()
 
 def show_app(app):
     """Helper function for showing myfedora apps in a template
@@ -36,18 +38,17 @@ def show_app(app):
 
 class Controller(object):
     """Base class for a web application's controller.
-    
+
     Currently, this provides positional parameters functionality
     via a standard default method.
     """
-    
+
 class BaseController(TGController):
     """Base class for the root of a web application.
     
     Your web application should have one of these. The root of
     your application is used to compute URLs used by your app.
     """
-    _global_resource_injection = GlobalResourceInjectionWidget()
     
     def __call__(self, environ, start_response):
         """Invoke the Controller"""
@@ -61,9 +62,9 @@ class BaseController(TGController):
         tmpl_context.w = WidgetBunch()
         tmpl_context.show_app = show_app
         tmpl_context.resource_view = ''
-        self._global_resource_injection.register_resources()
+        global_resource_injection.register_resources()
         tmpl_context.identity =  pylons.request.environ.get('repoze.who.identity')
-        
+
         #this can be overwritten by the child controller
         nav = pylons.g.apps['navigation'](None, '320px', '200px', 'Home')
         apps = AppBundle('sidebarapps')
