@@ -1,6 +1,7 @@
 """Setup the myfedora application"""
 import logging
 
+import transaction
 from paste.deploy import appconfig
 from pylons import config
 
@@ -24,4 +25,5 @@ def setup_config(command, filename, section, vars):
 
     #model.DBSession.save(u)
 
+    #transaction.commit()
     print "Successfully setup"
