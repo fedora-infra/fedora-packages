@@ -1,5 +1,5 @@
 from myfedora.widgets.resourceview import ToolWidget
-from fedora.tg.client import BaseClient
+from fedora.client import BaseClient
 from myfedora.lib.app_factory import AppFactory
 
 class ProfileInfoToolApp(AppFactory):
