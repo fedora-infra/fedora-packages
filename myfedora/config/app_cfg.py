@@ -1,9 +1,14 @@
+import logging
+import pkg_resources
+
 from routes import Mapper
 from tg.configuration import AppConfig, Bunch, config
 
 import myfedora
 from myfedora import model
 from myfedora.lib import app_globals, helpers
+
+log = logging.getLogger(__name__)
 
 class MyFedoraConfig(AppConfig):
 
@@ -37,7 +42,6 @@ class MyFedoraConfig(AppConfig):
         """ Returns a load_environment function """
 
         def load_environment(global_conf, app_conf):
-            #AppConfig.make_load_environment(self)(global_config, app_config)
             global_conf = Bunch(global_conf)
             app_conf = Bunch(app_conf)
             self.setup_paths()
@@ -45,9 +49,8 @@ class MyFedoraConfig(AppConfig):
             self.setup_helpers_and_globals()
 
             # Load myfedora's Applications, ResourceViews and Tools
-            from myfedora.config.environment import load_resourceviews, load_apps
-            load_resourceviews()
-            load_apps()
+            self.load_resourceviews()
+            self.load_apps()
 
             self.setup_routes()
 
@@ -63,6 +66,44 @@ class MyFedoraConfig(AppConfig):
                 self.setup_sqlalchemy()
 
         return load_environment
+
+    def load_widget_entry_points(self, app):
+        entry_point_string = 'myfedora.plugins.apps.%s.views' %  app.entry_name
+        log.info("Loading widgets for app %s on entry point %s" % (
+                 app.entry_name, entry_point_string))
+        for widget_entry in pkg_resources.iter_entry_points(entry_point_string):
+            app.register_view(widget_entry.name, widget_entry.load())
+
+    def load_resourceviews(self):
+        log.info("Loading MyFedora resourceview apps")
+        for view in pkg_resources.iter_entry_points('myfedora.plugins.resourceviews'):
+            if not config['pylons.app_globals'].resourceviews.has_key(view.name):
+                view_class = view.load()
+                view_class.load_resources()
+
+            config['pylons.app_globals'].resourceviews[view.name] = view_class
+            log.info(view.name + " loaded")
+
+    def load_fas(self):
+        '''Load an instance of the Fedora Account System object.
+
+        Since we only use the system fas account, we can create a single fas
+        account for everyone.
+        '''
+        log.info("Loading fas")
+        from fedora.client import AccountSystem
+        fas = AccountSystem(config['fas.url'], username=config['fas.username'],
+                password=config['fas.password'])
+        config['pylons.app_globals'].fas = fas
+
+    def load_apps(self):
+        log.info("Loading MyFedora apps")
+        for app_entry in pkg_resources.iter_entry_points('myfedora.plugins.apps'):
+            if not config['pylons.app_globals'].apps.has_key(app_entry.name):
+                app_class = app_entry.load()
+                config['pylons.app_globals'].apps[app_entry.name] = app_class
+                self.load_widget_entry_points(app_class)
+                app_class.load_widgets()
 
 
 base_config = MyFedoraConfig()
