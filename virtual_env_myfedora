@@ -202,6 +202,7 @@ case "$1" in
 
     easy_install feedcache
     easy_install shove
+    easy_install repoze.profile
 
     output_mod_wsgi_conf $DIR
 

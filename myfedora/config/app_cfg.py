@@ -97,3 +97,5 @@ base_config.auth_backend = 'sqlalchemy'
 # override this if you would like to provide a different who plugin for.
 # managing login and logout of your application
 #base_config.sa_auth.form_plugin = None
+
+base_config.profile = False
