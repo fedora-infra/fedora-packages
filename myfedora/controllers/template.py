@@ -1,4 +1,4 @@
-from ${package}.lib.base import *
+from myfedora.lib.base import *
 
 class TemplateController(BaseController):
 
