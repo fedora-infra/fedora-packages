@@ -1,5 +1,5 @@
 from searchbase import SearchBaseWidget
-from fedora.tg.client import BaseClient
+from fedora.client import BaseClient
 from myfedora.lib.app_factory import AppFactory
 
 import time
