@@ -200,6 +200,9 @@ case "$1" in
     git clone git://git.fedoraproject.org/git/fas.git
     (cd fas; python setup.py build; python setup.py develop;)
 
+    easy_install feedcache
+    easy_install shove
+
     output_mod_wsgi_conf $DIR
 
     (cd $DIR/$PROJNAME; python setup.py develop;)
