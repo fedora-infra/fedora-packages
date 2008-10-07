@@ -79,6 +79,7 @@ setup(
     fedoraannounce = myfedora.plugins.apps.fedoraannounce:FedoraAnnounceApp
     peoplealphalist = myfedora.plugins.apps.peoplealphalist:PeopleAlphaListApp
     useralerts = myfedora.plugins.apps.useralerts:UserAlertsApp
+    updates = myfedora.plugins.apps.updates:FedoraUpdatesApp
     
     #TOOLS:
     tools.packageinfo = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolApp
@@ -171,6 +172,10 @@ setup(
     [myfedora.plugins.apps.tools.fedoramemberships.views]
     home = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
     canvas = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
+
+    [myfedora.plugins.apps.updates.views]
+    home = myfedora.plugins.apps.updates:FedoraUpdatesWidget
+    canvas = myfedora.plugins.apps.updates:FedoraUpdatesWidget
 
     [paste.paster_create_template]
     moksha-app = myfedora.pastetemplate:MokshaAppTemplate
