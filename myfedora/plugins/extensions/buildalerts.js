@@ -26,6 +26,10 @@
     var burl = myfedora.get_page_base_url();
     var buildsurl = data.base_url + 'builds/';
     var self = this;
+    var hidden_parent = undefined;
+    
+    if (data.hide_parent) 
+      hidden_parent = jQuery('#' + data.hide_parent);
     
     render = function(json) 
       {
@@ -111,6 +115,8 @@
             }
           
           div.append(alert);
+          if (hidden_parent)
+            hidden_parent.show();
         }
         
         if (num_failed_builds > 0)
@@ -125,6 +131,8 @@
             a.append(num_failed_builds + ' recent failed build' + plural);
             alert.append(a);
             div.append(alert);
+            if (hidden_parent)
+              hidden_parent.show();
           }
         
         if (num_complete_builds > 0)
@@ -138,6 +146,8 @@
             a.append(num_complete_builds + ' recent successful build' + plural);
             alert.append(a);
             div.append(alert);
+            if (hidden_parent)
+              hidden_parent.show();
           }
       }
      

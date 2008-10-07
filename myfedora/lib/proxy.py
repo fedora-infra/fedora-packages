@@ -32,6 +32,41 @@ class MFProxyClient(ProxyClient):
             
         return result
 
+    # TODO: make proxyclient able to handle non-json requests
+    def get_page(self, path, req_params = None):
+        method = path.lstrip('/')
+        url = urljoin(self.base_url, method)
+
+        response = None # the data that we get back from the server
+
+        req = urllib2.Request(url)
+        req.add_header('User-agent', self.useragent)
+
+        # If the cookie exists, send it so that visit tracking works.
+        req.add_header('Cookie', self.get_current_proxy_cookies().output(attrs=[],
+            header='').strip())
+        try:
+            response = urllib2.urlopen(req)
+        except urllib2.HTTPError, e:
+            if e.msg == 'Forbidden':
+                if (inspect.currentframe().f_back.f_code !=
+                        inspect.currentframe().f_code):
+                    self._authenticate(force=True)
+                    return self.send_request(method, auth, req_params)
+                else:
+                    # We actually shouldn't ever reach here.  Unless something
+                    # goes drastically wrong _authenticate should raise an
+                    # AuthError
+                    log.error(e)
+                    raise AuthError, _('Unable to log into server: %(error)s') \
+                            % {'error': str(e)}
+            else:
+                raise
+
+        data = response.read()
+        
+        return data
+         
 class FasClient(MFProxyClient):
     def __init__(self, baseURL='https://admin.fedoraproject.org/accounts'):
         super(FasClient, self).__init__(baseURL)

@@ -67,6 +67,12 @@ class UserAlertsWidget(Widget):
                                                '%s Packages' % prefix, 
                                                pkgsurl)
                          )
+        if is_auth_user:
+            categories.append(self.create_category('groups', 
+                                                   'Your Group Requests', 
+                                                   '')
+                             )
+
         d.update({'categories': categories,
                  'user': user,
                  'is_auth_user': is_auth_user,
