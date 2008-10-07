@@ -199,6 +199,11 @@ class FasQuery(Controller):
     def group_list(self, search, groups_only=False):
         c = FasClient()
         return c.group_list(search, groups_only)
+    
+    @expose()
+    def get_todo_list_page(self):
+        c = FasClient()
+        return c.get_page('home');
 
 class ProxyController(Controller):
     koji = KojiQuery()
