@@ -100,10 +100,33 @@ class PkgdbClient(MFProxyClient):
         
         return result
     
-    def get_user_packages(self, user):
-        result = self.send_authenticated_request("users/packages/" + user)
+    def get_user_packages(self, user, acls=None, limit=10, page=1):
+        result = self.send_authenticated_request("users/packages/" + user,
+                                                 req_params={'acls':acls,
+                                                             'pkgs_tgp_limit': limit,
+                                                             'pkgs_tgp_no': page})
         
         return result
+    
+    def get_collections(self, create_table=False, hide_obsolete=False):
+        results = self.send_authenticated_request("collections/")
+        
+        if hide_obsolete or create_table:
+            ctable={}
+            collections = []
+            for c in results['collections']:
+              if hide_obsolete and c['statuscode'] == 9:
+                  continue
+              
+              collections.append(c)
+              if create_table:
+                  ctable[c['id']] = c
+                  
+            if ctable:
+                results['collections_table'] = ctable
+            results['collections'] = collections
+              
+        return results
     
 class BodhiClient(MFProxyClient):
     def __init__(self, baseURL='https://admin.fedoraproject.org/updates'):
