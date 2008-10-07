@@ -80,3 +80,38 @@ class BodhiClient(MFProxyClient):
                                                               'get_auth': get_auth}
                                                   )
          return result
+
+    def query(self, release=None, status=None, type_=None, bugs=None,
+              request=None, mine=None, package=None, limit=10):
+        """ Query bodhi for a list of updates.
+
+        :kwarg release: The release that you wish to query updates for.
+        :kwarg status: The update status (``pending``, ``testing``, ``stable``,
+            ``obsolete``)
+        :kwarg type_: The type of this update: ``security``, ``bugfix``,
+            ``enhancement``, and ``newpackage``.
+        :kwarg bugs: A list of Red Hat Bugzilla ID's
+        :kwarg request: An update request to query for
+            ``testing``, ``stable``, ``unpush``, ``obsolete`` or None.
+        :kwarg mine: If True, only query the users updates.  Default: False.
+        :kwarg package: A package name or a name-version-release.
+        :kwarg limit: The maximum number of updates to display.  Default: 10.
+
+        """
+        params = {
+                'tg_paginate_limit': limit,
+                'release': release,
+                'package': package,
+                'request': request,
+                'status': status,
+                'type_': type_,
+                'bugs': bugs,
+                'mine': mine,
+                }
+        for key, value in params.items():
+            if not value:
+                del params[key]
+        if params['mine']:
+            return self.send_authenticated_request('list', req_params=params)
+        return self.send_request('list', req_params=params, auth=auth)
+

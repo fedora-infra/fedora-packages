@@ -1,0 +1,39 @@
+<div xmlns="http://www.w3.org/1999/xhtml" 
+     xmlns:py="http://genshi.edgewall.org/"
+     id="${id}">
+
+  <div class="list header-list" py:if="updates">
+     <h3>Updates</h3>
+     ${updates['title']}
+     <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Build</th>
+            <th>Release</th>
+            <th>Age</th>
+            <th>Status</th>
+            <th>Action(s)</th>
+          </tr>
+        </thead>
+        <tbody>         
+          <span py:for="i, update in enumerate(updates['updates'])">
+            <tr>
+              <td><img src="/images/16_package.png"/></td>
+              <td><a href="https://admin.fedoraproject.org/updates/${update['title']}">${update['title']}</a></td>
+              <td>${update['release']['long_name']}</td>
+              <td>${update['age']}</td>
+              <td>${update['status']} <br/> <img src="https://admin.fedoraproject.org/updates/static/images/${update['karmaimg']}"/>${update['karma']}</td>
+              <td>Actions</td>
+            </tr>
+        </span>
+      </tbody> 
+     </table>
+  </div>
+  
+  <!-- used if there is no data -->
+  <div py:if="not updates">
+    Cannot find any updates.
+  </div>
+
+</div>
