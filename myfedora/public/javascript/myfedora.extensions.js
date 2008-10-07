@@ -42,6 +42,9 @@ _extensions.prototype = {
       
         var obj_list = js;
         
+        if (data.hide_parent)
+          jQuery("#" + data.hide_parent).hide();
+        
         var append_div = jQuery("#" + data.placeholder_id);
         
         var block_element;
@@ -74,7 +77,6 @@ _extensions.prototype = {
             
           div.append(result);
           
-          //show it
           if (!data.ui) {
             if (data.show_effect) {
               eval("append_div." + data.show_effect);
