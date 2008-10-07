@@ -63,7 +63,7 @@ class FasClient(ProxyClient):
     visit_name = 'tg-visit'
     
     def __init__(self, baseURL):
-        super(FasClient, self).__init__(baseURL, session_as_cookie=False)
+        super(FasClient, self).__init__(baseURL)
 
     def convert_cookie(self, cookie):
         sc = SimpleCookie()
@@ -158,11 +158,12 @@ class FASWhoPlugin(object):
     def remember(self, environ, identity):
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
-            cookie = linfo[0]
+            cookies = linfo[0]
             result = []
-            
-            set_cookie = 'tg-visit=%s; Path=/;' % cookie
-            result.append(('Set-Cookie', set_cookie))
+            for name, value in cookies.iteritems():
+                # return a Set-Cookie header
+                set_cookie = '%s=%s; Path=/;' % (name, value)
+                result.append(('Set-Cookie', set_cookie))
             return result
         return None
 

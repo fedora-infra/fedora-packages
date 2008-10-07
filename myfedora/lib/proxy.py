@@ -1,15 +1,10 @@
 from fedora.client import ProxyClient
 from Cookie import SimpleCookie
 from pylons import request
-from urlparse import urljoin
-
-import urllib2
-
 
 class MFProxyClient(ProxyClient):
     def __init__(self, base_url, useragent=None, debug=False, return_auth=False):
-        super(MFProxyClient, self).__init__(base_url,
-                                            session_as_cookie=False, 
+        super(MFProxyClient, self).__init__(base_url, 
                                             useragent=useragent, 
                                             debug=debug)
         self._return_auth = return_auth
