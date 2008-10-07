@@ -7,19 +7,12 @@ from myfedora.lib.utils import HRElapsedTime
 from pylons import tmpl_context, request
 from tg import url
 
-#from fedora.client import BodhiClient
 from myfedora.lib.proxy import BodhiClient
 
 log = logging.getLogger(__name__)
 
 class FedoraUpdatesApp(AppFactory):
     entry_name = 'updates'
-
-    def __init__(self, *args, **kw):
-        super(FedoraUpdatesApp, self).__init__(*args, **kw)
-        # person=None 
-        # package=None 
-        # profile=None
     
 class FedoraUpdatesWidget(Widget):
     params = {'updates': 'A list of bodhi updates'}
@@ -38,8 +31,7 @@ class FedoraUpdatesWidget(Widget):
         query = {'limit': self.limit}
 
         person = d.get('person', 'lmacken') # FIXME
-        if person:
-            query['mine'] = True
+        query['mine'] = person and True or False
 
         candidates = d.get('candidates')
         if candidates:
@@ -55,6 +47,9 @@ class FedoraUpdatesWidget(Widget):
             query['package'] = package
 
         d['updates'] = bodhi.query(**query)
+
+        # Convert the timestamps to human readable ages, and set the
+        # karma icons appropriately
         elapsed_time = HRElapsedTime()
         for update in d['updates']['updates']:
             elapsed_time.set_start_timestr(update['date_submitted'])
