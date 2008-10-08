@@ -3,7 +3,12 @@ from myfedora.model import Blogs, DBSession
 def get_metadata(username):
     h = 'http://planet.fedoraproject.org/images/heads/default.png'
     burl = None
-    blog = DBSession.query(Blogs).filter(Blogs.user_name==username).first()
+    
+    try:
+        blog = DBSession.query(Blogs).filter(Blogs.user_name==username).first()
+    except:
+        blog = None
+        
     if blog:
         hb = blog.hackergotchi_url
         if hb:
