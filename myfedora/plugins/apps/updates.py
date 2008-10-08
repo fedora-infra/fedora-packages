@@ -30,8 +30,10 @@ class FedoraUpdatesWidget(Widget):
         bodhi = BodhiClient()
         query = {'limit': self.limit}
 
-        person = d.get('person', 'lmacken') # FIXME
-        query['mine'] = person and True or False
+        person = d.get('person', None) # FIXME we need a bodhi query for this
+        
+        profile = d.get('profile', None)
+        query['mine'] = profile and True or False
 
         candidates = d.get('candidates')
         if candidates:
