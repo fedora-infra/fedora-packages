@@ -158,7 +158,8 @@ class BodhiClient(MFProxyClient):
         for key, value in params.items():
             if value is None:
                 del params[key]
-        if params['mine']:
+    
+        if params.get('mine'):
             return self.send_authenticated_request('list', req_params=params)
+        
         return self.send_request('list', req_params=params)
-
