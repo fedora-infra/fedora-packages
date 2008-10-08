@@ -63,7 +63,7 @@ class FasClient(ProxyClient):
     visit_name = 'tg-visit'
     
     def __init__(self, baseURL):
-        super(FasClient, self).__init__(baseURL)
+        super(FasClient, self).__init__(baseURL, session_as_cookie=False)
 
     def convert_cookie(self, cookie):
         sc = SimpleCookie()
@@ -77,27 +77,20 @@ class FasClient(ProxyClient):
                                  auth_params={'username': login, 
                                               'password':password})
         
-    def logout(self, cookie):
-        if cookie and not isinstance(cookie, SimpleCookie):
-            cookie = self.convert_cookie(cookie)
-            
-        auth_params = {'cookie': cookie}
+    def logout(self, session_id):
+        auth_params = {'session_id': session_id}
             
         return self.send_request("logout", auth_params = auth_params)
 
-    def keep_alive(self, cookie, get_user_info):
-        if cookie:
-            if not cookie.get('tg-visit', None):
-                return None
-            
-            if not isinstance(cookie, SimpleCookie):
-                cookie = self.convert_cookie(cookie)
-        
+    def keep_alive(self, session_id, get_user_info):
+        if not session_id:
+            return None
+
         method = ''
         if get_user_info:
             method = 'user/view'
             
-        auth_params = {'cookie': cookie}
+        auth_params = {'session_id': session_id}
         
         result = None
         try:
@@ -118,10 +111,11 @@ class FASWhoPlugin(object):
             self._metadata_plugins.append(entry.load())
         
         
-    def keep_alive(self, cookies):
+    def keep_alive(self, session_id):
         print "************ cache miss *****************"
-        fas = FasClient(self.url)    
-        linfo = fas.keep_alive(cookies, True)
+        fas = FasClient(self.url)
+        
+        linfo = fas.keep_alive(session_id, True)
         
         return linfo
     
@@ -135,8 +129,8 @@ class FASWhoPlugin(object):
         
         print "Request identify for cookie " + cookie
         linfo = fas_cache.get_value(key=cookie + "_identity",
-                                    createfunc=lambda: self.keep_alive(req.cookies),
-                                    type="memory", 
+                                    createfunc=lambda: self.keep_alive(cookie),
+                                    type="memory",
                                     expiretime=FAS_CACHE_TIMEOUT)
 
         if not linfo:
@@ -158,12 +152,10 @@ class FASWhoPlugin(object):
     def remember(self, environ, identity):
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
-            cookies = linfo[0]
+            session_id = linfo[0]
             result = []
-            for name, value in cookies.iteritems():
-                # return a Set-Cookie header
-                set_cookie = '%s=%s; Path=/;' % (name, value)
-                result.append(('Set-Cookie', set_cookie))
+            set_cookie = 'tg-visit=%s; Path=/;' % (session_id)
+            result.append(('Set-Cookie', set_cookie))
             return result
         return None
 
@@ -173,15 +165,12 @@ class FASWhoPlugin(object):
         
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
-            cookies = linfo[0]
+            session_id = linfo[0]
             result = []
             for name in cookies.iterkeys():
-                expired = ('%s=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT' %
-                           name)
+                expired = ('%session_id=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT')
                 result.append(('Set-Cookie', expired))
                 environ['FAS_LOGIN_INFO'] = None
-                
-                cookies['tg-visit'] = None
             return result
         return None
      
@@ -196,7 +185,7 @@ class FASWhoPlugin(object):
         fas = FasClient(self.url)
         user_data = fas.login(login, password)
         if user_data:
-            if isinstance(user_data, tuple) and isinstance(user_data[0], SimpleCookie):
+            if isinstance(user_data, tuple):
                 environ['FAS_LOGIN_INFO']=fas.keep_alive(user_data[0], True)
                 return login
     
