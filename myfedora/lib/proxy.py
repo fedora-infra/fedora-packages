@@ -1,5 +1,4 @@
 from fedora.client import ProxyClient
-from Cookie import SimpleCookie
 from pylons import request
 
 class MFProxyClient(ProxyClient):
@@ -8,13 +7,6 @@ class MFProxyClient(ProxyClient):
                                             useragent=useragent, 
                                             debug=debug)
         self._return_auth = return_auth
-        
-    def convert_to_simple_cookie(self, cookie):
-        sc = SimpleCookie()
-        for key, value in cookie.iteritems():
-            sc[key] = value
-            
-        return sc
 
     def get_current_proxy_cookies(self):
         cookies = request.cookies
