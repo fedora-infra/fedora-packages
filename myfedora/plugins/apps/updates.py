@@ -104,7 +104,7 @@ class FedoraUpdatesWidget(Widget):
             query['package'] = package
 
         d['updates'] = bodhi.query(**query)
-        d['updates']['updates'] = self._postprocess_updates(d['updates'])
+        self._postprocess_updates(d['updates'])
 
     def _postprocess_updates(self, updates):
         """ Perform post-processing on a list of bodhi updates.
@@ -123,5 +123,4 @@ class FedoraUpdatesWidget(Widget):
                 update['karmaimg'] = 'karma-1.png'
             else:
                 update['karmaimg'] = 'karma0.png'
-        return updates
 
