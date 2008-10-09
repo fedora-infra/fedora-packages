@@ -30,11 +30,6 @@ class MFProxyClient(ProxyClient):
         result = self.send_request(method,
                                    req_params = req_params,
                                    auth_params = auth_params)
-        
-        if not self._return_auth:
-            from pprint import pprint
-            pprint(result)
-            result = result[1]
             
         return result
 
