@@ -152,7 +152,7 @@ class BodhiClient(MFProxyClient):
          return result
 
     def query(self, release=None, status=None, type_=None, bugs=None,
-              request=None, mine=None, package=None, limit=10):
+              request=None, mine=None, package=None, username=None, limit=10):
         """ Query bodhi for a list of updates.
 
         :kwarg release: The release that you wish to query updates for.
@@ -166,6 +166,7 @@ class BodhiClient(MFProxyClient):
         :kwarg mine: If True, only query the users updates.  Default: False.
         :kwarg package: A package name or a name-version-release.
         :kwarg limit: The maximum number of updates to display.  Default: 10.
+        :kwarg username: username to look at
 
         """
         params = {
@@ -177,7 +178,9 @@ class BodhiClient(MFProxyClient):
                 'type_': type_,
                 'bugs': bugs,
                 'mine': mine,
+                'username': username
                 }
+        
         for key, value in params.items():
             if value is None:
                 del params[key]

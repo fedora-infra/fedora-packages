@@ -90,7 +90,9 @@ class FedoraUpdatesWidget(Widget):
         bodhi = BodhiClient()
         query = {'limit': self.limit}
 
-        person = d.get('person')
+        username = d.get('person')
+        if username:
+            query['username'] = username
         
         profile = d.get('profile', None)
         query['mine'] = profile and True or False
