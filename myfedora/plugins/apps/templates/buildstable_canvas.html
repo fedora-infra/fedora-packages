@@ -24,15 +24,33 @@ import tg
         </thead>
         <tbody>         
          <span py:for="i, build in enumerate(builds_list)" 
-              py:with="build_id=str(build['build_id']); 
-                       build_state=str(build['state']); 
-                       task_id=str(build['task_id']); 
-                       message_id='message_' + build_id;
-                       nvr=str(build['nvr']);
-                       odd_or_even=i%2 and 'row-odd' or 'row-even'"
+               py:with="build_id=str(build['build_id']); 
+                        build_state=str(build['state']); 
+                        task_id=str(build['task_id']); 
+                        message_id='message_' + build_id;
+                        nvr=str(build['nvr']);
+                        odd_or_even=i%2 and 'row-odd' or 'row-even'"
+                       
+               class="rowgroup"
                        >
             <tr class="${odd_or_even}">
-              <td>${build_id}</td>
+              <td>${build_id}
+              <script type="text/x-myfedora-extpoint">
+                  {
+                     'type': 'build_message',
+                     'placeholder_id': '${message_id}',
+                     'build_id': '${build_id}',
+                     'task_id': '${task_id}',
+                     'build_state': ${build_state}, 
+                     'show_effect': 'slideDown("slow")',
+                     'run': 'whenReady'
+                  }
+                  </script>
+                  <div
+                    id="${message_id}"
+                    class="message_row">
+                  </div>
+              </td>
           
     	      <td py:with="menu_id='menu_' + build_id" id="${build_id}_name_col"> 
                   <div class="${odd_or_even}">
@@ -86,23 +104,6 @@ import tg
                      'run': 'whenReady'
                   }
                   </script>
-              </td>
-            </tr>
-            <tr class="${odd_or_even}">
-              <script type="text/x-myfedora-extpoint">
-                  {
-                     'type': 'build_message',
-                     'placeholder_id': '${message_id}',
-                     'build_id': '${build_id}',
-                     'task_id': '${task_id}',
-                     'build_state': ${build_state}, 
-                     'show_effect': 'slideDown("slow")',
-                     'run': 'whenReady'
-                  }
-              </script>
-              <td colspan="6" 
-                  id="${message_id}"
-                  class="message_row">
               </td>
             </tr>
         </span>

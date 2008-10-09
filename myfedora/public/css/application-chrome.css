@@ -256,13 +256,12 @@
 }
 
 #left-content-column {
-  width: 60%;
+  width: 68%;
 }
 
 #right-content-column {
   width: 30%;
   float: right;
-  margin-top: 10px;
 }
 
 #bottom,
@@ -331,6 +330,10 @@ span.more-items {
 
 .header-list table td {
   border-bottom: 1px solid #c8c8c8 !important;
+}
+
+.message_row {
+  position: absolute;
 }
 
 span.package-name a,

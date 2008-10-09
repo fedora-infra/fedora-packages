@@ -51,7 +51,7 @@
                    params,
                    render);
                    
-    jQuery("#" + data.uid).css('background-color', '#ffcccc');
+    jQuery("#" + data.uid).css('color', 'red');
     return('Attempting to load error log for failed build...'); 
   }
  }
