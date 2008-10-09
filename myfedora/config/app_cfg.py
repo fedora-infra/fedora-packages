@@ -139,4 +139,8 @@ base_config.auth_backend = 'sqlalchemy'
 # managing login and logout of your application
 #base_config.sa_auth.form_plugin = None
 
+# Enable profiling middleware.
 base_config.profile = False
+
+# Enable squeeze middlware
+base_config.squeeze = False
