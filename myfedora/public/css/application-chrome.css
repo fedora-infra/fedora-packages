@@ -70,6 +70,14 @@
   border-left: 1px solid #eee;
 }
 
+/** ui styles **/
+.hover_menu {
+  position:absolute;
+  background-color: #FFFFFF;
+  border: 1px solid;
+  width: auto !important;
+  padding: 10px;
+}
 
 /* left navbar tabs styling */
 
@@ -478,3 +486,5 @@ h1#greeter img {
   margin: 0px !important;
   margin-right: 8px !important;
 }
+
+
