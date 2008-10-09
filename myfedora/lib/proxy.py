@@ -182,6 +182,10 @@ class BodhiClient(MFProxyClient):
                 'username': username
                 }
         
+        # bodhi can't handle false query sting
+        if not mine:
+            del params['mine']
+            
         for key, value in params.items():
             if value is None:
                 del params[key]
