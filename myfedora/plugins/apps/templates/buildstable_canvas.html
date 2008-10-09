@@ -34,23 +34,7 @@ import tg
                class="rowgroup"
                        >
             <tr class="${odd_or_even}">
-              <td>${build_id}
-              <script type="text/x-myfedora-extpoint">
-                  {
-                     'type': 'build_message',
-                     'placeholder_id': '${message_id}',
-                     'build_id': '${build_id}',
-                     'task_id': '${task_id}',
-                     'build_state': ${build_state}, 
-                     'show_effect': 'slideDown("slow")',
-                     'run': 'whenReady'
-                  }
-                  </script>
-                  <div
-                    id="${message_id}"
-                    class="message_row">
-                  </div>
-              </td>
+              <td>${build_id}</td>
           
     	      <td py:with="menu_id='menu_' + build_id" id="${build_id}_name_col"> 
                   <div class="${odd_or_even}">
@@ -74,6 +58,21 @@ import tg
                       'run': 'whenReady'
                     }
                     </script>
+                    <script type="text/x-myfedora-extpoint">
+                  {
+                     'type': 'build_message',
+                     'placeholder_id': '${message_id}',
+                     'build_id': '${build_id}',
+                     'task_id': '${task_id}',
+                     'build_state': ${build_state}, 
+                     'show_effect': 'slideDown("slow")',
+                     'run': 'whenReady'
+                  }
+                  </script>
+                  <div
+                    id="${message_id}"
+                    class="message_row">
+                  </div>
                   </div>
                   
     	      </td>
