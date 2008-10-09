@@ -40,7 +40,6 @@ class MFProxyClient(ProxyClient):
                                    req_params = req_params,
                                    auth_params = auth_params)
         
-        
             
         return result
 
