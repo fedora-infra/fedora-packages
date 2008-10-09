@@ -6,7 +6,13 @@ make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 def make_app(global_conf, full_stack=True, **app_conf):
     app = make_base_app(global_conf, full_stack=full_stack, **app_conf)
 
-    # Wrap your base turbogears app with custom middleware here
+    if base_config.squeeze:
+        from repoze.squeeze.processor import ResourceSqueezingMiddleware
+        app = ResourceSqueezingMiddleware(
+                app,
+                cache_dir='public/cache',
+                url_prefix='/cache/',
+                )
 
     ## Profiler
     if base_config.profile:
