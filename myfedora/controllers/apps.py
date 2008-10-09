@@ -6,6 +6,13 @@ import pylons
 class AppController(Controller):
     """AppController provide the base controller for serving applications"""
 
+    @expose('myfedora.templates.nocromeapps')
+    def run(self, app_id, app_config_id=None, width=None, height=None, 
+            view='Home', **kw):
+        
+        return self.name(app_id, app_config_id, width, height, 
+                         view='Home', **kw)
+        
     @expose('myfedora.templates.apps')    
     def name(self, app_id, app_config_id=None, width=None, height=None, 
                 view='Home', **kw):
