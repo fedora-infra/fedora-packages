@@ -90,9 +90,9 @@ class FedoraUpdatesWidget(Widget):
         bodhi = BodhiClient()
         query = {'limit': self.limit}
 
-        person = d.get('person') # FIXME we need a bodhi query for this
-        profile = d.get('profile')
-        query['mine'] = profile and True or False
+        person = d.get('person')
+        if person:
+            query['mine'] = True
 
         testing = d.get('testing')
         if testing:
@@ -123,3 +123,4 @@ class FedoraUpdatesWidget(Widget):
             else:
                 update['karmaimg'] = 'karma0.png'
         return updates
+

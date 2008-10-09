@@ -1,45 +1,36 @@
 from fedora.client import ProxyClient
-from pylons import request
 from Cookie import SimpleCookie
-from urlparse import urljoin
-import urllib2
+from pylons import request
 
 class MFProxyClient(ProxyClient):
     def __init__(self, base_url, useragent=None, debug=False, return_auth=False):
         super(MFProxyClient, self).__init__(base_url, 
                                             useragent=useragent, 
-                                            debug=debug,
-                                            session_as_cookie=False)
+                                            debug=debug)
         self._return_auth = return_auth
-
+        
     def convert_to_simple_cookie(self, cookie):
         sc = SimpleCookie()
         for key, value in cookie.iteritems():
             sc[key] = value
-        
+            
         return sc
 
     def get_current_proxy_cookies(self):
         cookies = request.cookies
+        cookies = self.convert_to_simple_cookie(cookies)
         return cookies
     
-    def send_request(self, method, req_params=None, auth_params=None):
-        result = super(MFProxyClient, self).send_request(method, 
-                                                         req_params=req_params, 
-                                                         auth_params=auth_params)
-        
-        if not self._return_auth:
-            result = result[1]
-            
-        return result
-            
     def send_authenticated_request(self, method, req_params=None):
-        sessionid = request.cookies.get('tg-visit')
-        auth_params = {'session_id': sessionid}
+        auth_params = {'cookie': self.get_current_proxy_cookies()}
         result = self.send_request(method,
                                    req_params = req_params,
                                    auth_params = auth_params)
         
+        if not self._return_auth:
+            from pprint import pprint
+            pprint(result)
+            result = result[1]
             
         return result
 
@@ -54,8 +45,8 @@ class MFProxyClient(ProxyClient):
         req.add_header('User-agent', self.useragent)
 
         # If the cookie exists, send it so that visit tracking works.
-        c = self.convert_to_simple_cookie(self.get_current_proxy_cookies())
-        req.add_header('Cookie', c.output(attrs=[], header='').strip())
+        req.add_header('Cookie', self.get_current_proxy_cookies().output(attrs=[],
+            header='').strip())
         try:
             response = urllib2.urlopen(req)
         except urllib2.HTTPError, e:
@@ -111,10 +102,33 @@ class PkgdbClient(MFProxyClient):
         
         return result
     
-    def get_user_packages(self, user):
-        result = self.send_authenticated_request("users/packages/" + user)
+    def get_user_packages(self, user, acls=None, limit=10, page=1):
+        result = self.send_authenticated_request("users/packages/" + user,
+                                                 req_params={'acls':acls,
+                                                             'pkgs_tgp_limit': limit,
+                                                             'pkgs_tgp_no': page})
         
         return result
+    
+    def get_collections(self, create_table=False, hide_obsolete=False):
+        results = self.send_authenticated_request("collections/")
+        
+        if hide_obsolete or create_table:
+            ctable={}
+            collections = []
+            for c in results['collections']:
+              if hide_obsolete and c['statuscode'] == 9:
+                  continue
+              
+              collections.append(c)
+              if create_table:
+                  ctable[c['id']] = c
+                  
+            if ctable:
+                results['collections_table'] = ctable
+            results['collections'] = collections
+              
+        return results
     
 class BodhiClient(MFProxyClient):
     def __init__(self, baseURL='https://admin.fedoraproject.org/updates'):
@@ -157,8 +171,7 @@ class BodhiClient(MFProxyClient):
         for key, value in params.items():
             if value is None:
                 del params[key]
-    
-        if params.get('mine'):
+        if params['mine']:
             return self.send_authenticated_request('list', req_params=params)
-        
         return self.send_request('list', req_params=params)
+
