@@ -152,7 +152,7 @@ class BodhiClient(MFProxyClient):
          return result
 
     def query(self, release=None, status=None, type_=None, bugs=None,
-              request=None, mine=None, package=None, username=None, limit=10):
+              request=None, mine=None, package=None, username=None, limit=10, page=1):
         """ Query bodhi for a list of updates.
 
         :kwarg release: The release that you wish to query updates for.
@@ -171,6 +171,7 @@ class BodhiClient(MFProxyClient):
         """
         params = {
                 'tg_paginate_limit': limit,
+                'tg_paginate_no': page,
                 'release': release,
                 'package': package,
                 'request': request,

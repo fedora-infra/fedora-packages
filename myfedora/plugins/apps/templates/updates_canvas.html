@@ -5,6 +5,8 @@
   <div class="list header-list" py:if="updates">
      <h3>Updates</h3>
      ${updates['title']}
+     ${children.pager.display(value_for(children.pager), 
+                              **args_for(children.pager))}
      <table>
         <thead>
           <tr>
@@ -29,6 +31,8 @@
         </span>
       </tbody> 
      </table>
+     ${children.pager.display(value_for(children.pager), 
+                              **args_for(children.pager))}
   </div>
   
   <!-- used if there is no data -->

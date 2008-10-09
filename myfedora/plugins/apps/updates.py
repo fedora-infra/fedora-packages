@@ -87,8 +87,19 @@ class FedoraUpdatesWidget(Widget):
     def update_params(self, d):
         super(FedoraUpdatesWidget, self).update_params(d)
 
+        page = d.get('page', 1)
+    
+        try:
+            page_num = int(page)
+            d['page'] = page_num    
+            offset = (page_num - 1) * self.limit
+        except:
+            d['page'] = 1
+
         bodhi = BodhiClient()
-        query = {'limit': self.limit}
+        query = {'limit': self.limit,
+                 'page':page_num
+                 }
 
         username = d.get('person')
         if username:
@@ -106,7 +117,16 @@ class FedoraUpdatesWidget(Widget):
             query['package'] = package
 
         d['updates'] = bodhi.query(**query)
+        
+        total_count = d['updates']['num_items']
+        last_page = int (total_count / self.limit + 1)
+        
         self._postprocess_updates(d['updates'])
+        d['child_args'] = {'pager':{'last_page': last_page,
+                                     'page': page,
+                                     'parent_dom_id': d['id']
+                                   }
+                          }
 
     def _postprocess_updates(self, updates):
         """ Perform post-processing on a list of bodhi updates.
