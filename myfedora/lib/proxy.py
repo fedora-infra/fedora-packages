@@ -1,12 +1,15 @@
 from fedora.client import ProxyClient
 from Cookie import SimpleCookie
+from urlparse import urljoin
+import urllib2
 from pylons import request
 
 class MFProxyClient(ProxyClient):
     def __init__(self, base_url, useragent=None, debug=False, return_auth=False):
         super(MFProxyClient, self).__init__(base_url, 
                                             useragent=useragent, 
-                                            debug=debug)
+                                            debug=debug,
+                                            session_as_cookie=False)
         self._return_auth = return_auth
         
     def convert_to_simple_cookie(self, cookie):
@@ -18,11 +21,12 @@ class MFProxyClient(ProxyClient):
 
     def get_current_proxy_cookies(self):
         cookies = request.cookies
-        cookies = self.convert_to_simple_cookie(cookies)
         return cookies
     
     def send_authenticated_request(self, method, req_params=None):
-        auth_params = {'cookie': self.get_current_proxy_cookies()}
+        sessionid = request.cookies.get('tg-visit')
+        
+        auth_params = {'session_id': sessionid}
         result = self.send_request(method,
                                    req_params = req_params,
                                    auth_params = auth_params)
@@ -34,6 +38,16 @@ class MFProxyClient(ProxyClient):
             
         return result
 
+    def send_request(self, method, req_params=None, auth_params=None):
+        result = super(MFProxyClient, self).send_request(method, 
+                                                         req_params=req_params, 
+                                                         auth_params=auth_params)
+        
+        if not self._return_auth:
+            result = result[1]
+            
+        return result
+    
     # TODO: make proxyclient able to handle non-json requests
     def get_page(self, path, req_params = None):
         method = path.lstrip('/')
@@ -45,8 +59,9 @@ class MFProxyClient(ProxyClient):
         req.add_header('User-agent', self.useragent)
 
         # If the cookie exists, send it so that visit tracking works.
-        req.add_header('Cookie', self.get_current_proxy_cookies().output(attrs=[],
-            header='').strip())
+        c = self.convert_to_simple_cookie(self.get_current_proxy_cookies())
+        req.add_header('Cookie', c.output(attrs=[], header='').strip())
+
         try:
             response = urllib2.urlopen(req)
         except urllib2.HTTPError, e:
@@ -171,7 +186,8 @@ class BodhiClient(MFProxyClient):
         for key, value in params.items():
             if value is None:
                 del params[key]
-        if params['mine']:
+    
+        if params.get('mine'):
             return self.send_authenticated_request('list', req_params=params)
+        
         return self.send_request('list', req_params=params)
-

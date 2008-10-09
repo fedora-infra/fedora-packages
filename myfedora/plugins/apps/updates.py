@@ -11,7 +11,7 @@ from myfedora.lib.app_factory import AppFactory
 from myfedora.lib.base import Controller
 from myfedora.lib.utils import HRElapsedTime
 from myfedora.lib.proxy import BodhiClient
-from myfedora.controllers.resourceview import AppFactoryController
+from myfedora.controllers.resourceview import ResourceViewController
 
 KOJI_URL = 'http://koji.fedoraproject.org/kojihub'
 
@@ -37,7 +37,7 @@ class NewUpdateWidget(TableForm):
 new_update_form = NewUpdateWidget('new_update_form')
 
 
-class FedoraUpdatesController(AppFactoryController):
+class FedoraUpdatesController(ResourceViewController):
 
     @expose('genshi:myfedora.plugins.apps.templates.updateform')
     def updateform(self):
@@ -91,8 +91,9 @@ class FedoraUpdatesWidget(Widget):
         query = {'limit': self.limit}
 
         person = d.get('person')
-        if person:
-            query['mine'] = True
+        
+        profile = d.get('profile', None)
+        query['mine'] = profile and True or False
 
         testing = d.get('testing')
         if testing:
