@@ -43,6 +43,9 @@ class PagerWidget(Widget):
         super(PagerWidget, self).update_params(d)
         
         page = int(d['page'])
+        if page < 1:
+            page = 1
+     
         last_page = int(d['last_page'])
         
         # how many of the main set do we show
@@ -54,18 +57,18 @@ class PagerWidget(Widget):
         back_set = []
         main_set = []
         
-        fmax_block_num = float(last_page) / show
-        max_block_num = int(fmax_block_num)
-        if (fmax_block_num - max_block_num) > 0:
-            max_block_num += 1
+        max_block_num = last_page / show
         
         # figure out main set
         block_num = page / show
-        print page, '/', show, '=', block_num
+        
         start = block_num * show + 1
         last_in_set = start + show
         if last_in_set >= last_page:
             start = last_page - show + 1
+            if start < 1:
+                start = 1;
+
             last_in_set = last_page + 1
             block_num = max_block_num
             
