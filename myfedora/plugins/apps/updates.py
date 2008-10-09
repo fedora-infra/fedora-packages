@@ -1,23 +1,83 @@
-import logging
-from datetime import datetime
-from tw.api import Widget
+import koji
+
+from tg import url, expose
+from tw.api import Widget, WidgetsList
+from tw.forms import (TableForm, TextField, SingleSelectField, TextArea,
+                      CheckBox)
+from pylons import tmpl_context, request
+
 from myfedora.widgets import PagerWidget
 from myfedora.lib.app_factory import AppFactory
+from myfedora.lib.base import Controller
 from myfedora.lib.utils import HRElapsedTime
-from pylons import tmpl_context, request
-from tg import url
-
 from myfedora.lib.proxy import BodhiClient
+from myfedora.controllers.resourceview import AppFactoryController
 
-log = logging.getLogger(__name__)
+KOJI_URL = 'http://koji.fedoraproject.org/kojihub'
+
+class NewUpdateWidget(TableForm):
+    """
+    TODO:
+        - use a tw.jquery ajax form?
+        - display a list of potential bugzillas for this update
+    """
+    class fields(WidgetsList):
+        title = TextField()
+        bugs = TextField()
+        types = ((1, 'enhancement'),
+                 (2, 'bugfix'),
+                 (3, 'security'),
+                 (4, 'newpackage'))
+        type = SingleSelectField(options=types)
+        request = SingleSelectField(options=((1, 'Testing'), (2, 'Stable')))
+        notes = TextArea()
+        # karma automation
+        # recommend reboot
+
+new_update_form = NewUpdateWidget('new_update_form')
+
+
+class FedoraUpdatesController(AppFactoryController):
+
+    @expose('genshi:myfedora.plugins.apps.templates.updateform')
+    def updateform(self):
+        tmpl_context.new_update_form = new_update_form
+        return dict()
+
 
 class FedoraUpdatesApp(AppFactory):
     entry_name = 'updates'
-    
+    controller = FedoraUpdatesController
+
+
+class FedoraUpdateCandidatesWidget(Widget):
+    """ A widget for displaying candidate update builds """
+    params = {'builds': 'A list of koji builds'}
+    template = 'genshi:myfedora.plugins.apps.templates.candidates_canvas'
+
+    def update_params(self, d):
+        super(FedoraUpdatesWidget, self).update_params(d)
+
+        bodhi = BodhiClient()
+        koji_session = koji.ClientSession(KOJI_URL)
+
+        person = d.get('person')
+        if not person:
+            raise Exception('You must be logged in to view your '
+                            'candidate updates')
+
+        d['updates'] = []
+        for tag in [tag + '-updates-candidate' for tag in
+                    bodhi.send_request('dist_tags')[1]['tags']]:
+            for build in koji_session.listTagged(tag, latest=True):
+                if build['owner_name'] == person:
+                    d['updates'].append(build)
+
+
 class FedoraUpdatesWidget(Widget):
+    """ A widget for displaying a list of bodhi updates """
     params = {'updates': 'A list of bodhi updates'}
     template = 'genshi:myfedora.plugins.apps.templates.updates_canvas'
-    offset = 0
     limit = 10
 
     def __init__(self, *args, **kw):
@@ -30,15 +90,9 @@ class FedoraUpdatesWidget(Widget):
         bodhi = BodhiClient()
         query = {'limit': self.limit}
 
-        person = d.get('person', None) # FIXME we need a bodhi query for this
-        
-        profile = d.get('profile', None)
+        person = d.get('person') # FIXME we need a bodhi query for this
+        profile = d.get('profile')
         query['mine'] = profile and True or False
-
-        candidates = d.get('candidates')
-        if candidates:
-            # only show candidates
-            pass
 
         testing = d.get('testing')
         if testing:
@@ -49,11 +103,16 @@ class FedoraUpdatesWidget(Widget):
             query['package'] = package
 
         d['updates'] = bodhi.query(**query)
+        d['updates']['updates'] = self._postprocess_updates(d['updates'])
 
-        # Convert the timestamps to human readable ages, and set the
-        # karma icons appropriately
+    def _postprocess_updates(self, updates):
+        """ Perform post-processing on a list of bodhi updates.
+
+        This entails Converting the timestamps to human readable ages, and
+        set the karma icons appropriately.
+        """
         elapsed_time = HRElapsedTime()
-        for update in d['updates']['updates']:
+        for update in updates['updates']:
             elapsed_time.set_start_timestr(update['date_submitted'])
             elapsed_time.set_end_time_to_now()
             update['age'] = elapsed_time.get_hr_elapsed_time()
@@ -63,3 +122,4 @@ class FedoraUpdatesWidget(Widget):
                 update['karmaimg'] = 'karma-1.png'
             else:
                 update['karmaimg'] = 'karma0.png'
+        return updates
