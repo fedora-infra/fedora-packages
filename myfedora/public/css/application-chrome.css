@@ -77,6 +77,7 @@
   border: 1px solid;
   width: auto !important;
   padding: 10px;
+  z-index: 2;
 }
 
 /* left navbar tabs styling */
