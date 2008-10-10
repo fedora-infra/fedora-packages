@@ -116,6 +116,23 @@ class FedoraUpdatesWidget(Widget):
         if package:
             query['package'] = package
 
+        # filters
+        filter_security = request.params.get('filter_security')
+        if filter_security:
+            query['type_'] = 'security'
+
+        filter_pending = request.params.get('filter_pending')
+        if filter_pending:
+            query['status'] = 'pending'
+            
+        filter_testing = request.params.get('filter_testing')
+        if filter_testing:
+            query['status'] = 'testing'
+
+        filter_stable = request.params.get('filter_stable')
+        if filter_stable:
+            query['status'] = 'stable'
+            
         d['updates'] = bodhi.query(**query)
         
         total_count = d['updates']['num_items']

@@ -96,10 +96,10 @@ class PackagesNavWidget(Widget):
             
             
         if flags & PackagesNavApp.UPDATES_SUBNAV_FLAG:
-            name = 'unpushed_updates'
-            label = 'Unpushed Updates'
+            name = 'security_updates'
+            label = 'Security Updates'
             
-            params = {'filter_unpushed': 'true'}
+            params = {'filter_security': 'true'}
             params.update(req_params)
             
             subnav[name] = self.create_subnav_item(name,
@@ -166,32 +166,35 @@ class PackagesNavWidget(Widget):
         tool = d.get('tool', 'builds')
         
         nav = odict()
-        tool_url = url('/%s/%s/' % (tmpl_context.resource_view, tool))
+        tool_url = url('/packages/%s/' % (tool))
         
         nav['all']= self.create_nav_item(d, 'All Packages', tool_url)
         
         package = d.get('package', None)
         if package:
-            package_url = url('/%s/name/%s/%s/' % (tmpl_context.resource_view, package, tool))
+            package_url = url('/packages/name/%s/%s/' % (package, tool))
             nav['dbus']= self.create_nav_item(d, package + ' Packages', package_url)
         
-        if tmpl_context.identity:
-            user = tmpl_context.identity['person']['username']
-            
-            user = d.get('user', None)
+        
+        user = d.get('user', None)
+        
+        if tmpl_context.identity or user:
             if not user:
                 user = 'I'
-                
-            profile_url = url('/profile/%s/' % (tool))
+                myurl = url('/profile/%s/' % (tool))
+            else:
+                myurl = url('/people/name/%s/%s/' % (user, tool))
             nav['own']= self.create_nav_item(d, 'Packages %s Own' % (user), 
-                                             profile_url, 
+                                             myurl, 
                                              req_params = {'filter_own': 'true'})
-            nav['maintain']= self.create_nav_item(d, 'Packages %s Maintain' % (user),
-                                                  profile_url, 
-                                                  req_params = {'filter_maintain':'true'})
             
-        
-        
+            
+            # Remove for now since we can't effectively determine owned vs maintained
+            #nav['maintain']= self.create_nav_item(d, 'Packages %s Maintain' % (user),
+            #                                      myurl, 
+            #                                      req_params = {'filter_maintain':'true'})
+            
+
         d.update({'nav': nav})
 
         return d
