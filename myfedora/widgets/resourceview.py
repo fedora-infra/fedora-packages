@@ -86,7 +86,7 @@ class ResourceViewWidget(Widget):
             if c.requires_data_key and not data_key:
                 continue
             
-            if c.requires_auth and not tmpl_context.indentity:
+            if c.requires_auth and not tmpl_context.identity:
                 continue
              
             childargs.update({'resourceview': d['config']['widget_id']})
