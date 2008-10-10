@@ -5,14 +5,24 @@
   <table>
     <thead>
       <tr>
+        <th></th>
         <th>Package</th>
         <th>Summary</th>
       </tr>
     </thead>
     <tbody py:for="pkg in results">
         <tr>
-          <td><img src="/images/16_package.png" /> <span class="package-name"><a href="${pkg['url']}" title="${pkg['description']}">${pkg['name']}</a></span></td>
+          <td><img src="/images/16_package.png" /></td>
+          <td><span class="package-name"><a href="${pkg['url']}" title="${pkg['description']}">${pkg['name']}</a></span></td>
           <td>${pkg['summary']}</td>
+        </tr>
+        <tr py:if="extralinks">
+           <td></td>
+           <td colspan="2">
+             <span py:for="link in extralinks">
+               - <a href="${pkg['url'] + '/' + link['tool']}">${link['label']}</a>
+             </span>
+           </td>
         </tr>
     </tbody>
   </table>

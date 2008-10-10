@@ -5,6 +5,7 @@
   <table>
     <thead>
       <tr>
+        <th></th>
         <th>Full Name</th>
         <th>User Name</th>
         <th>IRC Nick</th>
@@ -16,7 +17,9 @@
     <tbody py:for="person in results" class="${person['status']}">
         <tr>
           <td>
-            <img height="16" src="${person['hackergotchi_url']}" /> 
+            <img height="16" src="${person['hackergotchi_url']}" />
+          </td>
+          <td> 
             <span class="person-name">
               <a href="${person['url']}">
                 ${person['human_name']}
@@ -35,6 +38,14 @@
               ${person['last_seen_hr_1']}
             </span>
           </td>
+        </tr>
+        <tr py:if="extralinks">
+           <td></td>
+           <td colspan="6">
+             <span py:for="link in extralinks">
+               - <a href="${person['url'] + '/' + link['tool']}">${link['label']}</a>
+             </span>
+           </td>
         </tr>
       </tbody>
   </table>

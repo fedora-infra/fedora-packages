@@ -7,6 +7,8 @@ from Cookie import SimpleCookie
 from myfedora.lib.app_factory import AppFactory
 from myfedora.plugins.identity import bloginfo
 from myfedora.lib.utils import HRElapsedTime
+from myfedora.plugins.resourceviews.people import PeopleViewApp
+from pylons import tmpl_context
 
 FULL_WEIGHT=100
 MEDIUM_WEIGHT=50
@@ -48,6 +50,20 @@ class SearchPeopleToolWidget(SearchBaseWidget):
     display_name = 'People'
     requires_auth = True
     
+    def get_extra_links_table(self):
+        links = []
+        rview = PeopleViewApp.entry_name
+        children = PeopleViewApp._widget.children
+        for c in children:
+            if not tmpl_context.identity and c.requires_auth:
+                continue
+            
+            link = {'label': c.display_name,
+                     'tool': c._id
+                   }
+            links.append(link)
+        
+        return links
     def search(self, search_terms, timeout_in_seconds=5):
         start_time = time.time()
         

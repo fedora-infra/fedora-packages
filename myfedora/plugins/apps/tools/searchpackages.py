@@ -1,6 +1,8 @@
 from searchbase import SearchBaseWidget
 from fedora.client import BaseClient
 from myfedora.lib.app_factory import AppFactory
+from myfedora.plugins.resourceviews.packages import PackagesViewApp
+from pylons import tmpl_context
 
 import time
 import tg
@@ -34,6 +36,21 @@ class SearchPackagesToolWidget(SearchBaseWidget):
     params=['search_string', 'results']
     template = 'genshi:myfedora.plugins.apps.tools.templates.searchpackages'
     display_name = 'Packages'
+    
+    def get_extra_links_table(self):
+        links = []
+        rview = PackagesViewApp.entry_name
+        children = PackagesViewApp._widget.children
+        for c in children:
+            if not tmpl_context.identity and c.requires_auth:
+                continue
+            
+            link = {'label': c.display_name,
+                     'tool': c._id
+                   }
+            links.append(link)
+        
+        return links
     
     def search(self, search_terms, timeout_in_seconds=5):
         results = []
