@@ -9,13 +9,11 @@
         <th>Summary</th>
       </tr>
     </thead>
-    <tbody>
-      <rowgroup py:for="pkg in results">
+    <tbody py:for="pkg in results">
         <tr>
           <td><img src="/images/16_package.png" /> <span class="package-name"><a href="${pkg['url']}" title="${pkg['description']}">${pkg['name']}</a></span></td>
           <td>${pkg['summary']}</td>
         </tr>
-      </rowgroup>
     </tbody>
   </table>
 </div>

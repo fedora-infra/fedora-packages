@@ -338,7 +338,11 @@ span.more-items {
 }
 
 .header-list table td {
-  border-bottom: 1px solid #c8c8c8 !important;
+  
+}
+
+.header-list table tbody {
+  background: repeat-x left bottom url('../images/c8c8c8_dot.png') !important;
 }
 
 .message_row {

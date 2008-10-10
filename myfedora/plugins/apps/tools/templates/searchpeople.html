@@ -13,8 +13,7 @@
         <th>Last Seen</th>
       </tr>
     </thead>
-    <tbody>
-      <rowgroup py:for="person in results" class="${person['status']}">
+    <tbody py:for="person in results" class="${person['status']}">
         <tr>
           <td>
             <img height="16" src="${person['hackergotchi_url']}" /> 
@@ -37,7 +36,6 @@
             </span>
           </td>
         </tr>
-      </rowgroup>
-    </tbody>
+      </tbody>
   </table>
 </div>
