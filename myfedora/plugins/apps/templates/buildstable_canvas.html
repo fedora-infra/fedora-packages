@@ -55,21 +55,6 @@ import tg
                       'run': 'whenReady'
                     }
                     </script>
-                    <script type="text/x-myfedora-extpoint">
-                  {
-                     'type': 'build_message',
-                     'placeholder_id': '${message_id}',
-                     'build_id': '${build_id}',
-                     'task_id': '${task_id}',
-                     'build_state': ${build_state}, 
-                     'show_effect': 'slideDown("slow")',
-                     'run': 'whenReady'
-                  }
-                  </script>
-                  <div
-                    id="${message_id}"
-                    class="message_row">
-                  </div>
                   </div>
                   
     	      </td>
@@ -100,6 +85,23 @@ import tg
                      'run': 'whenReady'
                   }
                   </script>
+              </td>
+            </tr>
+            <tr>
+              <script type="text/x-myfedora-extpoint">
+                  {
+                     'type': 'build_message',
+                     'placeholder_id': '${message_id}',
+                     'build_id': '${build_id}',
+                     'task_id': '${task_id}',
+                     'build_state': ${build_state}, 
+                     'show_effect': 'slideDown("slow")',
+                     'run': 'whenReady'
+                  }
+              </script>
+              <td colspan="7"
+                  id="${message_id}"
+                  class="message_row">
               </td>
             </tr>
       </tbody> 
