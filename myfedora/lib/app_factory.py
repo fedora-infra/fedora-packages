@@ -216,6 +216,7 @@ class ResourceViewAppFactory(AppFactory):
     _widget = None
     controller = None # this must be set by the child class
     widget_class = ResourceViewWidget # this can be set by the child class 
+    display_overview = True
 
     def __init__(self, app_config_id, width=None, height=None, view='canvas', 
                 data_key=None, tool=None, **kw):
@@ -253,7 +254,10 @@ class ResourceViewAppFactory(AppFactory):
         for tool in pkg_resources.iter_entry_points(cls.tools_entry_point):
             child_tools.append(tool.load()(tool.name))
             
-        cls._widget = cls.widget_class(cls.entry_name + '_view', children=child_tools)
+        cls._widget = cls.widget_class(cls.entry_name + '_view', 
+                                       children=child_tools,
+                                       display_overview=cls.display_overview)
+
         print "ReosurceView widget " + cls._widget.id + " loaded"
         
         return child_tools

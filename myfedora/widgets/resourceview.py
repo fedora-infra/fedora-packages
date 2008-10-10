@@ -15,10 +15,19 @@ class ResourceViewWidget(Widget):
     params = ['data_key']
     data_keys = ['data_key']
     template = 'genshi:myfedora.widgets.resourceview'
+    display_overview = True
     
     javascript = [jquery_js]
     data = None
     event_cb = None
+    
+    def __init__(self, *args, **kw):
+        do = kw.get('display_overview')
+        if do is not None:
+            self.display_overview = False
+            del kw['display_overview']
+        
+        super(ResourceViewWidget, self).__init__(*args, **kw)
     
     def syncronize_data_keys(self, d, data_key):
         result = {}
@@ -68,13 +77,16 @@ class ResourceViewWidget(Widget):
         visible_children = []
         childurls = {}
         
-        if data_key == None:
+        if data_key == None and self.display_overview:
             ov = DummyToolWidget('overview', 'Overview')
             visible_children = [ov]
             childurls = {ov._id: '/%s/' % tmpl_context.resource_view}
             
         for c in self.children:
             if c.requires_data_key and not data_key:
+                continue
+            
+            if c.requires_auth and not tmpl_context.indentity:
                 continue
              
             childargs.update({'resourceview': d['config']['widget_id']})
@@ -108,6 +120,7 @@ class ToolWidget(Widget):
     data = None
     event_cb = None
     requires_data_key = True
+    requires_auth = False
 
     def __init__(self, id=None, *args, **kwargs):
         super(ToolWidget, self).__init__(id, *args, **kwargs)

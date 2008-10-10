@@ -31,5 +31,6 @@ class SearchViewWidget(ResourceViewWidget):
 class SearchViewApp(ResourceViewAppFactory):
     entry_name = 'search'
     display_name = 'Search'
+    display_overview = False
     controller = SearchViewController
     widget_class = SearchViewWidget

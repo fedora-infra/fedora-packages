@@ -16,7 +16,7 @@ searchurl = 'https://admin.fedoraproject.org/accounts'
 
 class SearchPeopleToolApp(AppFactory):
     entry_name = "tools.searchpeople"
-
+    
 class FasClient(ProxyClient):
     visit_name = 'tg-visit'
     
@@ -46,6 +46,7 @@ class SearchPeopleToolWidget(SearchBaseWidget):
     params=['search_string', 'results']
     template = 'genshi:myfedora.plugins.apps.tools.templates.searchpeople'
     display_name = 'People'
+    requires_auth = True
     
     def search(self, search_terms, timeout_in_seconds=5):
         start_time = time.time()

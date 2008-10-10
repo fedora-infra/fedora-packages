@@ -8,7 +8,7 @@
       <div class="content-searchinput">
         <input class="searchinput" type="text" name="search" value="${data_key}" />
         <span py:if="not tool" py:for="c in visible_children" class="small-text">
-          <input  name="${c._id}_checkbox" type="checkbox" value="checked">
+          <input  name="${c._id}_checkbox" type="checkbox" checked="checked">
             <a href="/search/${c._id}/">${c.display_name}</a>
           </input>&nbsp;
         </span>
