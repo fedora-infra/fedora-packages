@@ -2,6 +2,8 @@
      xmlns:py="http://genshi.edgewall.org/"
      id="${id}">
 
+  <center><div id="bodhi_notice" class="notice" style="display: none"></div></center>
+
   <div class="list header-list" py:if="updates">
      <h3>Updates</h3>
      ${updates['title']}
@@ -25,7 +27,12 @@
               <td>${update['release']['long_name']}</td>
               <td>${update['age']}</td>
               <td>${update['status']} <br/> <img src="https://admin.fedoraproject.org/updates/static/images/${update['karmaimg']}"/>${update['karma']}</td>
-              <td>Actions</td>
+              <td>
+                <div py:for="action, label in update['actions']"
+                     class="${i}_${action}">
+                  <a href="#" onclick="$.getJSON('/apps/updates/request/${update['title']}/${action}', function(data){ $('#bodhi_notice').html(data['tg_flash']); $('#bodhi_notice').show('slow'); }); return false;">${label}</a>
+                </div> 
+              </td>
             </tr>
       </tbody>
      </table>

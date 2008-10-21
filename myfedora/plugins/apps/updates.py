@@ -1,10 +1,31 @@
-import koji
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Library General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# Copyright 2008  Red Hat, Inc
+# Authors: Luke Macken <lmacken@redhat.com>
 
-from tg import url, expose
-from tw.api import Widget, WidgetsList
+import koji
+import logging
+import formencode
+
+from tg import url, expose, validate
+from tw.api import Widget, WidgetsList, js_callback, js_function
 from tw.forms import (TableForm, TextField, SingleSelectField, TextArea,
                       CheckBox)
+from tw.jquery.activeform import AjaxForm
+
 from pylons import tmpl_context, request
+from formencode import validators
 
 from myfedora.widgets import PagerWidget
 from myfedora.lib.app_factory import AppFactory
@@ -13,36 +34,63 @@ from myfedora.lib.utils import HRElapsedTime
 from myfedora.lib.proxy import BodhiClient
 from myfedora.controllers.resourceview import ResourceViewController
 
+log = logging.getLogger(__name__)
+
 KOJI_URL = 'http://koji.fedoraproject.org/kojihub'
 
-class NewUpdateWidget(TableForm):
-    """
-    TODO:
-        - use a tw.jquery ajax form?
-        - display a list of potential bugzillas for this update
-    """
+
+class NewUpdateWidget(AjaxForm):
+    #success = 'newupdate_success'
+    action = 'save'
     class fields(WidgetsList):
-        title = TextField()
-        bugs = TextField()
-        types = ((1, 'enhancement'),
-                 (2, 'bugfix'),
-                 (3, 'security'),
-                 (4, 'newpackage'))
-        type = SingleSelectField(options=types)
-        request = SingleSelectField(options=((1, 'Testing'), (2, 'Stable')))
-        notes = TextArea()
-        # karma automation
-        # recommend reboot
+        builds = TextField(validator=formencode.All(validators.NotEmpty(),
+                           validators.UnicodeString()))
+        bugs = TextField(validator=validators.UnicodeString())
+        types = ('bugfix', 'enhancement', 'security', 'newpackage')
+        type = SingleSelectField(options=types,
+                                 validator=validators.OneOf(types))
+        requests = ('Testing', 'Stable')
+        request = SingleSelectField(options=requests,
+                                    validator=validators.OneOf(requests))
+        notes = TextArea(validator=validators.UnicodeString())
+        #autokarma = CheckBox(validator=validators.StringBool())
+        #reboot = CheckBox(validator=validators.StringBool())
 
-new_update_form = NewUpdateWidget('new_update_form')
+
+new_update_form = NewUpdateWidget('new_update_form', target='output')
 
 
-class FedoraUpdatesController(ResourceViewController):
+class FedoraUpdatesController(object):
+
+    @expose()
+    def default(self, *args, **kw):
+        print "NewUpdateController.default(%s, %s)" % (args, kw)
+        return "Booyah"
 
     @expose('genshi:myfedora.plugins.apps.templates.updateform')
-    def updateform(self):
+    def new(self, **kw):
         tmpl_context.new_update_form = new_update_form
-        return dict()
+        return dict(value=kw)
+
+    @expose('json')
+    @validate(new_update_form, error_handler=new)
+    def save(self, builds, type, bugs, request, notes):
+        log.debug('save(%s)' % locals())
+        bodhi = BodhiClient()
+        results = bodhi.save(builds=builds, type_=type, bugs=bugs,
+                             request=request.lower(), notes=notes)
+        log.debug('results = %r' % results)
+        return results
+
+    @expose('json')
+    def request(self, update, action):
+        """ Request a specified action on a given update """
+        log.debug('request(%s, %s)' % (update, action))
+        bodhi = BodhiClient()
+        response = bodhi.request(update, action)
+        if 'message' in response:
+            response['tg_flash'] = response['message']
+        return response
 
 
 class FedoraUpdatesApp(AppFactory):
@@ -74,6 +122,7 @@ class FedoraUpdateCandidatesWidget(Widget):
                     d['updates'].append(build)
 
 
+
 class FedoraUpdatesWidget(Widget):
     """ A widget for displaying a list of bodhi updates """
     params = {'updates': 'A list of bodhi updates'}
@@ -88,23 +137,21 @@ class FedoraUpdatesWidget(Widget):
         super(FedoraUpdatesWidget, self).update_params(d)
 
         page = d.get('page', 1)
-    
+
         try:
             page_num = int(page)
-            d['page'] = page_num    
+            d['page'] = page_num
             offset = (page_num - 1) * self.limit
         except:
             d['page'] = 1
 
         bodhi = BodhiClient()
-        query = {'limit': self.limit,
-                 'page':page_num
-                 }
+        query = {'limit': self.limit, 'page': page_num}
 
         username = d.get('person')
         if username:
             query['username'] = username
-        
+
         profile = d.get('profile', None)
         query['mine'] = profile and True or False
 
@@ -124,7 +171,7 @@ class FedoraUpdatesWidget(Widget):
         filter_pending = request.params.get('filter_pending')
         if filter_pending:
             query['status'] = 'pending'
-            
+
         filter_testing = request.params.get('filter_testing')
         if filter_testing:
             query['status'] = 'testing'
@@ -132,30 +179,35 @@ class FedoraUpdatesWidget(Widget):
         filter_stable = request.params.get('filter_stable')
         if filter_stable:
             query['status'] = 'stable'
-            
+
         d['updates'] = bodhi.query(**query)
-        
+
         total_count = d['updates']['num_items']
         last_page = int (total_count / self.limit + 1)
-        
+
         self._postprocess_updates(d['updates'])
         d['child_args'] = {'pager':{'last_page': last_page,
-                                     'page': page,
-                                     'parent_dom_id': d['id']
+                                    'page': page,
+                                    'parent_dom_id': d['id']
                                    }
                           }
 
     def _postprocess_updates(self, updates):
         """ Perform post-processing on a list of bodhi updates.
 
-        This entails Converting the timestamps to human readable ages, and
+        This entails converting the timestamps to human readable ages, and
         set the karma icons appropriately.
         """
         elapsed_time = HRElapsedTime()
+
         for update in updates['updates']:
+
+            # Age
             elapsed_time.set_start_timestr(update['date_submitted'])
             elapsed_time.set_end_time_to_now()
             update['age'] = elapsed_time.get_hr_elapsed_time()
+
+            # Karma icons
             if update['karma'] > 1:
                 update['karmaimg'] = 'karma1.png'
             elif update['karma'] < -1:
@@ -163,3 +215,13 @@ class FedoraUpdatesWidget(Widget):
             else:
                 update['karmaimg'] = 'karma0.png'
 
+            # Actions
+            update['actions'] = []
+            if update['status'] == 'testing':
+                update['actions'].append(('unpush', 'Unpush'))
+                update['actions'].append(('stable', 'Push to stable'))
+            if update['status'] == 'pending':
+                update['actions'].append(('testing', 'Push to testing'))
+                update['actions'].append(('stable', 'Push to stable'))
+            if update['request']:
+                update['actions'].append(('revoke', 'Cancel push'))
