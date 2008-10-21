@@ -72,3 +72,16 @@ class AppController(Controller):
             raise LookupError("App %s is not registered with MyFedora" % app_id)
             
         return appclass
+
+    @expose()
+    def lookup(self, app, *args):
+        """ Application dispatcher.
+
+        If no arguments are given, this method will display the application
+        itself.  If arguments are specified, it will dispatch them to
+        the applications controller.
+        """
+        if not args:
+            return self.name, (app,)
+        appclass = self._find_app(app)
+        return appclass(app).controller(), args
