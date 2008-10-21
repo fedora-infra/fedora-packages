@@ -3,9 +3,42 @@
       id="resource_content"> 
   <?python from pylons import tmpl_context ?>
   
-  <div id="left-content-column">
-    <div py:for="field in tmpl_context.identity['person'].iterkeys()">
-      <strong>${field}: </strong>${tmpl_context.identity['person'][field]}
-    </div>  
+  <div id="right-content-column">
+    <div py:for="app in rightcol" class="panel icon-panel" >
+      ${tmpl_context.show_app(app)}
+    </div>
+  </div>
+  <div id="left-content-column"
+       py:with="p=tmpl_context.identity['person']"
+       class="list">
+    <table>
+      <tr>
+        <td>Username:</td><td>${p['username']}</td>
+      </tr>
+      <tr>
+        <td>IRC Nickname:</td><td>${p['ircnick']}</td>
+      </tr>
+      <tr>
+        <td>Contact Info:</td><td></td>
+      </tr>
+      <tr>
+        <td></td><td>${p['postal_address']}</td>
+      </tr>
+      <tr>
+        <td></td><td><a href="mailto:${p['email']}">${p['email']}</a></td>
+      </tr>
+      <tr>
+        <td></td><td>${p['telephone']}</td>
+      </tr>
+      <tr>
+        <td></td><td></td>
+      </tr>
+      <tr>
+        <td>Public ssh key</td><td>${p['ssh_key']}</td>
+      </tr>
+      <tr>
+         <td>GPG Id</td><td>${p['gpg_keyid']}</td>
+      </tr>
+    </table>
   </div>
 </div>

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PROJNAME=myfedora
-BRANCH=tg2
+#BRANCH=tg2
 
 BASEPATH="/community"
 HOST="localhost"
@@ -141,7 +141,7 @@ case "$1" in
     cd $PROJNAME;
 
     if [ ! "x$BRANCH" = "x" ]; then
-      git-checkout origin/tg2 -b tg2;
+      git-checkout origin/$BRANCH -b $BRANCH;
     fi
 
     virtualenv tg2 --no-site-packages;
