@@ -219,40 +219,20 @@ var _autocomplete_entry = function(entry_id, min_chars, js_search_callback) {
 /******** lightbox class **********/
 
 var _lightbox = function(block_id, zindex) {
-  this.index = zindex;
   var parent = new _base_widget(block_id);
   myfedora.inherit(this, parent);
   this.setup();
   
-  
-  var dark_box = jQuery("<div />").css({"z-index": zindex,
-                                        "background-color": "black",
-                                        "opacity": "1",
-                                        "position": "fixed",
-                                        "height": "100%",
-                                        "width": "100%",
-                                        "left": 0,
-                                        "top": 0,
-                                       });
-                                       
-  dark_box.hide()
+  var main_box = jQuery("<div />").addClass("lightbox-parent");;
+  var dark_box = jQuery("<div />").addClass("lightbox-black");
+  dark_box.show();
   
   var content = this.block;
   content.show();
-  content.parent().append(dark_box);
-  this.block = dark_box;
+  content.parent().append(main_box);
   
-  
-  var light_box = jQuery("<div />").css({"background-color": "white",
-                                         "opacity": "1",
-                                         "height": "80%",
-                                         "width": "90%",
-                                         "margin-left": "auto",
-                                         "margin-right": "auto",
-                                         "padding": "20px"
-                                        });
-  var content_box = jQuery("<div />").css({"overflow":"auto", "height":"90%"});
-  content_box.append(content);
+  var light_box = jQuery("<div />").addClass("lightbox-white");
+  light_box.show();
   
   var self = this;
   var hide = function (){
@@ -262,9 +242,13 @@ var _lightbox = function(block_id, zindex) {
   
   var close_link = jQuery("<a href='#'/>").text("[X]Close").click(hide);           
   light_box.append(close_link);
-  light_box.append(content_box);
+  light_box.append(content);
   light_box.append(close_link.clone(true));
-  dark_box.append(light_box);
+  main_box.append(dark_box);
+  main_box.append(light_box);
+  
+  this.block = main_box;
+  this.block.hide();
 };
 
 _lightbox.prototype = {
@@ -329,7 +313,7 @@ _ellipsized_text.prototype =  {
     if (this.show_more_object) {
       s = jQuery('<span />').text(' [');
       a = jQuery('<a/>').attr('href', '#').text(this.show_more_text);
-      a.click(function() {self.show_more_object.show(); return false;});
+      a.click(function() {self.show_more_object .show(); return false;});
       s.append(a);
       s.append(']');
       el.append(s);

@@ -29,12 +29,11 @@
         var add_testing_action = false;
         var add_cancel_action = false;
         
-        var actions = []
         if (json.num_items == 0 && data.identity == data.builder)
           {
             add_stable_action = true;
             add_testing_action = true;
-          } else {
+          } else if (json.num_items > 0) {
             var up = json.updates[0];
             if (!up.can_modify)
               return;
@@ -55,6 +54,10 @@
                 add_stable_action == true;
                 add_testing_action == true;
               }              
+          }
+        else
+          {
+            return;
           }
           
         var block = jQuery('#' + data.uid);
