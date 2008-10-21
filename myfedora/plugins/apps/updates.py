@@ -62,11 +62,6 @@ new_update_form = NewUpdateWidget('new_update_form', target='output')
 
 class FedoraUpdatesController(object):
 
-    @expose()
-    def default(self, *args, **kw):
-        print "NewUpdateController.default(%s, %s)" % (args, kw)
-        return "Booyah"
-
     @expose('genshi:myfedora.plugins.apps.templates.updateform')
     def new(self, **kw):
         tmpl_context.new_update_form = new_update_form
@@ -120,7 +115,6 @@ class FedoraUpdateCandidatesWidget(Widget):
             for build in koji_session.listTagged(tag, latest=True):
                 if build['owner_name'] == person:
                     d['updates'].append(build)
-
 
 
 class FedoraUpdatesWidget(Widget):
