@@ -60,6 +60,7 @@ class AppFactory(object):
     entry_name = '' # Subclasses must set this
     display_name = '' # Subclass should set this
     requires_auth = False
+    controller = None
     
     _view_widgets = {}
 
