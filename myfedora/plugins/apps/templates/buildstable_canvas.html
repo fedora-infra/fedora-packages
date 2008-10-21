@@ -1,5 +1,6 @@
 <?python
 import tg
+from pylons import tmpl_context
 ?>
 
 <div xmlns="http://www.w3.org/1999/xhtml" 
@@ -80,7 +81,11 @@ import tg
                      'placeholder_id': '${release_id}',
                      'build_id': '${build_id}',
                      'package_nvr':'${nvr}',
-                     'build_state': ${build_state}, 
+                     'build_state': ${build_state},
+                     'builder': '${build["owner_name"]}',
+                     'identity': '${(tmpl_context.identity and 
+                                    tmpl_context.identity.person.get("username", None) 
+                                    or "")}',
                      'show_effect': 'fadeIn("slow")',
                      'run': 'whenReady'
                   }

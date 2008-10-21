@@ -13,6 +13,8 @@
                   - package_nvr: package full name including version and \
                                  release fields \
                   - build_id: the id of the build so we can get the tags \
+                  - builder: the person who built the package \
+                  - identity: the identity of the person who is logged in \
                   '
     
   },
@@ -21,15 +23,66 @@
     
     /************* Renders the release info into HTML ***************/                    
  
-    render_updates = function(json)
+    var render_updates = function(json)
       {
-        console.log(json);
+        var add_stable_action = false;
+        var add_testing_action = false;
+        var add_cancel_action = false;
+        
+        var actions = []
+        if (json.num_items == 0 && data.identity == data.builder)
+          {
+            add_stable_action = true;
+            add_testing_action = true;
+          } else {
+            var up = json.updates[0];
+            if (!up.can_modify)
+              return;
+            
+            if (up.status == 'stable')
+              return;
+              
+            if (up.request)
+              {
+                add_cancel_action = true;
+              }
+            else if (up.status == 'testing')
+              {
+                add_stable_action = true;
+              } 
+            else
+              {
+                add_stable_action == true;
+                add_testing_action == true;
+              }              
+          }
+          
+        var block = jQuery('#' + data.uid);
+        block.append('[ ');
+        if (add_stable_action)
+          {
+            block.append('push to stable');
+            if (add_testing_action)
+              block.append(' | ');
+          }
+          
+        if (add_testing_action)
+          {
+            block.append('push to testing');
+          }
+          
+        if (add_cancel_action)
+          {
+            block.append('cancel push');
+          }
+        
+        block.append(' ]');
       };
     
+    var updates_match = /.*-(updates|testing|candidate)/;
     /************* Renders the releases into HTML ***************/                    
     render = function(json) 
       {
-        var updates_match = /.*-(updates|testing|candidate)/;
         var query_updates = false;    
 
         var tag_div = jQuery("<div />");
@@ -47,7 +100,7 @@
             var list_item = jQuery("<li />").append(name);
             tag_list.append(list_item);
        
-            if (name.match(updates_match)) 
+            if (updates_match.test(name)) 
               query_updates = true;  
           }
     
@@ -68,13 +121,12 @@
     /************* Converts tags to release name ***************/
     tags_to_release = function(json)
       {
-        /* call render directly for now until we have this functionality*/
-        render(json);
+        
       }
       
     /* get the tags to process */
     var burl = myfedora.get_page_base_url();
-    params = {'build_id' : data.build_id}
+    params = {'build_id' : data.build_id};
     jQuery.getJSON(burl + 'proxy/koji/get_tags',
                    params,
                    render);
