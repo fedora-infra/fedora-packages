@@ -49,7 +49,6 @@ setup(
     [myfedora.plugins.resourceviews.packages.tools]
     info = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolWidget
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
-    updates = myfedora.plugins.apps.tools.updates:UpdatesToolWidget
 
     [myfedora.plugins.resourceviews.people.tools]
     info = myfedora.plugins.apps.tools.userinfo:UserInfoToolWidget
@@ -60,12 +59,11 @@ setup(
     info = myfedora.plugins.apps.tools.profileinfo:ProfileInfoToolWidget
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
     fedoramemberships = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
-    updates = myfedora.plugins.apps.tools.updates:UpdatesToolWidget
-    
+
     [myfedora.plugins.resourceviews.search.tools]
     packages = myfedora.plugins.apps.tools.searchpackages:SearchPackagesToolWidget
     people = myfedora.plugins.apps.tools.searchpeople:SearchPeopleToolWidget
-    
+
     [myfedora.data]
     rss = myfedora.plugins.apps.rss:FedoraPeopleData
 
@@ -82,7 +80,7 @@ setup(
     peoplealphalist = myfedora.plugins.apps.peoplealphalist:PeopleAlphaListApp
     useralerts = myfedora.plugins.apps.useralerts:UserAlertsApp
     updates = myfedora.plugins.apps.updates:FedoraUpdatesApp
-    
+
     #TOOLS:
     tools.packageinfo = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolApp
     tools.builds = myfedora.plugins.apps.tools.builds:BuildsToolApp
