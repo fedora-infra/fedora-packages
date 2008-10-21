@@ -25,7 +25,5 @@ class Globals(object):
 
         from shove import Shove
         from feedcache.cache import Cache
-
-        # is this not multi-process safe? or even thread safe?
         self.feed_storage = Shove('file://' + FEED_CACHE)
         self.feed_cache = Cache(self.feed_storage)
