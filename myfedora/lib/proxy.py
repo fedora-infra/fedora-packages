@@ -194,3 +194,62 @@ class BodhiClient(MFProxyClient):
             return self.send_authenticated_request('list', req_params=params)
         
         return self.send_request('list', req_params=params)
+
+    def save(self, builds='', type_='', bugs='', notes='', request='testing',
+             close_bugs=True, suggest_reboot=False, inheritance=False,
+             autokarma=True, stable_karma=3, unstable_karma=-3, edited=''):
+        """ Save an update.
+
+        This entails either creating a new update, or editing an existing one.
+        To edit an existing update, you must specify the update title in
+        the ``edited`` keyword argument.
+
+        :kwarg builds: A list of koji builds for this update.
+        :kwarg type\_: The type of this update: ``security``, ``bugfix``,
+            ``enhancement``, and ``newpackage``.
+        :kwarg bugs: A list of Red Hat Bugzilla ID's associated with this
+            update.
+        :kwarg notes: Details as to why this update exists.
+        :kwarg request: Request for this update to change state, either to
+            ``testing``, ``stable``, ``unpush``, ``obsolete`` or None.
+        :kwarg close_bugs: Close bugs when update is stable
+        :kwarg suggest_reboot: Suggest that the user reboot after update.
+        :kwarg inheritance: Follow koji build inheritance, which may result in
+            this update being pushed out to additional releases.
+        :kwarg autokarma: Allow bodhi to automatically change the state of this
+            update based on the ``karma`` from user feedback.  It will
+            push your update to ``stable`` once it reaches the ``stable_karma``
+            and unpush your update when reaching ``unstable_karma``.
+        :kwarg stable_karma: The upper threshold for marking an update as
+            ``stable``.
+        :kwarg unstable_karma: The lower threshold for unpushing an update.
+        :kwarg edited: The update title of the existing update that we are
+            editing.
+
+        """
+        return self.send_authenticated_request('save', req_params={
+                'suggest_reboot': suggest_reboot,
+                'close_bugs': close_bugs,
+                'unstable_karma': unstable_karma,
+                'stable_karma': stable_karma,
+                'inheritance': inheritance,
+                'autokarma': autokarma,
+                'request': request,
+                'builds': builds,
+                'edited': edited,
+                'notes': notes,
+                'type_': type_,
+                'bugs': bugs,
+                })
+
+    def request(self, update, request):
+        """ Request an update state change.
+
+        :arg update: The title of the update
+        :arg request: The request (``testing``, ``stable``, ``obsolete``)
+
+        """
+        return self.send_authenticated_request('request', req_params={
+                'update': update,
+                'action': request,
+                })
