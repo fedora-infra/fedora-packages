@@ -44,7 +44,7 @@ class NewUpdateWidget(AjaxForm):
     action = 'save'
     class fields(WidgetsList):
         builds = TextField(validator=formencode.All(validators.NotEmpty(),
-                           validators.UnicodeString()))
+                           validators.UnicodeString()), disabled=True)
         bugs = TextField(validator=validators.UnicodeString())
         types = ('bugfix', 'enhancement', 'security', 'newpackage')
         type = SingleSelectField(options=types,
