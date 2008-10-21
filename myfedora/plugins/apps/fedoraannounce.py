@@ -16,7 +16,7 @@ class FedoraAnnounceBaseWidget(Widget):
     javascript=[jquery_js, ui_js]
     
     listurl = 'https://www.redhat.com/archives/fedora-announce-list/'
-    rssurl = url('/misc/fedora_announce.xml')
+    rssurl = '/misc/fedora_announce.xml'
     
     def update_params(self, d):
         super(FedoraAnnounceBaseWidget, self).update_params(d)
@@ -24,7 +24,7 @@ class FedoraAnnounceBaseWidget(Widget):
         entry_list = []
         
         d['url'] = self.listurl
-        rssfeed = feedparser.parse(self.rssurl)
+        rssfeed = feedparser.parse(url(self.rssurl))
         show = d.get('show', None)
 
         if show:
