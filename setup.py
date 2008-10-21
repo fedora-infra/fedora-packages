@@ -49,15 +49,18 @@ setup(
     [myfedora.plugins.resourceviews.packages.tools]
     info = myfedora.plugins.apps.tools.packageinfo:PackageInfoToolWidget
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
+    updates = myfedora.plugins.apps.tools.updates:UpdatesToolWidget
 
     [myfedora.plugins.resourceviews.people.tools]
     info = myfedora.plugins.apps.tools.userinfo:UserInfoToolWidget
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
+    updates = myfedora.plugins.apps.tools.updates:UpdatesToolWidget
     fedoramemberships = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
     
     [myfedora.plugins.resourceviews.profile.tools]
     info = myfedora.plugins.apps.tools.profileinfo:ProfileInfoToolWidget
     builds = myfedora.plugins.apps.tools.builds:BuildsToolWidget
+    updates = myfedora.plugins.apps.tools.updates:UpdatesToolWidget
     fedoramemberships = myfedora.plugins.apps.tools.fedoramemberships:FedoraMembershipsToolWidget
 
     [myfedora.plugins.resourceviews.search.tools]
