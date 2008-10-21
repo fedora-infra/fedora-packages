@@ -499,3 +499,31 @@ h1#greeter img {
   border: 1px solid #cce;
 }
 
+/*** Lightbox ***/
+
+.lightbox-black{
+  display: none;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index:1001;
+  -moz-opacity: 0.8;
+  opacity:.80;
+  filter: alpha(opacity=80);
+}
+
+.lightbox-white {
+  position: absolute;
+  padding: 20px; 
+  background-color: white; 
+  opacity: 1; 
+  height: 80%; 
+  width: 80%; 
+  margin-left: 6%;
+  display: none;
+  z-index:1002;
+  overflow: auto;
+}

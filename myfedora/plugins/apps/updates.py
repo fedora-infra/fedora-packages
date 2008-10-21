@@ -44,7 +44,7 @@ class NewUpdateWidget(AjaxForm):
     action = 'save'
     class fields(WidgetsList):
         builds = TextField(validator=formencode.All(validators.NotEmpty(),
-                           validators.UnicodeString()))
+                           validators.UnicodeString()), disabled=True)
         bugs = TextField(validator=validators.UnicodeString())
         types = ('bugfix', 'enhancement', 'security', 'newpackage')
         type = SingleSelectField(options=types,
@@ -61,11 +61,6 @@ new_update_form = NewUpdateWidget('new_update_form', target='output')
 
 
 class FedoraUpdatesController(object):
-
-    @expose()
-    def default(self, *args, **kw):
-        print "NewUpdateController.default(%s, %s)" % (args, kw)
-        return "Booyah"
 
     @expose('genshi:myfedora.plugins.apps.templates.updateform')
     def new(self, **kw):
@@ -120,7 +115,6 @@ class FedoraUpdateCandidatesWidget(Widget):
             for build in koji_session.listTagged(tag, latest=True):
                 if build['owner_name'] == person:
                     d['updates'].append(build)
-
 
 
 class FedoraUpdatesWidget(Widget):
