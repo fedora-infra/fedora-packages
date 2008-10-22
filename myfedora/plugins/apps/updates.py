@@ -189,8 +189,13 @@ class FedoraUpdatesWidget(Widget):
     def _postprocess_updates(self, updates):
         """ Perform post-processing on a list of bodhi updates.
 
-        This entails converting the timestamps to human readable ages, and
-        set the karma icons appropriately.
+        This entails converting the timestamps to human readable ages,
+        setting the karma icons, and determining all available actions.
+
+        Ideally, bodhi should be figuring this stuff out for us.  A ticket is
+        opened to move this feature upstream.
+
+            https://fedorahosted.org/bodhi/ticket/255
         """
         elapsed_time = HRElapsedTime()
 
