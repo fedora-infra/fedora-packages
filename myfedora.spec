@@ -52,7 +52,6 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 %{__mkdir_p} -m 0755 %{buildroot}/%{_localstatedir}/log/myfedora
 
 %{__install} -m 640 apache/%{name}.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
-%{__install} -m 640 %{name}.cfg %{buildroot}%{_sysconfdir}/%{name}/
 %{__install} apache/%{name}.wsgi %{buildroot}%{_datadir}/%{name}/%{name}.wsgi
 
 %clean
@@ -61,12 +60,12 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 
 %files 
 %defattr(-,root,root,-)
-%doc README COPYING
-%{python_sitelib}/%{name}/
-%{_bindir}/%{name}-*
+%doc README.txt
+#%{python_sitelib}/%{name}/
+#%{_bindir}/%{name}-*
 %{_sysconfdir}/httpd/conf.d/myfedora.conf
 %attr(-,apache,root) %{_datadir}/%{name}
-%attr(-,apache,root) %config(noreplace) %{_sysconfdir}/myfedora/*
+#%attr(-,apache,root) %config(noreplace) %{_sysconfdir}/myfedora/*
 %attr(-,apache,root) %{_localstatedir}/log/myfedora
 %{python_sitelib}/%{name}-%{version}-py%{pyver}.egg-info/
 
