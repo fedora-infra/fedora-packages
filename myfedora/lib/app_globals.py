@@ -21,9 +21,9 @@ class Globals(object):
         #from myfedora.streams import DataStreamer
         #self.datastreamer = DataStreamer()
 
-        FEED_CACHE = "/tmp/moksha-feeds"
+        #FEED_CACHE = "/tmp/moksha-feeds"
 
-        from shove import Shove
-        from feedcache.cache import Cache
-        self.feed_storage = Shove('file://' + FEED_CACHE)
-        self.feed_cache = Cache(self.feed_storage)
+        #from shove import Shove
+        #from feedcache.cache import Cache
+        #self.feed_storage = Shove('file://' + FEED_CACHE)
+        #self.feed_cache = Cache(self.feed_storage)
