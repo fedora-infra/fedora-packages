@@ -16,6 +16,8 @@ BuildArch:      noarch
 BuildRequires: python-setuptools 
 BuildRequires: python-setuptools-devel
 BuildRequires: python-devel
+BuildRequires: TurboGears2
+BuildRequires: python-pygments
 
 Requires: TurboGears2
 Requires: intltool
@@ -29,7 +31,7 @@ Requires: python-turbojson
 Requires: python-feedparser
 Requires: python-iniparse
 Requires: python-tw-jquery
-Requires: python-repoze-who 
+Requires: python-repoze-who
 
 %description
 MyFedora is a web application for consolidating Fedora Infrastructure
