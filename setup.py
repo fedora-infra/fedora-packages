@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import os
+import glob
 
 try:
     from setuptools import setup, find_packages
@@ -6,6 +8,28 @@ except ImportError:
     from ez_setup import use_setuptools
     use_setuptools()
     from setuptools import setup, find_packages
+
+# git setuptools plugin
+from subprocess import Popen, PIPE
+def find_git_files(dir):
+    try:
+        p = Popen(["git-ls-files", dir], stdout=PIPE)
+        files = p.stdout.readlines()
+    except:
+        return []
+    
+    results = []
+    for f in files:
+        results.append(f.strip())
+        
+    return results
+
+#data_files = [
+#    ('myfedora/public', filter(os.path.isfile, glob.glob('myfedora/public/*'))),
+#    ('myfedora/public/css', filter(os.path.isfile, glob.glob('myfedora/public/css/*.css'))),
+#    ('myfedora/public/images', filter(os.path.isfile, glob.glob('myfedora/public/images/*'))),
+#    ('myfedora/public/javascript', filter(os.path.isfile, glob.glob('myfedora/public/javascript/*.js'))),
+#]
 
 setup(
     name='myfedora',
@@ -21,6 +45,7 @@ setup(
     include_package_data=True,
     test_suite='nose.collector',
     tests_require=['webtest'],
+#    data_files=data_files,
     package_data={'myfedora': ['i18n/*/LC_MESSAGES/*.mo',
                                  'templates/*/*',
                                  'public/*/*']},
@@ -31,6 +56,9 @@ setup(
     #        ('public/**', 'ignore', None)]},
 
     entry_points="""
+    [setuptools.file_finders]
+    git = setup:find_git_files
+
     [paste.app_factory]
     main = myfedora.config.middleware:make_app
 
