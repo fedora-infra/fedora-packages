@@ -21,7 +21,8 @@ def find_git_files(dir):
     results = []
     for f in files:
         results.append(f.strip())
-        
+      
+    print results  
     return results
 
 #data_files = [
@@ -41,7 +42,7 @@ setup(
     install_requires=[
         "TurboGears2",
         ],
-    packages=find_packages(exclude=['ez_setup']),
+    packages=find_packages(exclude=['ez_setup']).append('myfedora/myfedora/templates/moksha-app/myfedora'),
     include_package_data=True,
     test_suite='nose.collector',
     tests_require=['webtest'],
