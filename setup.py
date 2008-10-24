@@ -197,7 +197,6 @@ setup(
     canvas = myfedora.plugins.apps.updates:FedoraUpdatesWidget
 
     [paste.paster_create_template]
-    moksha-app = myfedora.pastetemplate:MokshaAppTemplate
-
+    moksha-app = mokshaapp.pastetemplate:MokshaAppTemplate
     """,
 )
