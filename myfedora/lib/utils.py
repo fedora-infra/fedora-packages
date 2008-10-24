@@ -1,5 +1,21 @@
 from UserDict import DictMixin
 
+# git setuptools plugin
+from subprocess import Popen, PIPE
+def find_git_files(dir):
+    try:
+        p = Popen(["git-ls-files", dir], stdout=PIPE)
+        files = p.stdout.readlines()
+    except:
+        return []
+
+    results = []
+    for f in files:
+        results.append(f.strip())
+
+    print "finding git files in dir %s" % dir
+    return results
+
 def _print_map(map, depth):
     tabstop = ''
     for i in xrange(depth):
@@ -77,7 +93,7 @@ class odict(DictMixin):
 
 from datetime import datetime
 
-class HRElapsedTime():
+class HRElapsedTime(object):
     def __init__(self):
         self.start = None
         self.end = None
