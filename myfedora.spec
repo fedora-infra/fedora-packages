@@ -47,7 +47,7 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 %{__python} setup.py install -O1 --skip-build \
     --install-data=%{_datadir} --root %{buildroot}
 
-%{__mkdir_p} %{buildroot}/var/lib/bodhi
+%{__mkdir_p} %{buildroot}/var/lib/myfedora
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/httpd/conf.d
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/myfedora
 %{__mkdir_p} %{buildroot}%{_datadir}/%{name}
@@ -63,13 +63,15 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 %files 
 %defattr(-,root,root,-)
 %doc README.txt
-#%{python_sitelib}/%{name}/
-#%{_bindir}/%{name}-*
+%{python_sitelib}/%{name}/
+%{python_sitelib}/mokshaapp
+%{_bindir}/%{name}-*
 %{_sysconfdir}/httpd/conf.d/myfedora.conf
 %attr(-,apache,root) %{_datadir}/%{name}
-#%attr(-,apache,root) %config(noreplace) %{_sysconfdir}/myfedora/*
+%attr(-,apache,root) %config(noreplace) %{_sysconfdir}/myfedora/*
 %attr(-,apache,root) %{_localstatedir}/log/myfedora
 %{python_sitelib}/%{name}-%{version}-py%{pyver}.egg-info/
+
 
 %changelog
 * Tue Oct 21 2008 John (J5) Palmieri <lmacken@redhat.com> - 0.1-0.git5083686a
