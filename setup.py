@@ -9,12 +9,13 @@ except ImportError:
     use_setuptools()
     from setuptools import setup, find_packages
 
-data_files = [
-    ('myfedora/public', filter(os.path.isfile, glob.glob('myfedora/public/*'))),
-    ('myfedora/public/css', filter(os.path.isfile, glob.glob('myfedora/public/css/*.css'))),
-    ('myfedora/public/images', filter(os.path.isfile, glob.glob('myfedora/public/images/*'))),
-    ('myfedora/public/javascript', filter(os.path.isfile, glob.glob('myfedora/public/javascript/*.js'))),
-]
+#data_files = [
+#    ('myfedora/public', filter(os.path.isfile, glob.glob('myfedora/public/*'))),
+#    ('myfedora/public/css', filter(os.path.isfile, glob.glob('myfedora/public/css/*.css'))),
+ #   ('myfedora/public/images', filter(os.path.isfile, glob.glob('myfedora/public/images/*'))),
+ #   ('myfedora/public/planet-bubbles', filter(os.path.isfile, glob.glob('myfedora/public/images/planet-bubbles/*'))),
+ #   ('myfedora/public/javascript', filter(os.path.isfile, glob.glob('myfedora/public/javascript/*.js'))),
+#]
 
 print "finding packages"
 packages = find_packages(exclude=['ez_setup'])
@@ -33,10 +34,8 @@ setup(
     include_package_data=True,
     test_suite='nose.collector',
     tests_require=['webtest'],
-    data_files=data_files,
-    package_data={'myfedora': ['i18n/*/LC_MESSAGES/*.mo',
-                                 'templates/*/*',
-                                 'public/*/*']},
+    #data_files=data_files,
+    package_data={'myfedora': ['i18n/*/LC_MESSAGES/*.mo']},
     #message_extractors = {'myfedora': [
     #        ('**.py', 'python', None),
     #        ('templates/**.mako', 'mako', None),
