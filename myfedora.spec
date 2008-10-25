@@ -3,7 +3,7 @@
 
 Name:           myfedora 
 Version:        0.1dev
-Release:        0.gitfdc9a27c%{?dist}
+Release:        0.git6525e42%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
 License:        GPLv2+
@@ -31,8 +31,9 @@ Requires: python-turbojson
 Requires: python-feedparser
 Requires: python-iniparse
 Requires: python-tw-jquery
+Requires: python-tw-forms
 Requires: python-repoze-who
-
+Requires: python-repoze-tm2
 %description
 MyFedora is a web application for consolidating Fedora Infrastructure
 
@@ -55,7 +56,7 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 
 %{__install} -m 640 apache/%{name}.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{__install} apache/%{name}.wsgi %{buildroot}%{_datadir}/%{name}/%{name}.wsgi
-
+%{__install} myfedora.ini %{buildroot}%{_sysconfdir}/myfedora/myfedora.ini
 %clean
 %{__rm} -rf %{buildroot}
 
@@ -65,15 +66,17 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 %doc README.txt
 %{python_sitelib}/%{name}/
 %{python_sitelib}/mokshaapp
-%{_bindir}/%{name}-*
 %{_sysconfdir}/httpd/conf.d/myfedora.conf
 %attr(-,apache,root) %{_datadir}/%{name}
-%attr(-,apache,root) %config(noreplace) %{_sysconfdir}/myfedora/*
+%attr(-,apache,root) %config(noreplace) %{_sysconfdir}/myfedora
 %attr(-,apache,root) %{_localstatedir}/log/myfedora
 %{python_sitelib}/%{name}-%{version}-py%{pyver}.egg-info/
 
 
 %changelog
-* Tue Oct 21 2008 John (J5) Palmieri <lmacken@redhat.com> - 0.1-0.git5083686a
+* Fri Oct 24 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1-0.git6525e42e
+- fixed the upstream setuptools
+
+* Tue Oct 21 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1-0.git5083686a
 - first package
 

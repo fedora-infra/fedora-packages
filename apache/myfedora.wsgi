@@ -6,4 +6,4 @@ from pylons import config
 from myfedora.config.environment import load_environment
 
 from paste.deploy import loadapp
-application = loadapp('config:/usr/share/myfedora/myfedora.ini')
+application = loadapp('config:/etc/myfedora/myfedora.ini')
