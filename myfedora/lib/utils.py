@@ -92,6 +92,7 @@ class odict(DictMixin):
         return ''.join(['OrderedDict', '([', ', '.join(result), '])'])
 
 from datetime import datetime
+import time
 
 class HRElapsedTime(object):
     def __init__(self):
@@ -108,7 +109,7 @@ class HRElapsedTime(object):
         
     @staticmethod        
     def time_from_string(timestr, parse_format = '%Y-%m-%d %H:%M:%S'):
-        timep = datetime.strptime(timestr.split('.')[0], parse_format)    
+        timep = datetime(*strptime(timestr.split('.')[0], parse_format)[0:5])    
             
         return timep
     

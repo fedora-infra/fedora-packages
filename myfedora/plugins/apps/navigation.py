@@ -22,7 +22,7 @@ class NavigationWidget(Widget):
         # user defined links and other controllers
         rvs = app_globals.resourceviews
         
-        url_path = urlparse(request.environ['PATH_INFO']).path
+        url_path = urlparse(request.environ['PATH_INFO'])[2]
         
         has_active = False
         nav = []

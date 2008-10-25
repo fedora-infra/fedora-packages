@@ -53,6 +53,7 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/myfedora
 %{__mkdir_p} %{buildroot}%{_datadir}/%{name}
 %{__mkdir_p} -m 0755 %{buildroot}/%{_localstatedir}/log/myfedora
+%{__mkdir_p} -m 0700 %{buildroot}/%{_localstatedir}/cache/myfedora
 
 %{__install} -m 640 apache/%{name}.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
 %{__install} apache/%{name}.wsgi %{buildroot}%{_datadir}/%{name}/%{name}.wsgi
@@ -71,7 +72,7 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 %attr(-,apache,root) %config(noreplace) %{_sysconfdir}/myfedora
 %attr(-,apache,root) %{_localstatedir}/log/myfedora
 %{python_sitelib}/%{name}-%{version}-py%{pyver}.egg-info/
-
+%attr(-,apache,apache) %dir %{_localstatedir}/cache/myfedora
 
 %changelog
 * Fri Oct 24 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1-0.git6525e42e

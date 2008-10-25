@@ -1,9 +1,6 @@
-import os, sys
-import site
+import os
 
-from paste.deploy import appconfig
-from pylons import config
-from myfedora.config.environment import load_environment
+os.environ['PYTHON_EGG_CACHE'] = '/var/cache/myfedora/egg_cache'
 
 from paste.deploy import loadapp
 application = loadapp('config:/etc/myfedora/myfedora.ini')
