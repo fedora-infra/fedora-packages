@@ -3,7 +3,7 @@
 
 Name:           myfedora 
 Version:        0.1dev
-Release:        3.gita2550e6%{?dist}
+Release:        4.git57240e6%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
 License:        GPLv2+
@@ -75,6 +75,9 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/myfedora
 
 %changelog
+* Mon Oct 27 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-4.git57240e6
+- new upstream version removes console.log calls in javascript
+
 * Mon Oct 27 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-3.gita2550e6
 - new upstream version fixes the fedora announce rss
 
