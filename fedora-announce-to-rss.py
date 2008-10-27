@@ -2,6 +2,7 @@
 
 import urllib2
 import datetime
+import time
 import re
 
 date_match = re.compile('<!--X-Date: ([^-|^>|.]*) -->')
@@ -34,7 +35,7 @@ def get_messages(url):
             post['title'] = subject_match.search(data).group(1).replace('&#45;','-')
             date = date_match.search(data).group(1).replace('&#45;','-')
             date = date[:-6]
-            date = datetime.datetime.strptime(date, "%a, %d %b %Y %H:%M:%S")
+            date = datetime.datetime(*time.strptime(date, "%a, %d %b %Y %H:%M:%S")[0:5])
             date = date.strftime("%a, %d %b %Y %H:%M:%S GMT")
             post['date'] = date
             

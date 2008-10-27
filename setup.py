@@ -13,7 +13,7 @@ data_files = [
     ('myfedora/public', filter(os.path.isfile, glob.glob('myfedora/public/*'))),
     ('myfedora/public/css', filter(os.path.isfile, glob.glob('myfedora/public/css/*.css'))),
    ('myfedora/public/images', filter(os.path.isfile, glob.glob('myfedora/public/images/*'))),
-   ('myfedora/public/planet-bubbles', filter(os.path.isfile, glob.glob('myfedora/public/images/planet-bubbles/*'))),
+   ('myfedora/public/misc', filter(os.path.isfile, glob.glob('myfedora/public/misc/*'))),
    ('myfedora/public/javascript', filter(os.path.isfile, glob.glob('myfedora/public/javascript/*.js'))),
 ]
 
