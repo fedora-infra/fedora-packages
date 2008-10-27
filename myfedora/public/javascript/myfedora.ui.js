@@ -115,7 +115,6 @@ var _autocomplete_entry = function(entry_id, min_chars, js_search_callback) {
         }
         
       current_highlight = undefined;
-      console.log(self.entry_box[0].offsetLeft);
       self.menu.css("left", self.entry_box[0].offsetLeft + "px");
       self.menu.css("top", self.entry_box[0].offsetTop + self.entry_box[0].height + "px");
       var entry = e.currentTarget
@@ -169,7 +168,6 @@ var _autocomplete_entry = function(entry_id, min_chars, js_search_callback) {
   var keypress_cb = function(e)
     {
       var ul = jQuery("#" + entry_id + "_list");
-      console.log(ul);
       var c = jQuery("li", ul);
       var matched = false;
       switch(e.keyCode)
@@ -207,7 +205,6 @@ var _autocomplete_entry = function(entry_id, min_chars, js_search_callback) {
         h.css("background-color", "blue");
         self.entry_box[0].value = jQuery(".key", h).text();
         
-        console.log(self.entry_box);
         return !matched;
     }
   

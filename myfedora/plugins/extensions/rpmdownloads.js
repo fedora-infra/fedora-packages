@@ -132,7 +132,6 @@
         block.html(dl_item.contents())
         block.append(more_view);
         var lb = new myfedora.ui.lightbox(more_view, 5);
-        console.log(lb);
           
         more_link.click(function() {
                           lb.show();  

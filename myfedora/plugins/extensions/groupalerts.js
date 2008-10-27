@@ -33,7 +33,6 @@
           {
             // for now rewrite to bring you to fas
             var l = jQuery(links[i]);
-            console.log(i);
             l.attr('target', '_blank');
             var href = l.attr('href');
             l.attr('href', FAS_URL + href);
