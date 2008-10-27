@@ -2,6 +2,8 @@ from tg import url
 from tw.api import Widget, JSLink
 from tw.jquery import jquery_js, jQuery
 from myfedora.lib.app_factory import AppFactory
+from myfedora.lib.utils import fullurl
+
 import feedparser
 import re
 
@@ -24,7 +26,9 @@ class FedoraAnnounceBaseWidget(Widget):
         entry_list = []
         
         d['url'] = self.listurl
-        rssfeed = feedparser.parse(url(self.rssurl))
+        u = fullurl(self.rssurl)
+        rssfeed = feedparser.parse(u)
+
         show = d.get('show', None)
 
         if show:

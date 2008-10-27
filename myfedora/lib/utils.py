@@ -1,4 +1,13 @@
 from UserDict import DictMixin
+from tg import url
+from pylons import request
+import paste
+
+def fullurl(path):
+    h = url(path)
+    h = paste.request.resolve_relative_url(h, request.environ)
+
+    return h
 
 # git setuptools plugin
 from subprocess import Popen, PIPE
