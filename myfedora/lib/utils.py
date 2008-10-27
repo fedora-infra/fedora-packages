@@ -109,7 +109,7 @@ class HRElapsedTime(object):
         
     @staticmethod        
     def time_from_string(timestr, parse_format = '%Y-%m-%d %H:%M:%S'):
-        timep = datetime(*strptime(timestr.split('.')[0], parse_format)[0:5])    
+        timep = datetime(*time.strptime(timestr.split('.')[0], parse_format)[0:5])    
             
         return timep
     
