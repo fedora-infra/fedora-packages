@@ -3,7 +3,7 @@
 
 Name:           myfedora 
 Version:        0.1dev
-Release:        0.git6525e42%{?dist}
+Release:        2.gite720b06f%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
 License:        GPLv2+
@@ -75,9 +75,15 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/myfedora
 
 %changelog
-* Fri Oct 24 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1-0.git6525e42e
+* Mon Oct 27 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-1.gite720b06f
+- new upstream release fixes a namespace error in the utils module
+
+* Sat Oct 25 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-1.git19524dc3
+- new upstream snapshot fixes python 2.4 deprecations
+
+* Fri Oct 24 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-0.git6525e42e
 - fixed the upstream setuptools
 
-* Tue Oct 21 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1-0.git5083686a
+* Tue Oct 21 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-0.git5083686a
 - first package
 
