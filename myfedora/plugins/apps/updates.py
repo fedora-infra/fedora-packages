@@ -162,17 +162,9 @@ class FedoraUpdatesWidget(Widget):
         if filter_security:
             query['type_'] = 'security'
 
-        filter_pending = request.params.get('filter_pending')
-        if filter_pending:
-            query['status'] = 'pending'
-
-        filter_testing = request.params.get('filter_testing')
-        if filter_testing:
-            query['status'] = 'testing'
-
-        filter_stable = request.params.get('filter_stable')
-        if filter_stable:
-            query['status'] = 'stable'
+        for status in ('pending', 'testing', 'stable'):
+            if request.params.get('filter_%s' % status):
+                query['status'] = status
 
         d['updates'] = bodhi.query(**query)
 
