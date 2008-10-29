@@ -158,10 +158,8 @@ class FedoraUpdatesWidget(Widget):
             query['package'] = package
 
         # filters
-        filter_security = request.params.get('filter_security')
-        if filter_security:
+        if request.params.get('filter_security'):
             query['type_'] = 'security'
-
         for status in ('pending', 'testing', 'stable'):
             if request.params.get('filter_%s' % status):
                 query['status'] = status
