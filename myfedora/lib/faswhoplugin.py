@@ -23,7 +23,7 @@ import pkg_resources
 
 import os
 import sys
-
+import tg
 FAS_CACHE_TIMEOUT=20 #in seconds
 
 fasurl = 'https://admin.fedoraproject.org/accounts'

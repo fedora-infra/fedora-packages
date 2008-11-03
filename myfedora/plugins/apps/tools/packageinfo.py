@@ -59,9 +59,9 @@ class PackageInfoToolWidget(ToolWidget):
             c['version'] = collection['version']
             c['fullname'] = c['name'] + ' ' + c['version']
             c['package_owner_id'] = pd['owneruser']
+            c['package_owner_name'] = c['package_owner_id']
 
             for p in people:
-                c['package_owner_name'] = c['package_owner_id']
                 if p['user'] == c['package_owner_id']:
                     c['package_owner_name'] = p['name']
                     break
