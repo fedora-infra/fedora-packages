@@ -166,12 +166,18 @@ class FASWhoPlugin(object):
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
             session_id = linfo[0]
+            print "Forgetting login data for cookie %s" % (session_id)
+            
+            fas = FasClient(self.url)
+            fas.logout(session_id)
+            
             result = []
-            for name in cookies.iterkeys():
-                expired = ('%session_id=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT')
-                result.append(('Set-Cookie', expired))
-                environ['FAS_LOGIN_INFO'] = None
+            fas_cache.remove_value(key=session_id + "_identity")
+            expired = ('tg-visit=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT')
+            result.append(('Set-Cookie', expired))
+            environ['FAS_LOGIN_INFO'] = None
             return result
+        
         return None
      
     # IAuthenticatorPlugin
