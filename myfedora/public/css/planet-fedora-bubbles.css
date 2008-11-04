@@ -6,7 +6,7 @@ div.entry {
 }
 
 div.person-info {
-  background: transparent url(http://rapier.bos.redhat.com/community/images/planet-bubbles/point.png) no-repeat scroll right;
+  background: transparent url(/images/planet-bubbles/point.png) no-repeat scroll right;
   float: left;
   bottom: 18px;
   left: 0px;
@@ -58,7 +58,7 @@ b.lt {
 }
 
 b.vt {
-  background: transparent url(http://rapier.bos.redhat.com/community/images/planet-bubbles/vert.png) repeat-y scroll 0 0;
+  background: transparent url(/images/planet-bubbles/vert.png) repeat-y scroll 0 0;
   height:100%;
   position: absolute;
   width: 5px;
@@ -77,7 +77,7 @@ b.to {
 }
 
 b.hz {
-  background: transparent url(http://rapier.bos.redhat.com/community/images/planet-bubbles/horiz.png) repeat-x scroll 0 0;
+  background: transparent url(/images/planet-bubbles/horiz.png) repeat-x scroll 0 0;
   height: 8px;
   position: absolute;
   width: 100%;
@@ -96,7 +96,7 @@ b.tl {
 }
 
 b.cr {
-  background-image: url(http://rapier.bos.redhat.com/community/images/planet-bubbles/corners.png);
+  background-image: url(/images/planet-bubbles/corners.png);
   height: 50px;
   position: absolute;
   width: 50px;

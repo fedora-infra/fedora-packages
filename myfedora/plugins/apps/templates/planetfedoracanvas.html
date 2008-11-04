@@ -38,8 +38,10 @@
   </div>
   </div>
 </div>
+
       <?python last_time = 4 ?>
       <div py:for="entry in entries">
+        <!--
         <table id="${entry['uid']}_lightbox">
           <tr>
             <td>
@@ -56,13 +58,15 @@
             </td>
           </tr>
         </table>
+        -->
         <script type="text/javascript">
+        /*
         var lb = new myfedora.ui.lightbox("${entry['uid']}_lightbox", 5);
         lb.set_show_effect('fadeIn("slow")');
         lb.set_hide_effect('fadeOut("slow")');
+        */
         var et = new myfedora.ui.ellipsized_text("${entry['uid']}_text",
-                                                 55,
-                                                 lb);
+                                                 255);
         et.show();
       </script>
       </div>
