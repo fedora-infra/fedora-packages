@@ -124,6 +124,8 @@
   padding: 8px 2px;
   padding-left: 12px;
   -moz-border-radius: 12px 0px 0px 12px;
+  -webkit-border-top-left-radius: 12px;
+  -webkit-border-bottom-left-radius: 12px;
 }
 
 #app-sidebar .nav a.inactive:link,
@@ -186,6 +188,8 @@
   padding-top: 6px;
   background-color: #5499dd;
   -moz-border-radius: 12px 12px 0px 0px;
+  -webkit-border-top-left-radius: 12px;
+  -webkit-border-top-right-radius: 12px;
 }
 
 /** content searchbox **/
@@ -196,6 +200,7 @@
   width: 98%;
   background-color: #eee;
   -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
   padding: 8px;
   padding-top: 11px;
   margin: auto;
@@ -412,6 +417,8 @@ div.icon-panel td {
 .panel h3 {
   background-color: #d2d2d2;
   -moz-border-radius: 12px 12px 0px 0px;
+  -webkit-border-top-left-radius: 12px;
+  -webkit-border-top-right-radius: 12px;
   color: white !important;
   font-size: 1em !important;
   padding: 8px 6px 6px 6px;
@@ -440,6 +447,8 @@ div.icon-panel td {
 div.login {
  background-color: #5f94c9;
   -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  
   padding: 8px 12px;
 }
 
@@ -480,7 +489,7 @@ div.login a.small-text:visited {
 
 .label-rule {
   border-bottom: 1px solid;
-  border-color: #B3B3B3 -moz-use-text-color;
+  border-color: #B3B3B3;
 }
 
 /* greeter h1, so you can have an image or icon in the left of it */
