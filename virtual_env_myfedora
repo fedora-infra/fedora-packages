@@ -189,7 +189,9 @@ case "$1" in
     svn co http://svn.turbogears.org/projects/tg.devtools/trunk tgdev;
     svn co http://svn.turbogears.org/trunk tg2;
     svn co http://tgtools.googlecode.com/svn/projects/tg.ext.repoze.who/trunk tg.ext.repoze.who;
+    svn co http://tgtools.googlecode.com/svn/projects/tgext.authorization/trunk tg.ext.authorization;
     (cd tg.ext.repoze.who;python setup.py develop;)
+    (cd tg.ext.authorization;python setup.py develop;)
     (cd tg2; python setup.py develop;)
     (cd tgdev; python setup.py develop;)
     

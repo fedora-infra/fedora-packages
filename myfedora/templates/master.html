@@ -6,7 +6,12 @@
       py:strip="">
 <?python
 import tg
+tg_flash_status = ""
 tg_flash = tg.get_flash()
+
+ # Future API in docs but not in code yet  
+ # tg_flash = tg.flash.get_flash()
+ # tg_flash_status = tg.flash.get_status()
 ?>
 <head py:match="head" py:attrs="select('@*')">    
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
@@ -36,7 +41,7 @@ tg_flash = tg.get_flash()
     ${header()}
     ${sidebar_left()}
     <div id="content">
-      <div id="status_block" py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+      <div id="status_block" py:if="tg_flash" class="flash ${tg_flash_status}" py:content="tg_flash"></div>
       <div py:replace="select('*|text()')"/>
       <!-- End of main_content -->
       <div class="clearingdiv" />
