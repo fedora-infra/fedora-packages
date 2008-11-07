@@ -4,6 +4,8 @@ import time
 import logging
 from fedora.client import ProxyClient, FedoraServiceError, AuthError
 import urllib2
+import tg
+import uuid
 
 from repoze.who.interfaces import IIdentifier
 from repoze.who.interfaces import IChallenger
@@ -121,9 +123,20 @@ class FASWhoPlugin(object):
     
     def identify(self, environ):
         req = webob.Request(environ)
-                    
+        
+        print "****************** identify *******************"
+        errk = req.cookies.get('fas_error_key')
+        if errk:
+            try:
+                err = fas_cache.get_value(key=errk)
+                fas_cache.remove_value(errk)
+                environ['FAS_AUTH_ERROR'] = err
+                return None
+            except:
+                pass
+        
         cookie = req.cookies.get('tg-visit')
-
+ 
         if cookie is None:
             return None
         
@@ -150,16 +163,31 @@ class FASWhoPlugin(object):
             return None
         
     def remember(self, environ, identity):
+        print "****************** remeber *****************"
+        err = identity.get('error')
+        if err:
+            cache_error_key=str(uuid.uuid4()) + '_fas_error'
+            set_cookie = 'fas_error_key="%s"; Path=/;' % (cache_error_key)
+            fas_cache.set_value(cache_error_key, err, type="memory",
+                                                      expiretime=120)
+            return [('Set-Cookie', set_cookie)]
+        
+        result = []
+        req = webob.Request(environ)
+        if req.cookies.get('fas_error_key'):
+            expired = ('fas_error_key=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT')
+            result.append(('Set-Cookie', expired))
+        
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
             session_id = linfo[0]
-            result = []
             set_cookie = 'tg-visit=%s; Path=/;' % (session_id)
             result.append(('Set-Cookie', set_cookie))
             return result
         return None
 
     def forget(self, environ, identity):
+        print "************* forget *************"
         # return a expires Set-Cookie header
         req = webob.Request(environ)
         
@@ -182,14 +210,25 @@ class FASWhoPlugin(object):
      
     # IAuthenticatorPlugin
     def authenticate(self, environ, identity):
+        print "************* Authenticating ***********************"
         try:
             login = identity['login']
             password = identity['password']
         except KeyError:
             return None
 
-        fas = FasClient(self.url)
-        user_data = fas.login(login, password)
+        user_data = ""
+        try:
+            fas = FasClient(self.url)
+            user_data = fas.login(login, password)
+        except AuthError, e:
+            print "************* Authentication failed, setting error ***********************"
+            err = 'ERROR: Could not log in. Invalid username or password.'
+            environ['FAS_AUTH_ERROR'] = err
+            identity['error'] = err
+            
+            return 'error'
+            
         if user_data:
             if isinstance(user_data, tuple):
                 environ['FAS_LOGIN_INFO']=fas.keep_alive(user_data[0], True)
@@ -212,7 +251,11 @@ class FASWhoPlugin(object):
         
     def add_metadata(self, environ, identity):
         req = webob.Request(environ)
-                    
+        
+        if identity.get('error'):
+            print "************** error exists, no need to set metadata *************" 
+            return 'error'
+             
         cookie = req.cookies.get('tg-visit')
 
         if cookie is None:
@@ -224,6 +267,7 @@ class FASWhoPlugin(object):
                                    createfunc=lambda: self.get_metadata(environ),
                                    type="memory",
                                    expiretime=FAS_CACHE_TIMEOUT)
+        
         identity.update(info)
 
     def __repr__(self):

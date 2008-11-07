@@ -104,6 +104,7 @@ class RootController(BaseController):
         return dict(page='about')
 
     @expose('myfedora.templates.about')
+    
     #@authorize.require(authorize.is_user('editor'))
     def editor_user_only(self, **kw):
         return dict(page='about')
@@ -117,6 +118,6 @@ class RootController(BaseController):
         login = pylons.g.apps['login'](None, '320px', '200px', 'Canvas', came_from=came_from);
         apps.add(login)
         apps = apps.serialize_apps(pylons.tmpl_context.w)
-        
+            
         return dict(page='login', header=lambda *arg: None,
                     footer=lambda *arg: None, came_from=came_from, apps=apps)

@@ -2,7 +2,7 @@
 
 Provides the BaseController class for subclassing.
 """
-from tg import TGController, tmpl_context
+from tg import TGController, tmpl_context, flash
 from pylons.templating import render_genshi as render
 
 from pylons import tmpl_context, request
@@ -63,7 +63,11 @@ class BaseController(TGController):
         tmpl_context.show_app = show_app
         tmpl_context.resource_view = ''
         global_resource_injection.register_resources()
-        tmpl_context.identity =  pylons.request.environ.get('repoze.who.identity')
+        tmpl_context.identity =  request.environ.get('repoze.who.identity')
+        
+        auth_error = request.environ.get('FAS_AUTH_ERROR')
+        if auth_error:
+            flash(auth_error)
 
         #this can be overwritten by the child controller
         nav = pylons.g.apps['navigation'](None, '320px', '200px', 'Home')
