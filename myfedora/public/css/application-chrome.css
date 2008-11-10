@@ -448,7 +448,7 @@ div.login {
  background-color: #5f94c9;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  
+  overflow: hidden !important;
   padding: 8px 12px;
 }
 
@@ -468,6 +468,7 @@ div.login form span {
 
 div.login form input {
   margin-bottom: 5px;
+  max-width: 80%;
 }
 
 div.login form .button {
