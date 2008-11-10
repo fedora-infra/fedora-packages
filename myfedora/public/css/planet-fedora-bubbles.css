@@ -9,20 +9,21 @@ div.person-info {
   background: transparent url(/images/planet-bubbles/point.png) no-repeat scroll right;
   float: left;
   bottom: 18px;
-  left: 0px;
-  margin-left: -1em !important;
+  left: 2px;
+  margin-left: -5em !important;
   margin-top: 8px !important;
   padding: 0 1em 0 1em;
   position: relative;
   text-align: center;
-  width: 6em;
+  width: 8em;
   z-index: 1; 
+  overflow: hidden;
 }
 
 div.person-info a img {
   border: 0 none;
   margin-bottom: .25em;
-  padding: 0px 12px;
+  padding: 0px 24px;
 }
 
 div.post {
