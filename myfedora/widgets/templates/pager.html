@@ -13,10 +13,10 @@
      ...
   </span>
   <span py:for="i in main_set">
-    <a py:if="page != i" onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)" class="page-button current-page">
+    <a py:if="page != i" onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">
       ${i}
     </a>
-    ${i}
+    <span class="page-button current-page">${i}</a>
   </span>
   <span py:if="back_set">
     ...
