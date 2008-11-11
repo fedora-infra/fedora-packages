@@ -46,6 +46,10 @@ h3.post-title {
   padding-left: 5px;
 }
 
+.post-title span {
+  padding-left: 5px;
+}
+
 .post-contents {
   line-height: 140%;
   overflow: auto;
