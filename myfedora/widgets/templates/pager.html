@@ -12,8 +12,8 @@
      </span>
      ...
   </span>
-  <span py:for="i in main_set" class="current-page">
-    <a py:if="page != i" onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)" class="page-button">
+  <span py:for="i in main_set">
+    <a py:if="page != i" onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)" class="page-button current-page">
       ${i}
     </a>
     ${i}
