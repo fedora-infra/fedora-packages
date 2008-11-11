@@ -1,9 +1,10 @@
 <div xmlns="http://www.w3.org/1999/xhtml" 
      xmlns:py="http://genshi.edgewall.org/"
-     id="${id}">
-  <a py:if="prev_page" onClick="myfedora.ui.go_to('${parent_id}', {'page':${prev_page}})" href="javascript:void(0)">Previous</a>
-  <span py:if="not prev_page">Previous</span>
-  <span py:if="front_set">
+     id="${id}"
+     class="pager">
+  <a py:if="prev_page page-button" onClick="myfedora.ui.go_to('${parent_id}', {'page':${prev_page}})" href="javascript:void(0)" class="prev-page">Previous</a>
+  <span py:if="not prev_page" class="prev-page">Previous</span>
+  <span py:if="front_set" class="page-button">
     <span py:for="i in front_set">
        <a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">
          ${i}
@@ -11,20 +12,20 @@
      </span>
      ...
   </span>
-  <span py:for="i in main_set">
-    <a py:if="page != i" onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">
+  <span py:for="i in main_set" class="current-page">
+    <a py:if="page != i" onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)" class="page-button">
       ${i}
     </a>
-    <strong py:if="page == i">${i}</strong>
+    ${i}
   </span>
   <span py:if="back_set">
     ...
     <span py:for="i in back_set">
-       <a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">
+       <a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)" class="page-button">
          ${i}
        </a>
      </span>
   </span>
-  <a py:if="next_page" onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)">Next</a>
-  <span py:if="not next_page">Next</span>
+  <a py:if="next_page" onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)" class="next-page page-button">Next</a>
+  <span py:if="not next_page" class="next-page">Next</span>
 </div>
