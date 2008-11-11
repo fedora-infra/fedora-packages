@@ -6,11 +6,7 @@
   <li py:if="prev_page" class="prev-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${prev_page}})" href="javascript:void(0)">Previous</a></li>
   <li py:if="not prev_page" class="prev-page">Previous</li>
   <span py:if="front_set" py:strip="">
-    <li py:for="i in front_set" class="page-button">
-       <a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">
-         ${i}
-       </a></li>
-  </span>
+    <li py:for="i in front_set" class="page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">${i}</a></li>
   <li class="page-ellipses"> ...</li>
   <li py:for="i in main_set" class="page-button">
     <a py:if="page != i" onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">
@@ -20,6 +16,7 @@
   <span py:if="back_set" py:strip="">
   <li class="page-ellipses">
     ...</li>
+  </span>
    <li py:for="i in back_set" class="page-button">
        <a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">
          ${i}
