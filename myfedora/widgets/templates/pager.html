@@ -28,7 +28,10 @@
        </a>
      </li>
   </span>
-  <li py:if="next_page"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)" class="next-page page-button">Next</a></li>
-  <li py:if="not next_page" class="next-page">Next</li>
+  <span py:if="next_page" py:strip="">
+  <li class="next-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)">Next</a></li>
+  </span>
+  <span py:if="not next_page" py:strip="">
+  <li class="next-page">Next</li>
   </ul>
 </div>
