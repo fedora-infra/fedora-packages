@@ -29,6 +29,7 @@
 
 #toolbar {
   vertical-align:		middle;
+  min-width:			510px;
 }
 
 #toolbar .username {
@@ -448,7 +449,7 @@ div.login {
  background-color: #5f94c9;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  
+  overflow: hidden !important;
   padding: 8px 12px;
 }
 
@@ -468,6 +469,7 @@ div.login form span {
 
 div.login form input {
   margin-bottom: 5px;
+  max-width: 80%;
 }
 
 div.login form .button {
@@ -543,4 +545,69 @@ h1#greeter img {
   display: none;
   z-index:1002;
   overflow: auto;
+}
+
+/** LIST PAGER **/
+
+.list .pager ul {
+  background-color: #ddd;
+  height: 22px;
+  padding: 0px;
+  margin: 0px !important;
+}
+
+.list .pager li {
+  float: left;
+  list-style-image: none;
+  list-style-type: none;
+  border: none;
+
+  margin-left: 0px;
+  margin-right: 0px;
+  border-right: 1px solid #aaa; 
+  background-color: #ccc;
+}
+
+.list .pager li.current-page,
+.list .pager li.no-link {
+  padding-left: 8px;
+  padding-right: 2px;
+}
+.list .pager li.page-ellipses {
+  padding-left: 4px;
+  padding-right: 0px;
+  width: 1.5em;
+}
+
+.list .pager li.page-button {
+  background-color: #ddd;
+}
+
+.list .pager li.page-button a {
+  padding-left: 8px;
+  padding-right: 2px;
+} 
+
+.list .pager li.page-button:hover {
+  background-color: #6AA6E2;
+  color: white;
+}
+
+.list .pager li.page-button:hover a {
+  color: white !important;
+}
+
+.list .pager li.current-page {
+  font-weight: bold !important;
+  background-color: #eee;
+}
+
+
+.list .pager li.next-page:after {
+ content:" ▸";
+}
+
+.list .pager li.prev-page:before {
+ padding-left: 2px;
+ content:"  ◂";
 }
