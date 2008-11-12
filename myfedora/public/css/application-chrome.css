@@ -574,7 +574,7 @@ h1#greeter img {
 }
 
 .list .pager li:hover a {
-  color: white;
+  color: white !important;
 }
 
 .list .pager li.current-page {
