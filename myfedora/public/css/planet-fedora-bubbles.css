@@ -28,6 +28,7 @@ div.person-info a img {
   min-height: 40px !important;
   margin-left: auto !important;
   margin-right: auto !important;
+  max-width: 70px;
 }
 
 div.post {
