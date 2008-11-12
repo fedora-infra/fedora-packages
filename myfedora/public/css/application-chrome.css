@@ -608,5 +608,5 @@ h1#greeter img {
 }
 
 .list .pager li.prev-page:before {
- content:" ◀";
+ content:"&nbsp;&nbsp;◀";
 }
