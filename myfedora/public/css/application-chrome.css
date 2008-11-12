@@ -549,24 +549,26 @@ h1#greeter img {
 /** LIST PAGER **/
 
 .list .pager ul {
-  background-color: #ddd !important;
+  background-color: #ddd;
   height: 22px;
-  padding: 0px !important;
-  margin: 0px !important;
+  padding: 0px;
+  margin: 0px;
 }
 
 .list .pager li {
   float: left;
-  list-style-image: none !important;
-  list-style-type: none !important;
-  border: none !important;
+  list-style-image: none;
+  list-style-type: none;
+  border: none;
 
   padding-left: 5px;
-  border-right: 1px solid #aaa !important;
+  border-right: 1px solid #aaa;
 } 
 
 .list .pager li:hover {
-  background-color: yellow !important;
+  background-color: #6AA6E2;
+  color: white;
+  font-weight: bold;
 }
 
 .list .pager li.current-page {
