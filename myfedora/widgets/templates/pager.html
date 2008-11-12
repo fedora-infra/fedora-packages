@@ -8,11 +8,13 @@
   <span py:if="front_set" py:strip="">
    <span py:for="i in front_set" py:strip=""> 
     <li class="page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">${i}</a></li>
-    <li class="page-ellipses"> ...</li>
+    <li class="page-ellipses">...</li>
    </span>
+   </span>
+   <span py:if="main_set" py:strip="">
    <span py:for="i in main_set" py:strip="">
     <li class="page-button"><a py:if="page != i" onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">${i}</a></li>
-    <li py:if="page == i" class="page-button current-page">${i}</li>
+    <li class="page-button current-page">${i}</li>
    </span>
   </span>
   <span py:if="back_set" py:strip="">
