@@ -568,12 +568,12 @@ h1#greeter img {
   border-right: 1px solid #aaa; 
 } 
 
-.list .pager li:hover {
+.list .pager li.pagebutton:hover {
   background-color: #6AA6E2;
   color: white;
 }
 
-.list .pager li:hover a {
+.list .pager li.pagebutton:hover a {
   color: white !important;
 }
 
