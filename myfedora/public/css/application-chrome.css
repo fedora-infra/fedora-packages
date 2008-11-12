@@ -566,9 +566,16 @@ h1#greeter img {
   border-right: 1px solid #aaa; 
 }
 
+.list .pager li.current-page,
+.list .pager li.prev-page,
+.list .pager li.next-page {
+  padding-left: 16px;
+  padding-right: 10px;
+}
+
 .list .pager li.page-button a {
-  padding-left: 10px;
-  padding-right: 4px;
+  padding-left: 16px;
+  padding-right: 10px;
 } 
 
 .list .pager li.page-button:hover {
