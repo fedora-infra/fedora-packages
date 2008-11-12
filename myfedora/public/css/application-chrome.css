@@ -568,10 +568,12 @@ h1#greeter img {
 }
 
 .list .pager li.current-page,
-.list .pager li.page-ellipses,
 .list .pager li.no-link {
-  padding-left: 10px;
-  padding-right: 4px;
+  padding-left: 8px;
+  padding-right: 2px;
+}
+.list .pager li.page-ellipses {
+  padding-left: 4px;
 }
 
 .list .pager li.page-button {
