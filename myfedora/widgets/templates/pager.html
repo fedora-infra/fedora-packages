@@ -4,7 +4,7 @@
      class="pager">
 <ul>
   <li py:if="prev_page" class="prev-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${prev_page}})" href="javascript:void(0)">Previous</a></li>
-  <li py:if="not prev_page" class="prev-page">Previous</li>
+  <li py:if="not prev_page" class="prev-page no-link">Previous</li>
   <span py:if="front_set" py:strip="">
    <span py:for="i in front_set" py:strip=""> 
     <li class="page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">${i}</a></li>
@@ -32,7 +32,7 @@
   <li class="next-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)">Next</a></li>
   </span>
   <span py:if="not next_page" py:strip="">
-  <li class="next-page">Next</li>
+  <li class="next-page no-link">Next</li>
   </span>
   </ul>
 </div>
