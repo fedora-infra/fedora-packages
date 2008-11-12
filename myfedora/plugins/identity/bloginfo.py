@@ -1,4 +1,7 @@
 from myfedora.model import Blogs, DBSession
+import logging
+
+log = logging.getLogger(__name__)
 
 def get_metadata(username):
     h = 'http://planet.fedoraproject.org/images/heads/default.png'
@@ -25,4 +28,4 @@ def add_metadata(identity):
         identity['person'].update(blog)
         
     except Exception, e:
-        print e
+        log.warning(e)

@@ -25,7 +25,10 @@ import pkg_resources
 
 import os
 import sys
-import tg
+import logging
+
+log = logging.getLogger(__name__)
+
 FAS_CACHE_TIMEOUT=20 #in seconds
 
 fasurl = 'https://admin.fedoraproject.org/accounts'
@@ -98,8 +101,7 @@ class FasClient(ProxyClient):
         try:
             result = self.send_request(method, auth_params = auth_params)
         except AuthError, e:
-            
-            print e
+            log.warning(e)
 
         return result
 
@@ -114,7 +116,7 @@ class FASWhoPlugin(object):
         
         
     def keep_alive(self, session_id):
-        print "************ cache miss *****************"
+        log.info("************ cache miss *****************")
         fas = FasClient(self.url)
         
         linfo = fas.keep_alive(session_id, True)

@@ -32,7 +32,6 @@ class FedoraMembershipsToolWidget(ToolWidget):
         results = {}
         for m in memberships:
             grouping_name = self.group_type_to_name(m['group_type'])
-            print m
             if results.has_key(grouping_name):
                 results[grouping_name].append(m)
             else:
@@ -70,7 +69,6 @@ class FedoraMembershipsToolWidget(ToolWidget):
         resource_view = d.get('resourceview', None)
         if resource_view == 'profile_view':
             d.update(self.get_profile_data())
-            print d
             return d
         
         person = d.get('person',d.get('data_key', None))

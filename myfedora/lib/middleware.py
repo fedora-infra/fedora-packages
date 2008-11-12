@@ -22,11 +22,8 @@
 # Adapted from code in python-fedora
 #
 
-
-
 from Cookie import SimpleCookie
 
-from myfedora.lib.utils import pretty_print_map, pretty_print_array
 from fedora.client import ProxyClient, FedoraServiceError
 
 from fedora import _
@@ -86,8 +83,6 @@ class FasMiddleware(object):
     def __call__(self, environ, start_response):
         req = webob.Request(environ)
         resp_app = self.app
-
-        #pretty_print_map(environ)
 
         path_info = environ.get('PATH_INFO', None)
 
