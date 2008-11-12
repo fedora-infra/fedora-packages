@@ -601,3 +601,12 @@ h1#greeter img {
   font-weight: bold !important;
   background-color: #eee;
 }
+
+
+.list .pager li.next-page:after {
+ content:" ▶";
+}
+
+.list .pager li.prev-page:before {
+ content:" ◀";
+}
