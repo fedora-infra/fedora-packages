@@ -17,14 +17,175 @@
 
 from __future__ import with_statement
 
+import re
 import time
 import cjson
+import pylons
+import logging
 import threading
 import pkg_resources
 
+from tw.api import Widget
+from pylons import request
+from datetime import datetime
 from pyorbited.simple import Client
 
+log = logging.getLogger(__name__)
 
+
+class Feed(object):
+    """ A powerful Feed object.
+
+    A Feed is initialized with an id and a url, and automatically handles the
+    fetching, parsing, and caching of the data.
+
+    """
+    def __init__(self, id, url, *args, **kw):
+        log.debug('Feed.__init__(%s)' % locals())
+        self.url = url
+        self.id = id
+        self.name = id # eventually figure out the name from the feed
+
+    @property
+    def iterentries(self):
+        log.debug("Feed(%s).entries" % self.id)
+        start = datetime.now()
+
+        entries = pylons.g.feed_cache.fetch(self.url).entries
+        log.debug('Fetching %s took %d seconds' % (self.url,
+                  (datetime.now() - start).seconds))
+
+        for i, entry in enumerate(entries):
+            entry['uid'] = '%s_%d' % (self.id, i)
+            yield entry
+
+    @property
+    def entries(self):
+        return [entry for entry in self.iterentries]
+
+    @property
+    def num_entries(self):
+        return len(self.entries)
+
+
+class FeedWidget(Widget):
+    params = {
+            'entries': 'A list of feed entries',
+            'charcount': 'The number of characters to display per entry',
+    }
+    template = 'genshi:myfedora.widgets.templates.feedhome'
+
+    def update_params(self, d):
+        super(Feed, self).update_params(d)
+        limit = d.get('show')
+        if limit:
+            log.debug('show = %r' % limit)
+            d['entries'] = []
+            for i, entry in enumerate(self.entries):
+                if i >= limit:
+                    break
+                d['entries'].append(entry)
+        else:
+            d['entries'] = self.entries
+
+
+#
+# Feed aggregation and caching
+#
+
+from Queue import Queue
+from feedcache.cache import Cache
+from shove import Shove
+
+MAX_THREADS = 5
+FEED_CACHE = "/tmp/moksha-feeds"
+
+feed_storage = Shove('file://' + FEED_CACHE)
+
+class FeedFetcher(threading.Thread):
+
+    def __init__(self, storage, input_queue, output_queue):
+        super(FeedFetcher, self).__init__()
+        self.cache = Cache(storage)
+        self.input_queue = input_queue
+        self.output_queue = output_queue
+
+    def run(self):
+        print "Running FeedFetcher thread!"
+        while True:
+            next_url = self.input_queue.get()
+            if next_url is None: # None causes thread to exit
+                self.input_queue.task_done()
+                break
+            feed_data = self.cache.fetch(next_url)
+            for entry in feed_data.entries:
+                self.output_queue.put((feed_data.feed, entry))
+            self.input_queue.task_done()
+        print "FeedFetcher thread complete"
+
+
+class FeedAggregator(threading.Thread):
+
+    url_queue = Queue()
+
+    feeds = {} # potentially useless?
+
+    def __init__(self):
+        super(FeedAggregator, self).__init__()
+        self.load_feed_entry_points()
+
+    def load_feed_entry_points(self):
+        """ Load all data feeds from the 'moksha.feed' entrypoint """
+        for plugin in pkg_resources.iter_entry_points('moksha.feed'):
+            feed = plugin.load()()
+            print "Loading %s feed" % feed.url
+            self.url_queue.put(feed.url)
+            self.feeds[feed.url] = feed
+        # TODO: look at the 'feeds' propery on our widgets/apps?
+
+    def run(self):
+        print "Running FeedAggregator thread"
+        num_threads = min(len(self.feeds), MAX_THREADS)
+        print "Using %d threads" % num_threads
+        for i in range(num_threads):
+            self.url_queue.put(None)
+
+        entry_queue = Queue()
+        try:
+            workers = []
+            for i in range(num_threads):
+                fetcher = FeedFetcher(feed_storage, self.url_queue, entry_queue)
+                workers.append(fetcher)
+                fetcher.setDaemon(True)
+                fetcher.start()
+
+            print "url_queue.join()"
+            self.url_queue.join()
+
+            print "joining on workers"
+            for worker in workers:
+                worker.join()
+
+            # this requires the print thread
+            # print "joining on entry_queue"
+            # entry_queue.join()
+
+        finally:
+            storage.close()
+
+        print "Results:"
+        while True:
+            feed, entry = entry_queue.get()
+            if feed is None:
+                entry_queue.task_done()
+                break
+            print "%s: %s" % (feed.title, entry.title)
+            entry_queue.task_done()
+
+        print "Done with thread!"
+
+
+# TODO: Port this to the latest Orbited, and utilize Qpid for messaging.
 class DataStreamer(threading.Thread):
     """ Our comet data streamer.
 
@@ -100,3 +261,10 @@ class DataStreamer(threading.Thread):
                     self.users[feed].append((user, session))
             else:
                 raise DataStreamerException("Cannot find feed: %s" % feed)
+
+
+if __name__ == '__main__':
+    f = FeedAggregator()
+    f.start()
+    f.join()
+    print "Done!"
