@@ -13,10 +13,10 @@
       ${i}
     </a></li>
    <li py:if="page == i" class="page-button current-page">${i}</li>
+  </span>
   <span py:if="back_set" py:strip="">
   <li class="page-ellipses">
     ...</li>
-  </span>
    <li py:for="i in back_set" class="page-button">
        <a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">
          ${i}
