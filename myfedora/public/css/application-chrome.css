@@ -552,7 +552,7 @@ h1#greeter img {
   background-color: #ddd;
   height: 22px;
   padding: 0px;
-  margin: 0px;
+  margin: 0px !important;
 }
 
 .list .pager li {
@@ -568,7 +568,10 @@ h1#greeter img {
 .list .pager li:hover {
   background-color: #6AA6E2;
   color: white;
-  font-weight: bold;
+}
+
+.list .pager li:hover a {
+  color: white;
 }
 
 .list .pager li.current-page {
