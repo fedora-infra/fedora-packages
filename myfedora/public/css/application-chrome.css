@@ -604,10 +604,10 @@ h1#greeter img {
 
 
 .list .pager li.next-page:after {
- content:" ▶";
+ content:" ▸";
 }
 
 .list .pager li.prev-page:before {
  padding-left: 2px;
- content:" ◀";
+ content:"  ◂";
 }
