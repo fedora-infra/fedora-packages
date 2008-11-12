@@ -29,6 +29,7 @@
 
 #toolbar {
   vertical-align:		middle;
+  min-width:			510px;
 }
 
 #toolbar .username {
