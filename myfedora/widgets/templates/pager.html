@@ -2,9 +2,7 @@
      xmlns:py="http://genshi.edgewall.org/"
      id="${id}"
      class="pager">
-<ul>
-  <li py:if="prev_page" class="prev-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${prev_page}})" href="javascript:void(0)">Previous</a></li>
-  <li py:if="not prev_page" class="prev-page no-link">Previous</li>
+<ul class="page-numbers">
   <span py:if="front_set" py:strip="">
    <span py:for="i in front_set" py:strip=""> 
     <li class="page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">${i}</a></li>
@@ -28,11 +26,12 @@
        </a>
      </li>
   </span>
-  <span py:if="next_page" py:strip="">
-  <li class="next-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)">Next</a></li>
-  </span>
-  <span py:if="not next_page" py:strip="">
-  <li class="next-page no-link">Next</li>
-  </span>
-  </ul>
+</ul>
+
+ <ul class="page-flips">
+  <li py:if="prev_page" class="prev-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${prev_page}})" href="javascript:void(0)">Previous</a></li>
+  <li py:if="not prev_page" class="prev-page no-link">Previous</li>
+  <li py:if="next_page" class="next-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)">Next</a></li>
+  <li py:if="not next_page" class="next-page no-link">Next</li>
+ </ul>
 </div>
