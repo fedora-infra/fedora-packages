@@ -568,14 +568,15 @@ h1#greeter img {
 
 .list .pager li.current-page,
 .list .pager li.prev-page,
+.list .pager li.page-ellipses,
 .list .pager li.next-page {
-  padding-left: 16px;
-  padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 4px;
 }
 
 .list .pager li.page-button a {
-  padding-left: 16px;
-  padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 4px;
 } 
 
 .list .pager li.page-button:hover {
