@@ -1,6 +1,6 @@
 from myfedora.lib.base import Controller
 from tg import expose
-import pylons
+from pylons import config
 import shlex
 import os
 import pkg_resources
