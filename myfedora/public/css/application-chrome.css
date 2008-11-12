@@ -564,6 +564,7 @@ h1#greeter img {
   margin-left: 0px;
   margin-right: 0px;
   border-right: 1px solid #aaa; 
+  background-color: #ccc;
 }
 
 .list .pager li.current-page,
@@ -572,6 +573,10 @@ h1#greeter img {
 .list .pager li.next-page {
   padding-left: 10px;
   padding-right: 4px;
+}
+
+.list .pager li.page-button {
+  background-color: #eee;
 }
 
 .list .pager li.page-button a {
@@ -590,4 +595,5 @@ h1#greeter img {
 
 .list .pager li.current-page {
   font-weight: bold !important;
+  background-color: #eee;
 }
