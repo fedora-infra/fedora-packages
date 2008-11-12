@@ -584,7 +584,7 @@ h1#greeter img {
 
 .list .pager li.page-button a {
   padding-left: 10px;
-  padding-right: 4px;
+  padding-right: 2px;
 } 
 
 .list .pager li.page-button:hover {
