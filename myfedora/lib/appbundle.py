@@ -1,6 +1,5 @@
 from tw.api import WidgetBunch
 import pylons
-from myfedora.lib.utils import pretty_print_array
 
 class AppBundle(object):
     def __init__(self, id):

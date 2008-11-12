@@ -9,6 +9,10 @@ import koji
 import re
 import urllib2
 
+import logging
+
+log = logging.getLogger(__name__)
+
 # FIXME: get from configuration
 koji_url = 'http://koji.fedoraproject.org'
 koji_xmlrpc = koji_url + '/kojihub'
@@ -23,7 +27,7 @@ def _mock_error_code_to_log_file(err_code):
     elif err_code == 10 or err_code == 30:
         log_file = 'root.log'
     else:
-        print "Unhandled error code :", err_code
+        log.info("Unhandled error code from mock:", err_code)
 
     return log_file
 

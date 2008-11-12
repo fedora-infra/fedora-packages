@@ -8,6 +8,10 @@ import re
 
 from pylons import cache
 
+import logging
+
+log = logging.getLogger(__name__)
+
 ui_js = JSLink(link='/javascript/myfedora.ui.js')
 planet_css = CSSLink(link='/css/planet-fedora-bubbles.css')
 
@@ -58,7 +62,7 @@ class PlanetFedoraBaseWidget(Widget):
                     try:
                         atomentry.author_detail['hackergotchi'] = m.group(1)
                     except Exception, e:
-                        print e
+                        log.warning(e)
             
                 # make time look nice
                 hret = HRElapsedTime()

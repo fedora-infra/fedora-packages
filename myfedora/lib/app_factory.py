@@ -20,7 +20,10 @@
 import pylons
 import pkg_resources
 from myfedora.widgets.resourceview import ResourceViewWidget
-from myfedora.lib.utils import pretty_print_map, odict
+from myfedora.lib.utils import odict
+import logging
+
+log = logging.getLogger(__name__)
 
 ### FIXME: Write this so saving works.
 #from fedora.client import ProxyClient
@@ -259,7 +262,7 @@ class ResourceViewAppFactory(AppFactory):
                                        children=child_tools,
                                        display_overview=cls.display_overview)
 
-        print "ReosurceView widget " + cls._widget.id + " loaded"
+        log.info("ReosurceView widget " + cls._widget.id + " loaded")
         
         return child_tools
 

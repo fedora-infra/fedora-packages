@@ -43,7 +43,6 @@ class RootController(BaseController):
     @expose()
     def join(self, feed, *args, **kw):
         """ Join a specified data feed """
-        print "join(%s, %s, %s)" % (feed, args, kw)
         # Right now the names of the data feed are the names of the widgets
         # themselves.  This needs to change.
         # We also need to handle streaming data to logged in and anonymous
@@ -104,7 +103,6 @@ class RootController(BaseController):
         return dict(page='about')
 
     @expose('myfedora.templates.about')
-    
     #@authorize.require(authorize.is_user('editor'))
     def editor_user_only(self, **kw):
         return dict(page='about')
@@ -118,6 +116,6 @@ class RootController(BaseController):
         login = pylons.g.apps['login'](None, '320px', '200px', 'Canvas', came_from=came_from);
         apps.add(login)
         apps = apps.serialize_apps(pylons.tmpl_context.w)
-            
+        
         return dict(page='login', header=lambda *arg: None,
                     footer=lambda *arg: None, came_from=came_from, apps=apps)

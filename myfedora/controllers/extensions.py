@@ -1,6 +1,6 @@
 from myfedora.lib.base import Controller
 from tg import expose
-import pylons
+from pylons import config
 import shlex
 import os
 import pkg_resources
@@ -128,7 +128,7 @@ class ExtensionsController(Controller):
                 self.__extension_cache[exttype] = code
         
     def load_extensions(self, module, dir):
-        real_dir = pkg_resources.resource_filename(module, dir)
+        real_dir = config['extensions_dir']
         for root, dirs, files in os.walk(real_dir):
             for name in files:
                 if name.endswith('js'):

@@ -34,6 +34,7 @@ setup(
     include_package_data=True,
     test_suite='nose.collector',
     tests_require=['webtest'],
+    namespace_packages=['myfedora'],
     data_files=data_files,
     package_data={'myfedora': ['i18n/*/LC_MESSAGES/*.mo']
                                },

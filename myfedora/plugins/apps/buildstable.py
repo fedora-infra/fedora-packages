@@ -154,7 +154,6 @@ class BuildsTableWidget(Widget):
             
         if username:
             user = cs.getUser(username)
-            print user
             if user:
                 user_id = user['id']
             else:
