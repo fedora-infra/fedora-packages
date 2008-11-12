@@ -575,6 +575,7 @@ h1#greeter img {
 .list .pager li.page-ellipses {
   padding-left: 4px;
   padding-right: 0px;
+  width: 1.5em;
 }
 
 .list .pager li.page-button {
