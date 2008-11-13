@@ -324,6 +324,10 @@ span.more-items {
 }
 
 /** more advanced list with columns **/
+.header-list {
+  border-bottom: 5px solid #d2d2d2;
+}
+
 .header-list table {
   border-spacing: 0px; 
   border-collapse: separate !important;
@@ -639,3 +643,5 @@ ul.page-flips li {
 .next-page, .prev-page {
   height: 19px;
 }
+
+
