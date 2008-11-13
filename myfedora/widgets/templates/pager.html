@@ -29,9 +29,9 @@
 </ul>
 
  <ul class="page-flips">
-  <li py:if="next_page" class="next-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)">Next</a></li>
-  <li py:if="not next_page" class="next-page no-link">Next</li>
-  <li py:if="prev_page" class="prev-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${prev_page}})" href="javascript:void(0)">Previous</a></li>
-  <li py:if="not prev_page" class="prev-page no-link">Previous</li>
+  <li py:if="next_page" class="next-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)">Next ▸</a></li>
+  <li py:if="not next_page" class="next-page no-link">Next ▸</li>
+  <li py:if="prev_page" class="prev-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${prev_page}})" href="javascript:void(0)">◂ Previous</a></li>
+  <li py:if="not prev_page" class="prev-page no-link">◂ Previous</li>
  </ul>
 </div>

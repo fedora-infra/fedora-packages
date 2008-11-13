@@ -324,6 +324,10 @@ span.more-items {
 }
 
 /** more advanced list with columns **/
+.header-list {
+  border-bottom: 5px solid #d2d2d2;
+}
+
 .header-list table {
   border-spacing: 0px; 
   border-collapse: separate !important;
@@ -560,6 +564,7 @@ h1#greeter img {
   float: left;
   list-style-image: none;
   list-style-type: none;
+  list-style-position: outside;
   border: none;
 
   margin-left: 0px;
@@ -568,25 +573,21 @@ h1#greeter img {
   background-color: #ccc;
 }
 
+.list .pager li.page-button a,
 .list .pager li.current-page,
+.list .pager li.page-ellipses,
 .list .pager li.no-link {
-  padding-left: 8px;
-  padding-right: 2px;
+  padding-left: 7px;
+  padding-right: 7px
 }
+
 .list .pager li.page-ellipses {
-  padding-left: 4px;
-  padding-right: 0px;
   width: 1.5em;
 }
 
 .list .pager li.page-button {
   background-color: #ddd;
 }
-
-.list .pager li.page-button a {
-  padding-left: 8px;
-  padding-right: 2px;
-} 
 
 .list .pager li.page-button:hover {
   background-color: #6AA6E2;
@@ -603,16 +604,6 @@ h1#greeter img {
   border-bottom: 2px solid #f0f0f0 !important;
 }
 
-
-.list .pager li.next-page:after {
- content:" ▸";
-}
-
-.list .pager li.prev-page:before {
- padding-left: 2px;
- content:"  ◂";
-}
-
 div.pager {
   height: 22px;
   background-color: #ddd;
@@ -620,12 +611,12 @@ div.pager {
 
 .page-numbers {
   float: left;
-  width: 60% !important;
+  width: 65% !important;
 }
 
 .page-flips {
   float: right;
-  width: 30% !important;
+  width: 25% !important;
 }
 
 ul.page-flips li {
@@ -644,3 +635,5 @@ ul.page-flips li {
 .next-page, .prev-page {
   height: 19px;
 }
+
+
