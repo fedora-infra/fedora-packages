@@ -116,7 +116,7 @@ class FASWhoPlugin(object):
         
         
     def keep_alive(self, session_id):
-        log.info("************ cache miss *****************")
+        log.info("Keep alive cache miss")
         fas = FasClient(self.url)
         
         linfo = fas.keep_alive(session_id, True)
@@ -126,9 +126,11 @@ class FASWhoPlugin(object):
     def identify(self, environ):
         req = webob.Request(environ)
         
-        print "****************** identify *******************"
+        log.info('Identify')
         errk = req.cookies.get('fas_error_key')
         if errk:
+            log.info('''There was an error set in the last session - 
+                        retrieving error message''')
             try:
                 err = fas_cache.get_value(key=errk)
                 fas_cache.remove_value(errk)
@@ -142,7 +144,7 @@ class FASWhoPlugin(object):
         if cookie is None:
             return None
         
-        print "Request identify for cookie " + cookie
+        log.info("Request identify for cookie " + cookie)
         linfo = fas_cache.get_value(key=cookie + "_identity",
                                     createfunc=lambda: self.keep_alive(cookie),
                                     type="memory",
@@ -161,13 +163,15 @@ class FASWhoPlugin(object):
             environ['FAS_LOGIN_INFO'] = linfo
             return linfo[1]
         except Exception, e:
-            print e, linfo
+            log.warning(e)
             return None
         
     def remember(self, environ, identity):
-        print "****************** remeber *****************"
+        log.info('Remeber')
         err = identity.get('error')
         if err:
+            log.info('''There was an error set in this session -
+                        saving error message for next page redirect''')
             cache_error_key=str(uuid.uuid4()) + '_fas_error'
             set_cookie = 'fas_error_key="%s"; Path=/;' % (cache_error_key)
             fas_cache.set_value(cache_error_key, err, type="memory",
@@ -189,14 +193,14 @@ class FASWhoPlugin(object):
         return None
 
     def forget(self, environ, identity):
-        print "************* forget *************"
+        log.info("Forget")
         # return a expires Set-Cookie header
         req = webob.Request(environ)
         
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
             session_id = linfo[0]
-            print "Forgetting login data for cookie %s" % (session_id)
+            log.info("Forgetting login data for cookie %s" % (session_id))
             
             fas = FasClient(self.url)
             fas.logout(session_id)
@@ -212,7 +216,7 @@ class FASWhoPlugin(object):
      
     # IAuthenticatorPlugin
     def authenticate(self, environ, identity):
-        print "************* Authenticating ***********************"
+        log.info('Authenticate')
         try:
             login = identity['login']
             password = identity['password']
@@ -224,7 +228,7 @@ class FASWhoPlugin(object):
             fas = FasClient(self.url)
             user_data = fas.login(login, password)
         except AuthError, e:
-            print "************* Authentication failed, setting error ***********************"
+            log.info('Authentication failed, setting error')
             err = 'ERROR: Could not log in. Invalid username or password.'
             environ['FAS_AUTH_ERROR'] = err
             identity['error'] = err
@@ -239,7 +243,7 @@ class FASWhoPlugin(object):
         return None
     
     def get_metadata(self, environ):
-        print "**************** metadata cache miss **********************"
+        log.info("Metadata cache miss - refreshing metadata")
         info = environ.get('FAS_LOGIN_INFO')
         identity = {}
         
@@ -252,10 +256,11 @@ class FASWhoPlugin(object):
         return identity
         
     def add_metadata(self, environ, identity):
+        log.info('Metadata')
         req = webob.Request(environ)
         
         if identity.get('error'):
-            print "************** error exists, no need to set metadata *************" 
+            log.info('Error exists in session, no need to set metadata') 
             return 'error'
              
         cookie = req.cookies.get('tg-visit')
@@ -263,8 +268,7 @@ class FASWhoPlugin(object):
         if cookie is None:
             return None
         
-        print "Request metadata for cookie " + cookie
-        
+        log.info('Request metadata for cookie %s' % (cookie))        
         info = fas_cache.get_value(key=cookie + '_metadata',
                                    createfunc=lambda: self.get_metadata(environ),
                                    type="memory",
