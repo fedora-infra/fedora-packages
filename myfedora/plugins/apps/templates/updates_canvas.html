@@ -31,7 +31,7 @@
               <td>
                 <div py:for="action, label in update['actions']"
                      class="${i}_${action}">
-                     <a href="#" onclick="$.getJSON(${repr(tg.url('/apps/updates/request/%s/%s' % (update['title'], action)))}, function(data){ $('#bodhi_notice').html(data['tg_flash']); $('#bodhi_notice').show('slow'); }); return false;">${label}</a>
+                     <a class="action-button" href="#" onclick="$.getJSON(${repr(tg.url('/apps/updates/request/%s/%s' % (update['title'], action)))}, function(data){ $('#bodhi_notice').html(data['tg_flash']); $('#bodhi_notice').show('slow'); }); return false;">${label}</a>
                 </div> 
               </td>
             </tr>
