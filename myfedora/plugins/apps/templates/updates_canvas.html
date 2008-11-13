@@ -7,7 +7,7 @@
   <center><div id="bodhi_notice" class="notice" style="display: none"></div></center>
 
   <div class="list header-list" py:if="updates">
-     <h3>Updates <span class="header-details">${updates['title']}</span></h3>
+     <h3><span class="header-text">Updates</span> <span class="header-details">${updates['title']}</span></h3>
      ${children.pager.display(value_for(children.pager), 
                               **args_for(children.pager))}
      <table>
