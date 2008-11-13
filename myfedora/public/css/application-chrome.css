@@ -603,14 +603,8 @@ h1#greeter img {
   border-bottom: 2px solid #f0f0f0 !important;
 }
 
-
-.list .pager li.next-page:after {
- content:" ▸";
-}
-
 .list .pager li.prev-page:before {
  padding-left: 2px;
- content:"  ◂";
 }
 
 div.pager {
