@@ -631,3 +631,16 @@ div.pager {
 ul.page-flips li {
   float: right !important;
 }
+
+
+.next-page {
+  border-right: none !important;
+}
+
+.prev-page {
+  border-left: 1px solid #aaa !important;
+}
+
+.next-page, .prev-page {
+  height: 19px;
+}
