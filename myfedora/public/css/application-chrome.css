@@ -620,12 +620,12 @@ div.pager {
 
 .page-numbers {
   float: left;
-  width: 60% !important;
+  width: 65% !important;
 }
 
 .page-flips {
   float: right;
-  width: 30% !important;
+  width: 25% !important;
 }
 
 ul.page-flips li {
@@ -639,6 +639,7 @@ ul.page-flips li {
 
 .prev-page {
   border-left: 1px solid #aaa !important;
+  padding-left: 2px;
 }
 
 .next-page, .prev-page {
