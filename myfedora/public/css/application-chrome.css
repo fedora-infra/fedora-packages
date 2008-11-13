@@ -629,5 +629,5 @@ div.pager {
 }
 
 ul.page-flips li {
-  float: right;
+  float: right !important;
 }
