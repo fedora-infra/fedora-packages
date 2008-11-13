@@ -573,9 +573,14 @@ h1#greeter img {
   background-color: #ccc;
 }
 
+.list .pager li.page-button a,
 .list .pager li.current-page,
+.list .pager li.page-ellipses,
 .list .pager li.no-link {
+  padding-left: 7px;
+  padding-right: 7px
 }
+
 .list .pager li.page-ellipses {
   width: 1.5em;
 }
@@ -583,9 +588,6 @@ h1#greeter img {
 .list .pager li.page-button {
   background-color: #ddd;
 }
-
-.list .pager li.page-button a {
-} 
 
 .list .pager li.page-button:hover {
   background-color: #6AA6E2;
@@ -600,9 +602,6 @@ h1#greeter img {
   font-weight: bold !important;
   background-color: #eee;
   border-bottom: 2px solid #f0f0f0 !important;
-}
-
-.list .pager li.prev-page:before {
 }
 
 div.pager {
