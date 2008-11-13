@@ -609,5 +609,20 @@ h1#greeter img {
 
 .list .pager li.prev-page:before {
  padding-left: 2px;
- content:"  ◂";
+ content:" ◂ ";
+}
+
+div.pager {
+  height: 22px;
+  background-color: #ddd;
+}
+
+.page-numbers {
+  float: left;
+  width: 60%;
+}
+
+.page-flips {
+  float: right;
+  width: 30%;
 }
