@@ -610,7 +610,7 @@ h1#greeter img {
 
 .list .pager li.prev-page:before {
  padding-left: 2px;
- content:" ◂ ";
+ content:"  ◂";
 }
 
 div.pager {
