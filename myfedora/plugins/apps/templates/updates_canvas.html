@@ -24,7 +24,7 @@
         <tbody py:for="i, update in enumerate(updates['updates'])">
             <tr>
               <td><img src="/images/16_package_${update['type']}.png"/></td>
-              <td><ul><li py:for="build in update['title'].split(',')">${build}</li></ul>
+              <td><ul><li py:for="build in update['title'].split(',')"><a href="https://admin.fedoraproject.org/updates/${update['title']}">${build}</a></li></ul>
              </td>
               <td>${update['release']['long_name']}</td>
               <td>${update['age']}</td>
