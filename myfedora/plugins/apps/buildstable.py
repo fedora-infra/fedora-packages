@@ -19,7 +19,7 @@ class BuildsTableApp(AppFactory):
 class BuildsTableWidget(Widget):
     template = 'genshi:myfedora.plugins.apps.templates.buildstable_canvas'
     offset = 0
-    limit = 7
+    limit = 10
     
     def __init__(self, *args, **kw):
         super(BuildsTableWidget, self).__init__(*args, **kw)
