@@ -25,6 +25,10 @@
   padding-right:		28px;
 }
 
+a {
+  color: #2B80D6;
+}
+
 /* styling for login toolbar */
 
 #toolbar {
