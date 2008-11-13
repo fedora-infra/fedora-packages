@@ -627,3 +627,7 @@ div.pager {
   float: right;
   width: 30% !important;
 }
+
+ul.page-flips li {
+  float: right;
+}
