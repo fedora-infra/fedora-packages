@@ -88,7 +88,7 @@ class PlanetFedoraHomeWidget(PlanetFedoraBaseWidget):
     template = 'genshi:myfedora.plugins.apps.templates.planetfedorahome'
 
 class PlanetFedoraCanvasWidget(PlanetFedoraBaseWidget):
-    template = 'genshi:myfedora.plugins.apps.templates.planetfedoracanvas'
+    template = 'mako:/myfedora/plugins/apps/templates/planetfedoracanvas.html'
 
 class PlanetFedoraApp(AppFactory):
     entry_name = 'planetfedora'
