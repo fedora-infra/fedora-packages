@@ -1,73 +1,51 @@
-<div xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:py="http://genshi.edgewall.org/"
+<div
      id="${id}"
      class="list">
-  <h3><a href="http://planet.fedoraproject.org">Planet Fedora</a></h3>
+     
+    <h3><a href="http://planet.fedoraproject.org">Planet Fedora</a></h3>
 
-<?python last_time = None ?> 
-<div class="entry" py:for="entry in entries">
-  <div class="small-text label-rule" py:if="last_time != entry.elapsed_time">
-    ${entry.elapsed_time}
-    <?python last_time = entry.elapsed_time ?>
-  </div>
-  <div id="${entry['uid']}">
-  <div class="person-info">
-    <a title="${entry.author_detail.name}'s blog" href="${entry.author_detail.href}"> 
-         <img src="${entry.author_detail.hackergotchi}" height="40" />
-         ${entry.author_detail.name}</a> 
-  </div>
-  <div class="post">
-      <div class="post-header">
-        <h3 class="post-title">
-          <a href="${entry.link}" target="_blank">${entry.title}</a><span class="small-text">${entry.time}</span>
-        </h3>
-      </div>
-      <div class="post-contents" id="${entry['uid']}_text">
-          ${HTML(entry.content[0].value)}
-      </div>
-      <div class="post-footer">
-      </div>      
-      <b class="vt lt" />
-      <b class="vt rt" />
-      <b class="hz to" />
-      <b class="hz bo" />
-      <b class="cr tl" />
-      <b class="cr tr" />
-      <b class="cr bl" />
-      <b class="cr br" />
-  </div>
-  </div>
-</div>
-
-      <?python last_time = 4 ?>
-      <div py:for="entry in entries">
-        <!--
-        <table id="${entry['uid']}_lightbox">
-          <tr>
-            <td>
-              <div>
-                <img src="${entry.author_detail.hackergotchi}"/>
-              </div>
-              <a href="${entry.author_detail.href}" target="_blank">${entry.author_detail.name}</a>
-            </td>
-            <td>
-              <a href="${entry.link}" target="_blank"><h2>${entry.title}</h2></a>
-              <div>
-                ${HTML(entry.content[0].value)}
-              </div>
-            </td>
-          </tr>
-        </table>
-        -->
-        <script type="text/javascript">
-        /*
-        var lb = new myfedora.ui.lightbox("${entry['uid']}_lightbox", 5);
-        lb.set_show_effect('fadeIn("slow")');
-        lb.set_hide_effect('fadeOut("slow")');
-        */
-        var et = new myfedora.ui.ellipsized_text("${entry['uid']}_text",
-                                                 255);
-        et.show();
-      </script>
-      </div>
+    <% last_time = None %>
+    % for entry in entries:
+        <div class="entry">
+            %if last_time != entry.elapsed_time:
+                <div class="small-text label-rule">
+                    ${entry.elapsed_time}
+                    <% last_time = entry.elapsed_time %>
+                </div>
+            %endif
+            <div id="${entry['uid']}">
+                <div class="person-info">
+                    <a title="${entry.author_detail.name}'s blog" href="${entry.author_detail.href}"> 
+                         <img src="${entry.author_detail.hackergotchi}" height="40" />
+                         ${entry.author_detail.name}
+                    </a> 
+                </div>
+                <div class="post">
+                    <div class="post-header">
+                        <h3 class="post-title">
+                            <a href="${entry.link}" target="_blank">${entry.title}</a><span class="small-text">${entry.time}</span>
+                        </h3>
+                    </div>
+                    <div class="post-contents" id="${entry['uid']}_text">
+                        ${entry.content[0].value}
+                    </div>
+                    <div class="post-footer">
+                    </div>      
+                    <b class="vt lt" />
+                    <b class="vt rt" />
+                    <b class="hz to" />
+                    <b class="hz bo" />
+                    <b class="cr tl" />
+                    <b class="cr tr" />
+                    <b class="cr bl" />
+                    <b class="cr br" />
+                </div>
+            </div>
+            <script type="text/javascript">
+                var et = new myfedora.ui.ellipsized_text("${entry['uid']}_text",
+                                                         255);
+                et.show();
+            </script>
+        </div>
+    % endfor
 </div>
