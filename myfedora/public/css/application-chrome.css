@@ -564,6 +564,7 @@ h1#greeter img {
   float: left;
   list-style-image: none;
   list-style-type: none;
+  list-style-position: outside;
   border: none;
 
   margin-left: 0px;
@@ -574,12 +575,8 @@ h1#greeter img {
 
 .list .pager li.current-page,
 .list .pager li.no-link {
-  padding-left: 8px;
-  padding-right: 2px;
 }
 .list .pager li.page-ellipses {
-  padding-left: 4px;
-  padding-right: 0px;
   width: 1.5em;
 }
 
@@ -588,8 +585,6 @@ h1#greeter img {
 }
 
 .list .pager li.page-button a {
-  padding-left: 8px;
-  padding-right: 2px;
 } 
 
 .list .pager li.page-button:hover {
@@ -608,7 +603,6 @@ h1#greeter img {
 }
 
 .list .pager li.prev-page:before {
- padding-left: 2px;
 }
 
 div.pager {
@@ -637,7 +631,6 @@ ul.page-flips li {
 
 .prev-page {
   border-left: 1px solid #aaa !important;
-  padding-left: 2px;
 }
 
 .next-page, .prev-page {
