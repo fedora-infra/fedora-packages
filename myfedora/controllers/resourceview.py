@@ -1,6 +1,7 @@
 from myfedora.lib.base import BaseController
-from tg import expose, redirect, url
+from tg import expose, redirect, url, flash
 from myfedora.lib.appbundle import AppBundle
+from myfedora.lib.exception import App404Error,AppRequiresAuth 
 from myfedora.widgets.resourceview import DummyToolWidget
 import pylons
 
@@ -10,6 +11,12 @@ class ResourceViewController(BaseController):
         self.app_class = app_class
 
     def _create_view_app(self, data_key, tool, **kw):
+        print self.app_class
+        if self.app_class.requires_auth:
+            if (not pylons.tmpl_context.identity 
+                or not pylons.tmpl_context.identity.get('person')):
+                  raise AppRequiresAuth
+            
         return self.app_class(None, 
                               width="100%", 
                               height="100%",
@@ -20,8 +27,9 @@ class ResourceViewController(BaseController):
     def _init_context(self, data_key, tool, **kw):
         view_app = self._create_view_app(data_key, tool, **kw)
 
+
         if not view_app:
-            return None
+            raise App404Error
         
         # may be used later on for extensions
         app_bundle = AppBundle('view_content')
@@ -64,8 +72,15 @@ class ResourceViewController(BaseController):
         if view_action != 'name': 
             tool = view_action
             
-        app_bundle = self._init_context(data_key=data_key, tool=tool, **kw)
-        
+        try:
+            app_bundle = self._init_context(data_key=data_key, tool=tool, **kw)
+        except App404Error, e:
+            log.error(e)
+            return pylons.Response(code=404)
+        except AppRequiresAuth, e:
+            flash('You are not authorized to access the page you requested')
+            redirect(url('/login'))
+            
         data = app_bundle.serialize_apps(pylons.tmpl_context.w)
         return dict(view_content = data,
                     view = view, 

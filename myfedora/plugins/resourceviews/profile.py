@@ -12,9 +12,9 @@ import pylons
 class ProfileViewController(ResourceViewController):
     @expose('genshi:myfedora.templates.resourceviewcontainer')
     def default(self, *args, **kw):
-
-        kw.update({'data_key': pylons.tmpl_context.identity['person']['username'],
-                   'person': pylons.tmpl_context.identity['person']['username']})
+        if pylons.tmpl_context.identity and pylons.tmpl_context.identity.get('person'):
+            kw.update({'data_key': pylons.tmpl_context.identity['person']['username'],
+                       'person': pylons.tmpl_context.identity['person']['username']})
         
         d = super(ProfileViewController, self).default(*args, **kw)
 
