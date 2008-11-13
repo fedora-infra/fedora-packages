@@ -36,7 +36,7 @@ class GlobalResourceInjectionWidget(Widget):
 class PagerWidget(Widget):
     template = "genshi:myfedora.widgets.templates.pager"
     params = ['page', 'last_page', 'show', 'parent_dom_id']
-    show = 10
+    show = 7
     page = 1
     
     def update_params(self, d):
