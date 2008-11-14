@@ -631,7 +631,6 @@ h1#greeter img {
 .list .pager li.current-page {
   font-weight: bold !important;
   background-color: #eee;
-  border-bottom: 2px solid #f0f0f0 !important;
 }
 
 div.pager {
