@@ -59,6 +59,7 @@ class NewUpdateWidget(AjaxForm):
 
 new_update_form = NewUpdateWidget('new_update_form', target='output')
 
+bodhi = BodhiClient()
 
 class FedoraUpdatesController(object):
 
@@ -71,7 +72,6 @@ class FedoraUpdatesController(object):
     @validate(new_update_form, error_handler=new)
     def save(self, builds, type, bugs, request, notes):
         log.debug('save(%s)' % locals())
-        bodhi = BodhiClient()
         results = bodhi.save(builds=builds, type_=type, bugs=bugs,
                              request=request.lower(), notes=notes)
         log.debug('results = %r' % results)
@@ -81,7 +81,6 @@ class FedoraUpdatesController(object):
     def request(self, update, action):
         """ Request a specified action on a given update """
         log.debug('request(%s, %s)' % (update, action))
-        bodhi = BodhiClient()
         response = bodhi.request(update, action)
         if 'message' in response:
             response['tg_flash'] = response['message']
