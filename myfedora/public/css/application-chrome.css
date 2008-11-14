@@ -601,6 +601,7 @@ h1#greeter img {
   margin-right: 0px;
   border-right: 1px solid #aaa; 
   background-color: #ccc;
+  min-height: 22px;
 }
 
 .list .pager li.page-button a,
@@ -609,6 +610,7 @@ h1#greeter img {
 .list .pager li.no-link {
   padding-left: 7px;
   padding-right: 7px
+  vertical-align: middle !important;
 }
 
 .list .pager li.page-ellipses {
