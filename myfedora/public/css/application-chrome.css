@@ -666,4 +666,18 @@ ul.page-flips li {
   height: 19px;
 }
 
+/** special list styles **/
 
+.action-button {
+  padding: 4px;
+  line-height: 24px;
+  font-size: 70%;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  background-color: #ddd;
+  border: 1px solid #aaa;
+}
+
+.action-button:hover {
+  background-color: #eaeaea;
+}
