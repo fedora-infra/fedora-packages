@@ -1,10 +1,9 @@
-<html xmlns:py="http://genshi.edgewall.org/"
-      xmlns:xi="http://www.w3.org/2001/XInclude">
-
-<py:def function="sidebar_left">
-  <div id="app-sidebar" py:for="app in tmpl_context.sidebar_apps"> 
-      ${tmpl_context.show_app(app)}
-  </div>
-</py:def>    
-
+<html>
+    <%def name="sidebar_left()">
+        % for app in tmpl_context.sidebar_apps:
+            <div id="app-sidebar">  
+                ${tmpl_context.show_app(app)}
+            </div>
+        % endfor
+    </%def>
 </html>

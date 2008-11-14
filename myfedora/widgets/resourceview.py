@@ -14,7 +14,7 @@ class DummyToolWidget(object):
 class ResourceViewWidget(Widget):
     params = ['data_key']
     data_keys = ['data_key']
-    template = 'genshi:myfedora.widgets.resourceview'
+    template = 'mako:/resourceview.html'
     display_overview = True
     
     javascript = [jquery_js]

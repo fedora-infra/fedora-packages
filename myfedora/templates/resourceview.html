@@ -1,20 +1,21 @@
-<div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/"> 
-     
-  <py:def function="show_tool_nav">
-    <div id="content-nav">
-      <ul>
-        <span py:for="child in visible_children">
-          <li>
-            <a py:if="active_child == child" href="${childurls[child._id]}" class="active">${child.display_name}</a>
-            <a py:if="active_child != child" href="${childurls[child._id]}" class="inactive">${child.display_name}</a>
-          </li>
-        </span>
-      </ul>
-    </div>
-  </py:def>
+<div> 
+    <%def name="show_tool_nav()">
+        <div id="content-nav">
+            <ul>
+                % for child in visible_children:
+                    <li>
+                        % if active_child == child:
+                            <a href="${childurls[child._id]}" class="active">${child.display_name}</a>
+                        % else:
+                            <a href="${childurls[child._id]}" class="inactive">${child.display_name}</a>
+                        % endif
+                    </li>
+                % endfor
+            </ul>
+        </div>
+    </%def>
   
-  <py:def function="show_active_tool">
-    ${active_child(value_for(active_child), **args_for(active_child))}
-  </py:def>
+    <%def name="show_active_tool()">
+        ${active_child(value_for(active_child), **args_for(active_child))}
+    </%def>
 </div>

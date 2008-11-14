@@ -10,7 +10,7 @@ from tg import expose
 import pylons
 
 class ProfileViewController(ResourceViewController):
-    @expose('genshi:myfedora.templates.resourceviewcontainer')
+    @expose('mako:/resourceviewcontainer.html')
     def default(self, *args, **kw):
         if pylons.tmpl_context.identity and pylons.tmpl_context.identity.get('person'):
             kw.update({'data_key': pylons.tmpl_context.identity['person']['username'],
@@ -21,7 +21,7 @@ class ProfileViewController(ResourceViewController):
         return d
     
 class ProfileViewWidget(ResourceViewWidget):
-    template='genshi:myfedora.plugins.resourceviews.templates.profileview'
+    template='mako:/myfedora/plugins/resourceviews/templates/profileview.html'
     params=['person']
     data_keys=['data_key', 'person']
 

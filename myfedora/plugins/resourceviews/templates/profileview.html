@@ -1,17 +1,15 @@
-<div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/"
-     xmlns:xi="http://www.w3.org/2001/XInclude">
+<%! from pylons import tmpl_context %>
 
-  <xi:include href="../../../templates/resourceview.html" />
+<div>
+    <%namespace file="/myfedora/templates/resourceview.html" import="*" />
+    ${show_tool_nav()}   
   
-  ${show_tool_nav()}   
-  
-  <?python from pylons import tmpl_context ?>
-  
-  <div>
-      <img src="${tmpl_context.identity.person.get('hackergotchi_url', '')}" 
+    <div>
+        <% person = tmpl_context.identity.get('person') %>
+        <img src="${person.get('hackergotchi_url', '')}" 
              style="float:left"/>
-         <h1>${tmpl_context.identity.person['human_name']}'s Profile</h1>
-  </div>
-  ${show_active_tool()}
+        <h1>${person['human_name']}'s Profile</h1>
+    </div>
+    
+    ${show_active_tool()}
 </div>

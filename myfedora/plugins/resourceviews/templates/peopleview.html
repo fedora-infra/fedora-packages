@@ -1,11 +1,7 @@
-<div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/"
-     xmlns:xi="http://www.w3.org/2001/XInclude">
-
-  <xi:include href="../../../templates/resourceview.html" />
+<div>
+    <%namespace file="/myfedora/templates/resourceview.html" import="*"/>
   
-  ${show_tool_nav()}   
-  <h1>User ${person}</h1>
-  ${show_active_tool()}
-  
+    ${show_tool_nav()}   
+    <h1>User ${person}</h1>
+    ${show_active_tool()}
 </div>

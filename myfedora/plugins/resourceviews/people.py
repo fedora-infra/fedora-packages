@@ -8,7 +8,7 @@ from tg import expose
 import pylons
 
 class PeopleViewController(ResourceViewController):
-    @expose('genshi:myfedora.plugins.resourceviews.templates.peopleindex')
+    @expose('mako:/plugins/resourceviews/templates/peopleindex.html')
     def index(self, **kw):
         result = super(PeopleViewController, self).index(**kw)
         leftcol_apps = AppBundle("leftcol")
@@ -25,7 +25,7 @@ class PeopleViewController(ResourceViewController):
 
 class PeopleViewWidget(ResourceViewWidget):
     data_keys=['data_key', 'person']
-    template='genshi:myfedora.plugins.resourceviews.templates.peopleview'
+    template='mako:/myfedora/plugins/resourceviews/templates/peopleview.html'
 
 class PeopleViewApp(ResourceViewAppFactory):
     entry_name = 'people'
