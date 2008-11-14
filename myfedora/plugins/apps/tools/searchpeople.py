@@ -46,7 +46,7 @@ def weighted_sort(a, b):
 
 class SearchPeopleToolWidget(SearchBaseWidget):
     params=['search_string', 'results']
-    template = 'genshi:myfedora.plugins.apps.tools.templates.searchpeople'
+    template = 'mako:/myfedora/plugins/apps/tools/templates/searchpeople.html'
     display_name = 'People'
     requires_auth = True
     
