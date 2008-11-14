@@ -113,7 +113,7 @@ base_config.package = myfedora
 
 # Set the default renderer
 base_config.default_renderer = 'genshi'
-base_config.renderers.append('genshi')
+base_config.renderers.append('genshi', 'mako')
 base_config.auto_reload_templates = True
 
 # Configure the base SQLALchemy Setup
