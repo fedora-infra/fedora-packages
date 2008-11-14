@@ -354,6 +354,10 @@ span.more-items {
   height: 12px;
 }
 
+.header-list li {
+  list-style-type: none !important;
+}
+
 .header-list table {
   border-spacing: 0px; 
   border-collapse: separate !important;
