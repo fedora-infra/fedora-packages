@@ -153,7 +153,8 @@ class BodhiClient(MFProxyClient):
          return result
 
     def query(self, release=None, status=None, type_=None, bugs=None,
-              request=None, mine=None, package=None, username=None, limit=10, page=1):
+              request=None, mine=None, package=None, username=None, limit=10,
+              page=1, get_auth=True):
         """ Query bodhi for a list of updates.
 
         :kwarg release: The release that you wish to query updates for.
@@ -173,6 +174,8 @@ class BodhiClient(MFProxyClient):
         params = {
                 'tg_paginate_limit': limit,
                 'tg_paginate_no': page,
+                'username': username,
+                'get_auth': get_auth,
                 'release': release,
                 'package': package,
                 'request': request,
@@ -180,20 +183,19 @@ class BodhiClient(MFProxyClient):
                 'type_': type_,
                 'bugs': bugs,
                 'mine': mine,
-                'username': username
                 }
-        
+
         # bodhi can't handle false query sting
         if not mine:
             del params['mine']
-            
+
         for key, value in params.items():
             if value is None:
                 del params[key]
-    
+
         if params.get('mine'):
             return self.send_authenticated_request('list', req_params=params)
-        
+
         return self.send_request('list', req_params=params)
 
     def save(self, builds='', type_='', bugs='', notes='', request='testing',

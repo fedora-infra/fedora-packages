@@ -44,8 +44,6 @@ class FedoraAnnounceBaseWidget(Widget):
             entry['uid'] = d['config']['uid'] + '_' + str(c)
                     
             entry_list.append(entry)
-            
-            
 
         d.update({'entries': entry_list})
 
