@@ -3,6 +3,7 @@ from Cookie import SimpleCookie
 from urlparse import urljoin
 import urllib2
 from pylons import request
+import inspect
 
 class MFProxyClient(ProxyClient):
     def __init__(self, base_url, useragent=None, debug=False, return_auth=False):

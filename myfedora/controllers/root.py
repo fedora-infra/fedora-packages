@@ -107,7 +107,7 @@ class RootController(BaseController):
     def editor_user_only(self, **kw):
         return dict(page='about')
 
-    @expose('myfedora.templates.login')
+    @expose('mako:/login.html')
     def login(self, **kw):
         came_from = kw.get('came_from', 
                             pylons.request.headers.get('REFERER', '/'))
