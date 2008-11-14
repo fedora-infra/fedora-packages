@@ -1,29 +1,39 @@
-<div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/"
-     class="list header-list">
-  <h3>Packages</h3>
-  <table>
-    <thead>
-      <tr>
-        <th></th>
-        <th>Package</th>
-        <th>Summary</th>
-      </tr>
-    </thead>
-    <tbody py:for="pkg in results">
-        <tr>
-          <td><img src="/images/16_package.png" /></td>
-          <td><span class="package-name"><a href="${pkg['url']}" title="${pkg['description']}">${pkg['name']}</a></span></td>
-          <td>${pkg['summary']}</td>
-        </tr>
-        <tr py:if="extralinks">
-           <td></td>
-           <td colspan="2">
-             <span py:for="link in extralinks">
-               - <a href="${pkg['url'] + '/' + link['tool']}">${link['label']}</a>
-             </span>
-           </td>
-        </tr>
-    </tbody>
-  </table>
+<div class="list header-list">
+    <h3>Packages</h3>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th>Package</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        % for pkg in results:
+            <tbody>
+                <tr>
+                    <td><img src="/images/16_package.png" /></td>
+                    <td>
+                        <span class="package-name">
+                            <a href="${pkg['url']}" title="${pkg['description'] | h}">
+                                ${pkg['name']}
+                            </a>
+                        </span>
+                    </td>
+                    <td>${pkg['summary']}</td>
+                </tr>
+                % if extralinks:
+                    <tr>
+                        <td></td>
+                        <td colspan="2">
+                            % for link in extralinks:
+                                <span>
+                                    - <a href="${pkg['url'] + '/' + link['tool']}">${link['label']}</a>
+                                </span>
+                            % endfor
+                        </td>
+                    </tr>
+                % endif
+            </tbody>
+        % endfor
+    </table>
 </div>
