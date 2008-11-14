@@ -62,7 +62,7 @@ class ResourceViewController(BaseController):
                     active_child=ov,
                     childurls=childurls)
         
-    @expose('genshi:myfedora.templates.resourceviewcontainer')
+    @expose('mako:/resourceviewcontainer.html')
     def default(self, view=None, view_action=None, data_key=None, tool=None, *args, **kw):
         if not view:
             view = self.app_class.entry_name

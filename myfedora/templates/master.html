@@ -1,22 +1,23 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      xmlns:xi="http://www.w3.org/2001/XInclude"
-      py:strip="">
-<?python
-import tg
-tg_flash_status = ""
-tg_flash = tg.get_flash()
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<%!
+    import tg
+%>
+<%namespace file="header.html" import="*" />
+<%namespace file="sidebars.html" import="*" />
+<%namespace file="footer.html" import="*" />
+<html>
+<%
+    tg_flash_status = ""
+    tg_flash = tg.get_flash()
 
- # Future API in docs but not in code yet  
- # tg_flash = tg.flash.get_flash()
- # tg_flash_status = tg.flash.get_status()
-?>
-<head py:match="head" py:attrs="select('@*')">    
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
-    <title py:replace="''">Your title goes here</title>
-    <meta py:replace="select('*')"/>
+    # Future API in docs but not in code yet  
+    # tg_flash = tg.flash.get_flash()
+    # tg_flash_status = tg.flash.get_status()
+%>
+
+<head>    
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <title>${self.title()}</title>
     <base href="${tg.url('/')}" />
     
     <link href="${tg.url('/images/favicon.ico')}"
@@ -24,29 +25,29 @@ tg_flash = tg.get_flash()
     <link href="${'http://fedoraproject.org/favicon.ico'}"
       type="image/x-icon" rel="shortcut icon"/>
       
-  <!--[if lt IE 7]>
-  <style type="text/css">
-    #wrapper
-    {
-    height: 100%;
-    overflow: visible!important;
-    }
-  </style>
-  <![endif]-->
-       
+    <!--[if lt IE 7]>
+    <style type="text/css">
+        #wrapper
+        {
+            height: 100%;
+            overflow: visible!important;
+        }
+    </style>
+    <![endif]-->   
 </head>
 
-<body class="home" py:match="body" py:attrs="select('@*')">
-  <div id="wrapper">
-    ${header()}
-    ${sidebar_left()}
-    <div id="content">
-      <div id="status_block" py:if="tg_flash" class="flash ${tg_flash_status}" py:content="tg_flash"></div>
-      <div py:replace="select('*|text()')"/>
-      <!-- End of main_content -->
-      <div class="clearingdiv" />
+<body class="home">
+    <div id="wrapper">
+        ${header()}
+        ${sidebar_left()}
+        <div id="content">
+            % if tg_flash:
+                <div id="status_block" class="flash ${tg_flash_status}">%{tg_flash}</div>
+            % endif
+            ${self.content()}
+            <div class="clearingdiv"></div>
+        </div>
     </div>
-   </div>
-   ${footer()}
+    ${footer()}
 </body>
 </html>

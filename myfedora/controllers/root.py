@@ -53,7 +53,7 @@ class RootController(BaseController):
             log.error("Unknown data feed: %s" % feed)
         return ""
 
-    @expose('myfedora.templates.index')
+    @expose('mako:/index.html')
     def index(self):
         leftcol_apps = AppBundle("leftcol")
         rightcol_apps = AppBundle("rightcol")

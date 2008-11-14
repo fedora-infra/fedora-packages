@@ -1,33 +1,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      xmlns:xi="http://www.w3.org/2001/XInclude">
+<html>
 
-  <xi:include href="header.html" />
-  <xi:include href="sidebars.html" />
-  <xi:include href="footer.html" />
-  <xi:include href="master.html" />
+    <%inherit file="master.html" />
 
-<head>
-  <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
-  <title>MyFedora</title>
-</head>
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+        <title><%def name="title()">MyFedora</%def></title>
+    </head>
 
-<body>
- <div id="right-content-column">
-    <div py:for="app in rightcol_apps" class="panel icon-panel">
-      ${tmpl_context.show_app(app)}
-    </div> 
-  </div>
-  <div id="left-content-column">
-    <h1 id="greeter"><span py:if="tmpl_context.identity and tmpl_context.identity.person"> 
-         <img src="${tmpl_context.identity.person.get('hackergotchi_url', '')}" 
-             style="float:left"/>
-         Welcome, ${tmpl_context.identity.person['human_name']}!</span></h1>
-    <div py:for="app in leftcol_apps">
-      ${tmpl_context.show_app(app)}
-    </div> 
-  </div>
-</body>
+    <body>
+        <%def name="content()">
+            <div id="right-content-column">
+                % for app in rightcol_apps:
+                    <div class="panel icon-panel">
+                        ${tmpl_context.show_app(app)}
+                    </div>
+                % endfor 
+            </div>
+            <div id="left-content-column">
+                <h1 id="greeter">
+                    % if tmpl_context.identity and tmpl_context.identity['person']:
+                        <% person = tmpl_context.identity['person'] %>
+                        <span> 
+                            <img src="${person.get('hackergotchi_url', '')}" style="float:left"/>
+                            Welcome, ${person['human_name']}!
+                        </span>
+                    % endif
+                </h1>
+                % for app in leftcol_apps:
+                    <div>
+                        ${tmpl_context.show_app(app)}
+                    </div>
+                % endfor
+            </div>
+        </%def>
+    </body>
 </html>

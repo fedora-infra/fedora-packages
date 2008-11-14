@@ -1,17 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      xmlns:xi="http://www.w3.org/2001/XInclude">
-
-  <xi:include href="base.html" />
-  <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
-    <title>MyFedora ${view} view</title>
-  </head>
-  <body>
-    <div py:for="app in view_content">
-       ${tmpl_context.show_app(app)}
-    </div>
-  </body>
+<html>
+    <%inherit file="master.html" />
+    <head>
+        <title><%def name="title()">${view} view</%def></title>
+    </head>
+    <body>
+        <%def name="content()">
+            % for app in view_content:
+                <div>
+                    ${tmpl_context.show_app(app)}
+                </div>
+            % endfor
+        </%def>
+    </body>
 </html>

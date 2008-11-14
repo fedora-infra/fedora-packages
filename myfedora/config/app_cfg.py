@@ -7,6 +7,7 @@ from tg.configuration import AppConfig, Bunch, config
 import myfedora
 from myfedora import model
 from myfedora.lib import app_globals, helpers
+import os
 
 log = logging.getLogger(__name__)
 
@@ -54,6 +55,10 @@ class MyFedoraConfig(AppConfig):
 
             self.setup_routes()
 
+            root = os.path.dirname(os.path.abspath(self.package.__file__))
+            self.paths['templates'].append(root)
+            
+            print self.paths
             if 'genshi' in self.renderers:
                 self.setup_genshi_renderer()
             if 'mako' in self.renderers:

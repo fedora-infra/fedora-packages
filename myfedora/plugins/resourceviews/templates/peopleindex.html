@@ -1,34 +1,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      xmlns:xi="http://www.w3.org/2001/XInclude">
-
-  <!-- this is bunk.  Genshi's xinclude sucks because you always have to know exactly
-       where your template is being included from.  Perhaps we should just move to all
-       widgets. -->
-  <xi:include href="../../../templates/base.html" />
-  <xi:include href="../../../templates/resourceview.html" />
+<html>
+    <inherit file="/master.html" />
+    <%namespace file="/resourceview.html" import="*"/>
   
-  <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
-    <title>Packages</title>
-  </head>
-  <body>
-    ${show_tool_nav()}
-    <div class="content-searchbox">
-        <div>Search Fedora People
-          <form action="${tg.url('/search/people/')}">
-            <input type="text" name="search" value="Type search terms here." />
-            <input class="button" type="submit" value="Search"/> 
-          </form>
-        </div>
-    </div>
-    <div id="left-content-column">
-      <div py:for="app in leftcol_apps">
-      
-       ${tmpl_context.show_app(app)}
-      </div>
-    </div>
-  </body>
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
+        <title><%def name="title()">Packages</%def></title>
+    </head>
+    <body>
+        <%def name="content()">
+            ${show_tool_nav()}
+            <div class="content-searchbox">
+                <div>Search Fedora People
+                    <form action="${tg.url('/search/people/')}">
+                        <input type="text" name="search" value="Type search terms here." />
+                        <input class="button" type="submit" value="Search"/> 
+                    </form>
+                </div>
+            </div>
+            <div id="left-content-column">
+                % for app in leftcol_apps:
+                    ${tmpl_context.show_app(app)}
+                % endfor
+            </div>
+        </%def>
+    </body>
 </html>
