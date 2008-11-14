@@ -56,7 +56,8 @@ class ResourceViewWidget(Widget):
         super(ResourceViewWidget, self).update_params(d)
         data_key = self.get_data_key(d)
         childargs = self.syncronize_data_keys(d, data_key)
-        if d.get('tool', None):
+        tool = d.get('tool', None)
+        if tool and not tool == 'None':
             active_tool = self.children[d['tool']]
             if active_tool.requires_data_key and not data_key:
                 return None
