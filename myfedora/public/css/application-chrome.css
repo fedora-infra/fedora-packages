@@ -85,8 +85,8 @@ a {
   z-index: 2;
 }
 
-.hover_menu {
-  list-style-image: none;
+.hover_menu li {
+  list-style-position: inside;
 }
 
 /* left navbar tabs styling */
