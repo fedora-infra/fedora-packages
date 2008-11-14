@@ -78,11 +78,15 @@ a {
 /** ui styles **/
 .hover_menu {
   position:absolute;
-  background-color: #FFFFFF;
-  border: 1px solid;
+  background-color: #eee;
+  border: 1px solid #ddd;
   width: auto !important;
   padding: 10px;
   z-index: 2;
+}
+
+.hover_menu li {
+  list-style-position: inside;
 }
 
 /* left navbar tabs styling */
@@ -350,6 +354,10 @@ span.more-items {
   height: 12px;
 }
 
+.header-list li {
+  list-style-type: none !important;
+}
+
 .header-list table {
   border-spacing: 0px; 
   border-collapse: separate !important;
@@ -398,7 +406,7 @@ span.timestamp {
   width: 100%; 
 }
 
-.panel .list li {
+.panel .announce li {
   list-style: inside url('../images/16_announcement.png');
   margin-left: 2px;
   border-bottom: dotted 1px #ddd;
@@ -623,7 +631,6 @@ h1#greeter img {
 .list .pager li.current-page {
   font-weight: bold !important;
   background-color: #eee;
-  border-bottom: 2px solid #f0f0f0 !important;
 }
 
 div.pager {
@@ -658,4 +665,18 @@ ul.page-flips li {
   height: 19px;
 }
 
+/** special list styles **/
 
+.action-button {
+  padding: 4px;
+  line-height: 24px;
+  font-size: 70%;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  background-color: #ddd;
+  border: 1px solid #aaa;
+}
+
+.action-button:hover {
+  background-color: #eaeaea;
+}
