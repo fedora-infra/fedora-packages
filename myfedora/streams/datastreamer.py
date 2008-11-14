@@ -26,7 +26,7 @@ import threading
 import pkg_resources
 
 from tw.api import Widget
-from pylons import request
+from pylons import request, config
 from datetime import datetime
 from pyorbited.simple import Client
 
@@ -95,12 +95,8 @@ class FeedWidget(Widget):
 
 from Queue import Queue
 from feedcache.cache import Cache
-from shove import Shove
 
 MAX_THREADS = 5
-FEED_CACHE = "/tmp/moksha-feeds"
-
-feed_storage = Shove('file://' + FEED_CACHE)
 
 class FeedFetcher(threading.Thread):
 
@@ -154,7 +150,8 @@ class FeedAggregator(threading.Thread):
         try:
             workers = []
             for i in range(num_threads):
-                fetcher = FeedFetcher(feed_storage, self.url_queue, entry_queue)
+                fetcher = FeedFetcher(config['app_globals'].feed_storage,
+                                      self.url_queue, entry_queue)
                 workers.append(fetcher)
                 fetcher.setDaemon(True)
                 fetcher.start()

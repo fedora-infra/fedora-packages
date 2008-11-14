@@ -1,5 +1,8 @@
 """The application's Globals object"""
 
+from tg import config
+from shove import Shove
+from feedcache.cache import Cache
 from app_factory import AppFactoryDict
 
 class Globals(object):
@@ -16,14 +19,5 @@ class Globals(object):
         self.resourceviews = AppFactoryDict() # {name: ResourceView instance}
         self.apps =  AppFactoryDict() # {name: App instance}
 
-        # Our comet data streamer, responsible for polling the data
-        # streams, and providing data to the widgets
-        #from myfedora.streams import DataStreamer
-        #self.datastreamer = DataStreamer()
-
-        FEED_CACHE = "/tmp/moksha-feeds"
-
-        from shove import Shove
-        from feedcache.cache import Cache
-        self.feed_storage = Shove('file://' + FEED_CACHE)
+        self.feed_storage = Shove('file://' + config['feed_cache'])
         self.feed_cache = Cache(self.feed_storage)
