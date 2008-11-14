@@ -15,7 +15,7 @@ class PeopleAlphaListApp(AppFactory):
         # search='a*'
     
 class PeopleAlphaListWidget(Widget):
-    template = 'genshi:myfedora.plugins.apps.templates.peoplealphalist'
+    template = 'mako:/myfedora/plugins/apps/templates/peoplealphalist.html'
 
     def update_params(self, d):
         super(PeopleAlphaListWidget, self).update_params(d)
