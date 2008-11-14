@@ -34,7 +34,7 @@ class GlobalResourceInjectionWidget(Widget):
          myfedora_branding_css]
     
 class PagerWidget(Widget):
-    template = "genshi:myfedora.widgets.templates.pager"
+    template = "mako:/myfedora/widgets/templates/pager.html"
     params = ['page', 'last_page', 'show', 'parent_dom_id']
     show = 7
     page = 1

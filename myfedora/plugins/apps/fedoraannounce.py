@@ -53,10 +53,10 @@ class FedoraAnnounceBaseWidget(Widget):
         return "<%s %s>" % (self.__class__.__name__, self.id)
 
 class FedoraAnnounceHomeWidget(FedoraAnnounceBaseWidget):
-    template = 'genshi:myfedora.plugins.apps.templates.fedoraannouncehome'
+    template = 'mako:/myfedora/plugins/apps/templates/fedoraannouncehome.html'
 
 class FedoraAnnounceCanvasWidget(FedoraAnnounceBaseWidget):
-    template = 'genshi:myfedora.plugins.apps.templates.fedoraannouncecanvas'
+    template = 'mako:/myfedora/plugins/apps/templates/fedoraannouncecanvas.html'
 
 class FedoraAnnounceApp(AppFactory):
     entry_name = 'fedoraannounce'

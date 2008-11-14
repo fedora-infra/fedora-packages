@@ -1,13 +1,13 @@
-<div xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:py="http://genshi.edgewall.org/"
-     id="${id}"
+<div id="${id}"
      class="nav">
-  <ul>
-    <li py:for="item in navigation_list"
-        py:with="image=item.get('icon', 'generic_link.png')">
-      <a href="${item['href']}" class="${item['state']}">
-        <img src="${image}" border="0" /> ${item['label']}
-      </a>
-    </li>
-  </ul>
+    <ul>
+        % for item in navigation_list:
+            <li>
+                <% image = item.get('icon', 'generic_link.png') %>
+                <a href="${item['href']}" class="${item['state']}">
+                    <img src="${image}" border="0" /> ${item['label']}
+                </a>
+            </li>
+        % endfor
+    </ul>
 </div>

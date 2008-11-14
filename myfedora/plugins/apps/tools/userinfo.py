@@ -7,7 +7,7 @@ class UserInfoToolApp(AppFactory):
     entry_name = "tools.userinfo"
 
 class UserInfoToolWidget(ToolWidget):
-    template = 'genshi:myfedora.plugins.apps.tools.templates.userinfo'
+    template = 'mako:/myfedora/plugins/apps/tools/templates/userinfo.html'
     display_name = "Info"
 
     def update_params(self, d):

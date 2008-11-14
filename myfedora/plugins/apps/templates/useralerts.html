@@ -1,24 +1,24 @@
-<div xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:py="http://genshi.edgewall.org/"
-     style="max-width:${config.width};max-height:${config.height};"
-     id="${id}">
-  <h3>ALERTS</h3>
+<div id="${id}">
+    <h3>ALERTS</h3>
 
-  <div py:for="item in categories"
-    py:with="placeholder_id='placeholder_%s_%s' % (item['type'], id)">
-    <h4><a href="${item['url']}">${item['label']}</a></h4>
-    <div id="${placeholder_id}" />
-    <script type="text/x-myfedora-extpoint">
-        {
-          'type': '${item["type"]}',
-          'placeholder_id': '${placeholder_id}',
-          'user': '${user}',
-          'base_url': '${baseurl}',
-          'show_effect': 'slideDown("fast")',
-          'hide_effect': 'slideUp("fast")',
-          'run': 'whenReady',
-          'hide_parent': '${id}'
-        }
-    </script>
-  </div>
+    % for item in categories:
+        <div>
+            <% placeholder_id='placeholder_%s_%s' % (item['type'], id) %>
+            <h4><a href="${item['url']}">${item['label']}</a></h4>
+            <div id="${placeholder_id}" />
+                <script type="text/x-myfedora-extpoint">
+                    {
+                        'type': '${item["type"]}',
+                        'placeholder_id': '${placeholder_id}',
+                        'user': '${user}',
+                        'base_url': '${baseurl}',
+                        'show_effect': 'slideDown("fast")',
+                        'hide_effect': 'slideUp("fast")',
+                        'run': 'whenReady',
+                        'hide_parent': '${id}'
+                    }
+                </script>
+            </div>
+        </div>
+    % endfor
 </div>

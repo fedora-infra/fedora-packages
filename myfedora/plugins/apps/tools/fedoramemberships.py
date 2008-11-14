@@ -8,7 +8,7 @@ class FedoraMembershipsToolApp(AppFactory):
     entry_name = "tools.fedoramemberships"
 
 class FedoraMembershipsToolWidget(ToolWidget):
-    template = 'genshi:myfedora.plugins.apps.tools.templates.fedoramemberships'
+    template = 'mako:/myfedora/plugins/apps/tools/templates/fedoramemberships.html'
     display_name = "Memberships"
 
     def group_type_to_name(self, gtype):

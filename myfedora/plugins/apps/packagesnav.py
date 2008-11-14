@@ -35,7 +35,7 @@ class PackagesNavApp(AppFactory):
 
 class PackagesNavWidget(Widget):
     params=[]
-    template = 'genshi:myfedora.plugins.apps.templates.packagesnav'
+    template = 'mako:/myfedora/plugins/apps/templates/packagesnav.html'
     javascript = [jquery_js]
     
     def _construct_query_string(self, req_params, **params):

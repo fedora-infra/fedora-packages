@@ -1,51 +1,55 @@
-<div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/"
-     class="list header-list">
-  <h3>People</h3>
-  <span py:for="a in 'abcdefghijklmnopqrstuvwxy'" >
-    <a href="?search=${a}*">${a}</a> |
-  </span>
-    <a href="?search=z*">z</a>
-  <table>
-    <thead>
-      <tr>
-        <th>Full Name</th>
-        <th>User Name</th>
-        <th>IRC Nick</th>
-        <th>GPG Key Id</th>
-        <th>Status</th>
-        <th>Last Seen</th>
-      </tr>
-    </thead>
-    <tbody>
-      <rowgroup py:for="person in people" class="${person['status']}">
-        <tr>
-          <td>
-            <img height="16" src="${person['hackergotchi_url']}" /> 
-            <span class="person-name">
-              <a href="${person['url']}">
-                ${person['human_name']}
-              </a>
-            </span>
-          </td>
-          <td>${person['username']}</td>
-          <td>${person['ircnick']}</td>
-          <td>${person['gpg_keyid']}</td>
-          <td><img src="/images/16_${person['status']}.png" /> ${person['status']}</td> 
-          <td>
-            <div>
-              ${person['last_seen_hr_0']}
-            </div>
-            <span class="timestamp">
-              ${person['last_seen_hr_1']}
-            </span>
-          </td>
-        </tr>
-      </rowgroup>
-    </tbody>
-  </table>
-  <span py:for="a in 'abcdefghijklmnopqrstuvwxy'" >
-    <a href="?search=${a}*">${a}</a> |
-  </span>
-    <a href="?search=z*">z</a>
+<div class="list header-list">
+    <h3>People</h3>
+    <div>
+        % for a in 'abcdefghijklmnopqrstuvwxy':
+            <a href="?search=${a}*">${a}</a> |
+        % endfor
+        <a href="?search=z*">z</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>User Name</th>
+                <th>IRC Nick</th>
+                <th>GPG Key Id</th>
+                <th>Status</th>
+                <th>Last Seen</th>
+            </tr>
+        </thead>
+        <tbody>
+            % for person in people:
+                <rowgroup class="${person['status']}">
+                    <tr>
+                        <td>
+                            <img height="16" src="${person['hackergotchi_url']}" /> 
+                            <span class="person-name">
+                                <a href="${person['url']}">
+                                    ${person['human_name']}
+                                </a>
+                            </span>
+                        </td>
+                        <td>${person['username']}</td>
+                        <td>${person['ircnick']}</td>
+                        <td>${person['gpg_keyid']}</td>
+                        <td><img src="/images/16_${person['status']}.png" /> ${person['status']}</td> 
+                        <td>
+                            <div>
+                                ${person['last_seen_hr_0']}
+                            </div>
+                            <span class="timestamp">
+                                ${person['last_seen_hr_1']}
+                            </span>
+                        </td>
+                    </tr>
+                </rowgroup>
+            % endfor
+        </tbody>
+    </table>
+    <div>
+        % for a in 'abcdefghijklmnopqrstuvwxy':
+            <a href="?search=${a}*">${a}</a> |
+        % endfor
+        <a href="?search=z*">z</a>
+    </div>
 </div>

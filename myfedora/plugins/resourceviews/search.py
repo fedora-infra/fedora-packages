@@ -10,7 +10,7 @@ class SearchViewController(ResourceViewController):
     pass
 
 class SearchViewWidget(ResourceViewWidget):
-    template='genshi:myfedora.plugins.resourceviews.templates.searchview'
+    template='mako:/myfedora/plugins/resourceviews/templates/searchview.html'
     data_keys=['data_key', 'search']
     
     def update_params(self, d):

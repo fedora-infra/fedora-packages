@@ -1,45 +1,45 @@
-<div xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      id="resource_content"> 
-  <?python import tg ?>
+<%! import tg %>
+
+<div id="resource_content"> 
+    <h2>Package: ${package} - ${package_data['summary']}</h2>
   
-  <h2>Package: ${package} - ${package_data['summary']}</h2>
-  
-  <div id="right-content-column">
-     <div id="more_info" />
-     <script type="text/x-myfedora-extpoint">
-            {
-              'type': 'package_info',
-              'placeholder_id': 'more_info',
-              'package': '${package}',
-              'show_effect': 'fadeIn("fast")',
-              'hide_effect': 'fadeOut("fast")'
-            }
-     </script>
-   </div>
-  
-  <div id="left-content-column">
-    <div class="list list-simple">
-      <h3>Description</h3>
-      <table>
-        <tr>
-          <td>
-             ${package_data['description']}
-          </td>
-        </tr>
-      </table>
+    <div id="right-content-column">
+        <div id="more_info" />
+            <script type="text/x-myfedora-extpoint">
+                {
+                    'type': 'package_info',
+                    'placeholder_id': 'more_info',
+                    'package': '${package}',
+                    'show_effect': 'fadeIn("fast")',
+                    'hide_effect': 'fadeOut("fast")'
+                }
+            </script>
+        </div>
     </div>
+    <div id="left-content-column">
+        <div class="list list-simple">
+            <h3>Description</h3>
+            <table>
+                <tr>
+                    <td>
+                        ${package_data['description']}
+                    </td>
+                </tr>
+            </table>
+        </div>
   
-    <div class="list list-simple">
-      <h3>Collections</h3>
-      <table>
-        <tr py:for="c in package_data['collection_list']">
-          <td>
-            ${c['fullname']} - <span class="person-name"><a href="${tg.url('/people/name/' + c['package_owner_id'])}">${c['package_owner_name']}</a></span>    
-          </td>
-        </tr>
-      </table>
+        <div class="list list-simple">
+            <h3>Collections</h3>
+            <table>
+                % for c in package_data['collection_list']:
+                    <tr>
+                        <td>
+                            ${c['fullname']} - <span class="person-name"><a href="${tg.url('/people/name/' + c['package_owner_id'])}">${c['package_owner_name']}</a></span>    
+                        </td>
+                    </tr>
+                % endfor
+            </table>
+        </div>
     </div>
-  </div>
 </div>
 

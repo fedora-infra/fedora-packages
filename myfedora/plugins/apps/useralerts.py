@@ -29,7 +29,7 @@ class UserAlertsApp(AppFactory):
 
 class UserAlertsWidget(Widget):
     params=[]
-    template = 'genshi:myfedora.plugins.apps.templates.useralerts'
+    template = 'mako:/myfedora/plugins/apps/templates/useralerts.html'
     javascript = [jquery_js, myfedora_ui_js, myfedora_extensions_js]
 
     def create_category(self, name, label, url):

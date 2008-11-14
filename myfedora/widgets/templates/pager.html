@@ -1,37 +1,47 @@
-<div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/"
-     id="${id}"
-     class="pager">
-<ul class="page-numbers">
-  <span py:if="front_set" py:strip="">
-   <span py:for="i in front_set" py:strip=""> 
-    <li class="page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">${i}</a></li>
-    <li class="page-ellipses">...</li>
-   </span>
-   </span>
-   <span py:if="main_set" py:strip="">
-   <span py:for="i in main_set" py:strip="">
-    <span py:if="page != i" py:strip="">
-     <li class="page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">${i}</a></li>
-    </span>
-    <li py:if="page == i" class="current-page">${i}</li>
-   </span>
-  </span>
-  <span py:if="back_set" py:strip="">
-  <li class="page-ellipses">
-    ...</li>
-   <li py:for="i in back_set" class="page-button">
-       <a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">
-         ${i}
-       </a>
-     </li>
-  </span>
-</ul>
+## -*- coding: utf-8 -*-
 
- <ul class="page-flips">
-  <li py:if="next_page" class="next-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)">Next ▸</a></li>
-  <li py:if="not next_page" class="next-page no-link">Next ▸</li>
-  <li py:if="prev_page" class="prev-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${prev_page}})" href="javascript:void(0)">◂ Previous</a></li>
-  <li py:if="not prev_page" class="prev-page no-link">◂ Previous</li>
- </ul>
+<div id="${id}" class="pager">
+    <ul class="page-numbers">
+        % if front_set:
+            % for i in front_set: 
+                <li class="page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">${i}</a></li>
+                <li class="page-ellipses">...</li>
+            % endfor
+        % endif
+        
+        % if main_set:
+            % for i in main_set: 
+                % if page != i:
+                    <li class="page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">${i}</a></li>
+                % else:
+                    <li class="current-page">${i}</li>
+                % endif
+            % endfor
+        % endif
+        
+        % if back_set:
+            <li class="page-ellipses">...</li>
+            % for i in back_set:
+                <li class="page-button">
+                    <a onClick="myfedora.ui.go_to('${parent_id}', {'page':${i}})" href="javascript:void(0)">
+                        ${i}
+                    </a>
+                </li>
+            % endfor
+        % endif
+    </ul>
+
+    <ul class="page-flips">
+        % if next_page:
+            <li class="next-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${next_page}})" href="javascript:void(0)">Next ▸</a></li>
+        % else:
+            <li class="next-page no-link">Next ▸</li>
+        % endif
+        
+        % if prev_page:
+            <li class="prev-page page-button"><a onClick="myfedora.ui.go_to('${parent_id}', {'page':${prev_page}})" href="javascript:void(0)">◂ Previous</a></li>
+        % else:
+            <li class="prev-page no-link">◂ Previous</li>
+        % endif
+    </ul>
 </div>

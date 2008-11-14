@@ -7,7 +7,7 @@ class PackageInfoToolApp(AppFactory):
     entry_name = "tools.packageinfo"
 
 class PackageInfoToolWidget(ToolWidget):
-    template = 'genshi:myfedora.plugins.apps.tools.templates.packageinfo'
+    template = 'mako:/myfedora/plugins/apps/tools/templates/packageinfo.html'
     display_name = "Info"
 
     def _compare_collection_versions(self, a, b):

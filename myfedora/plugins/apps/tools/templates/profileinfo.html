@@ -1,44 +1,43 @@
-<div xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      id="resource_content"> 
-  <?python from pylons import tmpl_context ?>
-  
-  <div id="right-content-column">
-    <div py:for="app in rightcol" class="panel icon-panel" >
-      ${tmpl_context.show_app(app)}
+<%! from pylons import tmpl_context %>
+<div id="resource_content"> 
+    <div id="right-content-column">
+        % for app in rightcol:
+            <div class="panel icon-panel" >
+                ${tmpl_context.show_app(app)}
+            </div>
+        % endfor
     </div>
-  </div>
-  <div id="left-content-column"
-       py:with="p=tmpl_context.identity['person']"
+    <div id="left-content-column"
        class="list">
-    <table>
-      <tr>
-        <td>Username:</td><td>${p['username']}</td>
-      </tr>
-      <tr>
-        <td>IRC Nickname:</td><td>${p['ircnick']}</td>
-      </tr>
-      <tr>
-        <td>Contact Info:</td><td></td>
-      </tr>
-      <tr>
-        <td></td><td>${p['postal_address']}</td>
-      </tr>
-      <tr>
-        <td></td><td><a href="mailto:${p['email']}">${p['email']}</a></td>
-      </tr>
-      <tr>
-        <td></td><td>${p['telephone']}</td>
-      </tr>
-      <tr>
-        <td></td><td></td>
-      </tr>
-      <tr>
-        <td>Public ssh key</td><td>${p['ssh_key']}</td>
-      </tr>
-      <tr>
-         <td>GPG Id</td><td>${p['gpg_keyid']}</td>
-      </tr>
-    </table>
-  </div>
+        <% p=tmpl_context.identity['person'] %>
+        <table>
+            <tr>
+                <td>Username:</td><td>${p['username']}</td>
+            </tr>
+            <tr>
+                <td>IRC Nickname:</td><td>${p['ircnick']}</td>
+            </tr>
+            <tr>
+                <td>Contact Info:</td><td></td>
+            </tr>
+            <tr>
+                <td></td><td>${p['postal_address']}</td>
+            </tr>
+            <tr>
+                <td></td><td><a href="mailto:${p['email']}">${p['email']}</a></td>
+            </tr>
+            <tr>
+                <td></td><td>${p['telephone']}</td>
+            </tr>
+            <tr>
+                <td></td><td></td>
+            </tr>
+            <tr>
+                <td>Public ssh key</td><td>${p['ssh_key']}</td>
+            </tr>
+            <tr>
+                <td>GPG Id</td><td>${p['gpg_keyid']}</td>
+            </tr>
+        </table>
+    </div>
 </div>

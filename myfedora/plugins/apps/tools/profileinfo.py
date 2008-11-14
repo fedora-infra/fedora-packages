@@ -9,7 +9,7 @@ class ProfileInfoToolApp(AppFactory):
     entry_name = "tools.profileinfo"
 
 class ProfileInfoToolWidget(ToolWidget):
-    template = 'genshi:myfedora.plugins.apps.tools.templates.profileinfo'
+    template = 'mako:/myfedora/plugins/apps/tools/templates/profileinfo.html'
     display_name = "Info"
 
     def update_params(self, d):

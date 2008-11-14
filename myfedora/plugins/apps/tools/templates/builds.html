@@ -1,20 +1,21 @@
-<?python
-import tg
-from pylons import tmpl_context
-?>
+<%!
+    import tg
+    from pylons import tmpl_context
+%>
 
-<div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/">
- 
-   <div id="right-content-column">
-    <div py:for="app in rightcol" class="panel">
-      ${tmpl_context.show_app(app)}
+<div>
+    <div id="right-content-column">
+        % for app in rightcol:
+            <div class="panel">
+                ${tmpl_context.show_app(app)}
+            </div>
+        % endfor
+    </div>    
+    <div id='left-content-column'>
+        % for app in leftcol:
+            <div class="panel">
+                ${tmpl_context.show_app(app)}
+            </div>
+        % endfor
     </div>
-  </div>    
-  <div id='left-content-column'>
-     <div py:for="app in leftcol" class="panel">
-      ${tmpl_context.show_app(app)}
-    </div>
-  </div>
- 
 </div>

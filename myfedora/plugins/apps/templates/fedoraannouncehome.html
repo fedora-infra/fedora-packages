@@ -1,11 +1,11 @@
-<div xmlns="http://www.w3.org/1999/xhtml"
-     xmlns:py="http://genshi.edgewall.org/"
-     id="${id}"
+<div id="${id}"
      class="list">
-  <h3><a href="${url}" target="_blank">Fedora Announcements</a></h3>
-  <ul>
-    <li py:for="entry in entries">
-        <a href="${entry.link}" target="_blank">${entry.title}</a>
-      </li>
+    <h3><a href="${url}" target="_blank">Fedora Announcements</a></h3>
+    <ul>
+        % for entry in entries:
+            <li py:for="entry in entries">
+                <a href="${entry.link}" target="_blank">${entry.title}</a>
+            </li>
+        % endfor
     </ul>
 </div>

@@ -1,50 +1,63 @@
-<div xmlns="http://www.w3.org/1999/xhtml" 
-     xmlns:py="http://genshi.edgewall.org/"
-     id="${id}">
+<div id="${id}">
 
-<?python import tg ?>
+<%! import tg %>
 
-  <center><div id="bodhi_notice" class="notice" style="display: none"></div></center>
+    <center><div id="bodhi_notice" class="notice" style="display: none"></div></center>
 
-  <div class="list header-list" py:if="updates">
-     <h3><span class="header-text">Updates</span> <span class="header-details">${updates['title']}</span></h3>
-     ${children.pager.display(value_for(children.pager), 
-                              **args_for(children.pager))}
-     <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Build</th>
-            <th>Release</th>
-            <th>Age</th>
-            <th>Status</th>
-            <th>Action(s)</th>
-          </tr>
-        </thead>
-        <tbody py:for="i, update in enumerate(updates['updates'])">
-            <tr>
-              <td><img src="/images/16_package_${update['type']}.png"/></td>
-              <td><ul><li py:for="build in update['title'].split(',')"><a href="https://admin.fedoraproject.org/updates/${update['title']}">${build}</a></li></ul>
-             </td>
-              <td>${update['release']['long_name']}</td>
-              <td>${update['age']}</td>
-              <td>${update['status']} <br/> <img src="https://admin.fedoraproject.org/updates/static/images/${update['karmaimg']}"/>${update['karma']}</td>
-              <td>
-                <div py:for="action, label in update['actions']"
-                     class="${i}_${action}">
-                     <a class="action-button" href="#" onclick="$.getJSON(${repr(tg.url('/apps/updates/request/%s/%s' % (update['title'], action)))}, function(data){ $('#bodhi_notice').html(data['tg_flash']); $('#bodhi_notice').show('slow'); }); return false;">${label}</a>
-                </div> 
-              </td>
-            </tr>
-      </tbody>
-     </table>
-     ${children.pager.display(value_for(children.pager), 
-                              **args_for(children.pager))}
-  </div>
-
-  <!-- used if there is no data -->
-  <div py:if="not updates">
-    Cannot find any updates.
-  </div>
-
+    % if updates:
+        <div class="list header-list">
+            <h3>
+                <span class="header-text">Updates</span> 
+                <span class="header-details">${updates['title']}</span>
+            </h3>
+            ${children.pager.display(value_for(children.pager), 
+                                     **args_for(children.pager))}
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Build</th>
+                        <th>Release</th>
+                        <th>Age</th>
+                        <th>Status</th>
+                        <th>Action(s)</th>
+                    </tr>
+                </thead>
+                
+                % for i, update in enumerate(updates['updates']):
+                    <tbody>
+                        <tr>
+                            <td><img src="/images/16_package_${update['type']}.png"/></td>
+                            <td>
+                                <ul>
+                                    % for build in update['title'].split(','):
+                                        <li>
+                                            <a target="_blank" href="https://admin.fedoraproject.org/updates/${update['title']}">${build}</a>
+                                        </li>
+                                    % endfor
+                                </ul>
+                            </td>
+                            <td>${update['release']['long_name']}</td>
+                            <td>${update['age']}</td>
+                            <td>${update['status']} <br/> <img src="https://admin.fedoraproject.org/updates/static/images/${update['karmaimg']}"/>${update['karma']}</td>
+                            <td>
+                                % for action, label in update['actions']:
+                                    <div class="${i}_${action}">
+                                        <a class="action-button" href="#" onclick="$.getJSON(${repr(tg.url('/apps/updates/request/%s/%s' % (update['title'], action)))}, function(data){ $('#bodhi_notice').html(data['tg_flash']); $('#bodhi_notice').show('slow'); }); return false;">${label}</a>
+                                    </div>
+                                % endfor 
+                            </td>
+                        </tr>
+                    </tbody>
+                % endfor
+            </table>
+            ${children.pager.display(value_for(children.pager), 
+                                     **args_for(children.pager))}
+        </div>
+    % else:
+        <!-- used if there is no data -->
+        <div>
+            Cannot find any updates.
+        </div>
+    % endif
 </div>

@@ -34,7 +34,7 @@ class PkgdbClient(BaseClient):
 
 class SearchPackagesToolWidget(SearchBaseWidget):
     params=['search_string', 'results']
-    template = 'genshi:myfedora.plugins.apps.tools.templates.searchpackages'
+    template = 'mako:/myfedora/plugins/apps/tools/templates/searchpackages.html'
     display_name = 'Packages'
     
     def get_extra_links_table(self):
