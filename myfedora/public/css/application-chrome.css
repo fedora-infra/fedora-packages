@@ -78,11 +78,15 @@ a {
 /** ui styles **/
 .hover_menu {
   position:absolute;
-  background-color: #FFFFFF;
-  border: 1px solid;
+  background-color: #eee;
+  border: 1px solid #ddd;
   width: auto !important;
   padding: 10px;
   z-index: 2;
+}
+
+.hover_menu {
+  list-style-image: none;
 }
 
 /* left navbar tabs styling */
