@@ -12,7 +12,7 @@ class BuildsToolApp(AppFactory):
     entry_name = 'tools.builds'
 
 class BuildsToolWidget(ToolWidget):
-    template = 'genshi:myfedora.plugins.apps.tools.templates.builds'
+    template = 'mako:/myfedora/plugins/apps/tools/templates/builds.html'
     display_name = "Builds"
     requires_data_key = False
     
