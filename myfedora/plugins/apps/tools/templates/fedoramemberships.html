@@ -1,104 +1,108 @@
-<div xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:py="http://genshi.edgewall.org/"
-      id="${id}">     
-      
-  <form>
-     <div> 
-      <span>
-        Group Membership
-      </span>
-      <input type="text" name="group" id="${id}_membership_entry"></input>
-    </div>
-    <div>
-      <input class="button" type="submit" value="Request"/>
-    </div>
-  </form>
-  <script type="text/javascript">
-    var search_len = 1;
-    var cache = {};
-    var last_search = undefined; 
-    var search_cb = function(text, result_cb)
-      {
-         var results = function(json)
-           {
-             var cache_key = undefined; 
-             for (var i in json.groups)
-               {
-                 var dn = json.groups[i].display_name;
-                 var n = json.groups[i].name;
-                 var d = dn;
-                 var cache_key = n.substr(0, search_len)
+<div id="${id}"> 
+    <!-- We need to add support for adding to a group in fas     
+    <form>
+        <div> 
+            <span>
+                Group Membership
+            </span>
+            <input type="text" name="group" id="${id}_membership_entry"></input>
+        </div>
+        <div>
+            <input class="button" type="submit" value="Request"/>
+        </div>
+    </form>
+    <script type="text/javascript">
+        var search_len = 1;
+        var cache = {};
+        var last_search = undefined; 
+        var search_cb = function(text, result_cb) {
+            var results = function(json) {
+                var cache_key = undefined; 
+                for (var i in json.groups) {
+                    var dn = json.groups[i].display_name;
+                    var n = json.groups[i].name;
+                    var d = dn;
+                    var cache_key = n.substr(0, search_len)
 
-                 var item = [d, n];
+                    var item = [d, n];
                  
-                 if (cache[cache_key] == 'loading')
-                   cache[cache_key] = [];
+                    if (cache[cache_key] == 'loading')
+                        cache[cache_key] = [];
                    
-                 cache[cache_key].push(item);
-               }
+                    cache[cache_key].push(item);
+                }
                
-             if (last_search == cache_key)
-                result_cb(cache[cache_key]);
-           }
+                if (last_search == cache_key)
+                    result_cb(cache[cache_key]);
+            }
            
-         search_chars = text.substr(0, search_len)
-         last_search = search_chars;
-         cached_list = cache[search_chars]
-         if (!cached_list)
-           {
-             cache[search_chars] = 'loading';
-             jQuery.getJSON(myfedora.get_page_base_url() +  'proxy/fas/group_list', {'search': text[0] + '*',
+            search_chars = text.substr(0, search_len)
+            last_search = search_chars;
+            cached_list = cache[search_chars]
+            if (!cached_list) {
+                cache[search_chars] = 'loading';
+                jQuery.getJSON(myfedora.get_page_base_url() +  'proxy/fas/group_list', {'search': text[0] + '*',
                                                       'groups_only': true}, results);
-           }
-         else if (cached_list != 'loading')
-           {
-             result_cb(cached_list); 
-           }
-      }
+            } else if (cached_list != 'loading') {
+                result_cb(cached_list); 
+            }
+        }
       
-    var autocomplete = new myfedora.ui.autocomplete_entry("${id}_membership_entry", 
+        var autocomplete = new myfedora.ui.autocomplete_entry("${id}_membership_entry", 
                                                           search_len, 
                                                           search_cb);
-  </script>
-  
-  <div class="list header-list">
-    <h3>Memberships</h3>
+    </script>
+  -->
+    <div class="list header-list">
+        <h3>Memberships</h3>
     
-    <div py:if="unapproved_memberships">
-    <h4>Pending</h4>
-    <table py:for="grouping_name in unapproved_memberships">
-      <thead>
-        <tr>
-          <th>${grouping_name}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <rowgroup py:for="group in unapproved_memberships[grouping_name]">
-          <tr>
-            <td>${group['display_name']}</td><td><a href="${group['url']}" target="_blank">Web Link Placeholder</a></td>
-          </tr>
-        </rowgroup>
-      </tbody>
-      
-    </table>
+        % if unapproved_memberships:
+            <div>
+                <h4>Pending</h4>
+                % for grouping_name in unapproved_memberships:
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>${grouping_name}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            % for group in unapproved_memberships[grouping_name]:
+                                <rowgroup>
+                                    <tr>
+                                        <td>${group['display_name']}</td><td><a href="${group['url']}" target="_blank">Web Link Placeholder</a></td>
+                                    </tr>
+                                </rowgroup>
+                            % endfor
+                        </tbody>
+                    </table>
+                % endfor
+            </div>
+        % endif
+        <div>
+            <h4>Approved</h4>
+            % for grouping_name in approved_memberships:
+                <table>
+                    <thead>
+                        <tr>
+                            <th>${grouping_name}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        % for group in approved_memberships[grouping_name]:
+                            <rowgroup>
+                                <tr>
+                                    <td>${group['display_name']}</td>
+                                    <td><a href="${group['url']}" target="_blank">Web Link Placeholder</a></td>
+                                    % if group['user_can_remove']:
+                                        <td>Leave Group Placeholder</td>
+                                    % endif
+                                </tr>
+                            </rowgroup>
+                        % endfor
+                    </tbody>   
+                </table>
+            % endfor
+        </div>
     </div>
-    <div>
-    <h4>Approved</h4>
-    <table py:for="grouping_name in approved_memberships">
-      <thead>
-        <tr>
-          <th>${grouping_name}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <rowgroup py:for="group in approved_memberships[grouping_name]">
-          <tr>
-            <td>${group['display_name']}</td><td><a href="${group['url']}" target="_blank">Web Link Placeholder</a></td><td py:if="group['user_can_remove']">Leave Group Placeholder</td>
-          </tr>
-        </rowgroup>
-      </tbody>
-      
-    </table>
-    </div>
-  </div>
 </div>
