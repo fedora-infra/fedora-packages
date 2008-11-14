@@ -601,7 +601,7 @@ h1#greeter img {
   margin-right: 0px;
   border-right: 1px solid #aaa; 
   background-color: #ccc;
-  min-height: 22px;
+  height: 20px;
 }
 
 .list .pager li.page-button a,
