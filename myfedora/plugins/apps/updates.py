@@ -120,7 +120,7 @@ class FedoraUpdateCandidatesWidget(Widget):
 class FedoraUpdatesWidget(Widget):
     """ A widget for displaying a list of bodhi updates """
     params = {'updates': 'A list of bodhi updates'}
-    template = 'genshi:myfedora.plugins.apps.templates.updates_canvas'
+    template = 'mako:/myfedora/plugins/apps/templates/updates_canvas.html'
     limit = 10
 
     def __init__(self, *args, **kw):
