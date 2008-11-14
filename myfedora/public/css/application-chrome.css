@@ -402,7 +402,7 @@ span.timestamp {
   width: 100%; 
 }
 
-.panel .list li {
+.panel .announce li {
   list-style: inside url('../images/16_announcement.png');
   margin-left: 2px;
   border-bottom: dotted 1px #ddd;
