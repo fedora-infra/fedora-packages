@@ -1,19 +1,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
                     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:py="http://genshi.edgewall.org/"
-    xmlns:xi="http://www.w3.org/2001/XInclude">
+<html>
 
-<xi:include href="base.html" />
+<%inherit file="master.html" />
 
 <head>
 <meta content="text/html; charset=UTF-8" http-equiv="content-type" py:replace="''"/>
-<title>Login Form</title>
+<title><%def name="title()">Login Form</%def></title>
 </head>
 
 <body>
-  <div py:for="a in apps">
-     ${tmpl_context.show_app(a)}
-  </div>
+  <%def name="content()">
+      % for a in apps:
+        <div>
+             ${tmpl_context.show_app(a)}
+        </div>
+      % endfor
+  </%def>
 </body>
 </html>
