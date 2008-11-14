@@ -12,7 +12,7 @@ class UpdatesToolApp(AppFactory):
     entry_name = 'tools.updates'
 
 class UpdatesToolWidget(ToolWidget):
-    template = 'genshi:myfedora.plugins.apps.tools.templates.updates'
+    template = 'mako:/myfedora/plugins/apps/tools/templates/updates.html'
     display_name = "Updates"
     requires_data_key = False
     
