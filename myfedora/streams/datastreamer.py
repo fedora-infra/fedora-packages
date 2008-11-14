@@ -41,27 +41,19 @@ class Feed(object):
 
     """
     def __init__(self, id, url, *args, **kw):
-        log.debug('Feed.__init__(%s)' % locals())
         self.url = url
         self.id = id
         self.name = id # eventually figure out the name from the feed
 
-    @property
     def iterentries(self):
-        log.debug("Feed(%s).entries" % self.id)
-        start = datetime.now()
-
         entries = pylons.g.feed_cache.fetch(self.url).entries
-        log.debug('Fetching %s took %d seconds' % (self.url,
-                  (datetime.now() - start).seconds))
-
         for i, entry in enumerate(entries):
             entry['uid'] = '%s_%d' % (self.id, i)
             yield entry
 
     @property
     def entries(self):
-        return [entry for entry in self.iterentries]
+        return [entry for entry in self.iterentries()]
 
     @property
     def num_entries(self):
