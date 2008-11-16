@@ -15,7 +15,7 @@
 #
 # Author(s): Luke Macken <lmacken@redhat.com>
 
-from __future__ import with_statement
+#from __future__ import with_statement
 
 import re
 import time
@@ -237,19 +237,19 @@ class DataStreamer(threading.Thread):
             # TODO: Make this suck less.
             time.sleep(10)
 
-    def user_keys(self, feed):
-        with self.lock:
-            return ['%s, %s, /feed/%s' % (user, session, feed) for
-                    user, session in self.users[feed]]
+    #def user_keys(self, feed):
+    #    with self.lock:
+    #        return ['%s, %s, /feed/%s' % (user, session, feed) for
+    #                user, session in self.users[feed]]
 
-    def join(self, user, feed, session='0'):
-        print "%s joining %s feed (%s)" % (user, feed, session)
-        with self.lock:
-            if self.users.has_key(feed):
-                if (user, session) not in self.users[feed]:
-                    self.users[feed].append((user, session))
-            else:
-                raise DataStreamerException("Cannot find feed: %s" % feed)
+    #def join(self, user, feed, session='0'):
+    #    print "%s joining %s feed (%s)" % (user, feed, session)
+    #    with self.lock:
+    #        if self.users.has_key(feed):
+    #            if (user, session) not in self.users[feed]:
+    #                self.users[feed].append((user, session))
+    #        else:
+    #            raise DataStreamerException("Cannot find feed: %s" % feed)
 
 
 if __name__ == '__main__':
