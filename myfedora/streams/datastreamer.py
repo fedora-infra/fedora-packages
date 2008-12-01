@@ -25,60 +25,12 @@ import logging
 import threading
 import pkg_resources
 
-from tw.api import Widget
 from pylons import request, config
 from datetime import datetime
 from pyorbited.simple import Client
 
+
 log = logging.getLogger(__name__)
-
-
-class Feed(object):
-    """ A powerful Feed object.
-
-    A Feed is initialized with an id and a url, and automatically handles the
-    fetching, parsing, and caching of the data.
-
-    """
-    def __init__(self, id, url, *args, **kw):
-        self.url = url
-        self.id = id
-        self.name = id # eventually figure out the name from the feed
-
-    def iterentries(self):
-        entries = pylons.g.feed_cache.fetch(self.url).entries
-        for i, entry in enumerate(entries):
-            entry['uid'] = '%s_%d' % (self.id, i)
-            yield entry
-
-    @property
-    def entries(self):
-        return [entry for entry in self.iterentries()]
-
-    @property
-    def num_entries(self):
-        return len(self.entries)
-
-
-class FeedWidget(Widget):
-    params = {
-            'entries': 'A list of feed entries',
-            'charcount': 'The number of characters to display per entry',
-    }
-    template = 'genshi:myfedora.widgets.templates.feedhome'
-
-    def update_params(self, d):
-        super(Feed, self).update_params(d)
-        limit = d.get('show')
-        if limit:
-            log.debug('show = %r' % limit)
-            d['entries'] = []
-            for i, entry in enumerate(self.entries):
-                if i >= limit:
-                    break
-                d['entries'].append(entry)
-        else:
-            d['entries'] = self.entries
 
 
 #
