@@ -1,5 +1,5 @@
+from moksha.feed import Feed
 from myfedora.lib.app_factory import AppFactory
-from myfedora.widgets.feed import Feed
 
 class FedoraAnnounceHomeWidget(Feed):
     link = 'https://www.redhat.com/archives/fedora-announce-list/'
