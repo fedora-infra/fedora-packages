@@ -18,7 +18,6 @@ data_files = [
 ]
 
 packages = find_packages(exclude=['ez_setup'])
-print packages
 
 setup(
     name='myfedora',
@@ -199,5 +198,8 @@ setup(
 
     [paste.paster_create_template]
     moksha-app = mokshaapp.pastetemplate:MokshaAppTemplate
+    
+    [moksha.connector]
+    koji = myfedora.connectors:KojiConnector
     """,
 )
