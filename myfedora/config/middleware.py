@@ -4,7 +4,11 @@ from myfedora.config.environment import load_environment
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
 def make_app(global_conf, full_stack=True, **app_conf):
-    app = make_base_app(global_conf, full_stack=full_stack, **app_conf)
+
+    from moksha.middleware import MokshaMiddleware
+
+    app = make_base_app(global_conf, full_stack=full_stack, 
+                        wrap_app=MokshaMiddleware, **app_conf)
 
     if base_config.squeeze:
         from repoze.squeeze.processor import ResourceSqueezingMiddleware

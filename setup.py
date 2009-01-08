@@ -83,9 +83,6 @@ setup(
     packages = myfedora.plugins.apps.tools.searchpackages:SearchPackagesToolWidget
     people = myfedora.plugins.apps.tools.searchpeople:SearchPeopleToolWidget
 
-    [myfedora.data]
-    rss = myfedora.plugins.apps.rss:FedoraPeopleData
-
     [myfedora.plugins.apps]
     planetfedora = myfedora.plugins.apps.planetfedora:PlanetFedoraApp
     helloworld = myfedora.plugins.apps.helloworld:HelloWorldApp

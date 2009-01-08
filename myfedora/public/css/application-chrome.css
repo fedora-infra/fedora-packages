@@ -602,15 +602,15 @@ h1#greeter img {
   border-right: 1px solid #aaa; 
   background-color: #ccc;
   height: 22px !important;
+  padding-left: 7px;
+  padding-right: 7px;
+  vertical-align: middle !important;
 }
 
 .list .pager li.page-button a,
 .list .pager li.current-page,
 .list .pager li.page-ellipses,
 .list .pager li.no-link {
-  padding-left: 7px;
-  padding-right: 7px
-  vertical-align: middle !important;
 }
 
 .list .pager li.page-ellipses {

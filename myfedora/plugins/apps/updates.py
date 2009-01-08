@@ -16,16 +16,15 @@
 
 import koji
 import logging
-import formencode
 
-from tg import url, expose, validate
+from tg import url, expose, validate, config
 from tw.api import Widget, WidgetsList, js_callback, js_function
 from tw.forms import (TableForm, TextField, SingleSelectField, TextArea,
                       CheckBox)
 from tw.jquery.activeform import AjaxForm
 
 from pylons import tmpl_context, request
-from formencode import validators
+from formencode import validators, All
 
 from myfedora.widgets import PagerWidget
 from myfedora.lib.app_factory import AppFactory
@@ -36,14 +35,12 @@ from myfedora.controllers.resourceview import ResourceViewController
 
 log = logging.getLogger(__name__)
 
-KOJI_URL = 'http://koji.fedoraproject.org/kojihub'
-
 
 class NewUpdateWidget(AjaxForm):
     #success = 'newupdate_success'
     action = 'save'
     class fields(WidgetsList):
-        builds = TextField(validator=formencode.All(validators.NotEmpty(),
+        builds = TextField(validator=All(validators.NotEmpty(),
                            validators.UnicodeString()), disabled=True)
         bugs = TextField(validator=validators.UnicodeString())
         types = ('bugfix', 'enhancement', 'security', 'newpackage')
@@ -59,8 +56,10 @@ class NewUpdateWidget(AjaxForm):
 
 new_update_form = NewUpdateWidget('new_update_form', target='output')
 
+bodhi = BodhiClient()
 
-class FedoraUpdatesController(object):
+
+class FedoraUpdatesController(Controller):
 
     @expose('genshi:myfedora.plugins.apps.templates.updateform')
     def new(self, **kw):
@@ -71,7 +70,6 @@ class FedoraUpdatesController(object):
     @validate(new_update_form, error_handler=new)
     def save(self, builds, type, bugs, request, notes):
         log.debug('save(%s)' % locals())
-        bodhi = BodhiClient()
         results = bodhi.save(builds=builds, type_=type, bugs=bugs,
                              request=request.lower(), notes=notes)
         log.debug('results = %r' % results)
@@ -81,7 +79,6 @@ class FedoraUpdatesController(object):
     def request(self, update, action):
         """ Request a specified action on a given update """
         log.debug('request(%s, %s)' % (update, action))
-        bodhi = BodhiClient()
         response = bodhi.request(update, action)
         if 'message' in response:
             response['tg_flash'] = response['message']
@@ -89,7 +86,7 @@ class FedoraUpdatesController(object):
 
 
 class FedoraUpdatesApp(AppFactory):
-    entry_name = 'updates'
+    entry_name = 'updates' 
     controller = FedoraUpdatesController
 
 
@@ -101,8 +98,7 @@ class FedoraUpdateCandidatesWidget(Widget):
     def update_params(self, d):
         super(FedoraUpdatesWidget, self).update_params(d)
 
-        bodhi = BodhiClient()
-        koji_session = koji.ClientSession(KOJI_URL)
+        koji_session = koji.ClientSession(config['koji_hub'])
 
         person = d.get('person')
         if not person:

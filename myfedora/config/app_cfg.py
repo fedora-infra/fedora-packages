@@ -57,8 +57,7 @@ class MyFedoraConfig(AppConfig):
 
             root = os.path.dirname(os.path.abspath(self.package.__file__))
             self.paths['templates'].append(root)
-            
-            print self.paths
+
             if 'genshi' in self.renderers:
                 self.setup_genshi_renderer()
             if 'mako' in self.renderers:
@@ -117,10 +116,11 @@ base_config.renderers = []
 base_config.package = myfedora
 
 # Set the default renderer
-base_config.default_renderer = 'genshi'
-base_config.renderers.append('genshi')
+base_config.default_renderer = 'mako'
 base_config.renderers.append('mako')
+base_config.renderers.append('genshi')
 base_config.auto_reload_templates = True
+base_config.use_legacy_renderer = True
 
 # Configure the base SQLALchemy Setup
 base_config.use_sqlalchemy = True

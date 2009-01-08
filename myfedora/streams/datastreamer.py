@@ -15,7 +15,7 @@
 #
 # Author(s): Luke Macken <lmacken@redhat.com>
 
-from __future__ import with_statement
+#from __future__ import with_statement
 
 import re
 import time
@@ -25,68 +25,12 @@ import logging
 import threading
 import pkg_resources
 
-from tw.api import Widget
-from pylons import request
+from pylons import request, config
 from datetime import datetime
 from pyorbited.simple import Client
 
+
 log = logging.getLogger(__name__)
-
-
-class Feed(object):
-    """ A powerful Feed object.
-
-    A Feed is initialized with an id and a url, and automatically handles the
-    fetching, parsing, and caching of the data.
-
-    """
-    def __init__(self, id, url, *args, **kw):
-        log.debug('Feed.__init__(%s)' % locals())
-        self.url = url
-        self.id = id
-        self.name = id # eventually figure out the name from the feed
-
-    @property
-    def iterentries(self):
-        log.debug("Feed(%s).entries" % self.id)
-        start = datetime.now()
-
-        entries = pylons.g.feed_cache.fetch(self.url).entries
-        log.debug('Fetching %s took %d seconds' % (self.url,
-                  (datetime.now() - start).seconds))
-
-        for i, entry in enumerate(entries):
-            entry['uid'] = '%s_%d' % (self.id, i)
-            yield entry
-
-    @property
-    def entries(self):
-        return [entry for entry in self.iterentries]
-
-    @property
-    def num_entries(self):
-        return len(self.entries)
-
-
-class FeedWidget(Widget):
-    params = {
-            'entries': 'A list of feed entries',
-            'charcount': 'The number of characters to display per entry',
-    }
-    template = 'genshi:myfedora.widgets.templates.feedhome'
-
-    def update_params(self, d):
-        super(Feed, self).update_params(d)
-        limit = d.get('show')
-        if limit:
-            log.debug('show = %r' % limit)
-            d['entries'] = []
-            for i, entry in enumerate(self.entries):
-                if i >= limit:
-                    break
-                d['entries'].append(entry)
-        else:
-            d['entries'] = self.entries
 
 
 #
@@ -95,12 +39,8 @@ class FeedWidget(Widget):
 
 from Queue import Queue
 from feedcache.cache import Cache
-from shove import Shove
 
 MAX_THREADS = 5
-FEED_CACHE = "/tmp/moksha-feeds"
-
-feed_storage = Shove('file://' + FEED_CACHE)
 
 class FeedFetcher(threading.Thread):
 
@@ -154,7 +94,8 @@ class FeedAggregator(threading.Thread):
         try:
             workers = []
             for i in range(num_threads):
-                fetcher = FeedFetcher(feed_storage, self.url_queue, entry_queue)
+                fetcher = FeedFetcher(config['app_globals'].feed_storage,
+                                      self.url_queue, entry_queue)
                 workers.append(fetcher)
                 fetcher.setDaemon(True)
                 fetcher.start()
@@ -248,19 +189,19 @@ class DataStreamer(threading.Thread):
             # TODO: Make this suck less.
             time.sleep(10)
 
-    def user_keys(self, feed):
-        with self.lock:
-            return ['%s, %s, /feed/%s' % (user, session, feed) for
-                    user, session in self.users[feed]]
+    #def user_keys(self, feed):
+    #    with self.lock:
+    #        return ['%s, %s, /feed/%s' % (user, session, feed) for
+    #                user, session in self.users[feed]]
 
-    def join(self, user, feed, session='0'):
-        print "%s joining %s feed (%s)" % (user, feed, session)
-        with self.lock:
-            if self.users.has_key(feed):
-                if (user, session) not in self.users[feed]:
-                    self.users[feed].append((user, session))
-            else:
-                raise DataStreamerException("Cannot find feed: %s" % feed)
+    #def join(self, user, feed, session='0'):
+    #    print "%s joining %s feed (%s)" % (user, feed, session)
+    #    with self.lock:
+    #        if self.users.has_key(feed):
+    #            if (user, session) not in self.users[feed]:
+    #                self.users[feed].append((user, session))
+    #        else:
+    #            raise DataStreamerException("Cannot find feed: %s" % feed)
 
 
 if __name__ == '__main__':
