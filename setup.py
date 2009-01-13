@@ -28,6 +28,7 @@ setup(
     #url='',
     install_requires=[
         "moksha",
+        "Pylons"
         ],
     packages=packages,
     include_package_data=True,
@@ -47,17 +48,21 @@ setup(
     [setuptools.file_finders]
     git = myfedora.lib.utils:find_git_files
 
+    [paste.app_factory]
+    main = moksha.config.middleware:make_app
+
+    [paste.app_install]
+    main = pylons.util:PylonsInstaller
+
     [fas.repoze.who.metadata_plugins]
     blog_info = myfedora.plugins.identity.bloginfo:add_metadata
-
-    [paste.paster_create_template]
-    moksha-app = mokshaapp.pastetemplate:MokshaAppTemplate
     
     [moksha.connector]
     koji = myfedora.connectors:KojiConnector
     
     [moksha.application]
-    mf.mokshatest = myfedora.controllers.mokshatest:RootController
-    
+    myfedora.mokshatest = myfedora.mokshaapps.mokshatest:RootController
+    fedoracommunity = myfedora.mokshaapps.fedoracommunity:RootController
+    fedoracommunity.overviewapp = myfedora.mokshaapps.helloworld:RootController
     """,
 )

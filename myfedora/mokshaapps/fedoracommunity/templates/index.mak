@@ -1,0 +1,34 @@
+<%namespace file="header.mak" import="*" />
+<%namespace file="footer.mak" import="*" />
+
+<html>
+    <head>    
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <title>${title}</title>
+    
+    <link href="/images/favicon.ico"
+      type="image/vnd.microsoft.icon" rel="shortcut icon" /> 
+    <link href="http://fedoraproject.org/favicon.ico"
+      type="image/x-icon" rel="shortcut icon"/>
+      
+    <!--[if lt IE 7]>
+    <style type="text/css">
+        #wrapper
+        {
+            height: 100%;
+            overflow: visible!important;
+        }
+    </style>
+    <![endif]-->   
+</head>
+
+<body id="chrome" class="home">
+    <div id="wrapper">
+        ${header()}
+        ${tmpl_context.widget()}
+        
+    </div>
+    ${footer()}
+</body>
+</html>
+</html>
