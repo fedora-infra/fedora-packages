@@ -1,6 +1,6 @@
 from moksha.lib.base import BaseController
 from tg import expose, tmpl_context
-from myfedora.widgets.widgets import GlobalResourceInjectionWidget
+from fedoracommunity.widgets.widgets import GlobalResourceInjectionWidget
 from tw.jquery.ui_tabs import JQueryUITabs
 from tw.jquery import ui_tabs
 from tw.core import CSSLink

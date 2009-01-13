@@ -58,7 +58,7 @@ setup(
     blog_info = myfedora.plugins.identity.bloginfo:add_metadata
     
     [moksha.connector]
-    koji = myfedora.connectors:KojiConnector
+    koji = fedoracommunity.connectors:KojiConnector
     
     [moksha.application]
     fedoracommunity.mokshatest = fedoracommunity.mokshaapps.mokshatest:RootController
