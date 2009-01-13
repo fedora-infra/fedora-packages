@@ -9,10 +9,9 @@ from pylons import config
 
 # Root for the whole fedora-community tree
 
-
 class MainNav(JQueryUITabs):
     css=[]
-    template = 'mako:myfedora.mokshaapps.fedoracommunity.templates.mainnav'
+    template = 'mako:fedoracommunity.mokshaapps.fedoracommunity.templates.mainnav'
     tabs = eval(config.get('fedoracommunity.mainnav.apps',()),{"__builtins__":None},{}) 
     
     def update_params(self, d):
@@ -24,7 +23,7 @@ class RootController(BaseController):
     def __init__(self):
         self.mainnav_tab_widget = MainNav('main_nav_tabs', action="create");
 
-    @expose('mako:myfedora.mokshaapps.fedoracommunity.templates.index')
+    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
     def index(self):
         w = GlobalResourceInjectionWidget()
         w.register_resources()

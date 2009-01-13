@@ -19,6 +19,8 @@ from tg import url
 from tw.api import Widget, JSLink, CSSLink, js_function, js_callback
 from tw.jquery import jquery_js, jQuery
 from tw.jquery.ui_tabs import  jquery_ui_tabs_js
+
+# FIXME: myfedora js code should go into moksha and be eliminated
 myfedora_js = JSLink(modname='myfedora', filename='public/javascript/myfedora.js')
 myfedora_ui_js = JSLink(modname='moksha', filename='public/javascript/ui/moksha.ui.grid.js')
 myfedora_extensions_js = JSLink(modname='myfedora', filename='public/javascript/myfedora.extensions.js')

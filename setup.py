@@ -10,21 +10,21 @@ except ImportError:
     from setuptools import setup, find_packages
 
 data_files = [
-    ('myfedora/public', filter(os.path.isfile, glob.glob('myfedora/public/*'))),
-    ('myfedora/public/css', filter(os.path.isfile, glob.glob('myfedora/public/css/*.css'))),
-   ('myfedora/public/images', filter(os.path.isfile, glob.glob('myfedora/public/images/*'))),
-   ('myfedora/public/misc', filter(os.path.isfile, glob.glob('myfedora/public/misc/*'))),
-   ('myfedora/public/javascript', filter(os.path.isfile, glob.glob('myfedora/public/javascript/*.js'))),
+    ('fedoracommunity/public', filter(os.path.isfile, glob.glob('fedoracommunity/public/*'))),
+    ('fedoracommunity/public/css', filter(os.path.isfile, glob.glob('fedoracommunity/public/css/*.css'))),
+   ('fedoracommunity/public/images', filter(os.path.isfile, glob.glob('fedoracommunity/public/images/*'))),
+   ('fedoracommunity/public/misc', filter(os.path.isfile, glob.glob('fedoracommunity/public/misc/*'))),
+   ('fedoracommunity/public/javascript', filter(os.path.isfile, glob.glob('fedoracommunity/public/javascript/*.js'))),
 ]
 
 packages = find_packages(exclude=['ez_setup'])
 
 setup(
-    name='myfedora',
+    name='fedoracommunity',
     version='0.2',
     description='',
-    author='',
-    author_email='',
+    author='John (J5) Palmieri',
+    author_email='johnp@redhat.com',
     #url='',
     install_requires=[
         "moksha",
@@ -34,9 +34,9 @@ setup(
     include_package_data=True,
     test_suite='nose.collector',
     tests_require=['webtest'],
-    namespace_packages=['myfedora'],
+    namespace_packages=['fedoracommunity'],
     data_files=data_files,
-    package_data={'myfedora': ['i18n/*/LC_MESSAGES/*.mo']
+    package_data={'fedoracommunity': ['i18n/*/LC_MESSAGES/*.mo']
                                },
     #message_extractors = {'myfedora': [
     #        ('**.py', 'python', None),
@@ -46,7 +46,7 @@ setup(
 
     entry_points="""
     [setuptools.file_finders]
-    git = myfedora.lib.utils:find_git_files
+    git = fedoracommunity.lib.utils:find_git_files
 
     [paste.app_factory]
     main = moksha.config.middleware:make_app
@@ -61,8 +61,8 @@ setup(
     koji = myfedora.connectors:KojiConnector
     
     [moksha.application]
-    myfedora.mokshatest = myfedora.mokshaapps.mokshatest:RootController
-    fedoracommunity = myfedora.mokshaapps.fedoracommunity:RootController
-    fedoracommunity.overviewapp = myfedora.mokshaapps.helloworld:RootController
+    fedoracommunity.mokshatest = fedoracommunity.mokshaapps.mokshatest:RootController
+    fedoracommunity = fedoracommunity.mokshaapps.fedoracommunity:RootController
+    fedoracommunity.overviewapp = fedoracommunity.mokshaapps.helloworld:RootController
     """,
 )

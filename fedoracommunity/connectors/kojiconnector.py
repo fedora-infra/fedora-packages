@@ -9,7 +9,7 @@ class KojiConnector(IConnector, ICall, IQuery):
     # IConnector
     @classmethod
     def register(cls):
-        cls._base_url = config.get('myfedora.connector.koji.baseurl',
+        cls._base_url = config.get('fedoracommunity.connector.kojihub.baseurl',
                                    'http://koji.fedoraproject.org/kojihub')
         
         cls.register_query_builds()
