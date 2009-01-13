@@ -14,7 +14,7 @@ class KojiConnector(IConnector, ICall, IQuery):
         
         cls.register_query_builds()
                                                                   
-    def request_data(self, resource_path, params, cookies):
+    def request_data(self, resource_path, params, _cookies):
         return self._koji_client(**params)
     
     def introspect(self):
@@ -22,13 +22,13 @@ class KojiConnector(IConnector, ICall, IQuery):
         return None
     
     #ICall
-    def call(self, resource_path, params, cookies):
+    def call(self, resource_path, params, _cookies):
         # koji client only returns structured data so we can pass
         # this off to request_data
-        return self.request_data(resource_path, params, cookies)
+        return self.request_data(resource_path, params, _cookies)
         
     #IQuery
-    def query(self, resource_path, params, cookies, 
+    def query(self, resource_path, params, _cookies, 
               offset = 0, 
               num_rows = 10,
               sort_col = None,
@@ -77,14 +77,14 @@ class KojiConnector(IConnector, ICall, IQuery):
                       can_paginate = True)
         
         cls.register_column('query_builds', 'build_id', 
-                        default_visible = False, 
+                        default_visible = True, 
                         can_sort = True, 
                         can_filter_wildcards = False)
         cls.register_column('query_builds', 'nvr', 
-                        default_visible = False, 
+                        default_visible = True, 
                         can_sort = True, 
                         can_filter_wildcards = False)
-        cls.register_column('query_builds', 'elapsed_build_time', 
+        cls.register_column('query_builds', 'owner_name', 
                         default_visible = True, 
                         can_sort = True, 
                         can_filter_wildcards = False)
@@ -97,25 +97,25 @@ class KojiConnector(IConnector, ICall, IQuery):
                            limit=None, 
                            order=-1,
                            sort_col=None,
-                           filter = {},
+                           filters = {},
                            **params):
         
         # FIXME: make filter an object
-        user = filter.get('user', '')
-        if user:
+        user = filters.get('user', '')
+        if isinstance(user, dict):
             user = user['value']
-        
-        package = filter.get('package', '')
-        if package:
+                
+        package = filters.get('package', '')
+        if isinstance(package, dict):
             package = package['value']
             
-        state = filter.get('state')
-        if state:
+        state = filters.get('state')
+        if isinstance(state, dict):
             state = state['value']
         
         complete_before = None
         complete_after = None
-        completed_filter = filter.get('completed')
+        completed_filter = filters.get('completed')
         if completed_filter:
             if completed_filter['op'] in ('>', 'after'):
                 complete_after = completed_filter['value']
@@ -125,7 +125,7 @@ class KojiConnector(IConnector, ICall, IQuery):
         if order < 0:
             order = '-' + sort_col
         else:
-            order = '+' + sort_col
+            order = sort_col
         
         user = self._koji_client.getUser(user)
         

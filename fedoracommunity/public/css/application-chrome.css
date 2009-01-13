@@ -91,6 +91,8 @@ a {
 
 /* left navbar tabs styling */
 
+.ui-tabs-hide { display: none; }
+
 #app-sidebar .nav {
   margin: 0px;
   padding: 0px;
@@ -125,9 +127,10 @@ a {
   font-size: 11pt;
 }
 
-#app-sidebar .nav a.active:link,
-#app-sidebar .nav a.active:visited,
-#app-sidebar .nav a.active:active {
+#app-sidebar .nav .ui-tabs-selected a:link,
+#app-sidebar .nav .ui-tabs-selected a:visited,
+#app-sidebar .nav .ui-tabs-selected a:active 
+{
   color: white;
   background-color: #6aa6e2;
   padding: 8px 2px;
@@ -137,9 +140,10 @@ a {
   -webkit-border-bottom-left-radius: 12px;
 }
 
-#app-sidebar .nav a.inactive:link,
-#app-sidebar .nav a.inactive:visited,
-#app-sidebar .nav a.inactive:active {
+#app-sidebar .nav .ui-tabs-disabled a:link,
+#app-sidebar .nav .ui-tabs-disabled a:visited,
+#app-sidebar .nav .ui-tabs-disabled a:active 
+{
   padding-left: 8px
 }
 
@@ -189,9 +193,9 @@ a {
   font-size: 11pt;
 }
 
-#content-nav li a.active:link,
-#content-nav li a.active:active,
-#content-nav li a.active:visited {
+#content-nav li.ui-tabs-selected a:link,
+#content-nav li.ui-tabs-selected a:active,
+#content-nav li.ui-tabs-selected a:visited {
   color: white;
   padding: 4px 12px;
   padding-top: 6px;
@@ -602,15 +606,15 @@ h1#greeter img {
   border-right: 1px solid #aaa; 
   background-color: #ccc;
   height: 22px !important;
-  padding-left: 7px;
-  padding-right: 7px;
-  vertical-align: middle !important;
 }
 
 .list .pager li.page-button a,
 .list .pager li.current-page,
 .list .pager li.page-ellipses,
 .list .pager li.no-link {
+  padding-left: 7px;
+  padding-right: 7px
+  vertical-align: middle !important;
 }
 
 .list .pager li.page-ellipses {

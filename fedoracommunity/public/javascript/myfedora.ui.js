@@ -367,3 +367,232 @@ _ui = {
 
 myfedora.ui = _ui;
 
+//# Quit using myfedora.ui and simply use jQuery.extend
+//############### make a moksha datagrid ######################
+(function($) {
+  $.widget("ui.mokshagrid",{
+    /* public method list */
+    public_signals: ["ready", "refresh_data"],
+    bind_api: function(api_list) {
+        var self = this;
+        for (var i in api_list) {
+            var pm = api_list[i];
+            var name = pm + ".mokshagrid";
+            
+            // proxy pattern (used for javascripts busted scoping rules)
+            (function() {
+                var proxied = self[pm];
+                if (!proxied)
+                    throw ('ERROR: binding api "' + pm + '" failed - method does not exist.'); 
+            
+                self.element.unbind(name).bind(name,
+                    function() {
+                        var args = []
+                        for (var ai=1; ai < arguments.length; ai++) {
+                            args.push(arguments[ai]);
+                        }
+                        
+                        return proxied.apply(self, args);
+                    });
+            })();
+        }
+    },
+    
+    bind_public_api: function() {
+        this.bind_api(this.public_methods);
+        this.bind_api(this.public_signals);
+    },
+    
+    /* methods */
+    
+    init: function() {
+      var self = this;
+      var o = self.options;
+    
+      self.$visible_rows = [];
+
+      self.bind_public_api();
+
+      // add placeholder for row appends
+      self.$rowplaceholder = jQuery('<span />').addClass('moksha_rowplaceholder');
+      self.$rowplaceholder.hide();
+      var rowtemplate = jQuery('.rowtemplate',self.element);
+      rowtemplate.after(self.$rowplaceholder);
+      
+      // hack to get the full html of the template including the root tag
+      // this also removes the template from the document
+      var container_div = jQuery('<div />');
+      var html = container_div.append(rowtemplate).html();
+      
+      self.$template = jQuery.template(html, {regx:'moksha'}).compile();
+      
+      self.$headers =  $('th:has(a[href])', this.element);
+      //self.$headers = this.$ths.map(function() { return $('a', this)[0]; });
+      self.$headers.unbind(o.event + '.mokshagrid').bind(o.event + '.mokshagrid', function(event) {
+        var ckey = o.sort_key;
+        var corder = o.sort_order;
+        console.log(event)
+        var key = event.originalTarget.hash.substr(1);
+      
+        if (key == ckey) {
+            if (corder == 'decending') {
+                corder = 'acending';
+            } else {
+                corder = 'decending';
+            }
+        } else {
+            corder = 'decending';
+        }
+        
+        self.options['sort_key'] = key;
+        self.options['sort_order'] = corder;
+            
+        self.request_data_refresh();
+
+        return false;
+      })
+          
+      jQuery(document).bind('ready', function (event) {
+                                 self.element.trigger('ready', event);
+                             });
+    },
+    
+    destroy: function() {
+        this.$headers.unbind('.mokshagrid');
+        this.element.unbind('.mokshagrid');
+    },
+    
+    clear: function() {
+       var self = this;
+       var rows = self.$visible_rows;
+       for (i in rows)
+           rows[i].replaceWith('');
+       
+       self.$visible_rows = [];
+    },
+    
+    insert_row: function(i, row_data) {
+        var self = this;
+        var o = self.options
+        var rows = self.$visible_rows;
+        var row_count = self.visible_row_count();
+      
+        // store the widget for this element
+        jQuery.data(self.element, 'mokshagrid', self);
+        
+        // do nothing if we are asked to insert passed
+        // the number of rows being displayed
+        if (i >= o.rows_per_page || (i == -1  && row_count >= o.rows_per_page))
+            return;
+            
+        var new_row = jQuery(self.$template.apply(row_data));
+        
+        if (i == -1 || row_count == i) {
+            // append to the end of the tracking array and the table dom
+            rows.push(new_row);
+            self.$rowplaceholder.before(new_row);
+        } else {
+            
+            // insert before i element in the tracking array and table dom
+            rows[i].before(new_row);
+            rows.splice(i, 0, new_row);
+            
+            // if there is one too many rows remove the last one
+            if (row_count == o.rows_per_page)
+                self.remove_row(o.rows_per_page);
+        }
+        
+        new_row.show();
+    },
+    
+    append_row: function(row_data) {
+        var self = this;
+        self.insert_row(-1, row_data);
+    },
+    
+    remove_row: function(i) {
+        var self = this;
+        var rows = self.$visible_rows;
+        rows[i].replaceWith('');
+        rows.splice(i,1);
+    },
+    
+    connector_query: function(connector, path, dispatch_data, callback) {
+        //TODO: implement a json loading method 
+        //      which starts and stops a loading
+        //      throbber
+        
+        if (dispatch_data)
+            path = '/moksha_connector/' + connector + '/query/' + path + '/' + $.toJSON(dispatch_data);
+            
+        console.log(path);
+        var xmlrequest = jQuery.getJSON(path, {}, callback);
+    },
+    
+    request_data_refresh: function(event) {
+        // TODO: allow an optional rows_requested parameter
+        var self = this
+        
+        var o = self.options;
+        
+        // figure out which row to start with
+        var rpp = o.rows_per_page;
+        var start_row = (o.page_num - 1) * rpp;
+          
+        // setup the search criteria
+        var search_criteria = {
+            filters: o.filters,
+            start_row: start_row,
+            rows_requested: rpp,
+            sort_key: o.sort_key,
+            sort_order: o.sort_order,
+        }
+        
+        console.log(search_criteria);
+        // TODO: Only trigger refresh signal if we have a cache miss
+        self.element.trigger('refresh_data', [event, search_criteria]);
+    },
+    
+    /* Signals */
+    ready: function(event, user_data) {
+        self = this;
+        self.request_data_refresh();
+    },
+    
+    refresh_data: function(event, search_criteria) {},
+    
+    /* Getter/Setters */
+    
+    visible_row_count: function() {
+        var self = this;
+        return self.$visible_rows.length;
+    },
+  })
+  
+  $.extend($.ui.mokshagrid, {
+          version: '@VERSION',
+          getters: 'visible_row_count',
+          defaults: {
+                 event: 'click',
+                 rows_per_page: 10,
+                 page_num: 1,
+                 total_rows: 0,
+                 filters: {},
+                 unique_key: undefined,
+                 sort_key: undefined,
+                 sort_order: "decending",
+                 loading_throbber: ["Loading",    // list of img urls or text
+                                    "Loading.", 
+                                    "Loading..",  
+                                    "Loading..."]  
+          }
+  });
+  
+$.extend( $.template.regx , {
+             moksha:/\@\{([\w-]+)(?:\:([\w\.]*)(?:\((.*?)?\))?)?\}/g
+           }
+);
+  
+  
+})(jQuery);
+  
