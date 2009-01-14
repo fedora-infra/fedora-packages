@@ -1,22 +1,16 @@
 from moksha.lib.base import BaseController
+from moksha.api.widgets.containers import TabbedContainer
 from tg import expose, tmpl_context
 from fedoracommunity.widgets.widgets import GlobalResourceInjectionWidget
 from tw.jquery.ui_tabs import JQueryUITabs
-from tw.jquery import ui_tabs
 from tw.core import CSSLink
 from moksha.layout import LayoutWidget
 from pylons import config
 
 # Root for the whole fedora-community tree
-
-class MainNav(JQueryUITabs):
-    css=[]
+class MainNav(TabbedContainer):
     template = 'mako:fedoracommunity.mokshaapps.fedoracommunity.templates.mainnav'
-    tabs = eval(config.get('fedoracommunity.mainnav.apps',()),{"__builtins__":None},{}) 
-    
-    def update_params(self, d):
-        super(MainNav, self).update_params(d)
-        d['tabs'] = self.tabs
+    config_key = 'fedoracommunity.mainnav.apps'
     
 class RootController(BaseController):
 
