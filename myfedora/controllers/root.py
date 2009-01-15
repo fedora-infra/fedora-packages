@@ -39,19 +39,6 @@ class RootController(BaseController):
     apps = AppController()
     extensions = ExtensionsController()
     proxy = ProxyController()
-    
-    @expose()
-    def join(self, feed, *args, **kw):
-        """ Join a specified data feed """
-        # Right now the names of the data feed are the names of the widgets
-        # themselves.  This needs to change.
-        # We also need to handle streaming data to logged in and anonymous
-        # users.
-        if pylons.g.widgets.has_key(feed):
-            pylons.g.datastreamer.join('bobvila', feed)
-        else:
-            log.error("Unknown data feed: %s" % feed)
-        return ""
 
     @expose('mako:/index.html')
     def index(self):
