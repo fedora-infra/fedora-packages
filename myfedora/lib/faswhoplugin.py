@@ -7,12 +7,14 @@ import urllib2
 import tg
 import uuid
 
+from repoze.what.middleware import setup_auth
+
 from repoze.who.interfaces import IIdentifier
 from repoze.who.interfaces import IChallenger
 from repoze.who.plugins.form import RedirectingFormPlugin
-from repoze.who.classifiers import default_request_classifier
-from repoze.who.classifiers import default_challenge_decider
-from repoze.who.middleware import PluggableAuthenticationMiddleware
+from repoze.what.adapters import BaseSourceAdapter
+
+
 from beaker.cache import Cache
 
 from repoze.who.interfaces import IChallenger, IIdentifier
@@ -34,7 +36,7 @@ FAS_CACHE_TIMEOUT=20 #in seconds
 fasurl = 'https://admin.fedoraproject.org/accounts'
 fas_cache = Cache('fas_repozewho_cache')
 
-def fas_make_who_middleware(app, config):
+def fas_make_who_middleware(app, log_stream):
     faswho = FASWhoPlugin(fasurl)
     
     form = RedirectingFormPlugin('/login', '/login_handler', '/logout', rememberer_name='fasident')
@@ -45,20 +47,18 @@ def fas_make_who_middleware(app, config):
     challengers = [('form',form)]
     mdproviders = [('fasmd', faswho)]
     
-    log_stream = None
-    if os.environ.get('WHO_LOG'):
+    if os.environ.get('FAS_WHO_LOG'):
         log_stream = sys.stdout
     
-    middleware = PluggableAuthenticationMiddleware(
+    middleware = setup_auth(
         app,
-        identifiers,
-        authenticators,
-        challengers,
-        mdproviders,
-        default_request_classifier,
-        default_challenge_decider,
-        log_stream = log_stream,
-        log_level = logging.DEBUG
+        groups,
+        permissions,
+        identifiers = identifiers,
+        authenticators = authenticators,
+        challengers = challengers,
+        mdproviders = mdproviders,
+        log_stream = log_stream
         )
     
     return middleware
@@ -279,3 +279,20 @@ class FASWhoPlugin(object):
     def __repr__(self):
         return '<%s %s>' % (self.__class__.__name__, id(self))
 
+class FASWhatGroupAdaptor(BaseSourceAdaptor):
+    def __init__(self):
+        super(FASWhatGroupAdaptor, self).__init__(writable=False)
+
+    def _get_all_sections(self):
+        return {}
+    
+    def _get_section_items(self, section):
+        return set([])
+    
+    # hint is the repoze.who.ident hash
+    def _find_sections(self, hint):
+        return ()
+    
+    def _section_exists(self, section)
+        return True
+    

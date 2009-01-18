@@ -49,7 +49,7 @@ setup(
     git = fedoracommunity.lib.utils:find_git_files
 
     [paste.app_factory]
-    main = moksha.config.middleware:make_app
+    main = fedoracommunity.config.middleware:make_app
 
     [paste.app_install]
     main = pylons.util:PylonsInstaller
@@ -63,6 +63,7 @@ setup(
     [moksha.application]
     fedoracommunity.mokshatest = fedoracommunity.mokshaapps.mokshatest:RootController
     fedoracommunity = fedoracommunity.mokshaapps.fedoracommunity:RootController
-    fedoracommunity.overviewapp = fedoracommunity.mokshaapps.helloworld:RootController
+    fedoracommunity.overviewresource = fedoracommunity.mokshaapps.overviewresource:RootController
+    fedoracommunity.packagemaintresource = fedoracommunity.mokshaapps.packagemaintresource:RootController
     """,
 )
