@@ -7,13 +7,15 @@ import urllib2
 import tg
 import uuid
 
-from repoze.what.middleware import setup_auth
+from repoze.who.middleware import PluggableAuthenticationMiddleware
 
 from repoze.who.interfaces import IIdentifier
 from repoze.who.interfaces import IChallenger
 from repoze.who.plugins.form import RedirectingFormPlugin
-from repoze.what.adapters import BaseSourceAdapter
+from repoze.who.classifiers import default_request_classifier
+from repoze.who.classifiers import default_challenge_decider
 
+from repoze.what.adapters import BaseSourceAdapter
 
 from beaker.cache import Cache
 
@@ -28,6 +30,7 @@ import pkg_resources
 import os
 import sys
 import logging
+import pylons
 
 log = logging.getLogger(__name__)
 
@@ -50,14 +53,14 @@ def fas_make_who_middleware(app, log_stream):
     if os.environ.get('FAS_WHO_LOG'):
         log_stream = sys.stdout
     
-    middleware = setup_auth(
+    middleware = PluggableAuthenticationMiddleware(
         app,
-        groups,
-        permissions,
-        identifiers = identifiers,
-        authenticators = authenticators,
-        challengers = challengers,
-        mdproviders = mdproviders,
+        identifiers,
+        authenticators,
+        challengers,
+        mdproviders,
+        default_request_classifier,
+        default_challenge_decider,
         log_stream = log_stream
         )
     
@@ -252,7 +255,19 @@ class FASWhoPlugin(object):
             
         for plugin in self._metadata_plugins:
             plugin(identity)
-            
+        
+        # we don't define permissions since we don't
+        # have any peruser data though other services
+        # may wish to add another metadata plugin to do so
+        
+        if not identity.has_key('permissions'):
+            identity['permissions'] |= set();
+
+        # we keep the approved_memberships list because there is also an
+        # unapproved_membership field.  The groups field is for repoze.who
+        # group checking and may include other types of groups besides 
+        # memberships in the future (such as special fedora community groups)
+        identity['groups'] = set(identity['person']['approved_memberships'])   
         return identity
         
     def add_metadata(self, environ, identity):
@@ -273,11 +288,20 @@ class FASWhoPlugin(object):
                                    createfunc=lambda: self.get_metadata(environ),
                                    type="memory",
                                    expiretime=FAS_CACHE_TIMEOUT)
-        
+   
+           
         identity.update(info)
 
     def __repr__(self):
         return '<%s %s>' % (self.__class__.__name__, id(self))
+
+
+"""
+We don't need any of this, we simply need to set identity['groups']
+and identity['permissions'] in our who metadata layer I'm leaving
+this skeleton here just incase we do want to implement getting the 
+whole FAS database (we don't though)
+
 
 class FASWhatGroupAdaptor(BaseSourceAdaptor):
     def __init__(self):
@@ -293,6 +317,25 @@ class FASWhatGroupAdaptor(BaseSourceAdaptor):
     def _find_sections(self, hint):
         return ()
     
-    def _section_exists(self, section)
+    def _section_exists(self, section):
         return True
+
+class FASWhatPermAdaptor(BaseSourceAdaptor):
+    # we don't handle permissions yet
+    def __init__(self):
+        super(FASWhatGroupAdaptor, self).__init__(writable=False)
+
+    def _get_all_sections(self):
+        return {}
     
+    def _get_section_items(self, section):
+        return set([])
+    
+    # hint is the repoze.who.ident hash
+    def _find_sections(self, hint):
+        return ()
+    
+    def _section_exists(self, section):
+        return False
+
+"""
