@@ -1,5 +1,5 @@
-from myfedora.config.app_cfg import base_config
-from myfedora.config.environment import load_environment
+from fedoracommunity.config.app_cfg import base_config
+from fedoracommunity.config.environment import load_environment
 
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
