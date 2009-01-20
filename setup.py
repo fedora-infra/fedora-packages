@@ -59,6 +59,7 @@ setup(
     
     [moksha.connector]
     koji = fedoracommunity.connectors:KojiConnector
+    bodhi = fedoracommunity.connectors:BodhiConnector
     
     [moksha.application]
     fedoracommunity.mokshatest = fedoracommunity.mokshaapps.mokshatest:RootController

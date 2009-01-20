@@ -2,7 +2,7 @@
     <head>
     </head>
         <div class="list header-list">
-        <table id="grid">
+        <table id="koji_grid">
             <thead>
                 <tr>
                     <th><a href="#build_id">Build ID</a></th>
@@ -38,8 +38,12 @@
                 </tbody>     
             
         </table>
+        <div id="bodhi_grid" />
        </div>
+       
       <script type="text/javascript">
-            var g = $("#grid").mokshagrid({resource:'koji', resource_path:'query_builds'});
+            var kg = $("#koji_grid").mokshagrid({resource:'koji', resource_path:'query_builds'});
+            var bg = $("#bodhi_grid").mokshagrid({resource:'bodhi', resource_path:'query_updates'});
+            
         </script>
 </html>

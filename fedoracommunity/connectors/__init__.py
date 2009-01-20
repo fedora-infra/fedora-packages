@@ -1,1 +1,2 @@
 from kojiconnector import KojiConnector
+from bodhiconnector import BodhiConnector
