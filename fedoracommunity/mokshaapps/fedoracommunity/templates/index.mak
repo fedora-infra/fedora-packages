@@ -25,8 +25,9 @@
 <body id="chrome" class="home">
     <div id="wrapper">
         ${header()}
-        ${tmpl_context.widget()}
-        
+        <div id="main_app">
+           ${tmpl_context.widget()}
+        </div>
     </div>
     ${footer()}
 </body>

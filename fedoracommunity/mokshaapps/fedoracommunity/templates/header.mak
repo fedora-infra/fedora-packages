@@ -4,7 +4,7 @@
         <div id="head">
             <h1><a href="/">Fedora Community</a></h1>
             <div id="toolbar">
-                % if tmpl_context.identity and tmpl_context.identity.has_key('person'):
+                % if tmpl_context.auth('not_anonymous()'):
                     <div id="login-toolbar">
                         <form class="login_button" action="/logout">
                             Logged In: <span class="username"><a href="/profile">${tmpl_context.identity['person']['human_name']}</a></span>

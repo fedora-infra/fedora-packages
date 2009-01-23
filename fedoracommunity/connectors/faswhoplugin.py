@@ -261,13 +261,18 @@ class FASWhoPlugin(object):
         # may wish to add another metadata plugin to do so
         
         if not identity.has_key('permissions'):
-            identity['permissions'] |= set();
+            identity['permissions'] = set();
 
         # we keep the approved_memberships list because there is also an
         # unapproved_membership field.  The groups field is for repoze.who
         # group checking and may include other types of groups besides 
         # memberships in the future (such as special fedora community groups)
-        identity['groups'] = set(identity['person']['approved_memberships'])   
+        
+        groups = set()
+        for g in identity['person']['approved_memberships']:
+            groups.add(g['name'])
+            
+        identity['groups'] = groups   
         return identity
         
     def add_metadata(self, environ, identity):
