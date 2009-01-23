@@ -62,6 +62,7 @@ setup(
     bodhi = fedoracommunity.connectors:BodhiConnector
     
     [moksha.application]
+    login = fedoracommunity.mokshaapps.login:RootController
     fedoracommunity.mokshatest = fedoracommunity.mokshaapps.mokshatest:RootController
     fedoracommunity = fedoracommunity.mokshaapps.fedoracommunity:RootController
     fedoracommunity.overviewresource = fedoracommunity.mokshaapps.overviewresource:RootController

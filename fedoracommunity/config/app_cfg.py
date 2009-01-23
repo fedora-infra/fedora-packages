@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 class FedoraCommunityConfig(AppConfig):
     def add_auth_middleware(self, app):
         """ Add our FAS authentication middleware """
-        from myfedora.lib.faswhoplugin import fas_make_who_middleware
+        from fedoracommunity.connectors.faswhoplugin import fas_make_who_middleware
         from copy import copy
         
         # Configuring auth logging:

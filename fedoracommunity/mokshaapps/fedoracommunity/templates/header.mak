@@ -13,7 +13,7 @@
                     </div>
                 % else:
                     <div id="login-toolbar">
-                        <form action="/login">
+                        <form onSubmit="$('#main_app').load('/appz/login?view=canvas'); return false;">
                             You are not logged in yet  <input type="submit"  value="Login" class="button"/>
                         </form>
                     </div>

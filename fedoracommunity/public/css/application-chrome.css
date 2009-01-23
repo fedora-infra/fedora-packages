@@ -523,6 +523,14 @@ div.login a.small-text:visited {
 
 }
 
+.canvas .login {
+  margin-left: auto;
+  margin-right: auto;
+  //position: absolute;
+  width: 300px;
+  overflow: visible;
+}
+
 .small-text {
   font-size: 8pt;
 }
