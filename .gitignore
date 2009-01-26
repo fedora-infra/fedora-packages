@@ -1,1 +1,9 @@
 *.pyc
+tg2/*
+dist/*
+data/*
+build/*
+*.egg-info
+myfedora/*
+*.swp
+*.swo
