@@ -1,17 +1,18 @@
 from moksha.lib.base import BaseController
-from tg import expose
-from fedoracommunity.widgets.widgets import GlobalResourceInjectionWidget
+from moksha.api.widgets.containers import DashboardContainer
+from tg import expose, tmpl_context
+
+class OverviewContainer(DashboardContainer):
+    template = 'mako:fedoracommunity.mokshaapps.overviewresource.templates.overviewcontainer'
+    layout = "[Category('left-content-column',[MokshaApp('Hello World', 'helloworld')])," 
+    layout += "Category('right-content-column',[MokshaApp(None, 'login' , auth=[Not(not_anonymous())])])]"
+
+overview_container = OverviewContainer('overview')
 
 class RootController(BaseController):
 
-    @expose('mako:fedoracommunity.mokshaapps.helloworld.templates.index')
+    @expose('mako:fedoracommunity.mokshaapps.overviewresource.templates.index')
     def index(self):
-        return dict(world='World')
-
-    @expose('mako:fedoracommunity.mokshaapps.helloworld.templates.index')
-    def test(self):
-        return dict(world='Test')
-    
-    @expose('mako:fedoracommunity.mokshaapps.helloworld.templates.index')
-    def name(self, name='Nobody'):
-        return dict(world=name)
+        tmpl_context.widget = overview_container
+        
+        return dict()

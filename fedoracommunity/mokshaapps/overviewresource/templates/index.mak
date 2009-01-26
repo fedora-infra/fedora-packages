@@ -2,6 +2,6 @@
     <head>
     </head>
     <body>
-        Hello ${world}
+        ${tmpl_context.widget}
     </body>
 </html>
