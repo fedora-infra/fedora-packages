@@ -10,7 +10,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
     @classmethod
     def register(cls):
         cls._base_url = config.get('fedoracommunity.connector.bodhi.baseurl',
-                                   'http://admin.fedoraproject.org/updates')
+                                   'https://admin.fedoraproject.org/updates')
         
         cls.register_query_updates()
                                                                   
@@ -148,7 +148,10 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         default_visible = True, 
                         can_sort = False, 
                         can_filter_wildcards = False)
-        
+        cls.register_column('query_updates', 'karma_level', 
+                        default_visible = True, 
+                        can_sort = False, 
+                        can_filter_wildcards = False)
         
     def query_updates(self, offset=None,
                            limit=None, 
@@ -189,8 +192,6 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 del filters['mine']
         elif mine:
             filters['mine'] = True
-        else:
-            filters['mine'] = False
                 
         params.update(filters)
         params['tg_paginate_limit'] = limit
@@ -206,5 +207,19 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 up['request_id'] = up['title'], 
                 up['nvr'] = up['title'], 
                 up['release_label'] = up['release']['long_name']
+            
+                k = up['karma']
+                
+                if k:
+                    up['karma_str'] = "%+d"%k
+                else:
+                    up['karma_str'] = " %d"%k
+                    
+                up['karma_level'] = 'meh'
+                if k > 0:
+                    up['karma_level'] = 'good'
+                if k < 0:
+                    up['karma_level'] = 'bad'
+                
 
         return (total_count, updates_list)
