@@ -164,6 +164,13 @@ a {
   background: repeat-y right url(../images/vertical-gradient.png);
 }
 
+/** banner-header for banner images **/
+#banner-header {
+  width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /** content div horiztonal tabs **/
 
 #content-nav ul {
