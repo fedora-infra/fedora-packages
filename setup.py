@@ -56,6 +56,17 @@ setup(
 
     [fas.repoze.who.metadata_plugins]
     blog_info = myfedora.plugins.identity.bloginfo:add_metadata
+
+    [moksha.global]
+    fedora_css = fedoracommunity.widgets:fedora_css
+    myfedora_appchrome_css = fedoracommunity.widgets:myfedora_appchrome_css
+    myfedora_branding_css = fedoracommunity.widgets:myfedora_branding_css
+    myfedora_js = fedoracommunity.widgets:myfedora_js
+    myfedora_extension_js = fedoracommunity.widgets:myfedora_extensions_js
+    myfedora_ui_js = fedoracommunity.widgets:myfedora_ui_js
+    jquery_template_js = fedoracommunity.widgets:jquery_template_js
+    jquery_json_js = fedoracommunity.widgets:jquery_json_js
+    jquery_ui_tabs = tw.jquery.ui_tabs:jquery_ui_tabs_js
     
     [moksha.connector]
     koji = fedoracommunity.connectors:KojiConnector

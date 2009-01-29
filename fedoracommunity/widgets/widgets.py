@@ -21,23 +21,16 @@ from tw.jquery import jquery_js, jQuery
 from tw.jquery.ui_tabs import  jquery_ui_tabs_js
 
 # FIXME: myfedora js code should go into moksha and be eliminated
-myfedora_js = JSLink(modname='fedoracommunity', filename='public/javascript/myfedora.js')
-myfedora_ui_js = JSLink(modname='moksha', filename='public/javascript/ui/moksha.ui.grid.js')
-myfedora_extensions_js = JSLink(modname='fedoracommunity', filename='public/javascript/myfedora.extensions.js')
-jquery_template_js = JSLink(modname='moksha', filename='public/javascript/jquery.template.js')
-jquery_json_js = JSLink(modname='moksha', filename='public/javascript/jquery.json.js')
+jquery_template_js = JSLink(modname='moksha', filename='public/javascript/jquery.template.js', javascript=[jquery_js])
+jquery_json_js = JSLink(modname='moksha', filename='public/javascript/jquery.json.js', javascript=[jquery_js])
+myfedora_js = JSLink(modname='fedoracommunity', filename='public/javascript/myfedora.js', javascript=[jquery_js])
+myfedora_ui_js = JSLink(modname='moksha', filename='public/javascript/ui/moksha.ui.grid.js', javascript=[myfedora_js, jquery_template_js])
+myfedora_extensions_js = JSLink(modname='fedoracommunity', filename='public/javascript/myfedora.extensions.js', javascript=[myfedora_js])
 
 fedora_css = CSSLink(link='https://fedoraproject.org/static/css/fedora.css')
 myfedora_appchrome_css = CSSLink(modname='fedoracommunity', filename='public/css/application-chrome.css')
 myfedora_branding_css = CSSLink(modname='fedoracommunity', filename='public/css/myfedora-branding.css')
 
-
-class GlobalResourceInjectionWidget(Widget):
-    javascript=[jquery_js, jquery_template_js, jquery_json_js, jquery_ui_tabs_js, myfedora_js, myfedora_ui_js]
-    css=[fedora_css,
-         myfedora_appchrome_css, 
-         myfedora_branding_css]
-    
 class PagerWidget(Widget):
     template = "mako:/myfedora/widgets/templates/pager.html"
     params = ['page', 'last_page', 'show', 'parent_dom_id']

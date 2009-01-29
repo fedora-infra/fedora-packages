@@ -1,10 +1,8 @@
 from moksha.lib.base import BaseController
 from moksha.api.widgets.containers import TabbedContainer
 from tg import expose, tmpl_context
-from fedoracommunity.widgets.widgets import GlobalResourceInjectionWidget
 from tw.jquery.ui_tabs import JQueryUITabs
 from tw.core import CSSLink
-from moksha.layout import LayoutWidget
 from pylons import config
 
 # Root for the whole fedora-community tree
@@ -19,9 +17,6 @@ class RootController(BaseController):
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
     def index(self):
-        w = GlobalResourceInjectionWidget()
-        w.register_resources()
-        
         # FIXME: we won't always display the main nav
         tmpl_context.widget = self.mainnav_tab_widget
         

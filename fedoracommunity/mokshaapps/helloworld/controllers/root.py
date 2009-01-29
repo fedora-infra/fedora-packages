@@ -1,6 +1,5 @@
 from moksha.lib.base import BaseController
 from tg import expose
-from fedoracommunity.widgets.widgets import GlobalResourceInjectionWidget
 
 class RootController(BaseController):
 
