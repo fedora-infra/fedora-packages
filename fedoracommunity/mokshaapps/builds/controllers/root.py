@@ -1,7 +1,6 @@
 from moksha.lib.base import BaseController
 from moksha.api.widgets import ContextAwareWidget, Grid
 from tg import expose, tmpl_context
-from fedoracommunity.widgets.widgets import GlobalResourceInjectionWidget
 
 class BuildsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.builds.templates.table_widget'
@@ -13,8 +12,6 @@ class RootController(BaseController):
     # do something for index, this should be the container stuff
     @expose()
     def index(self):
-        w = GlobalResourceInjectionWidget()
-        w.register_resources()
         return {}
     
     @expose('mako:fedoracommunity.mokshaapps.builds.templates.table')
