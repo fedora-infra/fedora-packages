@@ -2,20 +2,20 @@ from moksha.connector import IConnector, ICall, IQuery
 from pylons import config
 from fedora.client import ProxyClient
 
-class BodhiConnector(IConnector, ICall, IQuery):
+class PkgdbConnector(IConnector, ICall, IQuery):
     def __init__(self):
-        self._bodhi_client = ProxyClient(self._base_url)
+        self._pkgdb_client = ProxyClient(self._base_url)
     
     # IConnector
     @classmethod
     def register(cls):
-        cls._base_url = config.get('fedoracommunity.connector.bodhi.baseurl',
-                                   'https://admin.fedoraproject.org/updates')
+        cls._base_url = config.get('fedoracommunity.connector.pkgdb.baseurl',
+                                   'http://admin.fedoraproject.org/pkgdb')
         
         cls.register_query_updates()
                                                                   
     def request_data(self, resource_path, params, _cookies):
-        return self._bodhi_client.send_request(resource_path, request_params = params)
+        return self._pkgdb_client.send_request(resource_path, request_params = params)
     
     def introspect(self):
         # FIXME: return introspection data
@@ -66,7 +66,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         
         return results
         
-    # BodhiConnector
+    # PkgdbConnector
     @classmethod
     def register_query_updates(cls):
         cls.register_path(
@@ -148,10 +148,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         default_visible = True, 
                         can_sort = False, 
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'karma_level', 
-                        default_visible = True, 
-                        can_sort = False, 
-                        can_filter_wildcards = False)
+        
         
     def query_updates(self, offset=None,
                            limit=None, 
@@ -192,6 +189,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 del filters['mine']
         elif mine:
             filters['mine'] = True
+        else:
+            filters['mine'] = False
                 
         params.update(filters)
         params['tg_paginate_limit'] = limit
@@ -207,19 +206,5 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 up['request_id'] = up['title'], 
                 up['nvr'] = up['title'], 
                 up['release_label'] = up['release']['long_name']
-            
-                k = up['karma']
-                
-                if k:
-                    up['karma_str'] = "%+d"%k
-                else:
-                    up['karma_str'] = " %d"%k
-                    
-                up['karma_level'] = 'meh'
-                if k > 0:
-                    up['karma_level'] = 'good'
-                if k < 0:
-                    up['karma_level'] = 'bad'
-                
 
         return (total_count, updates_list)

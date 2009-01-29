@@ -2,6 +2,6 @@
     <head>
     </head>
     <body>
-        ${tmpl_context.widget}
+        ${tmpl_context.widget()}
     </body>
 </html>

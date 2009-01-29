@@ -78,5 +78,7 @@ setup(
     fedoracommunity = fedoracommunity.mokshaapps.fedoracommunity:RootController
     fedoracommunity.overviewresource = fedoracommunity.mokshaapps.overviewresource:RootController
     fedoracommunity.packagemaintresource = fedoracommunity.mokshaapps.packagemaintresource:RootController
-    """,
+    fedoracommunity.builds = fedoracommunity.mokshaapps.builds:RootController
+    fedoracommunity.updates = fedoracommunity.mokshaapps.updates:RootController
+    """
 )
