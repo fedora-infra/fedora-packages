@@ -1,5 +1,5 @@
-<%namespace file="header.mak" import="*" />
-<%namespace file="footer.mak" import="*" />
+<%namespace file="fedoracommunity.mokshaapps.fedoracommunity.templates.header" import="*" />
+<%namespace file="fedoracommunity.mokshaapps.fedoracommunity.templates.footer" import="*" />
 
 <html>
     <head>    

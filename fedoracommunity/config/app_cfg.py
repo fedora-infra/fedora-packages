@@ -26,6 +26,7 @@ class FedoraCommunityConfig(AppConfig):
 
 base_config = FedoraCommunityConfig()
 base_config.renderers = []
+base_config.use_dotted_templatenames = True
 
 base_config.package = fedoracommunity
 
@@ -34,7 +35,7 @@ base_config.default_renderer = 'mako'
 base_config.renderers.append('mako')
 base_config.renderers.append('genshi')
 base_config.auto_reload_templates = True
-base_config.use_legacy_renderer = True
+base_config.use_legacy_renderer = False
 
 # Configure the base SQLALchemy Setup
 base_config.use_sqlalchemy = False # fix this later
