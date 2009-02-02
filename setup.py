@@ -80,5 +80,8 @@ setup(
     fedoracommunity.packagemaintresource = fedoracommunity.mokshaapps.packagemaintresource:RootController
     fedoracommunity.builds = fedoracommunity.mokshaapps.builds:RootController
     fedoracommunity.updates = fedoracommunity.mokshaapps.updates:RootController
+    
+    [moksha.widget]
+    fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
     """
 )

@@ -15,8 +15,7 @@
 <div id="content">
             % for t in tabs:
     <div id="${t['label']}_Page"></div>
-    
   % endfor
-            <div class="clearingdiv"></div>
+    <div class="clearingdiv"></div>
  </div>
 </div>

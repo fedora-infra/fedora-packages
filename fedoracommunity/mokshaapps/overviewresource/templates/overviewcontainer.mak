@@ -16,7 +16,7 @@
           their packages.  Logging into your Fedora account in Fedora Community
           allows you to keep up with your packages and to keep track of your
           friends' packages as well.<br/>
-          <strong><a href="">Need an account?</a>
+          <strong><a href="">Need an account?</a></strong>
           % endif
           ${applist_widget(category = 'left-content-column', layout = layout)}
        </div>

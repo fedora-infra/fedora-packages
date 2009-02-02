@@ -7,6 +7,7 @@
 #head h1 {
   width:			200px;
   float: 			left;
+  margin-bottom:    0;
 }
 
 #head #toolbar {
