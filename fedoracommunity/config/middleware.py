@@ -21,7 +21,6 @@ def make_app(global_conf, full_stack=True, **app_conf):
                 url_prefix='/cache/',
                 )
 
-    ## Profiler
     if base_config.profile:
         from repoze.profile.profiler import AccumulatingProfileMiddleware
         app = AccumulatingProfileMiddleware(
