@@ -11,7 +11,7 @@ def make_app(global_conf, full_stack=True, **app_conf):
                         **app_conf)
 
     app = MokshaConnectorMiddleware(app)
-    app = MokshaExtensionPointMiddleware(app, 'fedoracommunity', 'plugins/extensions')
+    app = MokshaExtensionPointMiddleware(app)
 
     if base_config.squeeze:
         from repoze.squeeze.processor import ResourceSqueezingMiddleware
