@@ -12,9 +12,16 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
                                   params={"filters":'{"status":"stable"}', "uid":"stable"}),
                         MokshaApp('Latest Testing Updates','fedoracommunity.updates/table',
                                   params={"filters":'{"status":"testing"}', "uid":"testing"}),
+                        MokshaApp('Planet Fedora','fedoracommunity.planetfedora')
                         ]),
               Category('right-content-column',
-                       [MokshaWidget(None, 'fedoracommunity.login', auth=Not(not_anonymous()))])]
+                       [MokshaWidget(None, 'fedoracommunity.login', auth=Not(not_anonymous())),
+                        MokshaApp('Alerts', 'fedoracommunity.alerts'),
+                        MokshaApp('Quick Links', 'fedoracommunity.quicklinks', auth=not_anonymous()),
+                        MokshaApp('Quick Links', 'fedoracommunity.mypackages', auth=not_anonymous())
+                       ]
+                      )
+              ]
 
 overview_container = OverviewContainer('overview')
 
