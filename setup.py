@@ -67,21 +67,30 @@ setup(
     jquery_template_js = fedoracommunity.widgets:jquery_template_js
     jquery_json_js = fedoracommunity.widgets:jquery_json_js
     jquery_ui_tabs = tw.jquery.ui_tabs:jquery_ui_tabs_js
-    
+
     [moksha.connector]
     koji = fedoracommunity.connectors:KojiConnector
     bodhi = fedoracommunity.connectors:BodhiConnector
-    
+
     [moksha.application]
     login = fedoracommunity.mokshaapps.login:RootController
     fedoracommunity.mokshatest = fedoracommunity.mokshaapps.mokshatest:RootController
     fedoracommunity = fedoracommunity.mokshaapps.fedoracommunity:RootController
+
     fedoracommunity.overviewresource = fedoracommunity.mokshaapps.overviewresource:RootController
+    fedoracommunity.myprofileresource = fedoracommunity.mokshaapps.myprofileresource:RootController
     fedoracommunity.packagemaintresource = fedoracommunity.mokshaapps.packagemaintresource:RootController
+    fedoracommunity.peopleresource = fedoracommunity.mokshaapps.peopleresource:RootController
+
+
     fedoracommunity.builds = fedoracommunity.mokshaapps.builds:RootController
     fedoracommunity.updates = fedoracommunity.mokshaapps.updates:RootController
-    
+
+
     [moksha.widget]
     fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
+
+    [moksha.extension_point]
+    fedoracommunity = fedoracommunity.plugins.extensions
     """
 )

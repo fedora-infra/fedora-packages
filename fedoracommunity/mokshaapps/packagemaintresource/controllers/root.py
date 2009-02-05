@@ -1,10 +1,16 @@
 from moksha.lib.base import BaseController
+from moksha.lib.helpers import MokshaApp
 from tg import expose, tmpl_context
 from fedoracommunity.widgets import SubTabbedContainer
 
 class TabbedNav(SubTabbedContainer):
-    tabs= '(MokshaApp("Overview", ""), MokshaApp("Builds", ""))'
-    
+    tabs= (MokshaApp('Overview', 'fedoracommunity.packagemaint.overview'),
+           MokshaApp('Builds', 'fedoracommunity.packagemaint.builds'),
+           MokshaApp('Updates', 'fedoracommunity.packagemaint.updates'),
+           MokshaApp('Packages', 'fedoracommunity.packagemaint.packages'),
+           MokshaApp('Package Groups', 'fedoracommunity.packagemaint.packagegroups'),
+          )
+
 class RootController(BaseController):
     def __init__(self):
         self.widget = TabbedNav('packagemaintnav')
