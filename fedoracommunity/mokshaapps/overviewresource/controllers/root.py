@@ -1,4 +1,4 @@
-from moksha.lib.base import BaseController
+from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets import ContextAwareWidget
@@ -25,7 +25,7 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
 
 overview_container = OverviewContainer('overview')
 
-class RootController(BaseController):
+class RootController(Controller):
 
     @expose('mako:fedoracommunity.mokshaapps.overviewresource.templates.index')
     def index(self):

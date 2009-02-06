@@ -1,4 +1,4 @@
-from moksha.lib.base import BaseController
+from moksha.lib.base import Controller
 from tg import expose, tmpl_context, override_template, request
 from fedoracommunity.widgets import LoginWidget
 
@@ -6,7 +6,7 @@ from fedoracommunity.widgets import LoginWidget
 
 login_widget = LoginWidget('login_widget');
 
-class RootController(BaseController):
+class RootController(Controller):
 
     @expose()
     def index(self, view='home'):

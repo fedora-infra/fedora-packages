@@ -26,14 +26,14 @@ from pylons.i18n import ugettext as _
 #from dbsprockets.dbmechanic.frameworks.tg2 import DBMechanic
 #from dbsprockets.saprovider import SAProvider
 
-from myfedora.lib.base import BaseController
+from myfedora.lib.base import Controller
 from myfedora.lib.appbundle import AppBundle
 from myfedora.controllers.apps import AppController
 from myfedora.controllers.extensions import ExtensionsController
 from myfedora.controllers.proxy import ProxyController
 log = logging.Logger(__name__)
 
-class RootController(BaseController):
+class RootController(Controller):
 
     #admin = DBMechanic(SAProvider(metadata), '/admin')
     apps = AppController()

@@ -1,4 +1,4 @@
-from moksha.lib.base import BaseController
+from moksha.lib.base import Controller
 from moksha.lib.helpers import MokshaApp
 from tg import expose, tmpl_context
 from fedoracommunity.widgets import SubTabbedContainer
@@ -9,7 +9,7 @@ class TabbedNav(SubTabbedContainer):
            MokshaApp('Packages Maintenance', 'fedoracommunity.profile.packagemaint/me'),
           )
 
-class RootController(BaseController):
+class RootController(Controller):
     def __init__(self):
         self.widget = TabbedNav('myprofilenav')
 

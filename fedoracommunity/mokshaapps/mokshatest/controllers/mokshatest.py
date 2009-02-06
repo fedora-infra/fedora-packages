@@ -1,7 +1,7 @@
-from moksha.lib.base import BaseController
+from moksha.lib.base import Controller
 from tg import expose
 
-class RootController(BaseController):
+class RootController(Controller):
 
     @expose('mako:fedoracommunity.mokshaapps.mokshatest.templates.mokshatest')
     def index(self):

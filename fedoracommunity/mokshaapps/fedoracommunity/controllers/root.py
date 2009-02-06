@@ -1,4 +1,4 @@
-from moksha.lib.base import BaseController
+from moksha.lib.base import Controller
 from moksha.api.widgets.containers import TabbedContainer
 from tg import expose, tmpl_context
 from tw.jquery.ui_tabs import JQueryUITabs
@@ -10,7 +10,7 @@ class MainNav(TabbedContainer):
     template = 'mako:fedoracommunity.mokshaapps.fedoracommunity.templates.mainnav'
     config_key = 'fedoracommunity.mainnav.apps'
     
-class RootController(BaseController):
+class RootController(Controller):
 
     def __init__(self):
         self.mainnav_tab_widget = MainNav('main_nav_tabs', action="create");

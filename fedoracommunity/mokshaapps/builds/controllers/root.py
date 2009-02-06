@@ -1,4 +1,4 @@
-from moksha.lib.base import BaseController
+from moksha.lib.base import Controller
 from moksha.api.widgets import ContextAwareWidget, Grid
 from tg import expose, tmpl_context
 
@@ -7,7 +7,7 @@ class BuildsGrid(Grid, ContextAwareWidget):
 
 builds_grid = BuildsGrid('builds_table')
 
-class RootController(BaseController):
+class RootController(Controller):
 
     # do something for index, this should be the container stuff
     @expose()

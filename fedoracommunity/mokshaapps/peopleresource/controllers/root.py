@@ -1,4 +1,4 @@
-from moksha.lib.base import BaseController
+from moksha.lib.base import Controller
 from moksha.lib.helpers import MokshaApp, Category
 from moksha.api.widgets.containers import DashboardContainer
 from tg import expose, tmpl_context
@@ -21,7 +21,7 @@ class IndexDashboard(DashboardContainer):
   % endfor
 </div>
 """
-class RootController(BaseController):
+class RootController(Controller):
     def __init__(self):
         self.name_widget = NameTabbedNav('namepeoplenav')
         self.index_widget = IndexDashboard('indexdashboard')
