@@ -2,15 +2,15 @@
 <%namespace file="fedoracommunity.mokshaapps.fedoracommunity.templates.footer" import="*" />
 
 <html>
-    <head>    
+    <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title>${title}</title>
-    
+
     <link href="/images/favicon.ico"
-      type="image/vnd.microsoft.icon" rel="shortcut icon" /> 
+      type="image/vnd.microsoft.icon" rel="shortcut icon" />
     <link href="http://fedoraproject.org/favicon.ico"
       type="image/x-icon" rel="shortcut icon"/>
-      
+
     <!--[if lt IE 7]>
     <style type="text/css">
         #wrapper
@@ -19,7 +19,7 @@
             overflow: visible!important;
         }
     </style>
-    <![endif]-->   
+    <![endif]-->
 </head>
 
 <body id="chrome" class="home">

@@ -103,7 +103,7 @@ a {
   margin-left: 15px;
   margin-right: none;
   margin-top: 12px;
-  width: 157px; 
+  width: 157px;
 }
 
 #app-sidebar .nav li {
@@ -130,7 +130,7 @@ a {
 
 #app-sidebar .nav .ui-tabs-selected a:link,
 #app-sidebar .nav .ui-tabs-selected a:visited,
-#app-sidebar .nav .ui-tabs-selected a:active 
+#app-sidebar .nav .ui-tabs-selected a:active
 {
   color: white;
   background-color: #6aa6e2;
@@ -143,7 +143,7 @@ a {
 
 #app-sidebar .nav .ui-tabs-disabled a:link,
 #app-sidebar .nav .ui-tabs-disabled a:visited,
-#app-sidebar .nav .ui-tabs-disabled a:active 
+#app-sidebar .nav .ui-tabs-disabled a:active
 {
   padding-left: 8px
 }
@@ -155,7 +155,7 @@ a {
 
 #app-sidebar {
   float: left;
-  width: 170px; 
+  width: 170px;
   padding: 0px;
   border-right: 1px solid #eee;
   min-height: 650px;
@@ -182,7 +182,7 @@ a {
   padding-bottom: 24px;
   background: #FFFFFF url(http://fedoraproject.org/static/images/line.png) repeat-x scroll 0pt 100%;
 /* 22px because #content padding is 22px */
-  margin-left: -22px; 
+  margin-left: -22px;
   padding-left: 22px;
   margin-bottom: 12px;
 }
@@ -285,16 +285,16 @@ a {
   margin-right: 4px;
 }
 
-#left-content-column,
-#right-content-column {
+.left-content-column,
+.right-content-column {
   padding: 0px;
 }
 
-#left-content-column {
+.left-content-column {
   width: 68%;
 }
 
-#right-content-column {
+.right-content-column {
   width: 30%;
   float: right;
 }
@@ -371,7 +371,7 @@ span.more-items {
 }
 
 .header-list table {
-  border-spacing: 0px; 
+  border-spacing: 0px;
   border-collapse: separate !important;
   border-bottom: none !important;
 }
@@ -390,7 +390,7 @@ span.more-items {
 }
 
 .header-list table td {
-  
+
 }
 
 .header-list table tbody {
@@ -415,7 +415,7 @@ span.timestamp {
 
 .panel .list ul {
   margin-left: 0px !important;
-  width: 100%; 
+  width: 100%;
 }
 
 .panel .announce li {
@@ -424,7 +424,7 @@ span.timestamp {
   border-bottom: dotted 1px #ddd;
   padding-top: 3px;
 }
-  
+
 
 /** float clearing **/
 
@@ -590,11 +590,11 @@ h1#greeter img {
 
 .lightbox-white {
   position: absolute;
-  padding: 20px; 
-  background-color: white; 
-  opacity: 1; 
-  height: 80%; 
-  width: 80%; 
+  padding: 20px;
+  background-color: white;
+  opacity: 1;
+  height: 80%;
+  width: 80%;
   margin-left: 6%;
   display: none;
   z-index:1002;
@@ -619,7 +619,7 @@ h1#greeter img {
 
   margin-left: 0px;
   margin-right: 0px;
-  border-right: 1px solid #aaa; 
+  border-right: 1px solid #aaa;
   background-color: #ccc;
   height: 22px !important;
 }

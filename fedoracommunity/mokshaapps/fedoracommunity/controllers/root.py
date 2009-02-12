@@ -1,6 +1,6 @@
-from moksha.lib.base import Controller
+from moksha.lib.base import Controller, BaseController
 from moksha.api.widgets.containers import TabbedContainer
-from tg import expose, tmpl_context
+from tg import expose, tmpl_context, redirect
 from tw.jquery.ui_tabs import JQueryUITabs
 from tw.core import CSSLink
 from pylons import config
@@ -9,8 +9,8 @@ from pylons import config
 class MainNav(TabbedContainer):
     template = 'mako:fedoracommunity.mokshaapps.fedoracommunity.templates.mainnav'
     config_key = 'fedoracommunity.mainnav.apps'
-    
-class RootController(Controller):
+
+class RootController(BaseController):
 
     def __init__(self):
         self.mainnav_tab_widget = MainNav('main_nav_tabs', action="create");
@@ -19,10 +19,9 @@ class RootController(Controller):
     def index(self):
         # FIXME: we won't always display the main nav
         tmpl_context.widget = self.mainnav_tab_widget
-        
+
         return {'title': 'Fedora Community'}
-    
+
+    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
     def default(self, *args, **kwds):
-        # TODO: translate the rest of the URL into # and redirect to index
-        # this should be done in moksha if a flag is set correctly
-        pass
+        redirect('/#' + '/'.join(args), **kwds)

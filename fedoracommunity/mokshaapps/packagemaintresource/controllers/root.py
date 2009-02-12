@@ -4,8 +4,7 @@ from tg import expose, tmpl_context
 from fedoracommunity.widgets import SubTabbedContainer
 
 class TabbedNav(SubTabbedContainer):
-    tabs= (MokshaApp('Overview', 'fedoracommunity.packagemaint.overview'),
-           MokshaApp('Builds', 'fedoracommunity.packagemaint.builds'),
+    tabs= (MokshaApp('Builds', 'fedoracommunity.builds'),
            MokshaApp('Updates', 'fedoracommunity.packagemaint.updates'),
            MokshaApp('Packages', 'fedoracommunity.packagemaint.packages'),
            MokshaApp('Package Groups', 'fedoracommunity.packagemaint.packagegroups'),
