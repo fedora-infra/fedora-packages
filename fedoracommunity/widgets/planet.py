@@ -30,5 +30,5 @@ class PlanetFedoraWidget(LiveFeedWidget):
     template = "mako:fedoracommunity.widgets.templates.planet"
     url = 'http://planet.fedoraproject.org/atom.xml'
     css = [CSSLink(link='/css/planet-fedora-bubbles.css')]
-    javascript = [JSLink(link='/javascript/jquery.jtruncate.js')]
+    #javascript = [JSLink(link='/javascript/jquery.jtruncate.js')]
     limit = 3

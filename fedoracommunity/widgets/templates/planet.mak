@@ -40,8 +40,6 @@
                 $("#${entry['uid']}_person").prepend($("#${entry['uid']}_text img:first"));
             }
 
-            $("#${entry['uid']}_text").jTruncate();
-
         </script>
     % endfor
 </div>
