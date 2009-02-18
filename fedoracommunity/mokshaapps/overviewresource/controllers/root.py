@@ -12,7 +12,7 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
                                   params={"filters":'{"status":"stable"}', "uid":"stable"}),
                         MokshaApp('Latest Testing Updates','fedoracommunity.updates/table',
                                   params={"filters":'{"status":"testing"}', "uid":"testing"}),
-                        MokshaWidget('Planet Fedora','fedoracommunity.planet', params={'id': 'planet'})
+                        MokshaWidget('Planet Fedora','fedoracommunity.planet'),
                         ]),
               Category('right-content-column',
                        [MokshaWidget(None, 'fedoracommunity.login', auth=Not(not_anonymous())),
@@ -27,7 +27,7 @@ overview_container = OverviewContainer('overview')
 
 class RootController(Controller):
 
-    @expose('mako:moksha.templates.widget')
+    @expose('mako:fedoracommunity.mokshaapps.overviewresource.templates.index')
     def index(self):
         tmpl_context.widget = overview_container
         return dict()
