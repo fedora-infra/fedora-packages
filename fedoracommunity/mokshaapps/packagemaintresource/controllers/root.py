@@ -11,6 +11,7 @@ class TabbedNav(SubTabbedContainer):
           )
 
 class RootController(Controller):
+
     def __init__(self):
         self.widget = TabbedNav('packagemaintnav')
 

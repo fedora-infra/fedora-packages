@@ -1,5 +1,4 @@
 from tw.api import Widget
-from tw.jquery import jquery_js
 from tg import url
 from pylons import request
 
@@ -9,8 +8,6 @@ class LoginWidget(Widget):
 
     def update_params(self, d):
         super(LoginWidget, self).update_params(d)
-        
+
         if not 'came_from' in d:
             d['came_from'] = url(request.environ.get('PATH_INFO'))
-        
-        return d

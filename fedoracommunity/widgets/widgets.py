@@ -12,13 +12,9 @@
 # incorporated in the source code or documentation are not subject to the GNU
 # General Public License and may only be used or replicated with the express
 # permission of Red Hat, Inc.
-#
-# Author(s): Luke Macken <lmacken@redhat.com>
 
-from tg import url
-from tw.api import Widget, JSLink, CSSLink, js_function, js_callback
-from tw.jquery import jquery_js, jQuery
-from tw.jquery.ui_tabs import  jquery_ui_tabs_js
+from tw.api import Widget, JSLink, CSSLink
+from tw.jquery import jquery_js
 
 # FIXME: myfedora js code should go into moksha and be eliminated
 jquery_template_js = JSLink(modname='moksha', filename='public/javascript/jquery.template.js', javascript=[jquery_js])
