@@ -1,4 +1,6 @@
+from fedoracommunity.lib import app_globals, helpers
 import fedoracommunity
+import fedoracommunity.lib
 
 from tg.configuration import AppConfig, Bunch
 
