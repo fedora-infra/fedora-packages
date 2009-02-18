@@ -1,26 +1,20 @@
-from tg.configuration import AppConfig, Bunch
-from fedoracommunity.lib import app_globals, helpers
-
 import fedoracommunity
-import fedoracommunity.lib
 
-import logging
-import os
-
-log = logging.getLogger(__name__)
+from tg.configuration import AppConfig, Bunch
 
 class FedoraCommunityConfig(AppConfig):
     def add_auth_middleware(self, app):
         """ Add our FAS authentication middleware """
         from fedoracommunity.connectors.faswhoplugin import fas_make_who_middleware
         from copy import copy
-        
+        import logging
+
         # Configuring auth logging:
         if 'log_stream' not in self.fas_auth:
             self.fas_auth['log_stream'] = logging.getLogger('auth')
 
         auth_args = copy(self.fas_auth)
-        
+
         app = fas_make_who_middleware(app, **auth_args)
         return app
 
