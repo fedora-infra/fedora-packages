@@ -12,7 +12,7 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
                                   params={"filters":'{"status":"stable"}', "uid":"stable"}),
                         MokshaApp('Latest Testing Updates','fedoracommunity.updates/table',
                                   params={"filters":'{"status":"testing"}', "uid":"testing"}),
-                        MokshaApp('Planet Fedora','fedoracommunity.planetfedora')
+                        MokshaWidget('Planet Fedora','fedoracommunity.planet', params={'id': 'planet'})
                         ]),
               Category('right-content-column',
                        [MokshaWidget(None, 'fedoracommunity.login', auth=Not(not_anonymous())),
