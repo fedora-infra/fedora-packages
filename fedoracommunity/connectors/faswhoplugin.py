@@ -27,7 +27,6 @@ import pkg_resources
 
 import os
 import sys
-import logging
 import pylons
 
 log = logging.getLogger(__name__)
