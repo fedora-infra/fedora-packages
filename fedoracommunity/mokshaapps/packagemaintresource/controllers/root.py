@@ -15,7 +15,7 @@ class RootController(Controller):
     def __init__(self):
         self.widget = TabbedNav('packagemaintnav')
 
-    @expose('mako:moksha.templates.index')
+    @expose('mako:fedoracommunity.mokshaapps.packagemaintresource.templates.index')
     def index(self):
         tmpl_context.widget = self.widget
         return {}
