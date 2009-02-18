@@ -27,8 +27,7 @@ overview_container = OverviewContainer('overview')
 
 class RootController(Controller):
 
-    @expose('mako:fedoracommunity.mokshaapps.overviewresource.templates.index')
+    @expose('mako:moksha.templates.widget')
     def index(self):
         tmpl_context.widget = overview_container
-
         return dict()
