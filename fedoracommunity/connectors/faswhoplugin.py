@@ -21,7 +21,9 @@ from repoze.who.interfaces import IChallenger, IIdentifier
 
 from Cookie import SimpleCookie
 
-import beaker   
+from csrfwhoplugin import CSRFWhoPlugin
+
+import beaker
 
 import pkg_resources
 
@@ -38,19 +40,24 @@ fasurl = tg.config.get('fedoracommunity.fas.baseurl')
 fas_cache = Cache('fas_repozewho_cache')
 
 def fas_make_who_middleware(app, log_stream):
+
+    csrfwho = CSRFWhoPlugin(session_id = 'tg-visit',
+                            csrf_token_id = '_csrf_token')
+
     faswho = FASWhoPlugin(fasurl)
-    
+
     form = RedirectingFormPlugin('/login', '/login_handler', '/logout', rememberer_name='fasident')
     form.classifications = { IIdentifier:['browser'],
                              IChallenger:['browser'] } # only for browser
+
     identifiers = [('form', form),('fasident', faswho)]
     authenticators = [('fasauth', faswho)]
     challengers = [('form',form)]
-    mdproviders = [('fasmd', faswho)]
-    
+    mdproviders = [('fasmd', faswho), ('csrfmd', csrfwho)]
+
     if os.environ.get('FAS_WHO_LOG'):
         log_stream = sys.stdout
-    
+
     middleware = PluggableAuthenticationMiddleware(
         app,
         identifiers,
@@ -173,7 +180,8 @@ class FASWhoPlugin(object):
             me = linfo[1]
             me.update({'repoze.who.userid':me['person']['username']})
             environ['FAS_LOGIN_INFO'] = linfo
-            return linfo[1]
+
+            return me
         except Exception, e:
             log.warning(e)
             return None
@@ -250,6 +258,9 @@ class FASWhoPlugin(object):
         if user_data:
             if isinstance(user_data, tuple):
                 environ['FAS_LOGIN_INFO']=fas.keep_alive(user_data[0], True)
+                # let the csrf plugin know we just authenticated and it needs
+                # to rewrite the redirection app
+                environ['CSRF_AUTH_REWRITE_TOKEN'] = environ['FAS_LOGIN_INFO'][0]
                 return login
 
         return None
