@@ -119,7 +119,7 @@ class KojiConnector(IConnector, ICall, IQuery):
         if completed_filter:
             if completed_filter['op'] in ('>', 'after'):
                 complete_after = completed_filter['value']
-            elif completed_luefilter['op'] in ('<', 'before'):
+            elif completed_filter['op'] in ('<', 'before'):
                 complete_before = completed_filter['value']
         
         if order < 0:
