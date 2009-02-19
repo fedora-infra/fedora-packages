@@ -73,7 +73,6 @@ class CSRFWhoPlugin(object):
             replace_header(app.headers, 'location', urlunparse(tuple(p)))
 
         else:
-            print token, csrf_check
             if token != csrf_check and 'repoze.what.credentials' in environ:
                 del environ['repoze.what.credentials']
 

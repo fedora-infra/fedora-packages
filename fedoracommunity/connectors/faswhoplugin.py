@@ -112,12 +112,10 @@ class FasClient(ProxyClient):
             method = 'user/view'
 
         auth_params = {'session_id': session_id}
-        log.info("************************ Session_id " + str(auth_params))
 
         result = None
         try:
             result = self.send_request(method, auth_params = auth_params)
-            log.info(result)
         except AuthError, e:
             log.warning(e)
 
