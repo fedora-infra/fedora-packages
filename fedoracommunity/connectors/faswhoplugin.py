@@ -257,7 +257,7 @@ class FASWhoPlugin(object):
                 environ['FAS_LOGIN_INFO']=fas.keep_alive(user_data[0], True)
                 # let the csrf plugin know we just authenticated and it needs
                 # to rewrite the redirection app
-                environ['CSRF_AUTH_REWRITE_TOKEN'] = environ['FAS_LOGIN_INFO'][0]
+                environ['CSRF_AUTH_SESSION_ID'] = environ['FAS_LOGIN_INFO'][0]
                 return login
 
         return None

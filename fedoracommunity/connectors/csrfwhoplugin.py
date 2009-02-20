@@ -39,7 +39,6 @@ class CSRFWhoPlugin(object):
         token = token.hexdigest()
         info = {self.csrf_token_id: token}
 
-
         identity.update(info)
 
         # check for csrf
@@ -63,7 +62,7 @@ class CSRFWhoPlugin(object):
             d.__delitem__(self.csrf_token_id)
             environ['paste.parsed_formvars'] = d
 
-        session_id = environ.get('CSRF_AUTH_REWRITE_TOKEN', False)
+        session_id = environ.get('CSRF_AUTH_SESSION_ID', False)
         if (session_id):
             log.info(dir(environ['repoze.who.application']))
             app = environ['repoze.who.application']
