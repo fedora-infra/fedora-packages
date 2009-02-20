@@ -28,9 +28,9 @@ from moksha.api.widgets.feed import LiveFeedWidget
 
 class PlanetFedoraWidget(LiveFeedWidget):
     url = 'http://planet.fedoraproject.org/atom.xml'
+    javascript = [JSLink(link='/javascript/jquery.jtruncate.js')]
     css = [CSSLink(link='/css/planet-fedora-bubbles.css')]
     limit = 3
-    engine_name = 'mako'
     template = """
 <div id="${id}" class="list">
     <h3><a href="http://planet.fedoraproject.org">Planet Fedora</a></h3>
@@ -74,9 +74,10 @@ class PlanetFedoraWidget(LiveFeedWidget):
                 $("#${entry['uid']}_person").prepend($("#${entry['uid']}_text img:first"));
             }
 
+            $("#${entry['uid']}_text").jTruncate({moreAni:'slow', lessAni:'slow'});
+
         </script>
     % endfor
 </div>
     """
-    #javascript = [JSLink(link='/javascript/jquery.jtruncate.js')]
-    #template = "mako:fedoracommunity.widgets.templates.planet"
+    engine_name = 'mako'
