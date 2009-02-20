@@ -18,16 +18,16 @@
                         </form>
                     </div>
                 % endif
-            </div>
-            <div id="search-toolbar">
-                <form action="/search/">
-                    Search: 
-                    <input type="text" name="data_key"
-                        onFocus="this.select();" 
-                        value="Type search terms here." />
-               
-                    <input class="button" type="submit" value="Search" />
-                </form>
+	            <div id="search-toolbar">
+        	        <form action="/search/">
+                	    Search: 
+               		     <input type="text" name="data_key"
+				onFocus="this.select();" 
+               		        value="Type search terms here." />
+
+                	    <input class="button" type="submit" value="Search" />
+              		</form>
+	            </div>
             </div>
         </div>
     </%def>
