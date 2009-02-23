@@ -7,11 +7,12 @@ from tg import expose, tmpl_context
 class OverviewContainer(DashboardContainer, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.overviewresource.templates.overviewcontainer'
     layout = [Category('left-content-column',
-                       [MokshaApp('Latest Rawhide Builds', 'fedoracommunity.builds/table'),
+                       [MokshaApp('Latest Rawhide Builds', 'fedoracommunity.builds/table',
+                                  params={"rows_per_page": 5}),
                         MokshaApp('Latest Stable Updates','fedoracommunity.updates/table',
-                                  params={"filters":'{"status":"stable"}', "uid":"stable"}),
+                                  params={"filters":'{"status":"stable"}', "rows_per_page": 5, "uid":"stable"}),
                         MokshaApp('Latest Testing Updates','fedoracommunity.updates/table',
-                                  params={"filters":'{"status":"testing"}', "uid":"testing"}),
+                                  params={"filters":'{"status":"testing"}', "rows_per_page": 5, "uid":"testing"}),
                         MokshaWidget('Planet Fedora','fedoracommunity.planet', params={'id': 'planet'}),
                         ]),
               Category('right-content-column',

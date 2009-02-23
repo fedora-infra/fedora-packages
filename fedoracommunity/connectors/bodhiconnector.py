@@ -214,8 +214,23 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
         if total_count > 0:
             for up in updates_list:
-                up['request_id'] = up['title'],
-                up['nvr'] = up['title'],
+                # grab the first build package, the rest are dependencies
+                nvr = up['builds'][0]['nvr']
+
+                # split the version and name by getting the
+                # position of the second to last dash
+                version_pos = nvr.rindex('-')
+                version_pos = nvr.rindex('-', 0, version_pos - 1)
+                name = nvr[:version_pos]
+                version_str = nvr[version_pos + 1:]
+                vparts = version_str.split('-')
+                version = {'version': vparts[0],
+                           'release': vparts[1]}
+                up['version'] = version
+                up['version_str'] = version_str
+                up['name'] = name
+                up['request_id'] = nvr
+                up['nvr'] = nvr
                 up['release_label'] = up['release']['long_name']
 
                 k = up['karma']

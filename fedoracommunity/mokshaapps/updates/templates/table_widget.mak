@@ -14,9 +14,9 @@
                     <tr>
                         <td>
                             <span class="package-name">
-                                @{package_name}
+                                @{name}
                             </span>
-                            <div>@{version}</div>
+                            <div>@{version_str}</div>
                         </td>
                         <td>n/a</td>
                         <td>@{completion_time}</td>
