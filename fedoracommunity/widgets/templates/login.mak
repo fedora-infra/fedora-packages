@@ -2,9 +2,10 @@
 <div
      id="${id}"
      class="login panel">
-  
+
     <h3>Log In</h3>
-    <form action="${tg.url('/login_handler?came_from=%s'% came_from)}" method="POST">
+    <form action="${tg.url('/login_handler')}" method="POST">
+        <input type="hidden" name="came_from" value="${came_from}"></input>
         <div>
             <span>
                 User Name

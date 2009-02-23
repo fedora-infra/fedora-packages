@@ -1,6 +1,6 @@
 
         <div class="list header-list">
-        <table id="${id}${uid}">
+        <table id="${id}">
             <thead>
                 <tr>
                     <th><a href="#nvr">Package</a></th>
@@ -13,10 +13,10 @@
             <tbody class="rowtemplate">
                     <tr>
                         <td>
-                            <span class="package-name"> 
-                                @{package_name}
+                            <span class="package-name">
+                                @{name}
                             </span>
-                            <div>@{version}</div>
+                            <div>@{version_str}</div>
                         </td>
                         <td>n/a</td>
                         <td>@{completion_time}</td>
@@ -25,7 +25,6 @@
                         <div><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</div>
                         </td>
                     </tr>
-                </tbody>     
-            
+                </tbody>
+
         </table>
- 

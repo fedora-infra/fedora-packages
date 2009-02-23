@@ -1,9 +1,6 @@
 from moksha.lib.base import Controller, BaseController
 from moksha.api.widgets.containers import TabbedContainer
 from tg import expose, tmpl_context, redirect
-from tw.jquery.ui_tabs import JQueryUITabs
-from tw.core import CSSLink
-from pylons import config
 
 # Root for the whole fedora-community tree
 class MainNav(TabbedContainer):

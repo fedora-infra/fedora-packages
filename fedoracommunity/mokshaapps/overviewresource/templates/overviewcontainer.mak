@@ -4,7 +4,7 @@
        <div id="right-content-column">
           ${applist_widget(category = 'right-content-column', layout = layout)}
        </div>
-       
+
        <div id="left-content-column">
       <div id="banner-header">
          <img width="600" src="${tmpl_context.get_url('/images/fedora_intro_banner1.png')}">
@@ -23,7 +23,6 @@
        </div>
      </div>
     </div>
-    
     <div id="overlay">
         <div id="preloader"><img src="/toscawidgets/resources/moksha.widgets.layout.layout/static/loader.gif" alt="" /></div>
     </div>
