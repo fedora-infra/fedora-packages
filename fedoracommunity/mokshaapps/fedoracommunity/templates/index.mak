@@ -32,4 +32,3 @@
     ${footer()}
 </body>
 </html>
-</html>

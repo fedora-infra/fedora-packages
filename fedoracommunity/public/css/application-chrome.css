@@ -167,10 +167,19 @@ a {
 
 /** banner-header for banner images **/
 #banner-header {
-  width: 600px;
+  background: url(http://localhost:8080/images/grad_grey_1x116.png);
+  width: 100%;
+  height: 116px;
+  -moz-border-radius: 12px;
+}
+
+#banner-header img {
+  display: block;
+  margin-top: 0px;
   margin-left: auto;
   margin-right: auto;
 }
+
 
 /** content div horiztonal tabs **/
 
@@ -285,16 +294,38 @@ a {
   margin-right: 4px;
 }
 
-.left-content-column,
-.right-content-column {
+#left-content-column,
+#right-content-column {
   padding: 0px;
 }
 
-.left-content-column {
+#left-content-column {
   width: 68%;
 }
 
-.right-content-column {
+#left-content-column dl dd {
+  margin-left: 0px;
+}
+
+#left-content-column dl dd div.header-list {
+  padding-top: 2px;
+} 
+
+
+#left-content-column dt {
+  text-transform: uppercase;
+  color: black;
+  margin-top: 18px;
+}
+
+#left-content-column h2 {
+  color: #2b81d6;
+  font-weight: 900;
+  margin-top: 10px;
+  margin-bottom: 3px;
+}
+
+#right-content-column {
   width: 30%;
   float: right;
 }
@@ -381,12 +412,15 @@ span.more-items {
   background-color: #f0f0f0 !important;
   vertical-align: top;
   text-align: left;
-  padding: 2px 5px 3px 5px!important;
+  padding: 6px 5px 6px 5px!important;
+  border-bottom: white 4px solid !important;
+  color: #707070;
 }
 
 .header-list table td {
   border: none !important;
-  padding: 1px 5px !important;
+  border-bottom: 1px solid #c8c8c8 !important;
+  padding-bottom: 4px !important;
 }
 
 .header-list table td {
@@ -702,3 +736,10 @@ ul.page-flips li {
 .action-button:hover {
   background-color: #eaeaea;
 }
+
+
+/* this needs to be fixed in fedora.css */
+table * {
+  color: #666;
+}
+
