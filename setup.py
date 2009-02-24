@@ -82,10 +82,11 @@ setup(
     fedoracommunity.packagemaintresource = fedoracommunity.mokshaapps.packagemaintresource:RootController
     fedoracommunity.peopleresource = fedoracommunity.mokshaapps.peopleresource:RootController
 
+    fedoracommunity.search = fedoracommunity.mokshaapps.searchresource:RootController
 
     fedoracommunity.builds = fedoracommunity.mokshaapps.builds:RootController
     fedoracommunity.updates = fedoracommunity.mokshaapps.updates:RootController
-
+    fedoracommunity.alerts = fedoracommunity.mokshaapps.alerts:RootController
 
     [moksha.widget]
     fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
