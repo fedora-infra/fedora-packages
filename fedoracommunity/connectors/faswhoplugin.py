@@ -21,7 +21,7 @@ from repoze.who.interfaces import IChallenger, IIdentifier
 
 from Cookie import SimpleCookie
 
-from csrfwhoplugin import CSRFWhoPlugin
+from moksha.middleware.csrfmiddleware import CSRFProtectionMiddleware
 
 import beaker
 
@@ -39,10 +39,7 @@ fasurl = tg.config.get('fedoracommunity.fas.baseurl')
 fas_cache = Cache('fas_repozewho_cache')
 
 def fas_make_who_middleware(app, log_stream):
-
-    csrfwho = CSRFWhoPlugin(session_id = 'tg-visit',
-                            csrf_token_id = '_csrf_token')
-
+    csrf_app = CSRFProtectionMiddleware()
     faswho = FASWhoPlugin(fasurl)
 
     form = RedirectingFormPlugin('/login', '/login_handler', '/logout', rememberer_name='fasident')
@@ -52,7 +49,7 @@ def fas_make_who_middleware(app, log_stream):
     identifiers = [('form', form),('fasident', faswho)]
     authenticators = [('fasauth', faswho)]
     challengers = [('form',form)]
-    mdproviders = [('fasmd', faswho), ('csrfmd', csrfwho)]
+    mdproviders = [('fasmd', faswho), ('csrfmd', csrf_app)]
 
     if os.environ.get('FAS_WHO_LOG'):
         log_stream = sys.stdout
@@ -68,8 +65,8 @@ def fas_make_who_middleware(app, log_stream):
         log_stream = log_stream
         )
 
-    return middleware
-
+    csrf_app.register_application(middleware)
+    return csrf_app
 
 class FasClient(ProxyClient):
     visit_name = 'tg-visit'
