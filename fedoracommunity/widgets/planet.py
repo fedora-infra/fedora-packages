@@ -28,7 +28,7 @@ from moksha.api.widgets.feed import LiveFeedWidget
 
 class PlanetFedoraWidget(LiveFeedWidget):
     url = 'http://planet.fedoraproject.org/atom.xml'
-    javascript = [JSLink(link='/javascript/jquery.jtruncate.js')]
+    javascript = [JSLink(link='/javascript/jquery.expander.js')]
     css = [CSSLink(link='/css/planet-fedora-bubbles.css')]
     limit = 3
     template = """
@@ -74,7 +74,7 @@ class PlanetFedoraWidget(LiveFeedWidget):
                 $("#${entry['uid']}_person").prepend($("#${entry['uid']}_text img:first"));
             }
 
-            $("#${entry['uid']}_text").jTruncate({moreAni:'slow', lessAni:'slow'});
+            $("#${entry['uid']}_text").expander({slicePoint: 300});
 
         </script>
     % endfor
