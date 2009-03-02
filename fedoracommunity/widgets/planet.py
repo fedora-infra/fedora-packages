@@ -68,10 +68,17 @@ class PlanetFedoraWidget(LiveFeedWidget):
         </div>
         <script>
 
+            function img_error(source) {
+                source.src = "http://planet.fedoraproject.org/images/heads/default.png";
+                source.onerror = "";
+                return true;
+            }
+
             hackergochi = $("#${entry['uid']}_text img:first");
             if (hackergochi) {
+                hackergochi.attr('onerror', 'img_error(this)');
                 $("#${entry['uid']}_person img:first").remove();
-                $("#${entry['uid']}_person").prepend($("#${entry['uid']}_text img:first"));
+                $("#${entry['uid']}_person").prepend(hackergochi);
             }
 
             $("#${entry['uid']}_text").expander({slicePoint: 300});
