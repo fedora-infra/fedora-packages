@@ -1,1 +1,1 @@
-from controllers.root import RootController
+from controllers.root import RootController, login_widget

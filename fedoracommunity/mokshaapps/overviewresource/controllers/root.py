@@ -16,7 +16,9 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
                         MokshaWidget('Planet Fedora','fedoracommunity.planet', params={'id': 'planet'}),
                         ]),
               Category('right-content-column',
-                       [MokshaWidget(None, 'fedoracommunity.login', auth=Not(not_anonymous())),
+                       [MokshaWidget(None, 'fedoracommunity.login',
+                                     params={'came_from': '/'},
+                                     auth=Not(not_anonymous())),
                         MokshaApp('Alerts', 'fedoracommunity.alerts'),
                         MokshaApp('Quick Links', 'fedoracommunity.quicklinks', auth=not_anonymous()),
                         MokshaApp('Quick Links', 'fedoracommunity.mypackages', auth=not_anonymous())
