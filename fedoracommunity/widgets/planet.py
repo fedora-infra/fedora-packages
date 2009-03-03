@@ -28,7 +28,7 @@ from moksha.api.widgets.feed import LiveFeedWidget
 
 class PlanetFedoraWidget(LiveFeedWidget):
     url = 'http://planet.fedoraproject.org/atom.xml'
-    javascript = [JSLink(link='/javascript/jquery.jtruncate.js')]
+    javascript = [JSLink(link='/javascript/jquery.expander.js')]
     css = [CSSLink(link='/css/planet-fedora-bubbles.css')]
     limit = 3
     template = """
@@ -68,13 +68,20 @@ class PlanetFedoraWidget(LiveFeedWidget):
         </div>
         <script>
 
-            hackergochi = $("#${entry['uid']}_text img:first");
-            if (hackergochi) {
-                $("#${entry['uid']}_person img:first").remove();
-                $("#${entry['uid']}_person").prepend($("#${entry['uid']}_text img:first"));
+            function img_error(source) {
+                source.src = "http://planet.fedoraproject.org/images/heads/default.png";
+                source.onerror = "";
+                return true;
             }
 
-            $("#${entry['uid']}_text").jTruncate({moreAni:'slow', lessAni:'slow'});
+            hackergochi = $("#${entry['uid']}_text img:first");
+            if (hackergochi) {
+                hackergochi.attr('onerror', 'img_error(this)');
+                $("#${entry['uid']}_person img:first").remove();
+                $("#${entry['uid']}_person").prepend(hackergochi);
+            }
+
+            $("#${entry['uid']}_text").expander({slicePoint: 300});
 
         </script>
     % endfor

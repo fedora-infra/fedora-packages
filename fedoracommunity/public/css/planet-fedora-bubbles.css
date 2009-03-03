@@ -9,7 +9,7 @@ div.person-info {
   background: transparent url(/images/planet-bubbles/point.png) no-repeat scroll right;
   float: left;
   bottom: 18px;
-  left: 2.5em;
+  left: 2.6em;
   margin-left: -5em !important;
   margin-top: 8px !important;
   padding: 0 1em 0 1em;
@@ -28,7 +28,16 @@ div.person-info a img {
   min-height: 40px !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  max-width: 70px;
+}
+
+div.person-info img {
+  max-width: 50px;
+}
+
+div.person-info a {
+  float: left;
+  text-align: center;
+  width: 94%;
 }
 
 div.post {
