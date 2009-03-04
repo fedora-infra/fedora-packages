@@ -1,6 +1,6 @@
 <%namespace file="fedoracommunity.mokshaapps.fedoracommunity.templates.header" import="*" />
 <%namespace file="fedoracommunity.mokshaapps.fedoracommunity.templates.footer" import="*" />
-
+<% from tg import flash %>
 <html>
     <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
@@ -26,7 +26,10 @@
     <div id="wrapper">
         ${header()}
         <div id="main_app">
-           ${tmpl_context.widget()}
+           % if flash.message:
+             ${flash.message}
+           % endif
+           ${tmpl_context.widget(**options)}
         </div>
     </div>
     ${footer()}

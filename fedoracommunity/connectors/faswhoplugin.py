@@ -7,6 +7,10 @@ import urllib2
 import tg
 import uuid
 
+from tg import flash
+
+from paste.httpexceptions import HTTPUnauthorized
+
 from repoze.who.middleware import PluggableAuthenticationMiddleware
 
 from repoze.who.plugins.form import RedirectingFormPlugin
@@ -22,7 +26,7 @@ from repoze.who.interfaces import IChallenger, IIdentifier
 from Cookie import SimpleCookie
 
 from moksha.middleware.csrfmiddleware import CSRFProtectionMiddleware
-
+from moksha.api.errorcodes import login_err
 import beaker
 
 import pkg_resources
@@ -42,7 +46,9 @@ def fas_make_who_middleware(app, log_stream):
     csrf_app = CSRFProtectionMiddleware()
     faswho = FASWhoPlugin(fasurl)
 
-    form = RedirectingFormPlugin('/login', '/login_handler', '/logout', rememberer_name='fasident')
+    form = RedirectingFormPlugin('/login', '/login_handler', '/logout',
+                                 rememberer_name='fasident',
+                                 reason_param='ec')
     form.classifications = { IIdentifier:['browser'],
                              IChallenger:['browser'] } # only for browser
 
@@ -140,17 +146,6 @@ class FASWhoPlugin(object):
         req = webob.Request(environ)
 
         log.info('Identify')
-        errk = req.cookies.get('fas_error_key')
-        if errk:
-            log.info('''There was an error set in the last session -
-                        retrieving error message''')
-            try:
-                err = fas_cache.get_value(key=errk)
-                fas_cache.remove_value(errk)
-                environ['FAS_AUTH_ERROR'] = err
-                return None
-            except:
-                pass
 
         cookie = req.cookies.get('tg-visit')
 
@@ -182,21 +177,9 @@ class FASWhoPlugin(object):
 
     def remember(self, environ, identity):
         log.info('Remeber')
-        err = identity.get('error')
-        if err:
-            log.info('''There was an error set in this session -
-                        saving error message for next page redirect''')
-            cache_error_key=str(uuid.uuid4()) + '_fas_error'
-            set_cookie = 'fas_error_key="%s"; Path=/;' % (cache_error_key)
-            fas_cache.set_value(cache_error_key, err, type="memory",
-                                                      expiretime=120)
-            return [('Set-Cookie', set_cookie)]
 
         result = []
         req = webob.Request(environ)
-        if req.cookies.get('fas_error_key'):
-            expired = ('fas_error_key=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT')
-            result.append(('Set-Cookie', expired))
 
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
@@ -221,7 +204,7 @@ class FASWhoPlugin(object):
 
             result = []
             fas_cache.remove_value(key=session_id + "_identity")
-            expired = ('tg-visit=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT')
+            expired = ('tg-visit=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT',)
             result.append(('Set-Cookie', expired))
             environ['FAS_LOGIN_INFO'] = None
             return result
@@ -244,8 +227,14 @@ class FASWhoPlugin(object):
         except AuthError, e:
             log.info('Authentication failed, setting error')
             log.error(e)
-            err = 'ERROR: Could not log in. Invalid username or password.'
+            err = 1
             environ['FAS_AUTH_ERROR'] = err
+
+            err_app = HTTPUnauthorized()
+            login_err.USERNAME_PASSWORD_ERROR.replace_app_header(err_app,
+                                        'X-Authorization-Failure-Reason')
+
+            environ['repoze.who.application'] = err_app
 
             return None
 
@@ -256,6 +245,13 @@ class FASWhoPlugin(object):
                 # to rewrite the redirection app
                 environ['CSRF_AUTH_SESSION_ID'] = environ['FAS_LOGIN_INFO'][0]
                 return login
+
+        err = 'An unknown error happened when trying to log you in.  Please try again.'
+        environ['FAS_AUTH_ERROR'] = err
+        err_app = HTTPUnauthorized()
+        login_err.UNKNOWN_AUTH_ERROR.replace_app_header(err_app,
+                                        'X-Authorization-Failure-Reason')
+        environ['repoze.who.application'] = err_app
 
         return None
 
