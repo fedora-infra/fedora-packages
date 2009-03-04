@@ -1,6 +1,4 @@
-<div id="${id}" class="list">
-    <h3><a href="http://planet.fedoraproject.org">Planet Fedora</a></h3>
-
+<div id="${id}">
     % for entry in feed.iterentries(d=d, limit=limit):
         <div class="entry">
             <div id="${entry['uid']}">
@@ -12,9 +10,9 @@
                 </div>
                 <div class="post">
                     <div class="post-header">
-                        <h3 class="post-title">
+                        <h4 class="post-title">
                             <a href="${entry.link}" target="_blank">${entry.title}</a></span>
-                        </h3>
+                        </h4>
                     </div>
                     <div class="post-contents" id="${entry['uid']}_text">
                         ${entry.content[0].value}
