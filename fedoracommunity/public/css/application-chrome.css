@@ -343,10 +343,6 @@ h3 {
 
 /** simple list **/
 
-.list {
-  padding-top: 10px;
-}
-
 .list table {
   width: 100%;
   border: none !important;
@@ -509,6 +505,13 @@ span.timestamp {
   margin-top:		-1px;
 }
 
+#left-content-column h3 {
+  font-weight: 900;
+  color: black !important;
+  text-transform: uppercase;
+  font-size: 9pt;
+  margin-bottom: -10px !important;
+}
 
 /** right sidebar column styles **/
 
@@ -524,14 +527,6 @@ div.panel td {
 
 div.icon-panel td {
   padding: 0px 0px 2px 10px !important;
-}
-
-#left-content-column h3 {
-  font-weight: 900;
-  color: black !important;
-  text-transform: uppercase;
-  font-size: 9pt;
-  margin-bottom: -2px;
 }
 
 #right-content-column a {
@@ -736,6 +731,10 @@ h1#greeter img {
 .list .pager li.current-page {
   font-weight: bold !important;
   background-color: #eee;
+}
+
+#left-content-column .list {
+  margin-bottom: 3em !important;
 }
 
 div.pager {
