@@ -584,7 +584,7 @@ div.login {
 
 div.login h3 {
   background: none !important;
-  padding: 2px 2px 5px 0px;
+  padding: 2px 2px 5px 0px !important;
 }
 
 div.login form span {
