@@ -55,7 +55,7 @@ setup(
     main = pylons.util:PylonsInstaller
 
     [fas.repoze.who.metadata_plugins]
-    blog_info = myfedora.plugins.identity.bloginfo:add_metadata
+#    blog_info = myfedora.plugins.identity.bloginfo:add_metadata
 
     [moksha.global]
     fedora_css = fedoracommunity.widgets:fedora_css
