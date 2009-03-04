@@ -32,6 +32,7 @@ div.person-info a img {
 
 div.person-info img {
   max-width: 50px;
+  max-height: 50px;
 }
 
 div.person-info a {
@@ -43,21 +44,19 @@ div.person-info a {
 div.post {
   margin-left: 8em;
   margin-top: 2.2em;
-  padding: .25em 1.5em;
+  padding: .25em 1.6em;
   position: relative;
   min-height: 68px;
+  padding-left: 2.2em;
 }
 
-h3.post-title {
-  font-size: large;
-  margin-top: 0;
+h4.post-title {
+  font-weight: strong;
+  font-size: medium;
+  margin-top: 9px;
   position: relative;
   z-index: 1;
-  padding-left: 5px;
-}
-
-.post-title span {
-  padding-left: 5px;
+  margin-bottom: -\0px;
 }
 
 .post-contents {
