@@ -16,21 +16,18 @@
                             <span class="package-name"> 
                                 <a href="http://localhost/koji/buildinfo?buildID=@{build_id}" target="_blank">@{package_name}</a>
                             </span>
-                            <div>@{version}</div>
+                            <div>@{version}</div>&nbsp;
                         </td>
                         <td>
-                            <span class="person-name"><a href="/people/name/@{owner_name}/builds">@{owner_name}</a></span>
+                            <span class="person-name"><a href="/people/name/@{owner_name}/builds">@{owner_name}</a></span>&nbsp;
                         </td>
                         <td>n/a</td>
-                        <td>@{completion_time}</td>
+                        <td>@{completion_time}&nbsp;</td>
                         
-                        <td><img src="/images/16_build_state_@{state}.png" /></td>
-                        <td id="@{release_id}">
-                            &nbsp;
-                        </td>
+                        <td><img src="/images/16_build_state_@{state}.png" />&nbsp;</td>
                     </tr>
                     <tr>
-                        <td colspan="7"
+                        <td colspan="5"
                             id="@{message_id}"
                             class="message_row">
                         </td>
