@@ -21,7 +21,7 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
                                      auth=Not(not_anonymous())),
                         MokshaApp('Alerts', 'fedoracommunity.alerts'),
                         MokshaApp('Quick Links', 'fedoracommunity.quicklinks', auth=not_anonymous()),
-                        MokshaApp('Quick Links', 'fedoracommunity.mypackages', auth=not_anonymous())
+                        MokshaApp('My Packages', 'fedoracommunity.packages/mypackages', auth=not_anonymous())
                        ]
                       )
               ]

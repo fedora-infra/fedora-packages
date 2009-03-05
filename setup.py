@@ -71,6 +71,7 @@ setup(
     [moksha.connector]
     koji = fedoracommunity.connectors:KojiConnector
     bodhi = fedoracommunity.connectors:BodhiConnector
+    pkgdb = fedoracommunity.connectors:PkgdbConnector
 
     [moksha.application]
     login = fedoracommunity.mokshaapps.login:RootController
@@ -87,6 +88,7 @@ setup(
     fedoracommunity.builds = fedoracommunity.mokshaapps.builds:RootController
     fedoracommunity.updates = fedoracommunity.mokshaapps.updates:RootController
     fedoracommunity.alerts = fedoracommunity.mokshaapps.alerts:RootController
+    fedoracommunity.packages = fedoracommunity.mokshaapps.packages:RootController
 
     [moksha.widget]
     fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget

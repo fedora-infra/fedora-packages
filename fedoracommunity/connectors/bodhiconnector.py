@@ -38,127 +38,90 @@ class BodhiConnector(IConnector, ICall, IQuery):
         return self.request_data(resource_path, params, _cookies)
 
     #IQuery
-    def query(self, resource_path, params, _cookies,
-              offset = 0,
-              num_rows = 10,
-              sort_col = None,
-              sort_order = -1,
-              filters = {}):
 
-        results = None
-        r = {
-              "total_rows": 0,
-              "row_count": 0,
-              "offset": 0,
-              "rows": None
-            }
-
-        if not sort_col:
-            sort_col = self.get_default_sort_col(resource_path)
-
-        if resource_path == 'query_updates':
-            if params == None:
-                params = {}
-
-            (total_rows, rows) = self.query_updates(offset = offset,
-                                                   limit = num_rows,
-                                                   order = sort_order,
-                                                   sort_col = sort_col,
-                                                   filters = filters,
-                                                   **params)
-            r['total_rows'] = total_rows
-            r['row_count'] = len(rows)
-            if offset:
-                r['offset'] = offset
-            r['rows'] = rows
-
-            results = r
-
-        return results
-
-    # BodhiConnector
     @classmethod
     def register_query_updates(cls):
-        cls.register_path(
+        path = cls.register_path(
                       'query_updates',
+                      cls.query_updates,
                       primary_key_col = 'request_id',
                       default_sort_col = 'request_id',
                       default_sort_order = -1,
                       can_paginate = True)
 
-        cls.register_column('query_updates', 'request_id',
+        path.register_column('request_id',
                         default_visible = False,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'updateid',
+        path.register_column('updateid',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'nvr',
+        path.register_column('nvr',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'submitter',
+        path.register_column('submitter',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'status',
+        path.register_column('status',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'request',
+        path.register_column('request',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'karma',
+        path.register_column('karma',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'nagged',
+        path.register_column('nagged',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'type',
+        path.register_column('type',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'approved',
+        path.register_column('approved',
+                        default_visible = True,
+                        can_sort = False,
+                     can_filter_wildcards = False)
+        path.register_column('date_submitted',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'date_submitted',
+        path.register_column('date_pushed',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'date_pushed',
+        path.register_column('date_modified',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'date_modified',
+        path.register_column('comments',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'comments',
+        path.register_column('bugs',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'bugs',
+        path.register_column('builds',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'builds',
+        path.register_column('release_label',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'release_label',
+        path.register_column('release',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        cls.register_column('query_updates', 'release',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
-        cls.register_column('query_updates', 'karma_level',
+        path.register_column('karma_level',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)

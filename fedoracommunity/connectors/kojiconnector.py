@@ -28,67 +28,29 @@ class KojiConnector(IConnector, ICall, IQuery):
         return self.request_data(resource_path, params, _cookies)
 
     #IQuery
-    def query(self, resource_path, params, _cookies,
-              offset = 0,
-              num_rows = 10,
-              sort_col = None,
-              sort_order = -1,
-              filters = {}):
-
-        results = None
-        r = {
-              "total_rows": 0,
-              "row_count": 0,
-              "offset": 0,
-              "rows": None
-            }
-
-        if not sort_col:
-            sort_col = self.get_default_sort_col(resource_path)
-
-        if resource_path == 'query_builds':
-            if params == None:
-                params = {}
-
-            (total_rows, rows) = self.query_builds(offset = offset,
-                                                   limit = num_rows,
-                                                   order = sort_order,
-                                                   sort_col = sort_col,
-                                                   filters = filters,
-                                                   **params)
-            r['total_rows'] = total_rows
-            r['row_count'] = len(rows)
-            if offset:
-                r['offset'] = offset
-            r['rows'] = rows
-
-            results = r
-
-        return results
-
-    # KojiConnector
     @classmethod
     def register_query_builds(cls):
-        cls.register_path(
+        path = cls.register_path(
                       'query_builds',
+                      cls.query_builds,
                       primary_key_col = 'build_id',
                       default_sort_col = 'build_id',
                       default_sort_order = -1,
                       can_paginate = True)
 
-        cls.register_column('query_builds', 'build_id',
+        path.register_column('build_id',
                         default_visible = True,
                         can_sort = True,
                         can_filter_wildcards = False)
-        cls.register_column('query_builds', 'nvr',
+        path.register_column('nvr',
                         default_visible = True,
                         can_sort = True,
                         can_filter_wildcards = False)
-        cls.register_column('query_builds', 'owner_name',
+        path.register_column('owner_name',
                         default_visible = True,
                         can_sort = True,
                         can_filter_wildcards = False)
-        cls.register_column('query_builds', 'state',
+        path.register_column('state',
                         default_visible = True,
                         can_sort = True,
                         can_filter_wildcards = False)

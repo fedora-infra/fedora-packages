@@ -1,2 +1,3 @@
 from kojiconnector import KojiConnector
 from bodhiconnector import BodhiConnector
+from pkgdbconnector import PkgdbConnector
