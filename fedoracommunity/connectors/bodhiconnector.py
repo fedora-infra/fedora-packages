@@ -1,4 +1,6 @@
 from moksha.connector import IConnector, ICall, IQuery
+from moksha.connector.utils import DateTimeDisplay
+
 from pylons import config
 from fedora.client import ProxyClient
 
@@ -196,6 +198,24 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 up['nvr'] = nvr
                 up['release_label'] = up['release']['long_name']
 
+                #dates
+                dp = up['date_pushed']
+                ds = up['date_submitted']
+
+                dtd = DateTimeDisplay(ds)
+                ds_when = dtd.when(0)
+                dp_when = None
+                elapsed = dtd.time_elapsed(0)
+                if dp:
+                    dtd = DateTimeDisplay(ds, dp)
+                    dp_when = dtd.when(1)
+                    elapsed = dtd.time_elapsed(0, 1)
+
+                up['date_pushed_display'] = dp_when
+                up['date_submitted_display'] = ds_when
+                up['elapsed_display'] = elapsed
+
+                # karma
                 k = up['karma']
 
                 if k:

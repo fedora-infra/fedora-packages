@@ -1,4 +1,5 @@
 from moksha.connector import IConnector, ICall, IQuery
+from moksha.connector.utils import DateTimeDisplay
 from pylons import config
 import koji
 
@@ -137,6 +138,24 @@ class KojiConnector(IConnector, ICall, IQuery):
         results = self._koji_client.multiCall()
         builds_list = results[1][0]
         total_count = results[0][0]
+        for b in builds_list:
+            start = b['creation_time']
+            complete = b['completion_time']
+            completion_display = None
+            if not complete:
+                dtd = DateTimeDisplay(start)
+                completion_display = {'when': 'In progress...',
+                                    'should_display_time': False,
+                                    'time': ''}
+                elapsed = dtd.time_elapsed(0)
+                completion_display['elapsed'] = elapsed['display']
+            else:
+                dtd = DateTimeDisplay(start, complete)
+                completion_display = dtd.when(1)
+                elapsed = dtd.time_elapsed(0,1)
+                completion_display['elapsed'] = elapsed['display']
+
+            b['completion_time_display'] = completion_display
 
         self._koji_client.multicall = False
 
