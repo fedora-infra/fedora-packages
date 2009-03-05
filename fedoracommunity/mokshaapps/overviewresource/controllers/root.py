@@ -18,11 +18,13 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
               Category('right-content-column',
                        [MokshaWidget(None, 'fedoracommunity.login',
                                      params={'came_from': '/'},
+                                     css_class='',
                                      auth=Not(not_anonymous())),
                         MokshaApp('Alerts', 'fedoracommunity.alerts'),
                         MokshaApp('Quick Links', 'fedoracommunity.quicklinks', auth=not_anonymous()),
                         MokshaApp('My Packages', 'fedoracommunity.packages/mypackages', auth=not_anonymous())
-                       ]
+                       ],
+                       default_child_css="panel"
                       )
               ]
 
