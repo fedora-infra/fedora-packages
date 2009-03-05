@@ -14,9 +14,9 @@
                     <tr>
                         <td>
                             <span class="package-name">
-                                @{name}
+                                @{name}&nbsp;
                             </span>
-                            <div>@{version_str}</div>
+                            <div>@{version_str}&nbsp;</div>
                         </td>
                         <td>@{date_pushed_display:index("when")}</td>
                         <td>@{date_pushed_display:index("date")}</td>
@@ -28,3 +28,4 @@
                 </tbody>
 
         </table>
+                       

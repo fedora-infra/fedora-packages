@@ -19,6 +19,7 @@
           allows you to keep up with your packages and to keep track of your
           friends&rsquo; packages as well. </p>
           <p><strong><a href="">Need an account?</a></strong></p>
+          <br />
 
           % else:
 
