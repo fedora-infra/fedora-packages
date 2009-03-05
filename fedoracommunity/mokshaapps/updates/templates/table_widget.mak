@@ -14,14 +14,14 @@
                     <tr>
                         <td>
                             <span class="package-name">
-                                @{name}
+                                @{name}&nbsp;
                             </span>
-                            <div>@{version_str}</div>
+                            <div>@{version_str}&nbsp;</div>
                         </td>
                         <td>n/a</td>
-                        <td>@{completion_time}</td>
-                        <td>@{release_label}</td>
-                        <td><span>@{status}</span>
+                        <td>@{completion_time}&nbsp;</td>
+                        <td>@{release_label}&nbsp;</td>
+                        <td>@{status}&nbsp;</span>
                         <div><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</div>
                         </td>
                     </tr>
