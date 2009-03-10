@@ -3,15 +3,21 @@ from fedoracommunity.config.environment import load_environment
 from moksha.middleware import (MokshaMiddleware, MokshaConnectorMiddleware,
                               MokshaExtensionPointMiddleware)
 
+from paste.cascade import Cascade
+
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
-def make_app(global_conf, full_stack=True, **app_conf):
-    app = make_base_app(global_conf, wrap_app=MokshaMiddleware,
-                        full_stack=True,
-                        **app_conf)
-
+def fc_middleware_wrapper(app):
+    app = MokshaMiddleware(app)
     app = MokshaConnectorMiddleware(app)
     app = MokshaExtensionPointMiddleware(app)
+
+    return app
+
+def make_app(global_conf, full_stack=True, **app_conf):
+    app = make_base_app(global_conf, wrap_app=fc_middleware_wrapper,
+                        full_stack=True,
+                        **app_conf)
 
     if base_config.squeeze:
         from repoze.squeeze.processor import ResourceSqueezingMiddleware
