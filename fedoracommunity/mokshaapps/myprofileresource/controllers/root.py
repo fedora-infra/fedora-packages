@@ -4,9 +4,12 @@ from tg import expose, tmpl_context
 from fedoracommunity.widgets import SubTabbedContainer
 
 class TabbedNav(SubTabbedContainer):
-    tabs= (MokshaApp('Info', 'fedoracommunity.profile.info/me'),
-           MokshaApp('Memberships', 'fedoracommunity.profile.memberships/me'),
-           MokshaApp('Packages Maintenance', 'fedoracommunity.profile.packagemaint/me'),
+    tabs= (MokshaApp('Info', 'fedoracommunity.people',
+                     params={'profile':True}),
+           MokshaApp('Memberships', 'fedoracommunity.people/memberships',
+                     params={'profile':True}),
+           MokshaApp('Packages Maintenance', 'fedoracommunity.people/packagemaint',
+                     params={'profile': True}),
           )
 
 class RootController(Controller):
