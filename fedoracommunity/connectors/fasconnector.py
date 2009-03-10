@@ -29,10 +29,19 @@ class FasConnector(IConnector, ICall, IQuery):
         cls._insecure = insecure
 
         cls.register_query_usermemberships()
-        # cls.register_query_userinfo()
+        cls.register_query_userinfo()
 
     def request_data(self, resource_path, params, _cookies):
-        return self._fas_client.send_request(resource_path, req_params = params)
+        fas_info = self._environ.get('FAS_LOGIN_INFO')
+
+        auth_params={}
+        if fas_info:
+            session_id = fas_info[0]
+            auth_params={'session_id': session_id}
+
+        return self._fas_client.send_request(resource_path,
+                                             auth_params = auth_params,
+                                             req_params = params)
 
     def introspect(self):
         # FIXME: return introspection data
@@ -44,30 +53,34 @@ class FasConnector(IConnector, ICall, IQuery):
         # this off to request_data but we should fix that in ProxyClient
         return self.request_data(resource_path, params, _cookies)
 
-    def request_memberships_table(self):
-        table = {}
-        co = self.call('/collections')
-        for c in co[1]['collections']:
-            d = {}
-            for i in c:
-                d.update(i)
+    def request_user_view(self, user):
+        view = self.call('user/view', {'username': user});
+        if not view:
+            return None
 
-            table[d['id']] = d
+        view = view[1]
+        extra = {'cla':view['cla'],
+                 'admin':view['admin'],
+                 'personal':view['personal']
+                 }
 
-        return table
+        view = view['person']
+        view.update(extra)
+        return view
 
-    def get_me_table(self, invalidate=False):
-        # Cache for a long time or if we see a collection
-        # that is not in the table
+    def get_user_view(self, user, invalidate=False):
+        if not isinstance(user, basestring):
+            return None
 
+        key = '_fas_user_info_' + user
         if invalidate:
-            pkgdb_cache.remove_value('_pkgdb_collection_table')
+            fas_cache.remove_value(key)
 
-        table = pkgdb_cache.get_value(key='_pkgdb_collection_table',
-                                   createfunc=self.request_collection_table,
+        info = fas_cache.get_value(key = key ,
+                                   createfunc=lambda : self.request_user_view(user),
                                    type="memory",
-                                   expiretime=COLLECTION_TABLE_CACHE_TIMEOUT)
-        return table
+                                   expiretime=USERINFO_CACHE_TIMEOUT)
+        return info
 
     # IQuery
     @classmethod
@@ -152,6 +165,43 @@ class FasConnector(IConnector, ICall, IQuery):
         f.add_filter('show_unapproved',['unapproved', 'un'], allow_none = True)
         cls._query_usermemberships_filter = f
 
+    @classmethod
+    def register_query_userinfo(cls):
+        path = cls.register_path(
+                      'query_userinfo',
+                      cls.query_userinfo,
+                      can_paginate = False)
+
+        f = ParamFilter()
+        f.add_filter('username',['u', 'user', 'name'], allow_none = False)
+        cls._query_userinfo_filter = f
+
+
+    def query_userinfo(self, offset=None,
+                           limit=None,
+                           order=-1,
+                           sort_col=None,
+                           filters = {},
+                           **params):
+
+        filters = self._query_userinfo_filter.filter(filters)
+
+        un = filters.get('username')
+
+        view = self.get_user_view(un)
+        if not view:
+            return None
+
+        # remove membership info to conserve bandwidth
+        if 'approved_memberships' in view:
+            del view['approved_memberships']
+
+        if 'unapproved_memberships' in view:
+            del view['unapproved_memberships']
+
+        # there is only ever one row returned
+        return (1, [view])
+
     def query_usermemberships(self, offset=None,
                            limit=None,
                            order=-1,
@@ -167,7 +217,7 @@ class FasConnector(IConnector, ICall, IQuery):
         profile = filters.get('profile', False)
 
         current_id = self._environ.get('repoze.who.identity')
-        print self._environ
+
         current_user = None
         if current_id:
             current_user = current_id['repoze.who.userid']
@@ -180,7 +230,7 @@ class FasConnector(IConnector, ICall, IQuery):
         if un == current_user:
             info = current_id['person']
         else:
-            info = get_user_info(un)
+            info = self.get_user_view(un)
 
         if info:
             if sa:
@@ -198,32 +248,3 @@ class FasConnector(IConnector, ICall, IQuery):
             rows = rows[offset:last_index]
 
         return (count, rows)
-
-
-    def get_user_info(self, user):
-
-        results = self._pkgdb_client.send_request('users/packages', req_params = params)
-        total_count = results[1]['pkgCount']
-        package_list = results[1]['pkgs']
-
-        co_table = self.get_collection_table()
-        for p in package_list:
-            p['collections'] = p['listings']
-            del p['listings']
-            for c in p['collections']:
-                id = c['collectionid']
-                co_info = co_table.get(id)
-                if not co_info:
-                    co_table = self.get_collection_table(invalidate=True)
-                    co_info = co_table.get(id)
-
-                    # hasn't been updated yet, don't hammer the server
-                    if not co_info:
-                        c['collectionname'] = 'Not Updated'
-                        c['collectionversion'] = ''
-                        continue
-
-                c['collectionname'] = co_info['name']
-                c['collectionversion'] = co_info['version']
-
-        return (total_count, package_list)
