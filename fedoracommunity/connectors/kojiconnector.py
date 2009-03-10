@@ -4,7 +4,8 @@ from pylons import config
 import koji
 
 class KojiConnector(IConnector, ICall, IQuery):
-    def __init__(self):
+    def __init__(self, environ=None, request=None):
+        super(KojiConnector, self).__init__(environ, request)
         self._koji_client = koji.ClientSession(self._base_url)
 
     # IConnector

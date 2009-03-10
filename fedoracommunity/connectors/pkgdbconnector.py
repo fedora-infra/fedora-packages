@@ -7,7 +7,8 @@ COLLECTION_TABLE_CACHE_TIMEOUT= 60 * 60 * 6 # s * m * h = 6 hours
 pkgdb_cache = Cache('pkgdb_connector_cache')
 
 class PkgdbConnector(IConnector, ICall, IQuery):
-    def __init__(self):
+    def __init__(self, environ=None, request=None):
+        super(PkgdbConnector, self).__init__(environ, request)
         self._pkgdb_client = ProxyClient(self._base_url,
                                          session_as_cookie=False,
                                          insecure = self._insecure)
@@ -144,7 +145,6 @@ class PkgdbConnector(IConnector, ICall, IQuery):
         params['tg_paginate_no'] = int(offset/limit)
 
         results = self._pkgdb_client.send_request('users/packages', req_params = params)
-
         total_count = results[1]['pkgCount']
         package_list = results[1]['pkgs']
 

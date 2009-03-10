@@ -16,11 +16,11 @@ class RootController(BaseController):
         self.mainnav_tab_widget = MainNav('main_nav_tabs', action="create");
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
-    def index(self, ec = None):
+    def index(self, ec = None, **kwds):
         # FIXME: we won't always display the main nav
         tmpl_context.widget = self.mainnav_tab_widget
 
-        return {'title': 'Fedora Community', 'options':{}}
+        return {'title': 'Fedora Community', 'options':kwds}
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
     def login(self, came_from = '/', ec = None):
@@ -41,4 +41,5 @@ class RootController(BaseController):
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
     def default(self, *args, **kwds):
-        redirect('/#' + '/'.join(args), **kwds)
+
+        redirect('/', anchor='/'.join(args), params=kwds)

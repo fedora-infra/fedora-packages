@@ -5,7 +5,8 @@ from pylons import config
 from fedora.client import ProxyClient
 
 class BodhiConnector(IConnector, ICall, IQuery):
-    def __init__(self):
+    def __init__(self, environ, request):
+        super(BodhiConnector, self).__init__(environ, request)
         self._bodhi_client = ProxyClient(self._base_url,
                                          session_as_cookie=False,
                                          insecure = self._insecure)
