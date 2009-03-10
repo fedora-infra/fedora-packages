@@ -6,6 +6,7 @@ from tg import expose, tmpl_context
 
 class SearchContainer(DashboardContainer):
     template = 'mako:fedoracommunity.mokshaapps.searchresource.templates.searchcontainer'
+    params=['search']
     layout = [Category('content-column',
                        [MokshaApp('Package Search', 'fedoracommunity.search/packages',
                                   params={'search': None},
