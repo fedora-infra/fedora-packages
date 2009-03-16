@@ -2,6 +2,7 @@ from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
+from moksha.api.connectors import get_connector
 
 from repoze.what.predicates import not_anonymous
 from tg import expose, tmpl_context, require, request
@@ -9,9 +10,13 @@ from tg import expose, tmpl_context, require, request
 from memberships import MembershipsController
 from package_maintenance import PackageMaintenanceController
 
+from uuid import uuid4
+
 class ProfileContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('header-content-column',
-                       MokshaApp('', 'fedoracommunity.people/details'),
+                       MokshaApp('', 'fedoracommunity.people/details',params=
+                                 {"show_profile": True}
+                                 ),
                        css_class='header-content-column'
                        ),
               Category('right-content-column',
@@ -63,7 +68,7 @@ profile_container = ProfileContainer('profile_container')
 
 class RootController(Controller):
     memberships = MembershipsController()
-    packagemaint     = PackageMaintenanceController()
+    packagemaint = PackageMaintenanceController()
     @expose('mako:moksha.templates.widget')
     @require(not_anonymous())
     def index(self, **kwds):
@@ -88,7 +93,21 @@ class RootController(Controller):
         kwds.update({'u': username})
         return self.index(**kwds)
 
+    @expose('mako:fedoracommunity.mokshaapps.people.templates.info')
+    @require(not_anonymous())
+    def details(self, username=None, show_profile=False, compact=False):
+        results = {'compact': compact,
+                   'id': 'uuid' + str(uuid4())}
 
+        fas_conn = get_connector('fas')
+        person = fas_conn.query_userinfo(filters = {'profile': show_profile,
+                                                    'u':username})
+
+        if person:
+            person = person[1][0]
+
+        results['person'] = person
+        return results
 
     @expose('mako:fedoracommunity.mokshaapps.people.templates.table')
     @require(not_anonymous())

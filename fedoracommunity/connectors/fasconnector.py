@@ -2,6 +2,7 @@ from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from pylons import config
 from fedora.client import ProxyClient
 from beaker.cache import Cache
+from moksha.connector.utils import DateTimeDisplay
 
 USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
 fas_cache = Cache('fas_connector_cache')
@@ -174,8 +175,8 @@ class FasConnector(IConnector, ICall, IQuery):
 
         f = ParamFilter()
         f.add_filter('username',['u', 'user', 'name'], allow_none = False)
+        f.add_filter('profile',[], allow_none=True)
         cls._query_userinfo_filter = f
-
 
     def query_userinfo(self, offset=None,
                            limit=None,
@@ -187,17 +188,30 @@ class FasConnector(IConnector, ICall, IQuery):
         filters = self._query_userinfo_filter.filter(filters)
 
         un = filters.get('username')
+        profile = filters.get('profile', False)
 
-        view = self.get_user_view(un)
+        current_id = self._environ.get('repoze.who.identity')
+
+        current_user = None
+        if current_id:
+            current_user = current_id['repoze.who.userid']
+            if profile:
+                un = current_user
+
+        if un == current_user:
+            view = current_id['person']
+        else:
+            view = self.get_user_view(un)
+
         if not view:
             return None
 
-        # remove membership info to conserve bandwidth
-        if 'approved_memberships' in view:
-            del view['approved_memberships']
-
-        if 'unapproved_memberships' in view:
-            del view['unapproved_memberships']
+        created = DateTimeDisplay(view['creation'])
+        created_display = created.when(0)
+        if created_display:
+            view['created_display'] = created_display['date']
+        else:
+            view['created_display'] = ''
 
         # there is only ever one row returned
         return (1, [view])
