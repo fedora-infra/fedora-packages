@@ -846,3 +846,10 @@ div.info_content th {
 div.info_basic_details table {
   margin-bottom: 10px;
 }
+
+/** moz ellipsis hackery **/
+
+.ellipsis {
+  text-overflow: ellipsis;
+  -moz-binding: url('ellipsis.xml#ellipsis');
+}
