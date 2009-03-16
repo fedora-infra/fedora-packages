@@ -344,6 +344,7 @@ h3 {
 /** simple list **/
 
 .list table {
+  font-size: .9em !important;
   width: 100%;
   border: none !important;
   border-bottom: 1px solid #b3b3b3 !important;
@@ -354,6 +355,7 @@ h3 {
 .list table th,
 .list table td,
 .list table tr {
+  font-size: 9pt !important;
   border: none !important;
   vertical-align: top;
 }
@@ -371,9 +373,6 @@ span.more-items {
 }
 
 /** more advanced list with columns **/
-.header-list {
-  border-bottom: 5px solid #d2d2d2;
-}
 
 .header-list .header-details {
   display: block;
@@ -510,7 +509,6 @@ span.timestamp {
   color: black !important;
   text-transform: uppercase;
   font-size: 9pt;
-  margin-bottom: -10px !important;
 }
 
 /** right sidebar column styles **/
@@ -791,3 +789,60 @@ table * {
   color: #666;
 }
 
+/* loading row for table */
+.rowtemplate {
+  display: none;
+}
+
+/** Styles for People Profiles **/
+
+
+div.info_content {
+  background-color: #eee;
+  -moz-border-radius: 6px;
+  padding: 12px;
+}
+
+div.info_basic_details,
+div.info_identity,
+div.info_contact {
+  margin-left: 120px;
+}
+
+div.info_content div.hackergotchi {
+  background-color: red;
+  height: 120px;
+  width: 120px;
+  float: left;
+  margin-right: 12px;
+  margin-bottom: 12px;
+}
+
+div.info_content h4 {
+  text-transform: uppercase;
+  color: black;
+}
+
+div.info_content table td {
+  border: none !important;
+}
+
+div.info_content td,
+div.info_content th {
+  padding-bottom: 1px !important;
+  padding-top: 1px !important;
+  font-size: 9pt;
+}
+
+div.info_content th {
+  border: none !important;
+  background: none !important;
+  text-align: right;
+  vertical-align: top;
+  color: #666 !important;
+  font-weight: bold !important; 
+}
+
+div.info_basic_details table {
+  margin-bottom: 10px;
+}
