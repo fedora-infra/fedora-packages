@@ -4,37 +4,60 @@
     <div class="info_details">
       <div class="info_basic_details">
         <h4>Basic Details</h4>
-
-        <div><span class="label">Username</span> ${person['username']}</div>
-        <div><span class="label">Member Since</span> ${person['created_display']}</div>
-        <div><span class="label">Location</span> ${person['country_code']}</div>
-        <div><span class="label">Timezone</span> ${person['timezone']}</div>
+        <table>
+        <tr>
+          <th>Username</th>
+          <td>${person['username']}</td>
+        </tr><tr>
+          <th>Member Since</th>
+          <td>${person['created_display']}</td>
+        </tr><tr>
+          <th>Location</th>
+          <td>${person['country_code']}</td>
+        </tr><tr>
+          <th>Timezone</th>
+          <td>${person['timezone']}</td>
+        </tr>
+        </table>
       </div>
 
       <div class="info_identity">
         <h4>Identity</h4>
-        <div><span class="label">Public SSH Key</span> ${person['ssh_key']}</div>
-        <div><span class="label">PGP Key</span> ${person['gpg_keyid']}</div>
+	<table>
+        <tr>
+          <th>Public SSH Key</th> 
+          <td>${person['ssh_key']}</td>
+        </tr><tr>
+          <th>PGP Key</th>
+          <td>${person['gpg_keyid']}</td>
+        </tr>
+        </table>
       </div>
 
       <div class="info_contact">
         <h4>Contacting ${person['human_name']}</h4>
-        <div><span class="label">IRC Nick</span> ${person['ircnick']}</div>
-        <div><span class="label">Email</span> ${person['email']}</div>
-        <div>
-        <span class="label">Phone</span> ${person['telephone']}
-        <div class="address">
-          <span class="label">Postal Address</span>
-          <span>
+        <table>
+        <tr>
+          <th>IRC Nick</th> 
+          <td>${person['ircnick']}</td>
+        </tr><tr>
+          <th>Email</th>
+          <td>${person['email']}</td>
+        </tr><tr>
+          <th>Phone</th>
+          <td>${person['telephone']}</td>
+        </tr><tr>
+          <th>Postal Address</th>
+          <td><span>
             % for l in person['postal_address'].split('\n'):
                <div>${l}</div>
             % endfor
           </span>
-        </div>
-       </div>
+          </td>
+        </tr>
+        </table>
       </div>
     </div>
-  </div>
   </div>
   <script type="text/javascript">
      % if compact:
