@@ -811,11 +811,10 @@ div.info_contact {
 
 div.info_content div.hackergotchi {
   background-color: red;
-  height: 120px;
-  width: 120px;
+  height: 100px;
+  width: 100px;
   float: left;
   margin-right: 12px;
-  margin-bottom: 12px;
 }
 
 div.info_content h4 {
@@ -843,7 +842,7 @@ div.info_content th {
   font-weight: bold !important; 
 }
 
-div.info_basic_details table {
+div.info_content table {
   margin-bottom: 10px;
 }
 
