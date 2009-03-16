@@ -38,7 +38,7 @@
         <h4>Contacting ${person['human_name']}</h4>
         <table>
         <tr>
-          <th>IRC Nick</th> 
+          <th>IRC Nick</th>
           <td>${person['ircnick']}</td>
         </tr><tr>
           <th>Email</th>

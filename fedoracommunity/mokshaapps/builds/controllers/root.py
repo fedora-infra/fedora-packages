@@ -1,18 +1,91 @@
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
-from moksha.api.widgets import ContextAwareWidget, Grid
+from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget, Widget
+from moksha.api.widgets import ContextAwareWidget, Grid, Selectable
 from moksha.api.widgets.containers import DashboardContainer
-
+from koji import BUILD_STATES
 from tg import expose, tmpl_context
+
+from tw.api import JSLink
+from tw.jquery import jQuery, jquery_js, js_callback
 
 class BuildsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.builds.templates.table_widget'
 
+class BuildsFilter(Selectable):
+    builds_filter_js = JSLink(modname='fedoracommunity.mokshaapps.builds',
+                              filename='javascript/buildsfilter.js')
+    javascript = [builds_filter_js] + Selectable.javascript
+
+    def update_params(self, d):
+        super(BuildsFilter, self).update_params(d)
+        categories = []
+
+        cat = {'label': 'Packages I Own',
+               'items': [{'label': 'In Progress Builds',
+                          'link':'javascript:void(0);'},
+                          {'label': 'Failed Builds',
+                          'link':'javascript:void(0);'},
+                          {'label': 'Successful Builds',
+                          'link':'javascript:void(0);'}
+                          ]
+              }
+
+
+        cat = {'label': 'All Packages',
+               'items': [{'label': 'In Progress Builds',
+                          'link':'javascript:void(0);',
+                          'data':{
+                                  'filters': {'state':BUILD_STATES['BUILDING']}
+                                 }
+                         },
+                         {'label': 'Failed Builds',
+                          'link':'javascript:void(0);',
+                          'data': {
+                                   'filters':{'state':BUILD_STATES['FAILED']}
+                                  }
+                         },
+                         {'label': 'Successful Builds',
+                          'link':'javascript:void(0);',
+                          'data': {
+                                   'filters':{'state':BUILD_STATES['COMPLETE']}
+                                  }
+                         }]
+                }
+
+        # for now just add this
+        categories.append(cat)
+        d.update({'categories': categories})
+
+        self.add_call('$("#%s").bind("selected", _builds_filter_selected)' % d.content_id)
+
+builds_filter = BuildsFilter('builds_filter')
+
 class BuildsContainer(DashboardContainer, ContextAwareWidget):
+    in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds/table',
+                                       css_class='main_table',
+                                       params={'rows_per_page': 5,
+                                               'filters':{'state':BUILD_STATES['BUILDING']}})
+    failed_builds_app = MokshaApp('Failed Builds', 'fedoracommunity.builds/table',
+                                       css_class='secondary_table',
+                                       params={'rows_per_page': 5,
+                                               'filters':{'state':BUILD_STATES['FAILED']}})
+    successful_builds_app = MokshaApp('Successful Builds', 'fedoracommunity.builds/table',
+                                       css_class='secondary_table',
+                                       params={'rows_per_page': 5,
+                                               'filters':{'state':BUILD_STATES['COMPLETE']}})
+
     layout = [Category('right-content-column',
-                        MokshaApp('Quick Links', 'fedoracommunity.quicklinks')),
+                        (Widget('Filters', builds_filter,
+                                  params={'in_progress': in_progress_builds_app,
+                                          'failed': failed_builds_app,
+                                          'successful': successful_builds_app
+                                         }
+                                 ),
+                        MokshaApp('Alerts', 'fedoracommunity.alerts'))),
               Category('left-content-column',
-                       MokshaApp('Builds', 'fedoracommunity.builds/table', params={"rows_per_page": 10, "filters":{}}))]
+                        (in_progress_builds_app,
+                        failed_builds_app,
+                        successful_builds_app))]
 
     def update_params(self, d):
         super(BuildsContainer, self).update_params(d)
@@ -25,9 +98,7 @@ class RootController(Controller):
     # do something for index, this should be the container stuff
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):
-        options = {
-            'filters': {'package': kwds.get('package', kwds.get('pkg', kwds.get('p')))}
-        }
+        options = {}
 
         tmpl_context.widget = builds_container
         return {'options':options}

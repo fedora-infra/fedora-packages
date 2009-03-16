@@ -40,6 +40,6 @@
                             class="message_row">
                         </td>
                     </tr>
-                </tbody>     
-            
+                </tbody>
+
         </table>
