@@ -7,15 +7,9 @@ from paste.cascade import Cascade
 
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
-def fc_middleware_wrapper(app):
-    app = MokshaMiddleware(app)
-    app = MokshaConnectorMiddleware(app)
-    app = MokshaExtensionPointMiddleware(app)
-
-    return app
-
 def make_app(global_conf, full_stack=True, **app_conf):
-    app = make_base_app(global_conf, wrap_app=fc_middleware_wrapper,
+    from moksha.middleware import make_moksha_middleware
+    app = make_base_app(global_conf, wrap_app=make_moksha_middleware,
                         full_stack=True,
                         **app_conf)
 
