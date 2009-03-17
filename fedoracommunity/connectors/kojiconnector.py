@@ -1,4 +1,4 @@
-from moksha.connector import IConnector, ICall, IQuery
+from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
 from pylons import config
 import koji
@@ -57,34 +57,51 @@ class KojiConnector(IConnector, ICall, IQuery):
                         can_sort = True,
                         can_filter_wildcards = False)
 
-    def query_builds(self, offset=None,
-                           limit=None,
+        def _profile_user(conn, filter_dict, key, value, allow_none):
+            d = filter_dict
+
+            if value:
+                user = None
+
+                ident = conn._environ.get('repoze.who.identity')
+                if ident:
+                    user = ident.get('repoze.who.userid')
+
+                if user or allow_none:
+                    d['user'] = user
+
+        f = ParamFilter()
+        f.add_filter('user',['u', 'username', 'name'], allow_none = False)
+        f.add_filter('profile',[], allow_none=False,
+                     filter_func=_profile_user,
+                     cast=bool)
+        f.add_filter('package',['p'], allow_none = True)
+        f.add_filter('state',['s'], allow_none = True)
+        cls._query_builds_filter = f
+
+    def query_builds(self, start_row=None,
+                           row_count=None,
                            order=-1,
                            sort_col=None,
                            filters = {},
                            **params):
 
-        # FIXME: make filter an object
+        filters = self._query_builds_filter.filter(filters, conn=self)
+
         user = filters.get('user', '')
-        if isinstance(user, dict):
-            user = user['value']
-
         package = filters.get('package', '')
-        if isinstance(package, dict):
-            package = package['value']
-
         state = filters.get('state')
-        if isinstance(state, dict):
-            state = state['value']
 
         complete_before = None
         complete_after = None
-        completed_filter = filters.get('completed')
-        if completed_filter:
-            if completed_filter['op'] in ('>', 'after'):
-                complete_after = completed_filter['value']
-            elif completed_filter['op'] in ('<', 'before'):
-                complete_before = completed_filter['value']
+
+        # need a better way to specify this
+        # completed_filter = filters.get('completed')
+        # if completed_filter:
+        #    if completed_filter['op'] in ('>', 'after'):
+        #        complete_after = completed_filter['value']
+        #    elif completed_filter['op'] in ('<', 'before'):
+        #        complete_before = completed_filter['value']
 
         if order < 0:
             order = '-' + sort_col

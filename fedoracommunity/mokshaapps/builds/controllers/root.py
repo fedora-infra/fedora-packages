@@ -1,9 +1,9 @@
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget, Widget
+from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget, Widget, check_predicates
 from moksha.api.widgets import ContextAwareWidget, Grid, Selectable
 from moksha.api.widgets.containers import DashboardContainer
 from koji import BUILD_STATES
-from tg import expose, tmpl_context
+from tg import expose, tmpl_context, request
 
 from tw.api import JSLink
 from tw.jquery import jQuery, jquery_js, js_callback
@@ -20,39 +20,65 @@ class BuildsFilter(Selectable):
         super(BuildsFilter, self).update_params(d)
         categories = []
 
-        cat = {'label': 'Packages I Own',
-               'items': [{'label': 'In Progress Builds',
-                          'link':'javascript:void(0);'},
-                          {'label': 'Failed Builds',
-                          'link':'javascript:void(0);'},
-                          {'label': 'Successful Builds',
-                          'link':'javascript:void(0);'}
-                          ]
-              }
+        if check_predicates(not_anonymous()):
+            cat = {'label': 'Packages I Own',
+                   'items': [{'label': 'In Progress Builds',
+                              'link':'javascript:void(0);',
+                              'data':{
+                                      'rows_requested': 10,
+                                      'filters': {'state':BUILD_STATES['BUILDING'],
+                                                  'profile': True
+                                                 }
+                                     }
+                              },
+                              {'label': 'Failed Builds',
+                              'link':'javascript:void(0);',
+                              'data':{
+                                      'rows_requested': 10,
+                                      'filters': {'state':BUILD_STATES['FAILED'],
+                                                  'profile': True
+                                                  }
+                                     }
+                              },
+                              {'label': 'Successful Builds',
+                              'link':'javascript:void(0);',
+                              'data':{
+                                      'rows_requested': 10,
+                                      'filters': {'state':BUILD_STATES['COMPLETE'],
+                                                  'profile': True
+                                                  }
+                                     }
+                              }
+                              ]
+                  }
+
+            categories.append(cat)
 
 
         cat = {'label': 'All Packages',
                'items': [{'label': 'In Progress Builds',
                           'link':'javascript:void(0);',
                           'data':{
+                                  'rows_requested': 10,
                                   'filters': {'state':BUILD_STATES['BUILDING']}
                                  }
                          },
                          {'label': 'Failed Builds',
                           'link':'javascript:void(0);',
                           'data': {
+                                   'rows_requested': 10,
                                    'filters':{'state':BUILD_STATES['FAILED']}
                                   }
                          },
                          {'label': 'Successful Builds',
                           'link':'javascript:void(0);',
                           'data': {
+                                   'rows_requested': 10,
                                    'filters':{'state':BUILD_STATES['COMPLETE']}
                                   }
                          }]
                 }
 
-        # for now just add this
         categories.append(cat)
         d.update({'categories': categories})
 

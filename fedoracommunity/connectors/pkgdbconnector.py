@@ -112,7 +112,7 @@ class PkgdbConnector(IConnector, ICall, IQuery):
                         can_sort = False,
                         can_filter_wildcards = False)
 
-        def filter_acls(d, k, v, allow_none):
+        def filter_acls(conn, d, k, v, allow_none):
             acls = []
             if 'acls' in d:
                 acls = d['acls']
