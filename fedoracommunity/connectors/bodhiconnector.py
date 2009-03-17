@@ -129,12 +129,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         can_sort = False,
                         can_filter_wildcards = False)
 
-    def query_updates(self, offset=None,
-                           limit=None,
-                           order=-1,
-                           sort_col=None,
-                           filters = {},
-                           **params):
+    def query_updates(self, start_row=None,
+                            rows_per_page=None,
+                            order=-1,
+                            sort_col=None,
+                            filters = {},
+                            **params):
 
         # FIXME: make filter an object
 
@@ -170,8 +170,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
             filters['mine'] = True
 
         params.update(filters)
-        params['tg_paginate_limit'] = limit
-        params['tg_paginate_no'] = int(offset/limit)
+        params['tg_paginate_limit'] = rows_per_page
+        params['tg_paginate_no'] = int(start_row/rows_per_page)
 
         results = self._bodhi_client.send_request('list', req_params = params)
 

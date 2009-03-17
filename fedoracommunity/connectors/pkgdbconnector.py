@@ -131,8 +131,8 @@ class PkgdbConnector(IConnector, ICall, IQuery):
 
         cls._query_userpackages_filter = f
 
-    def query_userpackages(self, offset=None,
-                           limit=None,
+    def query_userpackages(self, start_row=None,
+                           rows_per_page=None,
                            order=-1,
                            sort_col=None,
                            filters = {},
@@ -141,8 +141,8 @@ class PkgdbConnector(IConnector, ICall, IQuery):
         filters = self._query_userpackages_filter.filter(filters)
 
         params.update(filters)
-        params['tg_paginate_limit'] = limit
-        params['tg_paginate_no'] = int(offset/limit)
+        params['tg_paginate_limit'] = rows_per_page
+        params['tg_paginate_no'] = int(start_row/rows_per_page)
 
         results = self._pkgdb_client.send_request('users/packages', req_params = params)
         total_count = results[1]['pkgCount']

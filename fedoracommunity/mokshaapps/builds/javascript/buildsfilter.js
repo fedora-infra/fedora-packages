@@ -8,5 +8,5 @@ function _builds_filter_selected(o, d) {
 
   var main_table = $('.main_table');
   $('h3', main_table).html(data.label);
-  $('table', main_table).mokshagrid("request_update", {filters: data.filters});
+  $('table', main_table).mokshagrid("request_update", data);
 }

@@ -80,7 +80,7 @@ class KojiConnector(IConnector, ICall, IQuery):
         cls._query_builds_filter = f
 
     def query_builds(self, start_row=None,
-                           row_count=None,
+                           rows_per_page=10,
                            order=-1,
                            sort_col=None,
                            filters = {},
@@ -124,11 +124,11 @@ class KojiConnector(IConnector, ICall, IQuery):
             state = int(state)
 
         qo = {}
-        if not offset == None:
-          qo['offset'] = int(offset)
+        if not (start_row == None):
+          qo['offset'] = int(start_row)
 
-        if not offset == limit:
-            qo['limit'] = int(limit)
+        if not (rows_per_page == None):
+            qo['limit'] = int(rows_per_page)
 
         if order:
             qo['order'] = order

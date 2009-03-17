@@ -178,12 +178,12 @@ class FasConnector(IConnector, ICall, IQuery):
         f.add_filter('profile',[], allow_none=True)
         cls._query_userinfo_filter = f
 
-    def query_userinfo(self, offset=None,
-                           limit=None,
-                           order=-1,
-                           sort_col=None,
-                           filters = {},
-                           **params):
+    def query_userinfo(self, start_row=None,
+                             rows_per_page=None,
+                             order=-1,
+                             sort_col=None,
+                             filters = {},
+                             **params):
 
         filters = self._query_userinfo_filter.filter(filters)
 
@@ -216,12 +216,12 @@ class FasConnector(IConnector, ICall, IQuery):
         # there is only ever one row returned
         return (1, [view])
 
-    def query_usermemberships(self, offset=None,
-                           limit=None,
-                           order=-1,
-                           sort_col=None,
-                           filters = {},
-                           **params):
+    def query_usermemberships(self, start_rpw=None,
+                                    rows_per_page=None,
+                                    order=-1,
+                                    sort_col=None,
+                                    filters = {},
+                                    **params):
 
         filters = self._query_usermemberships_filter.filter(filters)
 
@@ -254,11 +254,11 @@ class FasConnector(IConnector, ICall, IQuery):
 
             count = len(rows)
             last_index = 0
-            if offset + limit >= count:
+            if start_row + rows_per_page >= count:
                 last_index = count - 1
             else:
-                last_index = offset + limit
+                last_index = start_row + rows_per_page
 
-            rows = rows[offset:last_index]
+            rows = rows[start_row:last_index]
 
         return (count, rows)

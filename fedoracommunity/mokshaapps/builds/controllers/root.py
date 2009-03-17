@@ -25,7 +25,7 @@ class BuildsFilter(Selectable):
                    'items': [{'label': 'In Progress Builds',
                               'link':'javascript:void(0);',
                               'data':{
-                                      'rows_requested': 10,
+                                      'rows_per_page': 10,
                                       'filters': {'state':BUILD_STATES['BUILDING'],
                                                   'profile': True
                                                  }
@@ -34,7 +34,7 @@ class BuildsFilter(Selectable):
                               {'label': 'Failed Builds',
                               'link':'javascript:void(0);',
                               'data':{
-                                      'rows_requested': 10,
+                                      'rows_per_page': 10,
                                       'filters': {'state':BUILD_STATES['FAILED'],
                                                   'profile': True
                                                   }
@@ -43,7 +43,7 @@ class BuildsFilter(Selectable):
                               {'label': 'Successful Builds',
                               'link':'javascript:void(0);',
                               'data':{
-                                      'rows_requested': 10,
+                                      'rows_per_page': 10,
                                       'filters': {'state':BUILD_STATES['COMPLETE'],
                                                   'profile': True
                                                   }
@@ -59,21 +59,21 @@ class BuildsFilter(Selectable):
                'items': [{'label': 'In Progress Builds',
                           'link':'javascript:void(0);',
                           'data':{
-                                  'rows_requested': 10,
+                                  'rows_per_page': 10,
                                   'filters': {'state':BUILD_STATES['BUILDING']}
                                  }
                          },
                          {'label': 'Failed Builds',
                           'link':'javascript:void(0);',
                           'data': {
-                                   'rows_requested': 10,
+                                   'rows_per_page': 10,
                                    'filters':{'state':BUILD_STATES['FAILED']}
                                   }
                          },
                          {'label': 'Successful Builds',
                           'link':'javascript:void(0);',
                           'data': {
-                                   'rows_requested': 10,
+                                   'rows_per_page': 10,
                                    'filters':{'state':BUILD_STATES['COMPLETE']}
                                   }
                          }]
