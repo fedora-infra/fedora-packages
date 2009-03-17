@@ -40,7 +40,7 @@ log = logging.getLogger(__name__)
 FAS_CACHE_TIMEOUT=20 #in seconds
 
 fasurl = tg.config.get('fedoracommunity.fas.baseurl')
-fas_cache = Cache('fas_repozewho_cache')
+fas_cache = Cache('fas_repozewho_cache', type="memory")
 
 def fas_make_who_middleware(app, log_stream):
     faswho = FASWhoPlugin(fasurl)
@@ -73,7 +73,6 @@ def fas_make_who_middleware(app, log_stream):
     return app
 
 class FasClient(ProxyClient):
-    visit_name = 'tg-visit'
 
     def __init__(self, baseURL):
         check_certs = tg.config.get('fedora.clients.check_certs', 'True').lower()
@@ -123,8 +122,9 @@ class FasClient(ProxyClient):
         return result
 
 class FASWhoPlugin(object):
-    def __init__(self, url):
+    def __init__(self, url, session_cookie='authtkt'):
         self.url = url
+        self.session_cookie = session_cookie
         self._session_cache = {}
         self._metadata_plugins = []
 
@@ -145,7 +145,7 @@ class FASWhoPlugin(object):
 
         log.info('Identify')
 
-        cookie = req.cookies.get('tg-visit')
+        cookie = req.cookies.get(self.session_cookie)
 
         if cookie is None:
             return None
@@ -153,7 +153,6 @@ class FASWhoPlugin(object):
         log.info("Request identify for cookie " + cookie)
         linfo = fas_cache.get_value(key=cookie + "_identity",
                                     createfunc=lambda: self.keep_alive(cookie),
-                                    type="memory",
                                     expiretime=FAS_CACHE_TIMEOUT)
 
         if not linfo:
@@ -182,7 +181,7 @@ class FASWhoPlugin(object):
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
             session_id = linfo[0]
-            set_cookie = 'tg-visit=%s; Path=/;' % (session_id)
+            set_cookie = '%s=%s; Path=/;' % (self.session_cookie, session_id)
             result.append(('Set-Cookie', set_cookie))
             return result
         return None
@@ -202,7 +201,8 @@ class FASWhoPlugin(object):
 
             result = []
             fas_cache.remove_value(key=session_id + "_identity")
-            expired = ('tg-visit=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT',)
+            expired = ('%s=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT' %
+                       self.session_cookie,)
             result.append(('Set-Cookie', expired))
             environ['FAS_LOGIN_INFO'] = None
             return result
@@ -291,15 +291,15 @@ class FASWhoPlugin(object):
             log.info('Error exists in session, no need to set metadata')
             return 'error'
 
-        cookie = req.cookies.get('tg-visit')
+        cookie = req.cookies.get(self.session_cookie)
 
         if cookie is None:
+            log.debug("Cookie is None, returning None")
             return None
 
         log.info('Request metadata for cookie %s' % (cookie))
         info = fas_cache.get_value(key=cookie + '_metadata',
                                    createfunc=lambda: self.get_metadata(environ),
-                                   type="memory",
                                    expiretime=FAS_CACHE_TIMEOUT)
 
         identity.update(info)
