@@ -44,6 +44,8 @@ fas_cache = Cache('fas_repozewho_cache', type="memory")
 
 def fas_make_who_middleware(app, log_stream):
     faswho = FASWhoPlugin(fasurl)
+    csrf_mdprovider = CSRFMetadataProvider(
+            login_handler=tg.config.get('moksha.csrf.login_handler', '/login_handler'))
 
     form = RedirectingFormPlugin('/login', '/login_handler', '/logout',
                                  rememberer_name='fasident',
@@ -54,7 +56,7 @@ def fas_make_who_middleware(app, log_stream):
     identifiers = [('form', form),('fasident', faswho)]
     authenticators = [('fasauth', faswho)]
     challengers = [('form',form)]
-    mdproviders = [('fasmd', faswho), ('csrfmd', CSRFMetadataProvider())]
+    mdproviders = [('fasmd', faswho), ('csrfmd', csrf_mdprovider)]
 
     if os.environ.get('FAS_WHO_LOG'):
         log_stream = sys.stdout
