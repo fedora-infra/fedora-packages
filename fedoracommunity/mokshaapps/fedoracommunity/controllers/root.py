@@ -2,7 +2,7 @@ from moksha.lib.base import Controller, BaseController
 from moksha.api.widgets.containers import TabbedContainer
 from moksha.api.errorcodes import login_err
 
-from tg import expose, tmpl_context, redirect, flash
+from tg import expose, tmpl_context, redirect, flash, url
 from fedoracommunity.mokshaapps.login import login_widget
 
 # Root for the whole fedora-community tree
@@ -35,6 +35,9 @@ class RootController(BaseController):
 
             if err:
                 flash(err)
+
+        if '/logout_handler' in came_from:
+            came_from = url('/')
 
         return {'title': 'Fedora Community Login',
                 'options':{'came_from': came_from}}
