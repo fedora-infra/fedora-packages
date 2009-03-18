@@ -296,7 +296,8 @@ class FASWhoPlugin(object):
         cookie = req.cookies.get(self.session_cookie)
 
         if cookie is None:
-            log.debug("Cookie is None, returning None")
+            # @@ Should we resort to this?
+            #cookie = environ.get('CSRF_AUTH_SESSION_ID')
             return None
 
         log.info('Request metadata for cookie %s' % (cookie))
