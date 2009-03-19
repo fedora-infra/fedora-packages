@@ -1,8 +1,10 @@
+from paste.deploy.converters import asbool
+from pylons import config
+from fedora.client import ProxyClient
+
 from moksha.connector import IConnector, ICall, IQuery
 from moksha.connector.utils import DateTimeDisplay
 
-from pylons import config
-from fedora.client import ProxyClient
 
 class BodhiConnector(IConnector, ICall, IQuery):
     def __init__(self, environ, request):
@@ -17,14 +19,9 @@ class BodhiConnector(IConnector, ICall, IQuery):
         cls._base_url = config.get('fedoracommunity.connector.bodhi.baseurl',
                                    'https://admin.fedoraproject.org/updates')
 
-        check_certs = config.get('fedora.clients.check_certs', 'True').lower()
-        if check_certs in ('false', '0', 'no'):
-            insecure = True
-        else:
-            # fail safe
-            insecure = False
+        check_certs = asbool(config.get('fedora.clients.check_certs', True))
+        cls._insecure = not check_certs
 
-        cls._insecure = insecure
         cls.register_query_updates()
 
     def request_data(self, resource_path, params, _cookies):
@@ -157,17 +154,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         # type_ = filters.get('type')
         # bugs = filters.get('bugs')
 
-        mine = filters.get('mine')
-        if isinstance(mine, str):
-            c = mine[0].lower()
-            if c == 't' or c == 'y':
-                filters['mine'] = True
-            elif c == 'f' or c == 'n':
-                filters['mine'] = False
-            else:
-                del filters['mine']
-        elif mine:
-            filters['mine'] = True
+        filters['mine'] = asbool(filters.get('mine'))
 
         params.update(filters)
         params['tg_paginate_limit'] = rows_per_page

@@ -28,7 +28,8 @@ setup(
     #url='',
     install_requires=[
         "moksha",
-        "Pylons"
+        "Pylons",
+        "PyOpenSSL",
         ],
     packages=packages,
     include_package_data=True,
