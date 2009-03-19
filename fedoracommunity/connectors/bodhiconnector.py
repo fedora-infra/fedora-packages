@@ -155,6 +155,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
         # bugs = filters.get('bugs')
 
         filters['mine'] = asbool(filters.get('mine'))
+        if not filters['mine']:
+            del(filters['mine'])
 
         params.update(filters)
         params['tg_paginate_limit'] = rows_per_page
