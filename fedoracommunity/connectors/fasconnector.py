@@ -216,7 +216,7 @@ class FasConnector(IConnector, ICall, IQuery):
         # there is only ever one row returned
         return (1, [view])
 
-    def query_usermemberships(self, start_rpw=None,
+    def query_usermemberships(self, start_row=None,
                                     rows_per_page=None,
                                     order=-1,
                                     sort_col=None,
