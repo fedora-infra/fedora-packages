@@ -19,7 +19,7 @@
                             <div>@{version}</div>&nbsp;
                         </td>
                         <td>
-                            <span class="person-name"><a href="/people/name/@{owner_name}/builds">@{owner_name}</a></span>&nbsp;
+                            <span class="person-name"><a href="javascript:moksha.goto('/people/?username=@{owner_name}')">@{owner_name}</a></span>&nbsp;
                         </td>
                         <td>@{completion_time_display:index("elapsed")}
                         </td>

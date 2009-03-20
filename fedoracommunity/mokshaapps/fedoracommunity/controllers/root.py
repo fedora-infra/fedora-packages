@@ -2,7 +2,7 @@ from moksha.lib.base import Controller, BaseController
 from moksha.api.widgets.containers import TabbedContainer
 from moksha.api.errorcodes import login_err
 
-from tg import expose, tmpl_context, redirect, flash, url
+from tg import expose, tmpl_context, redirect, flash, url, request
 from fedoracommunity.mokshaapps.login import login_widget
 
 # Root for the whole fedora-community tree
@@ -44,5 +44,10 @@ class RootController(BaseController):
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
     def default(self, *args, **kwds):
+        identity = request.environ.get('repoze.who.identity')
+        if identity:
+            csrf = identity.get('_csrf_token')
+            if csrf:
+                kwds['_csrf_token'] = csrf
 
         redirect('/', anchor='/'.join(args), params=kwds)

@@ -20,7 +20,7 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                         default_child_css='panel',
                         css_class='right-content-column'
                       ),
-              Category('left-content-colmn',
+              Category('left-content-column',
                        (MokshaApp('Your Packages',
                                  'fedoracommunity.packages/mypackages',
                                  params={'rows_per_page': 10,

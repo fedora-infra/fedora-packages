@@ -49,7 +49,7 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                                          'compact': True})
                        ),
               Category('right-content-column',
-                        (MokshaApp('Packages', 'fedoracommunity.packages/ownerpackages',
+                        (MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
                                   params={'username':''}),
                          MokshaApp('Alerts', 'fedoracommunity.alerts'),
                          MokshaApp('Quick Links', 'fedoracommunity.quicklinks'))
