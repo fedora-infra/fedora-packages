@@ -159,6 +159,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         if not filters['mine']:
             # workaround to bodhi bug which assumes mine=True
             # if it is set with any value
+            # This will be fixed with the next release of bodhi.
             del filters['mine']
 
         params.update(filters)
