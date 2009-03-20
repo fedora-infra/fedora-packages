@@ -797,16 +797,18 @@ table * {
 /** Styles for People Profiles **/
 
 
+/** just a quick hack to get ssh key out of the way **/
+div.info_identity td {
+  display: none;
+}
+
+/** info_content styles **/
+/** general **/
+
 div.info_content {
   background-color: #eee;
   -moz-border-radius: 6px;
   padding: 12px;
-}
-
-div.info_basic_details,
-div.info_identity,
-div.info_contact {
-  margin-left: 120px;
 }
 
 div.info_content div.hackergotchi {
@@ -846,9 +848,63 @@ div.info_content table {
   margin-bottom: 10px;
 }
 
+
+div.info_content th {
+  min-width: 100px !important;
+}
+
+div.info_content .col div {
+  margin-top: 1em !important;
+  padding-right: 1.5em;
+}
+
+div.info_content {
+  height: 200px !important;
+  margin-bottom: 1em;
+} 
+
+div.info_content table {
+  width: 100%;
+}
+
+div.info_content div.info_container {
+  float: left;
+  border-bottom: 1px solid #ccc;
+}
+
+div.info_content .info_container .col div:first-child {
+  border-bottom: 1px solid #ccc;
+}
+
+div.info_content .info_container .col div:last-child {
+  border-bottom: none;
+}
+
+/** left-column styles **/
+  
+div.info_content .left_col {
+  float: left;
+}
+
+div.info_content .left-col div {
+  padding-top: 1em;
+}
+
+/** right-column styles **/
+
+div.info_content .right_col {
+  float: right;
+  border-left: 1px solid #ccc;
+  padding-left: 1em;
+}
+
+div.info_content .right-col div {
+  width: 100%;
+}
+
 /** moz ellipsis hackery **/
 
 .ellipsis {
   text-overflow: ellipsis;
-  -moz-binding: url('ellipsis.xml#ellipsis');
+  -moz-binding: url('css/ellipsis.xml#ellipsis');
 }
