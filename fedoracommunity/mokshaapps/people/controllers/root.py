@@ -13,6 +13,7 @@ from package_maintenance import PackageMaintenanceController
 from uuid import uuid4
 
 class ProfileContainer(DashboardContainer, ContextAwareWidget):
+    template='mako:fedoracommunity.mokshaapps.people.templates.peoplecontainer'
     layout = [Category('header-content-column',
                        MokshaApp('', 'fedoracommunity.people/details',params=
                                  {"show_profile": True}

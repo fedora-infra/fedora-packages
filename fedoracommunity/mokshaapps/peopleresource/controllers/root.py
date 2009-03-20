@@ -21,6 +21,7 @@ class IndexDashboard(DashboardContainer):
   % endfor
 </div>
 """
+
 class RootController(Controller):
     def __init__(self):
         self.name_widget = NameTabbedNav('namepeoplenav')
