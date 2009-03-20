@@ -463,9 +463,13 @@ span.timestamp {
 
 /** styles for right content area panels **/
 
+/** FIXME html should really be using div, not span, this is a workaround **/
+span.panel {
+  display: block;
+}
 
-#right-content-column div.panel,
-.right-content-column div.panel {
+#right-content-column .panel,
+.right-content-column .panel {
   margin-top: 0px;
 }
 
@@ -526,13 +530,13 @@ span.timestamp {
 
 /** right sidebar column styles **/
 
-div.panel {
+.panel {
   margin-top: 12px;
   border: none !important;
   margin-bottom: 4ex;
 }
 
-div.panel td {
+.panel td {
   padding: 4px 0px 4px 10px !important;
 }
 
