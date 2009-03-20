@@ -130,11 +130,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
                             rows_per_page=None,
                             order=-1,
                             sort_col=None,
-                            filters = {},
+                            filters=None,
                             **params):
 
         # FIXME: make filter an object
-
+        if not filters:
+            filters = {}
 
         # username = filters.get('username')
         # get_auth = filters.get('get_auth')
