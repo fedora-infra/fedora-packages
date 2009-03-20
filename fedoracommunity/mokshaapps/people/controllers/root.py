@@ -46,7 +46,7 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                                  params={'username':''})
                        ),
               Category('right-content-column',
-                        (MokshaApp('Packages', 'fedoracommunity.packages/ownerpackages',
+                        (MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
                                   params={'username':''}),
                          MokshaApp('Alerts', 'fedoracommunity.alerts'),
                          MokshaApp('Quick Links', 'fedoracommunity.quicklinks'))
@@ -55,10 +55,10 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                        (MokshaApp('Group Memberships', 'fedoracommunity.people/memberships/table',
                                  params={"rows_per_page": 5,
                                          "filters":{"profile": False,
-                                                    "username":None}
+                                                    "username":''}
                                         }
                                  ),
-                        MokshaApp('Packages', 'fedoracommunity.packages/ownerpackages',
+                        MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
                                  params={'view': 'canvas',
                                          'username': ''})
                         )

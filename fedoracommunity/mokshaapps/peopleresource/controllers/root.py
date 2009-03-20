@@ -5,9 +5,12 @@ from tg import expose, tmpl_context
 from fedoracommunity.widgets import SubTabbedContainer
 
 class NameTabbedNav(SubTabbedContainer):
-    tabs = (MokshaApp('Info', 'fedoracommunity.profile.info/name/'),
-            MokshaApp('Memberships', 'fedoracommunity.profile.memberships/name/'),
-            MokshaApp('Packages Maintenance', 'fedoracommunity.profile.packagemaint/name/'),
+    tabs = (MokshaApp('Info', 'fedoracommunity.people',
+                      params={'username':None}),
+            MokshaApp('Memberships', 'fedoracommunity.people/memberships',
+                      params={'username':None}),
+            MokshaApp('Packages Maintenance', 'fedoracommunity.people/packagemaint',
+                      params={'username':None}),
            )
 
 class IndexDashboard(DashboardContainer):
@@ -28,7 +31,10 @@ class RootController(Controller):
         self.index_widget = IndexDashboard('indexdashboard')
 
     @expose('mako:moksha.templates.widget')
-    def index(self):
+    def index(self, username=None):
+        if username:
+            return self.name(username)
+
         tmpl_context.widget = self.index_widget
         return {'options':{}}
 

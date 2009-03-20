@@ -26,16 +26,16 @@ user_pkgs_grid = UserPkgsGrid('usrpkgs_table')
 
 class RootController(Controller):
 
-    @expose('mako:fedoracommunity.mokshaapps.packages.templates.userpackages')
-    @require(not_anonymous())
-    def mypackages(self, owner=5, maintainer=3, watcher=False, rows_per_page=5, view="home"):
-        username = request.identity['repoze.who.userid']
-
+    def _user_packages_view(self, username, owner=5, maintainer=3, watcher=False,
+                       owner_label='Owned',
+                       maintainer_label='Maintained',
+                       watcher_label='Watched',
+                       rows_per_page=5, view="home"):
         if view=="home":
             categories = []
             if owner:
                 owner = int(owner)
-                cat = {'label': 'Packages I Own',
+                cat = {'label': owner_label,
                        'rows_per_page': owner,
                        'filters':{'owner': True, 'u':username, 'eol': False}
                       }
@@ -43,7 +43,7 @@ class RootController(Controller):
 
             if maintainer:
                 maintainer = int(maintainer)
-                cat = {'label': 'Packages I Maintain',
+                cat = {'label': maintainer_label,
                        'rows_per_page': maintainer,
                        'filters':{'approveacls': True, 'commit': True,'u':username, 'eol': False}
                       }
@@ -51,52 +51,44 @@ class RootController(Controller):
 
             if watcher:
                 watcher = int(watcher)
-                cat = {'label': 'Packages I Watch',
+                cat = {'label': watcher_label,
                        'rows_per_page': watcher,
                        'filters':{'watchcommits': True, 'watchbugzilla': True,'u':username, 'eol': False}
                       }
                 categories.append(cat)
 
             tmpl_context.widget = user_pkgs_compact_grid
+
             return {'categories': categories}
         else:
             rows_per_page = int(rows_per_page)
             tmpl_context.widget = user_pkgs_grid
+
             return {'categories': None,
                     'filters':{'u':username},
                     'rows_per_page': rows_per_page,
                     }
 
-        return {}
+    @expose('mako:fedoracommunity.mokshaapps.packages.templates.userpackages')
+    @require(not_anonymous())
+    def mypackages(self, owner=5, maintainer=3, watcher=False,
+                   rows_per_page=5, view="home"):
+        username = request.identity['repoze.who.userid']
+
+        return self._user_packages_view(username, owner, maintainer, watcher,
+                   'Packages I Own', 'Packages I Maintain', 'Packages I Watch',
+                   rows_per_page, view)
 
     @expose('mako:fedoracommunity.mokshaapps.packages.templates.userpackages')
     @require(not_anonymous())
-    def userpackages(self, owner=5, maintainer=3, watcher=False, username=None):
+    def userpackages(self, owner=5, maintainer=3, watcher=False, username=None,
+                     rows_per_page=5, view='home'):
 
-        categories = []
-        if owner:
-            cat = {'label': 'Packages %s Owns' % username,
-                   'rows_per_page': owner,
-                   'filters':{'owner': True, 'u':username, 'eol': False}
-                  }
-            categories.append(cat)
-
-        if maintainer:
-            cat = {'label': 'Packages %s Maintains' % username,
-                   'rows_per_page': maintainer,
-                   'filters':{'approveacls': True, 'commit': True,'u':username, 'eol': False}
-                  }
-            categories.append(cat)
-
-        if watcher:
-            cat = {'label': 'Packages %s Watch' % username,
-                   'rows_per_page': watcher,
-                   'filters':{'watchcommits': True, 'watchbugzilla': True,'u':username, 'eol': False}
-                  }
-            categories.append(cat)
-
-        tmpl_context.widget = user_pkgs_grid
-        return {'categories': categories}
+        return self._user_packages_view(username, owner, maintainer, watcher,
+                  'Packages %s Owns' % username,
+                  'Packages %s Maintains' % username,
+                  'Packages %s Watch' % username,
+                   rows_per_page, view)
 
     # do something for index, this should be the container stuff
     @expose('mako:moksha.templates.widget')
