@@ -103,10 +103,12 @@ class RootController(Controller):
 
     @expose('mako:fedoracommunity.mokshaapps.updates.templates.table')
     @validate(validators={'rows_per_page': validators.Int()})
-    def table(self, uid="", rows_per_page=5, filters={}):
+    def table(self, uid="", rows_per_page=5, filters=None):
         ''' table handler
 
         This handler displays the main table by itself
         '''
+        if not filters:
+            filters = {}
         tmpl_context.widget = updates_grid
         return {'filters': filters, 'uid': uid, 'rows_per_page': rows_per_page}
