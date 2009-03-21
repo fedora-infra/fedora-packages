@@ -155,13 +155,6 @@ class BodhiConnector(IConnector, ICall, IQuery):
         # type_ = filters.get('type')
         # bugs = filters.get('bugs')
 
-        filters['mine'] = asbool(filters.get('mine'))
-        if not filters['mine']:
-            # workaround to bodhi bug which assumes mine=True
-            # if it is set with any value
-            # This will be fixed with the next release of bodhi.
-            del filters['mine']
-
         params.update(filters)
         params['tg_paginate_limit'] = rows_per_page
         params['tg_paginate_no'] = int(start_row/rows_per_page)
