@@ -173,6 +173,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
         if total_count > 0:
             for up in updates_list:
+                # this is not true:
                 # grab the first build package, the rest are dependencies
                 nvr = up['builds'][0]['nvr']
 
