@@ -38,7 +38,7 @@ class UpdatesFilter(Selectable):
                                   'filters': {'status':'pending'}
                                  }
                          },
-                         {'label': 'Testng Updates',
+                         {'label': 'Testing Updates',
                           'link':'javascript:void(0);',
                           'data': {
                                    'rows_per_page': 10,
