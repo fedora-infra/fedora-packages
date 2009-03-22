@@ -55,7 +55,7 @@ setup(
     [paste.app_install]
     main = pylons.util:PylonsInstaller
 
-    [fas.repoze.who.metadata_plugins]
+#    [fas.repoze.who.metadata_plugins]
 #    blog_info = myfedora.plugins.identity.bloginfo:add_metadata
 
     [moksha.global]
