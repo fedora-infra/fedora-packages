@@ -2,7 +2,7 @@ from paste.deploy.converters import asbool
 from pylons import config
 from fedora.client import ProxyClient
 
-from moksha.connector import IConnector, ICall, IQuery
+from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
 
 
@@ -125,6 +125,23 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
+
+        def _profile_user(conn, filter_dict, key, value, allow_none):
+            if value:
+                user = None
+                ident = conn._environ.get('repoze.who.identity')
+                if ident:
+                    user = ident.get('repoze.who.userid')
+                if user or allow_none:
+                    filter_dict['user'] = user
+
+        f = ParamFilter()
+        f.add_filter('user',['u', 'username', 'name'], allow_none = False)
+        f.add_filter('profile',[], allow_none=False,
+                     filter_func=_profile_user,
+                     cast=bool)
+        f.add_filter('status',['status'], allow_none = True)
+        cls._query_updates_filter = f
 
     def query_updates(self, start_row=None,
                             rows_per_page=None,
