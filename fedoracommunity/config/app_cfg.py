@@ -5,7 +5,7 @@ import fedoracommunity.lib
 from tg.configuration import AppConfig, Bunch
 
 class FedoraCommunityConfig(AppConfig):
-    def add_auth_middleware(self, app):
+    def add_auth_middleware(self, app, *args):
         """ Add our FAS authentication middleware """
         from fedoracommunity.connectors.faswhoplugin import fas_make_who_middleware
         from copy import copy
