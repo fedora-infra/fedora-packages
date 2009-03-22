@@ -113,7 +113,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        path.register_column('release_label',
+        path.register_column('releases',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
@@ -149,90 +149,186 @@ class BodhiConnector(IConnector, ICall, IQuery):
                             sort_col=None,
                             filters=None,
                             **params):
-
-        # FIXME: make filter an object
         if not filters:
             filters = {}
 
-        # username = filters.get('username')
-        # get_auth = filters.get('get_auth')
-        # release = filters.get('release')
+        filters = self._query_updates_filter.filter(filters, conn=self)
+
+        if filters.get('user'):
+            filters['username'] = filters['user']
+            del(filters['user'])
 
         package = filters.get('nvr', filters.get('name'))
         if package:
             filters['package'] = package
-            if filters.haskey('nvr'):
-                del filters['nvr']
+            if 'nvr' in filters:
+                del(filters['nvr'])
+            if 'name' in filters:
+                del(filters['name'])
 
-            if filters.haskey('name'):
-                del filters['name']
-
+        # release = filters.get('release')
         # request = filters.get('request')
         # status = filters.get('status')
         # type_ = filters.get('type')
         # bugs = filters.get('bugs')
 
         params.update(filters)
-        params['tg_paginate_limit'] = rows_per_page
         params['tg_paginate_no'] = int(start_row/rows_per_page)
 
-        results = self._bodhi_client.send_request('list', req_params = params)
+        # Ask for twice as many updates.  This is so we can handle the case
+        # where there are two updates for each package, one for each release.
+        # Yes, worst case we get twice as much data as we ask for, but this
+        # allows us to do *much* more efficient database calls on the server.
+        params['tg_paginate_limit'] = rows_per_page * 2
+
+        results = self._bodhi_client.send_request('list', req_params=params)
 
         total_count = results[1]['num_items']
-        updates_list = results[1]['updates']
+        updates_list = self._group_updates(results[1]['updates'],
+                                           num_packages=rows_per_page)
 
-        if total_count > 0:
-            for up in updates_list:
-                # this is not true:
-                # grab the first build package, the rest are dependencies
-                nvr = up['builds'][0]['nvr']
+        for up in updates_list:
+            versions = []
+            releases = []
 
-                # split the version and name by getting the
-                # position of the second to last dash
-                version_pos = nvr.rindex('-')
-                version_pos = nvr.rindex('-', 0, version_pos - 1)
-                name = nvr[:version_pos]
-                version_str = nvr[version_pos + 1:]
-                vparts = version_str.split('-')
-                version = {'version': vparts[0],
-                           'release': vparts[1]}
-                up['version'] = version
-                up['version_str'] = version_str
-                up['name'] = name
-                up['request_id'] = nvr
-                up['nvr'] = nvr
-                up['release_label'] = up['release']['long_name']
+            for dist_update in up['dist_updates']:
+                versions.append(dist_update['version'])
+                releases.append(dist_update['release_name'])
 
-                #dates
-                dp = up['date_pushed']
-                ds = up['date_submitted']
+            up['name'] = up['package_name']
+            up['versions'] = '<br/>'.join(versions)
+            up['releases'] = '<br/>'.join(releases)
+            up['status'] = up['dist_updates'][0]['status']
 
-                dtd = DateTimeDisplay(ds)
-                ds_when = dtd.when(0)
-                dp_when = None
-                elapsed = dtd.time_elapsed(0)
-                if dp:
-                    dtd = DateTimeDisplay(ds, dp)
-                    dp_when = dtd.when(1)
-                    elapsed = dtd.time_elapsed(0, 1)
+            # fix this...
+            up['nvr'] = up['dist_updates'][0]['title']
+            up['request_id'] = up['nvr']
 
-                up['date_pushed_display'] = dp_when
-                up['date_submitted_display'] = ds_when
-                up['elapsed_display'] = elapsed
+            actions = []
 
-                # karma
-                k = up['karma']
-
-                if k:
-                    up['karma_str'] = "%+d"%k
+            # Right now we're making the assumption that if you're logged
+            # in, we query by your username, thus you should be able to
+            # modify these updates.  This way, we avoid the pkgdb calls.
+            # Ideally, we should get the real ACLs from the pkgdb connector's
+            # cache.
+            if filters.get('username'):
+                # If we have multiple updates that are all in the same state,
+                # then create a single set of action buttons to control all
+                # of them.  If not,then supply separate ones.
+                if len(up['dist_updates']) > 1:
+                    if up['dist_updates'][0]['status'] != \
+                       up['dist_updates'][1]['status']:
+                        for update in up['dist_updates']:
+                            for action in self._get_update_actions(update):
+                                actions.append(action)
+                    else:
+                        for update in up['dist_updates']:
+                            for action in self._get_update_actions(update):
+                                actions.append(action)
                 else:
-                    up['karma_str'] = " %d"%k
+                    # Create a single set of action buttons
+                    update = up['dist_updates'][0]
+                    for action in self._get_update_actions(update):
+                        actions.append(action)
 
-                up['karma_level'] = 'meh'
-                if k > 0:
-                    up['karma_level'] = 'good'
-                if k < 0:
-                    up['karma_level'] = 'bad'
+            up['actions'] = ''
+            for action in actions:
+                up['actions'] += '<a href="#%s">%s</a><br/>' % (action[0],
+                                                                action[1])
 
+            #dates
+            dp = up['dist_updates'][0]['date_pushed']
+            ds = up['dist_updates'][0]['date_submitted']
+
+            dtd = DateTimeDisplay(ds)
+            ds_when = dtd.when(0)
+            dp_when = None
+            elapsed = dtd.time_elapsed(0)
+            if dp:
+                dtd = DateTimeDisplay(ds, dp)
+                dp_when = dtd.when(1)
+                elapsed = dtd.time_elapsed(0, 1)
+            up['date_pushed_display'] = dp_when
+            up['date_submitted_display'] = ds_when
+            up['elapsed_display'] = elapsed
+
+            # karma
+            # FIXME: take into account karma from both updates
+            k = up['dist_updates'][0]['karma']
+            if k:
+                up['karma_str'] = "%+d"%k
+            else:
+                up['karma_str'] = " %d"%k
+            up['karma_level'] = 'meh'
+            if k > 0:
+                up['karma_level'] = 'good'
+            if k < 0:
+                up['karma_level'] = 'bad'
 
         return (total_count, updates_list)
+
+    def _get_update_actions(self, update):
+        actions = []
+        if update['status'] == 'testing':
+            actions.append(('unpush', 'Unpush'))
+            actions.append(('stable', 'Push to stable'))
+        if update['status'] == 'pending':
+            actions.append(('testing', 'Push to testing'))
+            actions.append(('stable', 'Push to stable'))
+        if update['request']:
+            actions.append(('revoke', 'Cancel push'))
+        return actions
+
+    def _group_updates(self, updates, num_packages=None):
+        """
+        Group a list of updates by release.
+        This method allows allows you to limit the number of packages,
+        for when we want to display 1 package per row, regardless of how
+        many updates there are for it.
+        """
+        packages = {}
+        done = False
+        i = 0
+
+        if not updates:
+            return []
+
+        for update in updates:
+            for build in update['builds']:
+                pkg = build['package']['name']
+                if pkg not in packages:
+                    if num_packages and i >= num_packages:
+                        done = True
+                        break
+                    packages[pkg] = {
+                            'package_name' : pkg,
+                            'dist_updates': []
+                            }
+                    i += 1
+                else:
+                    skip = False
+                    for up in packages[pkg]['dist_updates']:
+                        if up['release_name'] == update['release']['long_name']:
+                            skip = True
+                            break
+                    if skip:
+                        break
+                packages[pkg]['dist_updates'].append({
+                        'release_name': update['release']['long_name'],
+                        'version': '-'.join(build['nvr'].split('-')[-2:])
+                        })
+                packages[pkg]['dist_updates'][-1].update(update)
+            if done:
+                break
+
+        result = [packages[pkg] for pkg in packages]
+
+        sort_col = 'date_submitted'
+        if result[0]['dist_updates'][0]['status'] == 'stable':
+            sort_col = 'date_pushed'
+
+        result = sorted(result, reverse=True, cmp=lambda x, y:
+                     cmp(x['dist_updates'][0][sort_col],
+                         y['dist_updates'][0][sort_col]))
+
+        return result
