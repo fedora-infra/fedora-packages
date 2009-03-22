@@ -1,6 +1,5 @@
 function _updates_filter_selected(o, d) {
   data = $(d.element).data('.moksha_selectable_data');
-  console.log(data)
 
   if (data.show_secondary_tables) {
     $('.secondary_table').fadeIn();
