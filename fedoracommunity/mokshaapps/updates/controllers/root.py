@@ -1,22 +1,29 @@
-from tg import expose, tmpl_context, validate
+from tg import expose, tmpl_context, validate, request
+from tw.api import JSLink
+from tw.jquery import jQuery, jquery_js, js_callback
 from formencode import validators
 
 from moksha.lib.base import Controller
-
 from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget, Widget, check_predicates
 from moksha.api.widgets import ContextAwareWidget, Grid, Selectable
 from moksha.api.widgets.containers import DashboardContainer
 
-from tw.api import JSLink
-from tw.jquery import jQuery, jquery_js, js_callback
+class PendingUpdatesGrid(Grid, ContextAwareWidget):
+    template='mako:fedoracommunity.mokshaapps.updates.templates.pending_table_widget'
 
+class StableUpdatesGrid(Grid, ContextAwareWidget):
+    template='mako:fedoracommunity.mokshaapps.updates.templates.stable_table_widget'
 
-class UpdatesGrid(Grid, ContextAwareWidget):
-    template='mako:fedoracommunity.mokshaapps.updates.templates.table_widget'
+class TestingUpdatesGrid(Grid, ContextAwareWidget):
+    template='mako:fedoracommunity.mokshaapps.updates.templates.testing_table_widget'
+
+pending_updates_grid =  PendingUpdatesGrid('pending_updates_grid')
+testing_updates_grid = TestingUpdatesGrid('testing_updates_grid')
+stable_updates_grid = StableUpdatesGrid('stable_updates_grid')
 
 class UpdatesFilter(Selectable):
     updates_filter_js = JSLink(modname='fedoracommunity.mokshaapps.updates',
-                              filename='javascript/updatesfilter.js')
+                               filename='javascript/updatesfilter.js')
     javascript = [updates_filter_js] + Selectable.javascript
 
     def update_params(self, d):
@@ -100,8 +107,7 @@ class RootController(Controller):
         tmpl_context.widget = updates_container
         return {'options':options}
 
-
-    @expose('mako:fedoracommunity.mokshaapps.updates.templates.table')
+    @expose('mako:moksha.templates.widget')
     @validate(validators={'rows_per_page': validators.Int()})
     def table(self, uid="", rows_per_page=5, filters=None):
         ''' table handler
@@ -110,5 +116,16 @@ class RootController(Controller):
         '''
         if not filters:
             filters = {}
-        tmpl_context.widget = updates_grid
-        return {'filters': filters, 'uid': uid, 'rows_per_page': rows_per_page}
+        if 'stable' in filters:
+            tmpl_context.widget = stable_updates_grid
+        elif 'testing' in filters:
+            tmpl_context.widget = testing_updates_grid
+        elif 'pending' in filters:
+            tmpl_context.widget = pending_updates_grid
+        else:
+            tmpl_context.widget = stable_updates_grid
+
+        options = dict(filters=filters, uid=uid, rows_per_page=rows_per_page,
+                       resource='bodhi', resource_path='query_updates')
+
+        return dict(options=options)
