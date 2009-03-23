@@ -1,4 +1,4 @@
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from moksha.connector import IConnector, ICall, IQuery, ISearch, ParamFilter
 from pylons import config
 from fedora.client import ProxyClient
 from beaker.cache import Cache
@@ -7,7 +7,7 @@ from moksha.connector.utils import DateTimeDisplay
 USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
 fas_cache = Cache('fas_connector_cache')
 
-class FasConnector(IConnector, ICall, IQuery):
+class FasConnector(IConnector, ICall, ISearch):
     def __init__(self, environ=None, request=None):
         super(FasConnector, self).__init__(environ, request)
         self._fas_client = ProxyClient(self._base_url,
@@ -31,6 +31,7 @@ class FasConnector(IConnector, ICall, IQuery):
 
         cls.register_query_usermemberships()
         cls.register_query_userinfo()
+        cls.register_search_people()
 
     def request_data(self, resource_path, params, _cookies):
         fas_info = self._environ.get('FAS_LOGIN_INFO')
@@ -82,6 +83,31 @@ class FasConnector(IConnector, ICall, IQuery):
                                    type="memory",
                                    expiretime=USERINFO_CACHE_TIMEOUT)
         return info
+
+    # ISearch
+    @classmethod
+    def register_search_people(cls):
+        path = cls.register_search_path(
+                      'search_people',
+                      cls.search_people,
+                      primary_key_col = 'username',
+                      default_sort_col = 'username',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('username',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('human_name',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+    def search_people(self, search_term):
+        result = self.call('user/list',
+                           params={'search': '*' + search_term + '*'})
+        return result[1]['people']
 
     # IQuery
     @classmethod
