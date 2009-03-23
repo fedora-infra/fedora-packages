@@ -2,6 +2,8 @@ from moksha.lib.base import Controller
 from moksha.lib.helpers import (Category, MokshaApp, Not, not_anonymous,
                                MokshaWidget, param_has_value)
 from moksha.api.widgets.containers import DashboardContainer
+from moksha.api.widgets import Grid
+
 from tg import expose, tmpl_context
 
 class SearchContainer(DashboardContainer):
@@ -17,19 +19,37 @@ class SearchContainer(DashboardContainer):
                         ])
               ]
 
+class PkgdbSearchGrid(Grid):
+    template="mako:fedoracommunity.mokshaapps.searchresource.templates.pkgdbsearchgrid"
+    def update_params(self, d):
+        d['resource'] = 'pkgdb'
+        d['resource_path'] = 'search_packages'
+        super(PkgdbSearchGrid, self).update_params(d)
+
 search_container = SearchContainer('search')
+pkgdb_search_grid = PkgdbSearchGrid('pkgdb_grid')
 
 class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):
         tmpl_context.widget = search_container
-        search = kwds.get('search',kwds.get('s',''))
+        search = kwds.get('search')
 
         return {'options':{'search': search}}
 
-    @expose('mako:fedoracommunity.mokshaapps.searchresource.templates.packages')
+    @expose('mako:moksha.templates.widget')
     def packages(self, **kwds):
+
         search = kwds.get('search',kwds.get('s'))
+        options= {'filters':{'search': search}}
+
+        tmpl_context.widget = pkgdb_search_grid
+
+        return {'options': options}
+
+
+
+
 
 

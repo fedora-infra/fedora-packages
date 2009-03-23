@@ -8,9 +8,11 @@
             </div>
             <input class="button" type="submit" value="Search"/>
         </form>
-       <div id="content-column">
+      </div>
+
+      <div id="content-column">
           ${applist_widget(category = 'content-column', layout = layout)}
-       </div>
+      </div>
     </div>
 
     <div id="overlay">

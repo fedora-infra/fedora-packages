@@ -1,4 +1,4 @@
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from moksha.connector import IConnector, ICall, IQuery, ParamFilter, ISearch
 from pylons import config
 from fedora.client import ProxyClient
 from beaker.cache import Cache
@@ -6,7 +6,7 @@ from beaker.cache import Cache
 COLLECTION_TABLE_CACHE_TIMEOUT= 60 * 60 * 6 # s * m * h = 6 hours
 pkgdb_cache = Cache('pkgdb_connector_cache')
 
-class PkgdbConnector(IConnector, ICall, IQuery):
+class PkgdbConnector(IConnector, ICall, ISearch):
     def __init__(self, environ=None, request=None):
         super(PkgdbConnector, self).__init__(environ, request)
         self._pkgdb_client = ProxyClient(self._base_url,
@@ -29,6 +29,7 @@ class PkgdbConnector(IConnector, ICall, IQuery):
         cls._insecure = insecure
 
         cls.register_query_userpackages()
+        cls.register_search_packages()
 
     def request_data(self, resource_path, params, _cookies):
         return self._pkgdb_client.send_request(resource_path, req_params = params)
@@ -67,6 +68,32 @@ class PkgdbConnector(IConnector, ICall, IQuery):
                                    type="memory",
                                    expiretime=COLLECTION_TABLE_CACHE_TIMEOUT)
         return table
+
+    # ISearch
+    @classmethod
+    def register_search_packages(cls):
+        path = cls.register_search_path(
+                      'search_packages',
+                      cls.search_packages,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('summary',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+    def search_packages(self, search_term):
+        result = self.call('search/package',
+                           params={'searchwords': search_term})
+        return result[1]['packages']
 
     # IQuery
     @classmethod

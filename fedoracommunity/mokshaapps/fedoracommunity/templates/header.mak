@@ -22,7 +22,7 @@
             	<div id="search-toolbar">
                 	<form action="/search/">
                 	    Search:
-                	    <input type="text" name="data_key"
+                	    <input type="text" name="search"
                 	        onFocus="this.select();"
 	               	        value="Type search terms here." />
 
