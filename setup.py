@@ -96,6 +96,9 @@ setup(
     [moksha.widget]
     fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
     fedoracommunity.planet = fedoracommunity.widgets.planet:PlanetFedoraWidget
+    grid = moksha.api.widgets:Grid
+    placeholder = moksha.api.widgets:Placeholder
+
 
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions

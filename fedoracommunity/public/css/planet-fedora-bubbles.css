@@ -3,6 +3,7 @@
 div.entry {
   clear: none;
   margin-bottom: 1em;
+  padding-bottom: 1em;
 }
 
 div.person-info {
@@ -65,6 +66,7 @@ h4.post-title {
   position: relative;
   z-index: 1;
   min-height: 35px;
+  margin-top: none;
 }
 
 .post-footer {
