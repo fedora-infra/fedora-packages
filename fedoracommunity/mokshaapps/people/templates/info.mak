@@ -24,37 +24,55 @@
       <div class="info_identity">
         <h4>Identity</h4>
 	<table>
+	    % if person.get('ssh_key'):
         <tr>
-          <th>Public SSH Key</th> 
+          <th>Public SSH Key</th>
           <td>${person['ssh_key']}</td>
-        </tr><tr>
+        </tr>
+        % endif
+        % if person.get('gpg_keyid'):
+        <tr>
           <th>PGP Key</th>
           <td>${person['gpg_keyid']}</td>
         </tr>
+        % endif
         </table>
       </div>
 
       <div class="info_contact">
         <h4>Contacting ${person['human_name']}</h4>
         <table>
+        % if person.get('irc_nick'):
         <tr>
           <th>IRC Nick</th>
           <td>${person['ircnick']}</td>
-        </tr><tr>
+        </tr>
+        % endif
+        % if person.get('email'):
+        <tr>
           <th>Email</th>
           <td>${person['email']}</td>
-        </tr><tr>
+        </tr>
+        % endif
+        % if person.get('telephone'):
+        <tr>
           <th>Phone</th>
           <td>${person['telephone']}</td>
-        </tr><tr>
+        </tr>
+        % endif
+        % if person.get('postal_address'):
+        <tr>
           <th>Postal Address</th>
           <td><span>
-            % for l in person['postal_address'].split('\n'):
-               <div>${l}</div>
-            % endfor
+
+                % for l in person['postal_address'].split('\n'):
+                    <div>${l}</div>
+                % endfor
+
           </span>
           </td>
         </tr>
+        % endif
         </table>
       </div>
     </div>
