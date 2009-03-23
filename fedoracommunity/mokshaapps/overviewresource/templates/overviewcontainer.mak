@@ -3,6 +3,7 @@
       <div>
        <div id="right-content-column">
           ${applist_widget(category = 'right-content-column', layout = layout)}
+          <div id="clear"></div>
        </div>
 
        <div id="left-content-column">
