@@ -65,6 +65,7 @@ h4.post-title {
   position: relative;
   z-index: 1;
   min-height: 35px;
+  margin-top: none;
 }
 
 .post-footer {
