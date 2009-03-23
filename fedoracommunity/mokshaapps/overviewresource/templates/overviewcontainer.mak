@@ -2,7 +2,7 @@
     <div id="container">
       <div>
        <div id="right-content-column">
-          ${applist_widget(category = 'right-content-column', layout = layout)}
+          ${applist_widget(category = 'right-content-column-apps', layout = layout)}
           <div id="clear"></div>
        </div>
 
@@ -28,7 +28,7 @@
 
           % endif
 
-          ${applist_widget(category = 'left-content-column', layout = layout)}
+          ${applist_widget(category = 'left-content-column-apps', layout = layout)}
        </div>
      </div>
     </div>
