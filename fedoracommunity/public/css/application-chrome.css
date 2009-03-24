@@ -53,6 +53,10 @@ a {
   border:			1px solid #aaa;
 }
 
+#toolbar .search-active {
+ color: #000 !important;
+}
+
 #toolbar input.button {
   margin-left: 			5px;
   text-transform:		uppercase;
@@ -314,7 +318,7 @@ a {
 #left-content-column dl dd div.header-list,
 .left-content-column dl dd div.header-list {
   padding-top: 2px;
-} 
+}
 
 #left-content-column dt,
 .left-content-column dt {
@@ -865,7 +869,7 @@ div.info_content th {
   text-align: right;
   vertical-align: top;
   color: #666 !important;
-  font-weight: bold !important; 
+  font-weight: bold !important;
 }
 
 div.info_content table {
@@ -885,7 +889,7 @@ div.info_content .col div {
 div.info_content {
   height: 200px !important;
   margin-bottom: 1em;
-} 
+}
 
 div.info_content table {
   width: 100%;
@@ -905,7 +909,7 @@ div.info_content .info_container .col div:last-child {
 }
 
 /** left-column styles **/
-  
+
 div.info_content .left_col {
   float: left;
 }

@@ -23,10 +23,24 @@
                 	<form action="/search/">
                 	    Search:
                 	    <input type="text" name="search"
-                	        onFocus="this.select();"
+                	        onFocus="_fedora_community_on_search_focus(this)"
+                	        onBlur="_fedora_community_on_search_blur(this)"
 	               	        value="Type search terms here." />
 
 	                    <input class="button" type="submit" value="Search" />
+	                    <script type="text/javascript">
+	                       function _fedora_community_on_search_focus(el) {
+
+	                          if (el.value === "Type search terms here.")
+	                              el.select();
+
+	                          $(el).addClass("search-active");
+	                       }
+
+	                       function _fedora_community_on_search_blur(el) {
+	                          $(el).removeClass("search-active");
+	                       }
+	                    </script>
         	        </form>
             	</div>
             </div>
