@@ -129,6 +129,7 @@ class AnonymousUpdatesContainer(DashboardContainer, ContextAwareWidget):
     ]
 
 class UpdatesContainer(DashboardContainer, ContextAwareWidget):
+    javascript = [JSLink(link='/javascript/bodhi.js', modname=__name__)]
     layout = [
             Category('right-content-column', (
                 Widget('Filters', updates_filter),
