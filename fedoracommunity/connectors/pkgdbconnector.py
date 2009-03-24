@@ -29,6 +29,7 @@ class PkgdbConnector(IConnector, ICall, ISearch):
         cls._insecure = insecure
 
         cls.register_query_userpackages()
+        cls.register_query_list_packages()
         cls.register_search_packages()
 
     def request_data(self, resource_path, params, _cookies):
@@ -92,10 +93,48 @@ class PkgdbConnector(IConnector, ICall, ISearch):
 
     def search_packages(self, search_term):
         result = self.call('search/package',
-                           params={'searchwords': search_term})
+                           params={'searchwords': search_term,
+                                   'tg_paginate_limit':100})
         return result[1]['packages']
 
     # IQuery
+    @classmethod
+    def register_query_list_packages(cls):
+        path = cls.register_path(
+                      'list_packages',
+                      cls.query_list_packages,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('summary',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+    def query_list_packages(self, start_row=None,
+                           rows_per_page=None,
+                           order=-1,
+                           sort_col=None,
+                           filters = {},
+                           **params):
+
+        params['tg_paginate_limit'] = rows_per_page
+        params['tg_paginate_no'] = int(start_row/rows_per_page)
+        params['searchwords'] = ''
+        print "fucl"
+        results = self._pkgdb_client.send_request('packages', req_params = params)
+        total_count = results[1]['pkgCount']
+        package_list = results[1]['packages']
+
+        return (total_count, package_list)
+
     @classmethod
     def register_query_userpackages(cls):
         path = cls.register_path(

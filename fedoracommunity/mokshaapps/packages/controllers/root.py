@@ -3,6 +3,8 @@ from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWi
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 
+from fedoracommunity.widgets import SubTabbedContainer
+
 from repoze.what.predicates import not_anonymous
 from tg import expose, tmpl_context, require, request
 
@@ -12,17 +14,47 @@ class UserPkgsCompactGrid(Grid, ContextAwareWidget):
 class UserPkgsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.userpkgs_table_widget'
 
-class BuildsContainer(DashboardContainer, ContextAwareWidget):
+class PackageNavContainer(SubTabbedContainer):
+    tabs= (MokshaApp('Overview', 'fedoracommunity.packages/overview',
+                     params={'package':''}),
+           Category('Package Details',
+                    (MokshaApp('Downloads', 'fedoracommunity.packages/package/downloads',
+                              params={'package':''}),
+                    MokshaApp('Maintainers', 'fedoracommunity.packages/package/maintainers',
+                              params={'package':''}),
+                    MokshaApp('Owners', 'fedoracommunity.packages/package/owners',
+                              params={'package':''}),
+                    MokshaApp('Watchers', 'fedoracommunity.packages/package/watchers',
+                              params={'package':''}),
+                    MokshaApp('Versions', 'fedoracommunity.packages/package/versions',
+                              params={'package':''}))
+                   ),
+
+           Category('Package Maintenance',
+                    (MokshaApp('Bugs', 'fedoracommunity.packages/package/bugs',
+                              params={'package':''}),
+                    MokshaApp('Builds', 'fedoracommunity.packages/package/builds',
+                              params={'package':''}),
+                    MokshaApp('Changelog', 'fedoracommunity.packages/package/Changelog',
+                              params={'package':''}),
+                    MokshaApp('Sources', 'fedoracommunity.packages/package/sources',
+                              params={'package':''}),
+                    MokshaApp('Updates', 'fedoracommunity.packages/package/updates',
+                              params={'package':''}))
+                   )
+          )
+
+class PackagesListContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('right-content-column',
                         MokshaApp('Quick Links', 'fedoracommunity.quicklinks')),
               Category('left-content-column',
-                       MokshaApp('Builds', 'fedoracommunity.builds/table', params={"rows_per_page": 10, "filters":{}}))]
-
-    def update_params(self, d):
-        super(BuildsContainer, self).update_params(d)
+                       MokshaApp('All Packages', 'fedoracommunity.packages/table', params={"rows_per_page": 10, "filters":{}}))]
 
 user_pkgs_compact_grid = UserPkgsCompactGrid('usrpkgs_list')
 user_pkgs_grid = UserPkgsGrid('usrpkgs_table')
+
+packages_list_container = PackagesListContainer('packages_list_container')
+package_nav_container = PackageNavContainer('package_nav_container')
 
 class RootController(Controller):
 
@@ -93,11 +125,17 @@ class RootController(Controller):
     # do something for index, this should be the container stuff
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):
-        options = {
-            'filters': {'package': kwds.get('package', kwds.get('pkg', kwds.get('p')))}
-        }
+        package = kwds.get('package', None)
 
-        tmpl_context.widget = builds_container
+        if not package:
+            options = {}
+            tmpl_context.widget = packages_list_container
+        else:
+            options = {
+                       'filters': {'package': package}
+                       }
+            tmpl_context.widget = package_nav_container
+
         return {'options':options}
 
     @expose('mako:moksha.templates.widget')
@@ -106,7 +144,7 @@ class RootController(Controller):
         kwds.update({'p': pkg_name})
         return self.index(**kwds)
 
-    @expose('mako:fedoracommunity.mokshaapps.builds.templates.table')
+    @expose('mako:fedoracommunity.mokshaapps.packages.templates.table')
     def table(self, user="", rows_per_page=5, filters={}):
         ''' table handler
 
@@ -115,8 +153,6 @@ class RootController(Controller):
 
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
-
-
 
         tmpl_context.widget = user_pkgs_grid
         return {'filters': filters, 'uid':user, 'rows_per_page':rows_per_page}
