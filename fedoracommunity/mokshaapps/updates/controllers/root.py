@@ -106,7 +106,6 @@ class UpdatesFilter(Selectable):
                       d.content_id)
 
 updates_filter = UpdatesFilter('updates_filter')
-#updates_grid = UpdatesGrid('updates_table')
 
 class AnonymousUpdatesContainer(DashboardContainer, ContextAwareWidget):
     layout = [
