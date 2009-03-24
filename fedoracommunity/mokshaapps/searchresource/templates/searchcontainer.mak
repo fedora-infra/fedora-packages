@@ -1,7 +1,8 @@
 <div id="${id}">
     <div id="container">
        <div class="content-searchbox">
-        <form action="/search">
+        <form action="/search"
+              onSubmit="moksha.csrf_add_form_field(this);">
             <span class="label">Search </span>
             <div class="content-searchinput">
                 <input class="searchinput" type="text" name="search" value="${search}" />

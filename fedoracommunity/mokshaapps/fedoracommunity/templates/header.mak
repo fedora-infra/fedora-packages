@@ -20,14 +20,18 @@
                     </div>
                 % endif
             	<div id="search-toolbar">
-                	<form action="/search/">
+                	<form action="/search/"
+                	      onSubmit="moksha.csrf_add_form_field(this)">
                 	    Search:
                 	    <input type="text" name="search"
                 	        onFocus="_fedora_community_on_search_focus(this)"
                 	        onBlur="_fedora_community_on_search_blur(this)"
 	               	        value="Type search terms here." />
 
-	                    <input class="button" type="submit" value="Search" />
+	                    <input class="button"
+	                           type="submit"
+	                           value="Search"
+	                           />
 	                    <script type="text/javascript">
 	                       function _fedora_community_on_search_focus(el) {
 
@@ -40,6 +44,7 @@
 	                       function _fedora_community_on_search_blur(el) {
 	                          $(el).removeClass("search-active");
 	                       }
+
 	                    </script>
         	        </form>
             	</div>
