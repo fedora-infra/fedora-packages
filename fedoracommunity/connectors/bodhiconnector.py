@@ -25,7 +25,16 @@ class BodhiConnector(IConnector, ICall, IQuery):
         cls.register_query_updates()
 
     def request_data(self, resource_path, params, _cookies):
-        return self._bodhi_client.send_request(resource_path, request_params = params)
+        auth_params={}
+
+        fas_info = self._environ.get('FAS_LOGIN_INFO')
+        if fas_info:
+            session_id = fas_info[0]
+            auth_params={'session_id': session_id}
+
+        return self._bodhi_client.send_request(resource_path,
+                                               req_params=params,
+                                               auth_params=auth_params)
 
     def introspect(self):
         # FIXME: return introspection data
