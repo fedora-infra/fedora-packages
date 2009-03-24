@@ -135,7 +135,7 @@ class HRElapsedTime(object):
         self.end = time
         
     def set_end_time_to_now(self):
-        self.end = datetime.now()
+        self.end = datetime.utcnow()
         
     def get_hr_elapsed_time(self):
         
