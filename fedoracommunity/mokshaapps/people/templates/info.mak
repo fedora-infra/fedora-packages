@@ -1,4 +1,5 @@
 <div id="${id}">
+  <H2>${person['human_name']}</H2>
   <div class="info_content">
     <div class="hackergotchi"></div>
     <div class="info_details">

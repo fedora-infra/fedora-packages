@@ -96,12 +96,12 @@ class RootController(Controller):
 
     @expose('mako:fedoracommunity.mokshaapps.people.templates.info')
     @require(not_anonymous())
-    def details(self, username=None, show_profile=False, compact=False):
+    def details(self, username=None, profile=False, compact=False):
         results = {'compact': compact,
                    'id': 'uuid' + str(uuid4())}
 
         fas_conn = get_connector('fas')
-        person = fas_conn.query_userinfo(filters = {'profile': show_profile,
+        person = fas_conn.query_userinfo(filters = {'profile': profile,
                                                     'u':username})
 
         if person:

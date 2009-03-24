@@ -7,7 +7,6 @@ class TabbedNav(SubTabbedContainer):
     tabs= (MokshaApp('Packages', 'fedoracommunity.packagemaint.packages'),
            MokshaApp('Builds', 'fedoracommunity.builds'),
            MokshaApp('Updates', 'fedoracommunity.updates'),
-           MokshaApp('Package Groups', 'fedoracommunity.packagemaint.packagegroups'),
           )
 
 class RootController(Controller):
