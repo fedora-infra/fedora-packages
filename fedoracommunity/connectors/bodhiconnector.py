@@ -242,8 +242,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
             up['actions'] = ''
             for action in actions:
-                up['actions'] += '<a href="#%s">%s</a><br/>' % (action[0],
-                                                                action[1])
+                reqs = ''
+                for u in up['dist_updates']:
+                    reqs += "update_action('%s', '%s');" % (u['title'], action[0])
+                up['actions'] += """
+                    <a href="#" onclick="%s return false;">%s</a><br/>
+                    """ % (reqs, action[1])
 
             #dates
             dp = up['dist_updates'][0]['date_pushed']
