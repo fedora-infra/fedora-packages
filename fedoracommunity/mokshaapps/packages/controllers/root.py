@@ -8,6 +8,8 @@ from fedoracommunity.widgets import SubTabbedContainer
 from repoze.what.predicates import not_anonymous
 from tg import expose, tmpl_context, require, request
 
+from overview import OverviewController
+
 class UserPkgsCompactGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.userpkgs_list_widget'
 
@@ -15,7 +17,7 @@ class UserPkgsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.userpkgs_table_widget'
 
 class PackageNavContainer(SubTabbedContainer):
-    tabs= (MokshaApp('Overview', 'fedoracommunity.packages/overview',
+    tabs= (MokshaApp('Overview', 'fedoracommunity.packages/package',
                      params={'package':''}),
            Category('Package Details',
                     (MokshaApp('Downloads', 'fedoracommunity.packages/package/downloads',
@@ -35,9 +37,9 @@ class PackageNavContainer(SubTabbedContainer):
                               params={'package':''}),
                     MokshaApp('Builds', 'fedoracommunity.packages/package/builds',
                               params={'package':''}),
-                    MokshaApp('Changelog', 'fedoracommunity.packages/package/Changelog',
+                    MokshaApp('Changelog', 'fedoracommunity.packages/package/changelog',
                               params={'package':''}),
-                    MokshaApp('Sources', 'fedoracommunity.packages/package/sources',
+                    MokshaApp('Sources', 'fedoracommunity.packages/package/downloads/source',
                               params={'package':''}),
                     MokshaApp('Updates', 'fedoracommunity.packages/package/updates',
                               params={'package':''}))
@@ -57,6 +59,8 @@ packages_list_container = PackagesListContainer('packages_list_container')
 package_nav_container = PackageNavContainer('package_nav_container')
 
 class RootController(Controller):
+
+    package = OverviewController()
 
     def _user_packages_view(self, username, owner=5, maintainer=3, watcher=False,
                        owner_label='Owned',
@@ -95,7 +99,6 @@ class RootController(Controller):
         else:
             rows_per_page = int(rows_per_page)
             tmpl_context.widget = user_pkgs_grid
-
             return {'categories': None,
                     'filters':{'u':username},
                     'rows_per_page': rows_per_page,

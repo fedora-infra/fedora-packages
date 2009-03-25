@@ -14,12 +14,12 @@
                     <tr>
                         <td>
                             <span class="package-name">
-                                <a href="http://localhost/koji/buildinfo?buildID=@{build_id}" target="_blank">@{package_name}</a>
+                                <a href="javascript:moksha.goto('/package_maintenance/packages/builds', {'package': '@{package_name}'});">@{package_name}</a>
                             </span>
                             <div>@{version}</div>&nbsp;
                         </td>
                         <td>
-                            <span class="person-name"><a href="javascript:moksha.goto('/people/?username=@{owner_name}')">@{owner_name}</a></span>&nbsp;
+                            <span class="person-name"><a href="javascript:moksha.goto('/people/', {'username': '@{owner_name}'})">@{owner_name}</a></span>&nbsp;
                         </td>
                         <td>@{completion_time_display:index("elapsed")}
                         </td>
