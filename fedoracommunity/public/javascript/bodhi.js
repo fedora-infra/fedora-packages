@@ -9,9 +9,11 @@ function update_action(update, action) {
 
     $.getJSON('/moksha_connector/bodhi/request_data/request', args, function(json) {
         console.log(json);
-        // flash json['tg_flash']
-        // if json['update']['request'] matches our action,
-        //      remove the action link
+        $('span.main_table').prepend($('<span/>').text(json['tg_flash']));
+        if (json['update']['request'] == action) {
+            console.log('Request successful');
+            $(update + '_' + action).hide();
+        }
     });
 
 }
