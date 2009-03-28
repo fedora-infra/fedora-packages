@@ -247,7 +247,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
                     reqs += "update_action('%s', '%s');" % (u['title'], action[0])
                 up['actions'] += """
                     <a href="#" id="%s_%s" onclick="%s return false;">%s</a><br/>
-                    """ % (up['dist_updates'][0]['title'], action[0], reqs, action[1])
+                    """ % (up['dist_updates'][0]['title'].replace('.', ''),
+                           action[0], reqs, action[1])
 
             #dates
             dp = up['dist_updates'][0]['date_pushed']
