@@ -35,8 +35,9 @@ class OverviewController(Controller):
     @expose('mako:moksha.templates.widget')
     def index(self, package):
         tmpl_context.widget = overview_dashboard
-        return {'package': package}
+        return dict(package=package, options={})
 
     @expose('mako:moksha.templates.widget')
     def overview(self, package):
-        return self.index(package)
+        tmpl_context.widget = overview_dashboard
+        return dict(package=package, options={})
