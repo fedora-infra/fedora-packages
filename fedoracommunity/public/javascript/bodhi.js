@@ -8,10 +8,10 @@ function update_action(update, action) {
     }
 
     $.getJSON('/moksha_connector/bodhi/request_data/request', args, function(json) {
-        console.log(json);
-        $('span.main_table').prepend($('<span/>').text(json['tg_flash']));
-        if (json['update']['request'] == action) {
-            console.log('Request successful');
+        json = json[1];
+        $('div.left-content-column').prepend($('<span/>').attr('id', 'flash').text(json.tg_flash)).show();
+        if (typeof(json.update) != 'undefined' && json.update.request == action) {
+            console.log('hiding "' + update + '_' + action + '"');
             $(update + '_' + action).hide();
         }
     });
