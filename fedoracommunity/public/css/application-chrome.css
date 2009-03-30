@@ -936,3 +936,15 @@ div.info_content .right-col div {
   text-overflow: ellipsis;
   -moz-binding: url('css/ellipsis.xml#ellipsis');
 }
+
+
+/** moksha magic **/
+
+.moksha-grid-pager-bottom .message {
+  float: left;
+  width: 30%;
+}
+.moksha-grid-pager-bottom .pager {
+  float: right;
+  width: 30%;
+}
