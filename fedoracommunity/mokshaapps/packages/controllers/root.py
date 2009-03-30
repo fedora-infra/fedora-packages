@@ -135,8 +135,8 @@ class RootController(Controller):
             tmpl_context.widget = packages_list_container
         else:
             options = {
-                       'filters': {'package': package}
-                       }
+                       'package': package
+                      }
             tmpl_context.widget = package_nav_container
 
         return {'options':options}

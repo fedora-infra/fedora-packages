@@ -4,6 +4,8 @@ from fedora.client import ProxyClient
 from beaker.cache import Cache
 
 COLLECTION_TABLE_CACHE_TIMEOUT= 60 * 60 * 6 # s * m * h = 6 hours
+BASIC_PACKAGE_DATA_CACHE_TIMEOUT = 60 * 60  # 1 hour
+
 pkgdb_cache = Cache('pkgdb_connector_cache')
 
 class PkgdbConnector(IConnector, ICall, ISearch):
@@ -70,6 +72,31 @@ class PkgdbConnector(IConnector, ICall, ISearch):
                                    expiretime=COLLECTION_TABLE_CACHE_TIMEOUT)
         return table
 
+    def request_package_info(self, package):
+        info = {}
+        co = self.call('/packages/name', {'packageName': package,
+                                          'collectionName':'Fedora',
+                                          'collectionVersion': 'devel'})
+        if not co:
+            return info
+
+        p = co[1]['packageListings'][0]['package']
+        info['name'] = p['name']
+        info['description'] = p['description']
+        info['summary'] = p['summary']
+
+        return info
+
+    def get_package_info(self, package, invalidate=False):
+        if invalidate:
+            pkgdb_cache.remove_value('_pkgdb_package_info')
+
+        info = pkgdb_cache.get_value(key=package,
+                                   createfunc=lambda : self.request_package_info(package),
+                                   type="memory",
+                                   expiretime=BASIC_PACKAGE_DATA_CACHE_TIMEOUT)
+        return info
+
     # ISearch
     @classmethod
     def register_search_packages(cls):
@@ -128,7 +155,7 @@ class PkgdbConnector(IConnector, ICall, ISearch):
         params['tg_paginate_limit'] = rows_per_page
         params['tg_paginate_no'] = int(start_row/rows_per_page)
         params['searchwords'] = ''
-        print "fucl"
+
         results = self._pkgdb_client.send_request('packages', req_params = params)
         total_count = results[1]['pkgCount']
         package_list = results[1]['packages']

@@ -1,18 +1,18 @@
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
-from moksha.api.widgets.containers import DashboardContainer
-from moksha.api.widgets import ContextAwareWidget
+from helpers import PackagesDashboardContainer
 
 from tg import expose, tmpl_context, require, request
 
-class BuildsDashboard(DashboardContainer, ContextAwareWidget):
-    template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
-    layout = [Category('content-col-apps',[])]
+class BuildsDashboard(PackagesDashboardContainer):
+    layout = [Category('content-col-apps',
+                       MokshaApp('Builds', 'fedoracommunity.builds/table',
+                                 params={'filters':{'package':''}}))]
 
-builds_dashboard = BuildsDashboard
+builds_dashboard = BuildsDashboard('builds_dashboard')
 
 class BuildsController(Controller):
     @expose('mako:moksha.templates.widget')
     def index(self, package):
         tmpl_context.widget = builds_dashboard
-        return {'package': package}
+        return {'options':{'package': package}}

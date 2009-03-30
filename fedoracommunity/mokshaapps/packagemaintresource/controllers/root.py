@@ -16,8 +16,9 @@ class RootController(Controller):
         self.widget = TabbedNav('packagemaintnav')
 
     @expose('mako:moksha.templates.widget')
-    def index(self, package=None):
+    def index(self, **kwds):
         options = {}
+        package = kwds.get('package')
         if package:
             options['package'] = package
 

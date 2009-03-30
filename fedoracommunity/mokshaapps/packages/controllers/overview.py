@@ -33,9 +33,9 @@ class OverviewController(Controller):
     watchers = WatchersController()
 
     @expose('mako:moksha.templates.widget')
-    def index(self, package):
+    def index(self, **kwds):
         tmpl_context.widget = overview_dashboard
-        return {'package': package}
+        return {'options': kwds}
 
     @expose('mako:moksha.templates.widget')
     def overview(self, package):
