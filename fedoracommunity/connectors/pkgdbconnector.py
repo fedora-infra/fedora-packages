@@ -33,6 +33,7 @@ class PkgdbConnector(IConnector, ICall, ISearch):
         cls.register_query_userpackages()
         cls.register_query_list_packages()
         cls.register_search_packages()
+        cls.register_query_acls()
 
     def request_data(self, resource_path, params, _cookies):
         return self._pkgdb_client.send_request(resource_path, req_params = params)
@@ -46,8 +47,8 @@ class PkgdbConnector(IConnector, ICall, ISearch):
         # proxy client only returns structured data so we can pass
         # this off to request_data but we should fix that in ProxyClient
         return self.request_data(resource_path, params, _cookies)
-
     def request_collection_table(self):
+
         table = {}
         co = self.call('/collections')
         for c in co[1]['collections']:
@@ -73,29 +74,33 @@ class PkgdbConnector(IConnector, ICall, ISearch):
         return table
 
     def request_package_info(self, package):
-        info = {}
         co = self.call('/packages/name', {'packageName': package,
                                           'collectionName':'Fedora',
                                           'collectionVersion': 'devel'})
+
+        print co
+
         if not co:
-            return info
+            return {}
 
-        p = co[1]['packageListings'][0]['package']
-        info['name'] = p['name']
-        info['description'] = p['description']
-        info['summary'] = p['summary']
+        return co
 
-        return info
-
-    def get_package_info(self, package, invalidate=False):
+    def get_basic_package_info(self, package, invalidate=False):
         if invalidate:
             pkgdb_cache.remove_value('_pkgdb_package_info')
 
+        result = {}
         info = pkgdb_cache.get_value(key=package,
                                    createfunc=lambda : self.request_package_info(package),
                                    type="memory",
                                    expiretime=BASIC_PACKAGE_DATA_CACHE_TIMEOUT)
-        return info
+
+        p = info[1]['packageListings'][0]['package']
+        result['name'] = p['name']
+        result['description'] = p['description']
+        result['summary'] = p['summary']
+
+        return result
 
     # ISearch
     @classmethod
@@ -125,6 +130,115 @@ class PkgdbConnector(IConnector, ICall, ISearch):
         return result[1]['packages']
 
     # IQuery
+    @classmethod
+    def register_query_acls(cls):
+        path = cls.register_path(
+                      'acls',
+                      cls.query_acls,
+                      primary_key_col = 'username',
+                      default_sort_col = 'username',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('username',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('roles',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        f = ParamFilter()
+        f.add_filter('package',['p', 'pkg'], allow_none = False)
+        f.add_filter('roles', allow_none = True)
+
+        cls._query_acls_filter = f
+
+    def query_acls(self, start_row=None,
+                           rows_per_page=None,
+                           order=-1,
+                           sort_col=None,
+                           filters = {},
+                           **params):
+
+        params['tg_paginate_limit'] = rows_per_page
+        params['tg_paginate_no'] = int(start_row/rows_per_page)
+        filters = self._query_acls_filter.filter(filters)
+
+        package = filters.get('package')
+        roles = filters.get('roles', ['owner', 'maintainer', 'watcher'])
+
+        info = pkgdb_cache.get_value(key=package,
+                                   createfunc=lambda : self.request_package_info(package),
+                                   type="memory",
+                                   expiretime=BASIC_PACKAGE_DATA_CACHE_TIMEOUT)
+
+        p = info[1]['packageListings']
+
+        entities = {}
+
+        for i in p:
+            distname = i['collection']['name']
+            distver = i['collection']['version']
+            owner = i['owneruser']
+            if 'owner' in roles:
+                entities[owner] = {'name': owner, 'roles': ['Owner'],'type': 'user'}
+
+            if distname == 'Fedora' and distver == 'devel':
+                distname = 'Rawhide'
+                distver = ''
+
+            for person in i['people']:
+                aclorder = person['aclOrder']
+                username = person['name']
+                record = entities.get(username,
+                                    {'name': username,
+                                     'roles': []})
+                record['type'] = 'user'
+
+                if (aclorder['commit'] or
+                    aclorder['approveacls']) and 'maintainer' in roles:
+
+                    record['roles'].append('Maintainer')
+                    entities[username] = record
+
+                if (aclorder['watchbugzilla']  or
+                    aclorder['watchcommits']) and 'watcher' in roles:
+                    record['roles'].append('Watcher')
+                    entities[username] = record
+
+            for group in i['groups']:
+                aclorder = group['aclOrder']
+                name = group['name']
+                record = group.get(name,
+                                   {'name': name,
+                                    'roles': []})
+                record['type'] = 'group'
+
+                if (aclorder['commit'] or
+                    aclorder['approveacls']) and 'maintainer' in roles:
+
+                    record['roles'].append('Maintainer')
+                    group[name] = record
+
+                if (aclorder['watchbugzilla']  or
+                    aclorder['watchcommits']) and 'watcher' in roles:
+                    record['roles'].append('Watcher')
+                    group[name] = record
+
+        def sort_entity_list(a, b):
+            if order < 0:
+                return cmp(b.get('name',''), a.get('name',''))
+            else:
+                return cmp(a.get('name',''), b.get('name',''))
+
+        entity_list = entities.values()
+        entity_list.sort(sort_entity_list)
+
+        total_count = len(entity_list)
+        return (total_count, entity_list)
+
     @classmethod
     def register_query_list_packages(cls):
         path = cls.register_path(

@@ -9,11 +9,9 @@ from bugs import BugsController
 from builds import BuildsController
 from changelog import ChangelogController
 from downloads import DownloadsController
-from maintainers import MaintainersController
-from owners import OwnersController
+from acls import AclsController
 from updates import UpdatesController
 from versions import VersionsController
-from watchers import WatchersController
 
 class OverviewDashboard(DashboardContainer, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
@@ -26,11 +24,9 @@ class OverviewController(Controller):
     builds = BuildsController()
     changelog = ChangelogController()
     downloads = DownloadsController()
-    maintainers = MaintainersController()
-    owners = OwnersController()
+    acls = AclsController()
     updates = UpdatesController()
     verisons = VersionsController()
-    watchers = WatchersController()
 
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):

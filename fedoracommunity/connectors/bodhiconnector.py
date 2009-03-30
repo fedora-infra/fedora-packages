@@ -145,6 +145,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                     filter_dict['user'] = user
 
         f = ParamFilter()
+        f.add_filter('package', ['nvr'], allow_none=False)
         f.add_filter('user',['u', 'username', 'name'], allow_none = False)
         f.add_filter('profile',[], allow_none=False,
                      filter_func=_profile_user,
@@ -162,24 +163,6 @@ class BodhiConnector(IConnector, ICall, IQuery):
             filters = {}
 
         filters = self._query_updates_filter.filter(filters, conn=self)
-
-        if filters.get('user'):
-            filters['username'] = filters['user']
-            del(filters['user'])
-
-        package = filters.get('nvr', filters.get('name'))
-        if package:
-            filters['package'] = package
-            if 'nvr' in filters:
-                del(filters['nvr'])
-            if 'name' in filters:
-                del(filters['name'])
-
-        # release = filters.get('release')
-        # request = filters.get('request')
-        # status = filters.get('status')
-        # type_ = filters.get('type')
-        # bugs = filters.get('bugs')
 
         params.update(filters)
         params['tg_paginate_no'] = int(start_row/rows_per_page)
@@ -205,6 +188,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 releases.append(dist_update['release_name'])
 
             up['name'] = up['package_name']
+            # FIXME: Don't embed HTML, just send it as a list and have the
+            #        template handle it
             up['versions'] = '<br/>'.join(versions)
             up['releases'] = '<br/>'.join(releases)
             up['status'] = up['dist_updates'][0]['status']
@@ -245,6 +230,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 reqs = ''
                 for u in up['dist_updates']:
                     reqs += "update_action('%s', '%s');" % (u['title'], action[0])
+
+                # FIXME: Don't embed HTML
                 up['actions'] += """
                     <a href="#" id="%s_%s" onclick="%s return false;">%s</a><br/>
                     """ % (up['dist_updates'][0]['title'].replace('.', ''),
