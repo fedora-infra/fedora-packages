@@ -8,6 +8,8 @@ from tg import expose, tmpl_context, request
 from tw.api import JSLink
 from tw.jquery import jQuery, jquery_js, js_callback
 
+from links import builds_links
+
 class BuildsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.builds.templates.table_widget'
 
@@ -136,7 +138,7 @@ class RootController(Controller):
         return self.index(**kwds)
 
     @expose('mako:fedoracommunity.mokshaapps.builds.templates.table')
-    def table(self, uid="", rows_per_page=5, filters={}):
+    def table(self, uid="", rows_per_page=5, filters={}, more_link_code=None):
         ''' table handler
 
         This handler displays the main table by itself
@@ -145,5 +147,10 @@ class RootController(Controller):
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
 
+        more_link = None
+        if more_link_code:
+            more_link = builds_links.get_data(more_link_code)
+
         tmpl_context.widget = builds_grid
-        return {'filters': filters, 'uid':uid, 'rows_per_page':rows_per_page}
+        return {'filters': filters, 'uid':uid, 'rows_per_page':rows_per_page,
+                'more_link': more_link}

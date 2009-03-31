@@ -11,11 +11,11 @@ import koji
 class BuildsToolApp(AppFactory):
     entry_name = 'tools.builds'
 
-class BuildsToolWidget(ToolWidget):
     template = 'mako:/myfedora/plugins/apps/tools/templates/builds.html'
+class BuildsToolWidget(ToolWidget):
     display_name = "Builds"
     requires_data_key = False
-    
+
     def update_params(self, d):
         super(ToolWidget, self).update_params(d)
 
@@ -26,16 +26,16 @@ class BuildsToolWidget(ToolWidget):
         profile = d.get('profile', None)
         package = d.get('package', None)
         username = None
-        
+
         if resourceview == 'people_view':
             username = person
-            
+
         elif resourceview == 'profile_view':
             profile = True
 
         left_col_apps = AppBundle("leftcol")
         build_table_class = pylons.g.apps['buildstable']
-        build_table_app = build_table_class(None, 
+        build_table_app = build_table_class(None,
                                             view='Canvas',
                                             person=person,
                                             package=package,
@@ -44,15 +44,15 @@ class BuildsToolWidget(ToolWidget):
 
         right_col_apps = AppBundle("rightcol")
         nav_class = pylons.g.apps['packagesnav']
-        nav_app = nav_class(None, 
-                            '320px', 
-                            '200px', 
+        nav_app = nav_class(None,
+                            '320px',
+                            '200px',
                             'Home',
                             flags=nav_class.BUILDS_SUBNAV_FLAG,
                             user=username,
                             package=package,
                             tool=d.get('tool','builds'))
-        
+
         right_col_apps.add(nav_app)
         d.update({'rightcol': right_col_apps.serialize_apps(pylons.tmpl_context.w),
                   'leftcol': left_col_apps.serialize_apps(pylons.tmpl_context.w)
