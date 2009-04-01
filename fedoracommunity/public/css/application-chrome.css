@@ -238,6 +238,7 @@ a {
   padding: 8px;
   padding-top: 11px;
   margin: auto;
+  margin-bottom: 24px;
 }
 
 .content-searchbox .button {
@@ -525,7 +526,8 @@ span.panel {
   margin-top:		-1px;
 }
 
-#left-content-column h3 {
+#left-content-column h3,
+.left-content-column h3 {
   font-weight: 900;
   color: black !important;
   text-transform: uppercase;
