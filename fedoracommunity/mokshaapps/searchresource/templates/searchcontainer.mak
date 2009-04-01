@@ -9,11 +9,11 @@
             </div>
             <input class="button" type="submit" value="Search"/>
         </form>
-      </div>
+       </div>
 
-      <div id="content-column">
+       <div id="left-content-column">
           ${applist_widget(category = 'content-column', layout = layout)}
-      </div>
+       </div>
     </div>
 
     <div id="overlay">

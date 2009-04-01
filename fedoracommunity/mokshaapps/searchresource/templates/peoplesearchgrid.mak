@@ -1,4 +1,4 @@
-<div>
+<div class="table header-table">
    <table id="${id}">
     <thead>
       <th>Name</th>

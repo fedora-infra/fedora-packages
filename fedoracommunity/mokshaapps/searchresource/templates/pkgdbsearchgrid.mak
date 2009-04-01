@@ -1,4 +1,4 @@
-<div>
+<div class="list header-list">
    <table id="${id}">
     <thead>
       <th>Package Name</th>
