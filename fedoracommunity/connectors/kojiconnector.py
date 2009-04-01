@@ -15,6 +15,7 @@ class KojiConnector(IConnector, ICall, IQuery):
                                    'http://koji.fedoraproject.org/kojihub')
 
         cls.register_query_builds()
+        cls.register_query_packages()
 
     def request_data(self, resource_path, params, _cookies):
         return self._koji_client.callMethod(resource_path, **params)
@@ -30,6 +31,88 @@ class KojiConnector(IConnector, ICall, IQuery):
         return self.request_data(resource_path, params, _cookies)
 
     #IQuery
+    @classmethod
+    def register_query_packages(cls):
+        path = cls.register_path(
+                      'query_packages',
+                      cls.query_packages,
+                      primary_key_col = 'id',
+                      default_sort_col = 'name',
+                      default_sort_order = 1,
+                      can_paginate = True)
+
+        path.register_column('id',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('prefix',[], allow_none = False)
+        cls._query_packages_filter = f
+
+    def query_packages(self, start_row=None,
+                           rows_per_page=10,
+                           order=1,
+                           sort_col=None,
+                           filters = {},
+                           **params):
+
+        filters = self._query_packages_filter.filter(filters, conn=self)
+        prefix = filters.get('prefix')
+        terms = '%'
+        if prefix:
+            terms = prefix + '%'
+
+        countQueryOpts = {'countOnly': True}
+
+        if order < 0:
+            order = '-' + sort_col
+        else:
+            order = sort_col
+
+        if start_row == None:
+            start_row = 0
+
+        queryOpts = None
+
+        qo = {}
+        if not (start_row == None):
+          qo['offset'] = int(start_row)
+
+        if not (rows_per_page == None):
+            qo['limit'] = int(rows_per_page)
+
+        if order:
+            qo['order'] = order
+
+        if qo:
+            queryOpts = qo
+
+
+        countQueryOpts = {'countOnly': True}
+
+        self._koji_client.multicall = True
+        self._koji_client.search(terms=terms,
+                                 type='package',
+                                 matchType='glob',
+                                 queryOpts=countQueryOpts)
+
+        self._koji_client.search(terms=terms,
+                                type='package',
+                                matchType='glob',
+                                queryOpts=queryOpts)
+
+        results = self._koji_client.multiCall()
+        pkgs = results[1][0]
+        total_count = results[0][0]
+
+        return (total_count, pkgs)
+
     @classmethod
     def register_query_builds(cls):
         path = cls.register_path(

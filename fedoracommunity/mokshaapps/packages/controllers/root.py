@@ -52,8 +52,8 @@ class PackageNavContainer(SubTabbedContainer):
 class PackagesListContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('right-content-column',
                         MokshaApp('Quick Links', 'fedoracommunity.quicklinks')),
-              Category('left-content-column',
-                       MokshaApp('All Packages', 'fedoracommunity.packages/table', params={"rows_per_page": 10, "filters":{}}))]
+              Category('left-content-column', # use the builds packages table for now while Toshio fixes the alphaPager json call for pkgdb
+                       MokshaApp('All Packages', 'fedoracommunity.builds/packages_table', params={"rows_per_page": 10, "filters":{}}))]
 
 user_pkgs_compact_grid = UserPkgsCompactGrid('usrpkgs_list')
 user_pkgs_grid = UserPkgsGrid('usrpkgs_table')
