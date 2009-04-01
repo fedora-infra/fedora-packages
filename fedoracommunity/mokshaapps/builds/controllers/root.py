@@ -13,6 +13,9 @@ from links import builds_links
 class BuildsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.builds.templates.table_widget'
 
+class BuildsPackagesGrid(Grid, ContextAwareWidget):
+    template='mako:fedoracommunity.mokshaapps.builds.templates.packages_table_widget'
+
 class BuildsFilter(Selectable):
     builds_filter_js = JSLink(modname='fedoracommunity.mokshaapps.builds',
                               filename='javascript/buildsfilter.js')
@@ -88,6 +91,7 @@ class BuildsFilter(Selectable):
 
 builds_filter = BuildsFilter('builds_filter')
 
+
 class BuildsContainer(DashboardContainer, ContextAwareWidget):
     in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds/table',
                                        css_class='main_table',
@@ -120,6 +124,7 @@ class BuildsContainer(DashboardContainer, ContextAwareWidget):
 
 builds_container = BuildsContainer('builds')
 builds_grid = BuildsGrid('builds_table')
+builds_packages_grid = BuildsPackagesGrid('builds_packages_table')
 
 class RootController(Controller):
 
@@ -136,6 +141,19 @@ class RootController(Controller):
 
         kwds.update({'p': pkg_name})
         return self.index(**kwds)
+
+    @expose('mako:fedoracommunity.mokshaapps.builds.templates.packages_table')
+    def packages_table(self, uid="", rows_per_page=5, filters={}, more_link_code=None):
+        if isinstance(rows_per_page, basestring):
+            rows_per_page = int(rows_per_page)
+
+        more_link = None
+        if more_link_code:
+            more_link = builds_links.get_data(more_link_code)
+
+        tmpl_context.widget = builds_packages_grid
+        return {'filters': filters, 'rows_per_page':rows_per_page,
+                'more_link': more_link}
 
     @expose('mako:fedoracommunity.mokshaapps.builds.templates.table')
     def table(self, uid="", rows_per_page=5, filters={}, more_link_code=None):
