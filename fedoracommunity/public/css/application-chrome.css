@@ -439,6 +439,7 @@ span.more-items {
 }
 
 .message_row {
+  display: none;
 }
 
 span.package-name a,
@@ -709,11 +710,23 @@ h1#greeter img {
 
 /** LIST PAGER **/
 
+.list .message {
+  float: left;
+  width: auto;
+  margin-top: 2px;
+}
+
+.list .pager {
+  float: right;
+  width: auto;
+  margin-top: 2px;
+}
+
 .list .pager ul {
-  background-color: #ddd;
   height: 22px;
   padding: 0px;
   margin: 0px !important;
+
 }
 
 .list .pager li {
@@ -726,8 +739,7 @@ h1#greeter img {
   margin-left: 0px;
   margin-right: 0px;
   border-right: 1px solid #aaa;
-  background-color: #ccc;
-  height: 22px !important;
+  height: 19px !important;
 }
 
 .list .pager li.page-button a,
@@ -735,16 +747,16 @@ h1#greeter img {
 .list .pager li.page-ellipses,
 .list .pager li.no-link {
   padding-left: 7px;
-  padding-right: 7px
-  vertical-align: middle !important;
+  padding-right: 7px;
 }
 
 .list .pager li.page-ellipses {
   width: 1.5em;
 }
 
-.list .pager li.page-button {
-  background-color: #ddd;
+.list .pager a { 
+  vertical-align: middle !important;
+  height: 19px !important;
 }
 
 .list .pager li.page-button:hover {
@@ -758,16 +770,14 @@ h1#greeter img {
 
 .list .pager li.current-page {
   font-weight: bold !important;
-  background-color: #eee;
+}
+
+.pager {
+  height: 22px;
 }
 
 #left-content-column .list {
   margin-bottom: 3em !important;
-}
-
-div.pager {
-  height: 22px;
-  background-color: #ddd;
 }
 
 .page-numbers {
@@ -939,14 +949,3 @@ div.info_content .right-col div {
   -moz-binding: url('css/ellipsis.xml#ellipsis');
 }
 
-
-/** moksha magic **/
-
-.moksha-grid-pager-bottom .message {
-  float: left;
-  width: 30%;
-}
-.moksha-grid-pager-bottom .pager {
-  float: right;
-  width: 30%;
-}
