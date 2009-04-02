@@ -1,7 +1,9 @@
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
-from pylons import config
+from moksha.api.connectors import get_connector
+from pylons import config, request
 import koji
+import re
 
 class KojiConnector(IConnector, ICall, IQuery):
     def __init__(self, environ=None, request=None):
@@ -16,6 +18,7 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         cls.register_query_builds()
         cls.register_query_packages()
+        cls.register_query_changelogs()
 
     def request_data(self, resource_path, params, _cookies):
         return self._koji_client.callMethod(resource_path, **params)
@@ -31,6 +34,131 @@ class KojiConnector(IConnector, ICall, IQuery):
         return self.request_data(resource_path, params, _cookies)
 
     #IQuery
+    @classmethod
+    def register_query_changelogs(cls):
+        path = cls.register_path(
+                      'query_changelogs',
+                      cls.query_changelogs,
+                      primary_key_col = 'id',
+                      default_sort_col = 'date',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('id',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('date',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('author',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('text',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('package',[], allow_none = False)
+        cls._query_changelogs_filter = f
+
+        cls._changelog_version_extract_re = re.compile('(.*)\W*(<.*>)\W*-?\W*(.*)')
+
+    def query_changelogs(self, start_row=None,
+                           rows_per_page=10,
+                           order=-1,
+                           sort_col=None,
+                           filters = {},
+                           **params):
+
+        filters = self._query_changelogs_filter.filter(filters, conn=self)
+
+        package = filters.get('package', '')
+
+        if order < 0:
+            order = '-' + sort_col
+        else:
+            order = sort_col
+
+        pkg_id = None
+        if package:
+            pkg_id = self._koji_client.getPackageID(package)
+
+        if not pkg_id:
+            return (0, [])
+
+        queryOpts = None
+
+        qo = {}
+        if not (start_row == None):
+          qo['offset'] = int(start_row)
+
+        if not (rows_per_page == None):
+            qo['limit'] = int(rows_per_page)
+
+        if order:
+            qo['order'] = order
+
+        if qo:
+            queryOpts = qo
+
+        countQueryOpts = {'countOnly': True}
+
+        self._koji_client.multicall = False
+
+        # FIXME: Figure out how to deal with different builds
+        #tags = self._koji_client.listTags(package=pkg_id,
+        #                                  queryOpts={})
+
+        # ask pkgdb for the collections table
+        # pkgdb = get_connector('pkgdb', self._request)
+        # collections_table = pkgdb.get_collection_table()
+
+        # get latest version and use that to get the changelog
+        builds = self._koji_client.listBuilds(packageID=pkg_id,
+                                              queryOpts={'limit': 1,
+                                                         'offset': 0,
+                                                         'order': '-nvr'})
+
+        build_id = builds[0].get('build_id');
+        if not build_id:
+            return (0, [])
+
+        self._koji_client.multicall = True
+        self._koji_client.getChangelogEntries(buildID=build_id,
+                                                queryOpts=countQueryOpts)
+
+        self._koji_client.getChangelogEntries(buildID=build_id,
+                                              queryOpts=queryOpts)
+
+        results = self._koji_client.multiCall()
+
+        changelog_list = results[1][0]
+
+        for entry in changelog_list:
+            # try to extract a version and e-mail from the authors field
+            m = self._changelog_version_extract_re.match(entry['author'])
+
+            entry['author'] = m.group(1)
+            entry['email'] = m.group(2)
+            entry['version'] = m.group(3)
+
+            # convert the date to a nicer format
+            dtd = DateTimeDisplay(entry['date'])
+            entry['display_date'] = dtd.when(0)['date'];
+
+        total_count = results[0][0]
+
+        self._koji_client.multicall = False
+
+        return (total_count, changelog_list)
+
     @classmethod
     def register_query_packages(cls):
         path = cls.register_path(
