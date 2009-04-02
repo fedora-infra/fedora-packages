@@ -1,6 +1,4 @@
-<div>
     <div id="container">
-      <div>
        <div id="right-content-column">
           ${applist_widget(category = 'right-content-column-apps', layout = layout)}
           <div id="clear"></div>
@@ -31,8 +29,6 @@
           ${applist_widget(category = 'left-content-column-apps', layout = layout)}
        </div>
      </div>
-    </div>
     <div id="overlay">
         <div id="preloader"><img src="/toscawidgets/resources/moksha.widgets.layout.layout/static/loader.gif" alt="" /></div>
     </div>
-</div>
