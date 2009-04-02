@@ -454,6 +454,9 @@ span.timestamp {
 
 /** simple list for side panel **/
 
+.panel {
+  background-color: #f4f4f4;
+}
 
 .panel .list ul {
   margin-left: 0px !important;
