@@ -818,6 +818,19 @@ ul.page-flips li {
   height: 19px;
 }
 
+
+.moksha-grid-pager-top,
+.moksha-grid-pager-bottom {
+  height: 22px;
+  text-align: left;
+  width: 100% !important;
+}
+
+/** clean the html up at some point! **/
+.list .moksha-grid-pager-top .pager {
+  float: left;
+}
+
 /** special list styles **/
 
 .action-button {
