@@ -1,6 +1,6 @@
-<div id="content-nav">
- <div id="${id}">
+<div id="${id}">
+ <div id="content-nav">
   ${tabwidget(root_id=root_id, tabs=tabs)}
-  ${panewidget(root_id=root_id, tabs=tabs)}
  </div>
+  ${panewidget(root_id=root_id, tabs=tabs)}
 </div>

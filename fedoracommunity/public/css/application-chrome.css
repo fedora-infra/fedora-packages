@@ -454,6 +454,14 @@ span.timestamp {
 
 /** simple list for side panel **/
 
+.panel {
+  background-color: #f4f4f4;
+}
+
+.panel .p,
+.panel .message {
+  padding: 3px 12px !important;
+}
 
 .panel .list ul {
   margin-left: 0px !important;
@@ -464,7 +472,10 @@ span.timestamp {
   list-style: inside url('../images/16_announcement.png');
   margin-left: 2px;
   border-bottom: dotted 1px #ddd;
-  padding-top: 3px;
+}
+
+.panel p.placeholder {
+  width: 95%;
 }
 
 /** styles for right content area panels **/
@@ -738,7 +749,7 @@ h1#greeter img {
 
   margin-left: 0px;
   margin-right: 0px;
-  border-right: 1px solid #aaa;
+  border-right: 1px solid #ddd;
   height: 19px !important;
 }
 
@@ -800,7 +811,7 @@ ul.page-flips li {
 }
 
 .prev-page {
-  border-left: 1px solid #aaa !important;
+  border-left: 1px solid #ddd !important;
 }
 
 .next-page, .prev-page {
@@ -949,3 +960,13 @@ div.info_content .right-col div {
   -moz-binding: url('css/ellipsis.xml#ellipsis');
 }
 
+/** app class -
+ *
+ * this is a class that is added to elements that contain
+ * apps. it will be used to pad/align between applications on the same
+ * page.
+**/
+
+.app {
+  padding-bottom: 12px;
+}
