@@ -458,6 +458,11 @@ span.timestamp {
   background-color: #f4f4f4;
 }
 
+.panel .p,
+.panel .message {
+  padding: 3px 12px !important;
+}
+
 .panel .list ul {
   margin-left: 0px !important;
   width: 100%;
@@ -467,7 +472,10 @@ span.timestamp {
   list-style: inside url('../images/16_announcement.png');
   margin-left: 2px;
   border-bottom: dotted 1px #ddd;
-  padding-top: 3px;
+}
+
+.panel p.placeholder {
+  width: 95%;
 }
 
 /** styles for right content area panels **/
