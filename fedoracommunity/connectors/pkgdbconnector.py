@@ -47,6 +47,7 @@ class PkgdbConnector(IConnector, ICall, ISearch):
         # proxy client only returns structured data so we can pass
         # this off to request_data but we should fix that in ProxyClient
         return self.request_data(resource_path, params, _cookies)
+
     def request_collection_table(self):
 
         table = {}
