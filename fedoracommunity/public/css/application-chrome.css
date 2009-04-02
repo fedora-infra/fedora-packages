@@ -981,5 +981,6 @@ div.info_content .right-col div {
 **/
 
 .app {
-  padding-bottom: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
