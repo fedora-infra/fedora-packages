@@ -32,3 +32,9 @@ class ChangelogController(Controller):
     def index(self, package):
         tmpl_context.widget = changelog_dashboard
         return {'options':{'package': package}}
+
+    @expose('mako:moksha.templates.widget')
+    def table(self, package):
+        tmpl_context.widget = changelog_grid
+
+        return {'options':{'package': package}}

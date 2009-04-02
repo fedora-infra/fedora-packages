@@ -79,7 +79,8 @@ class PkgdbConnector(IConnector, ICall, ISearch):
                                           'collectionName':'Fedora',
                                           'collectionVersion': 'devel'})
 
-        print co
+        from pprint import pprint
+        pprint (co)
 
         if not co:
             return {}
@@ -96,10 +97,21 @@ class PkgdbConnector(IConnector, ICall, ISearch):
                                    type="memory",
                                    expiretime=BASIC_PACKAGE_DATA_CACHE_TIMEOUT)
 
-        p = info[1]['packageListings'][0]['package']
+        # search for the rawhide records or use the first one
+        # we should ask pkgdb to mark which record has the most authority
+        # e.g. which one would have the most up to date info
+        d = info[1]['packageListings'][0]
+
+        for dist in info[1]['packageListings']:
+            if dist['collection']['koji_name'] == 'dist-rawhide':
+                d = dist
+                break;
+
+        p = d['package']
         result['name'] = p['name']
         result['description'] = p['description']
         result['summary'] = p['summary']
+        result['owner'] = d['owneruser']
 
         return result
 

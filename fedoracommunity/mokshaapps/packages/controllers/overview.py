@@ -1,7 +1,8 @@
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
+from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget, Widget
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets import ContextAwareWidget
+from tw.api import Widget as twWidget
 
 from tg import expose, tmpl_context, require, request
 
@@ -13,11 +14,36 @@ from acls import AclsController
 from updates import UpdatesController
 from versions import VersionsController
 
-class OverviewDashboard(DashboardContainer, ContextAwareWidget):
-    template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
-    layout = [Category('content-col-apps',[])]
+from helpers import PackagesDashboardContainer
 
-overview_dashboard = OverviewDashboard
+class PkgDetails(twWidget):
+    template = 'mako:fedoracommunity.mokshaapps.packages.templates.pkgdetails'
+
+pkg_details_widget = PkgDetails('details')
+
+class PkgLinks(twWidget):
+    template = 'mako:fedoracommunity.mokshaapps.packages.templates.pkglinks'
+
+pkg_links_widget = PkgLinks('details')
+
+class OverviewDashboard(PackagesDashboardContainer):
+    template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
+    layout = [Category('content-col-apps',(Widget('Description', pkg_details_widget,
+                                                  params={'pkg_description': '', 'owner': ''}),
+                                           MokshaApp('Active Releases',
+                                                     'fedoracommunity.updates/table',
+                                                     params={'filters':{'package':''}}),
+                                           Widget('Package Links', pkg_links_widget,
+                                                  params={'package':''}),
+                                           MokshaApp('Latest Changelog Entries',
+                                                     'fedoracommunity.packages/package/changelog/table',
+                                                     params={'package':''})
+
+                                           )
+                      )
+              ]
+
+overview_dashboard = OverviewDashboard('overview_dashboard')
 
 class OverviewController(Controller):
     bugs = BugsController()
