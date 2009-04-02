@@ -1,5 +1,5 @@
-<div id="content-nav">
- <div id="${id}">
+<div id="sidebar-nav">
+ <div>
    <div class="right-content-column">
      ${tabwidget(root_id=root_id, tabs=tabs)}
      <div id="clear"></div>
