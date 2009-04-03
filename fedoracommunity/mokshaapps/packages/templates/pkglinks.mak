@@ -1,4 +1,4 @@
-<div id="${id}" class="infra-toolbar">
+<div id="${id}" class="links-toolbar">
     <p>View this package in other Fedora Infrastructure systems:</p>
     <ul>
       <li><a href="https://admin.fedoraproject.org/updates/${package}"
