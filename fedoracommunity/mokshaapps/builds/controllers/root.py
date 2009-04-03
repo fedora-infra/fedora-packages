@@ -2,11 +2,12 @@ from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget, Widget, check_predicates
 from moksha.api.widgets import ContextAwareWidget, Grid, Selectable
 from moksha.api.widgets.containers import DashboardContainer
+from moksha.api.widgets.containers.dashboardcontainer import applist_widget
+
 from koji import BUILD_STATES
 from tg import expose, tmpl_context, request
 
-from tw.api import JSLink
-from tw.jquery import jQuery, jquery_js, js_callback
+from fedoracommunity.widgets import SubTabbedContainer
 
 from links import builds_links
 
@@ -16,115 +17,85 @@ class BuildsGrid(Grid, ContextAwareWidget):
 class BuildsPackagesGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.builds.templates.packages_table_widget'
 
-class BuildsFilter(Selectable):
-    builds_filter_js = JSLink(modname='fedoracommunity.mokshaapps.builds',
-                              filename='javascript/buildsfilter.js')
-    javascript = [builds_filter_js] + Selectable.javascript
 
-    def update_params(self, d):
-        super(BuildsFilter, self).update_params(d)
-        categories = []
-
-        if check_predicates(not_anonymous()):
-            cat = {'label': 'Packages I Own',
-                   'items': [{'label': 'In Progress Builds',
-                              'link':'javascript:void(0);',
-                              'data':{
-                                      'rows_per_page': 10,
-                                      'filters': {'state':BUILD_STATES['BUILDING'],
-                                                  'profile': True
-                                                 }
-                                     }
-                              },
-                              {'label': 'Failed Builds',
-                              'link':'javascript:void(0);',
-                              'data':{
-                                      'rows_per_page': 10,
-                                      'filters': {'state':BUILD_STATES['FAILED'],
-                                                  'profile': True
-                                                  }
-                                     }
-                              },
-                              {'label': 'Successful Builds',
-                              'link':'javascript:void(0);',
-                              'data':{
-                                      'rows_per_page': 10,
-                                      'filters': {'state':BUILD_STATES['COMPLETE'],
-                                                  'profile': True
-                                                  }
-                                     }
-                              }
-                              ]
-                  }
-
-            categories.append(cat)
-
-
-        cat = {'label': 'All Packages',
-               'items': [{'label': 'In Progress Builds',
-                          'link':'javascript:void(0);',
-                          'data':{
-                                  'rows_per_page': 10,
-                                  'filters': {'state':BUILD_STATES['BUILDING']}
-                                 }
-                         },
-                         {'label': 'Failed Builds',
-                          'link':'javascript:void(0);',
-                          'data': {
-                                   'rows_per_page': 10,
-                                   'filters':{'state':BUILD_STATES['FAILED']}
-                                  }
-                         },
-                         {'label': 'Successful Builds',
-                          'link':'javascript:void(0);',
-                          'data': {
-                                   'rows_per_page': 10,
-                                   'filters':{'state':BUILD_STATES['COMPLETE']}
-                                  }
-                         }]
-                }
-
-        categories.append(cat)
-        d.update({'categories': categories})
-
-        self.add_call('$("#%s").bind("selected", _builds_filter_selected)' % d.content_id)
-
-builds_filter = BuildsFilter('builds_filter')
-
-
-class BuildsContainer(DashboardContainer, ContextAwareWidget):
-    in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds/table',
+in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds/table',
                                        css_class='main_table',
+                                       content_id='inprogress',
                                        params={'rows_per_page': 5,
-                                               'filters':{'state':BUILD_STATES['BUILDING']}})
-    failed_builds_app = MokshaApp('Failed Builds', 'fedoracommunity.builds/table',
-                                       css_class='secondary_table',
-                                       params={'rows_per_page': 5,
-                                               'filters':{'state':BUILD_STATES['FAILED']}})
-    successful_builds_app = MokshaApp('Successful Builds', 'fedoracommunity.builds/table',
-                                       css_class='secondary_table',
-                                       params={'rows_per_page': 5,
-                                               'filters':{'state':BUILD_STATES['COMPLETE']}})
+                                               'filters':{'state':BUILD_STATES['BUILDING'],
+                                                          'profile': False
+                                                         }
+                                              })
 
-    layout = [Category('right-content-column',
-                        (Widget('Filters', builds_filter,
-                                  params={'in_progress': in_progress_builds_app,
-                                          'failed': failed_builds_app,
-                                          'successful': successful_builds_app
-                                         }
-                                 ),
-                        MokshaApp('Alerts', 'fedoracommunity.alerts'))),
-              Category('left-content-column',
-                        (in_progress_builds_app,
-                        failed_builds_app,
-                        successful_builds_app))]
+failed_builds_app = MokshaApp('Failed Builds', 'fedoracommunity.builds/table',
+                                       css_class='secondary_table',
+                                       content_id='failed',
+                                       params={'rows_per_page': 5,
+                                               'filters':{'state':BUILD_STATES['FAILED'],
+                                                          'profile': False
+                                                         }
+                                              })
+
+successful_builds_app = MokshaApp('Successful Builds', 'fedoracommunity.builds/table',
+                                       css_class='secondary_table',
+                                       content_id='successful',
+                                       params={'rows_per_page': 5,
+                                               'filters':{'state':BUILD_STATES['COMPLETE'],
+                                                          'profile': False
+                                                         }
+                                              })
+
+overview_builds_app = MokshaApp('Overview',
+                                 'fedoracommunity.builds/overview',
+                                 content_id='overview',
+                                 params={'profile': False})
+
+class BuildsNavContainer(SubTabbedContainer):
+    params = ['applist_widget']
+    applist_widget = applist_widget
+    template='mako:fedoracommunity.mokshaapps.builds.templates.builds_nav'
+    sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts'),)
+    tabs = (Category('Packages I Own',
+                     (overview_builds_app.clone({'profile': True},
+                                                content_id='my_overview'),
+                      in_progress_builds_app.clone({'filters': {'profile': True}},
+                                                   content_id='my_inprogress'),
+                      failed_builds_app.clone({'filters': {'profile': True}},
+                                                   content_id='my_failed'),
+                      successful_builds_app.clone({'filters': {'profile': True}},
+                                                   content_id='my_successful'),
+                     ),
+                     auth=not_anonymous()),
+            Category('All Packages',
+                     (overview_builds_app,
+                      in_progress_builds_app,
+                      failed_builds_app,
+                      successful_builds_app)
+                    )
+           )
 
     def update_params(self, d):
-        super(BuildsContainer, self).update_params(d)
+        d['sidebar_apps'] = Category('sidebar-apps', self.sidebar_apps).process(d)
 
-builds_container = BuildsContainer('builds')
+        super(BuildsNavContainer, self).update_params(d)
+
+builds_nav_container = BuildsNavContainer('builds_nav')
+
 builds_grid = BuildsGrid('builds_table')
 builds_packages_grid = BuildsPackagesGrid('builds_packages_table')
+
+class BuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
+
+    layout = [Category('group-1-apps',
+                        (in_progress_builds_app,
+                        failed_builds_app)
+                      ),
+              Category('group-2-apps',
+                       successful_builds_app
+                      )
+             ]
+
+builds_overview_container = BuildsOverviewContainer('builds_overview')
 
 class RootController(Controller):
 
@@ -133,7 +104,14 @@ class RootController(Controller):
     def index(self, **kwds):
         options = {}
 
-        tmpl_context.widget = builds_container
+        tmpl_context.widget = builds_nav_container
+        return {'options':options}
+
+    @expose('mako:moksha.templates.widget')
+    def overview(self, profile=False):
+        options = {'profile': profile}
+
+        tmpl_context.widget = builds_overview_container
         return {'options':options}
 
     @expose('mako:moksha.templates.widget')
