@@ -984,3 +984,65 @@ div.info_content .right-col div {
   padding-top: 6px;
   padding-bottom: 6px;
 }
+
+/*** links-toolbar
+ *   this is used to create a horizontal rounded box 
+ *   of links in the main content area.
+***/
+
+div.links-toolbar {
+  margin-top: 2ex;
+  background-color: #e9e9e9;
+  -moz-border-radius: 9px;
+  padding: 2px 12px !important;
+}
+
+div.links-toolbar p {
+  font-weight: bold;
+  color: #888;
+}
+
+div.links-toolbar ul {
+  margin: -8px 0 12px 0 !important;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+  height: 5ex;
+}
+
+div.links-toolbar li {
+  float: left;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+  padding-right:2ex;
+  padding-left: 2ex;
+  border-right: 1px solid #ccc;
+  height: 4ex !important;
+  margin-top: 1ex;
+}
+
+div.links-toolbar li:last-child {
+  border-right: none;
+}
+
+div.links-toolbar img {
+  padding-right: 1.2ex;
+  margin-top: 1ex !important;
+  float: left;
+}
+
+
+div.links-toolbar li a,
+div.links-toolbar li a:link,
+div.links-toolbar li a:active,
+div.links-toolbar li a:visited {
+  font-weight: bold;
+  text-decoration: none;
+  }
+
+div.links-toolbar li a span {
+  float: right;
+  display: block;
+  padding-top: 1ex;
+}
