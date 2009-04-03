@@ -453,6 +453,7 @@ span.timestamp {
 }
 
 /** simple list for side panel **/
+/** styles for right content area panels **/
 
 .panel {
   background-color: #f4f4f4;
@@ -463,9 +464,20 @@ span.timestamp {
   padding: 3px 12px !important;
 }
 
-.panel .list ul {
-  margin-left: 0px !important;
+.panel ul {
   width: 100%;
+  list-style: inside none none !important;
+  margin-left: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.panel ul li {
+  padding: 4px 6px;
+  border-bottom: 1px solid #d2d2d2;
+}
+
+.panel ul li.ui-tabs-selected {
+  background-color: #6aa6e2;
 }
 
 .panel .announce li {
@@ -478,7 +490,26 @@ span.timestamp {
   width: 95%;
 }
 
-/** styles for right content area panels **/
+
+.panel ul li.ui-tabs-selected a,
+.panel ul li.ui-tabs-selected a:link,
+.panel ul li.ui-tabs-selected a:active,
+.panel ul li.ui-tabs-selected a:visited {
+  color: white !important;
+  font-weight: bold;
+}
+
+.panel ul li.ui-tabs-selected a:before,
+.panel ul li.ui-tabs-selected a:link:before,
+.panel ul li.ui-tabs-selected a:active:before,
+.panel ul li.ui-tabs-selected a:visited:before {
+  content: '⚫';
+}
+
+.panel h4 {
+  padding-top: 0px !important;
+}
+
 
 /** FIXME html should really be using div, not span, this is a workaround **/
 span.panel {
