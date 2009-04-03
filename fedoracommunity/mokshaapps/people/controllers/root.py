@@ -14,20 +14,18 @@ from uuid import uuid4
 
 class ProfileContainer(DashboardContainer, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.people.templates.peoplecontainer'
-    layout = [Category('header-content-column',
+    layout = [Category('header-content-column-apps',
                        MokshaApp('', 'fedoracommunity.people/details',params=
                                  {"show_profile": True}
                                  ),
-                       css_class='header-content-column'
                        ),
-              Category('right-content-column',
+              Category('right-content-column-apps',
                        (MokshaApp('Your Packages', 'fedoracommunity.packages/mypackages'),
                         MokshaApp('Alerts', 'fedoracommunity.alerts'),
                         MokshaApp('Quick Links', 'fedoracommunity.quicklinks')),
                         default_child_css="panel",
-                        css_class='right-content-column'
                       ),
-              Category('left-content-column',
+              Category('left-content-column-apps',
                        (MokshaApp('Your Group Memberships',
                                  'fedoracommunity.people/memberships/table',
                                  params={"rows_per_page": 5,
@@ -37,21 +35,20 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                         MokshaApp('Your Packages', 'fedoracommunity.packages/mypackages',
                                  params={'view': 'canvas'})
                        ),
-                       css_class='left-content-column'
                       )]
 
 class PeopleContainer(DashboardContainer, ContextAwareWidget):
-    layout = [Category('header-content-column',
+    layout = [Category('header-content-column-apps',
                        MokshaApp('', 'fedoracommunity.people/details',
                                  params={'username':''})
                        ),
-              Category('right-content-column',
+              Category('right-content-column-apps',
                         (MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
                                   params={'username':''}),
                          MokshaApp('Alerts', 'fedoracommunity.alerts'),
                          MokshaApp('Quick Links', 'fedoracommunity.quicklinks'))
                         ),
-              Category('left-content-column',
+              Category('left-content-column-apps',
                        (MokshaApp('Group Memberships', 'fedoracommunity.people/memberships/table',
                                  params={"rows_per_page": 5,
                                          "filters":{"profile": False,
