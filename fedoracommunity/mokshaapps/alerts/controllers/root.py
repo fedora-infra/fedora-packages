@@ -80,9 +80,28 @@ class AlertsContainer(ContextAwareWidget):
 
         return {'count': count, 'label': label, 'state': state, 'icon': icon}
 
-    def get_this_week_entries(self):
+    def query_updates_count(self, userid, before, after, state):
         updates = get_connector('bodhi')
+        params = {'count_only': True}
+        label = state + ' updates pushed'
+        icon = '16_bodhi.png'
 
+        if userid:
+            params['username'] = userid
+        if state:
+            params['status'] = state
+        if before:
+            before = str(before)
+            params['end_date'] = before.split('.')[0]
+        if after:
+            after = str(after)
+            params['start_date'] = after.split('.')[0]
+
+        count = updates.call('list', params)[1]['num_items']
+
+        return {'count': count, 'label': label, 'state': state, 'icon': icon}
+
+    def get_this_week_entries(self):
         now = datetime.utcnow()
         a_day_ago = now - timedelta(days=1)
         a_day_ago = a_day_ago.replace(hour = 23,
@@ -94,12 +113,20 @@ class AlertsContainer(ContextAwareWidget):
 
         complete_builds = self.query_builds_count(None, a_day_ago, week_start, 1)
         failed_builds = self.query_builds_count(None, a_day_ago, week_start, 3)
+        stable_updates = self.query_updates_count(None, a_day_ago,
+                                                  week_start, 'stable')
+        testing_updates = self.query_updates_count(None, a_day_ago,
+                                                   week_start, 'testing')
 
         complete_builds['url'] = '/package_maintenance/builds/success'
         failed_builds['url'] = '/package_maintenance/builds/fail'
+        stable_updates['url'] = '/package_maintenance/updates/stable'
+        testing_updates['url'] = '/package_maintenance/updates/testing'
 
         results.append(complete_builds)
         results.append(failed_builds)
+        results.append(stable_updates)
+        results.append(testing_updates)
 
         return results
 
@@ -111,12 +138,18 @@ class AlertsContainer(ContextAwareWidget):
 
         complete_builds = self.query_builds_count(None, None, today_start, 1)
         failed_builds = self.query_builds_count(None, None, today_start, 3)
+        stable_updates = self.query_updates_count(None, None, today_start, 'stable')
+        testing_updates = self.query_updates_count(None, None, today_start, 'testing')
 
         complete_builds['url'] = '/package_maintenance/builds/success'
         failed_builds['url'] = '/package_maintenance/builds/fail'
+        stable_updates['url'] = '/package_maintenance/updates/stable'
+        testing_updates['url'] = '/package_maintenance/updates/testing'
 
         results.append(complete_builds)
         results.append(failed_builds)
+        results.append(stable_updates)
+        results.append(testing_updates)
 
         return results
 
@@ -127,12 +160,18 @@ class AlertsContainer(ContextAwareWidget):
 
         complete_builds = self.query_builds_count(userid, None, week_start, 1)
         failed_builds = self.query_builds_count(userid, None, week_start, 3)
+        stable_updates = self.query_updates_count(userid, None, week_start, 'stable')
+        testing_updates = self.query_updates_count(userid, None, week_start, 'testing')
 
         complete_builds['url'] = '/profile/builds/success'
         failed_builds['url'] = '/profile/builds/fail'
+        stable_updates['url'] = '/profile/updates/stable'
+        testing_updates['url'] = '/profile/updates/testing'
 
         results.append(complete_builds)
         results.append(failed_builds)
+        results.append(stable_updates)
+        results.append(testing_updates)
 
         return results
 
