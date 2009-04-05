@@ -11,16 +11,18 @@ from helpers import PackagesDashboardContainer
 from tg import expose, tmpl_context, require, request
 
 class DownloadsDashboard(PackagesDashboardContainer):
-    template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
     layout = [Category('content-col-apps',[
                 MokshaApp(None,
-                         'fedoracommunity.packages/package/downloads/source',
+                         'fedoracommunity.packages/package/downloads/downloads',
                          params={'package': '', 'release': 'rawhide'}),
                 ])]
 
-class SourceDashboard(DashboardContainer, ContextAwareWidget):
-    template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
-    layout = [Category('content-col-apps',[])]
+class SourceDashboard(PackagesDashboardContainer):
+    layout = [Category('content-col-apps',[
+                MokshaApp(None,
+                     'fedoracommunity.packages/package/downloads/source',
+                     params={'package': ''}),
+                ])]
 
 downloads_dashboard = DownloadsDashboard('downloads_dashboard')
 source_dashboard = SourceDashboard('source_dashboard')
@@ -30,9 +32,6 @@ class DownloadsWidget(Widget):
     params = ['id', 'package', 'release', 'latest_spec', 'latest_srpm', 'arches']
     def update_params(self, d):
         super(DownloadsWidget, self).update_params(d)
-        print "d =", d
-        #bodhi = get_connector('bodhi')
-        #dist_tags = bodhi.dist_tags()
         koji = get_connector('koji')
         rpms = koji._koji_client.getLatestRPMS('dist-%s' % d.release,
                                                package=d.package)
@@ -65,6 +64,60 @@ class DownloadsWidget(Widget):
 
 downloads_widget = DownloadsWidget('downloads_widget')
 
+
+class SourceDownloadsWidget(Widget):
+    template = """
+    <h3>Source for Active Releases</h3>
+    <table>
+      <tr>
+        <th>Release</th>
+        <th>Released Version</th>
+        <th>Newest SRPM</th>
+      </tr>
+      % for source in sources:
+        <tr>
+          <td>${source['release']}</td>
+          <td>${source['released_version']}</td>
+          <td><a href="${source['url']}">${source['nvr']}</a> <span class="filesize">(${source['size']} SRPM file)</span></td>
+        </tr>
+      % endfor
+    </table>
+    """
+    engine_name='mako'
+    params = ['id', 'package', 'sources']
+
+    def update_params(self, d):
+        super(SourceDownloadsWidget, self).update_params(d)
+        sources = []
+        releases = []
+        bodhi = get_connector('bodhi')
+        dist_tags = bodhi.get_releases()
+        koji = get_connector('koji')._koji_client
+        koji.multicall = True
+        for tag in dist_tags:
+            releases.append(tag)
+            if 'rawhide' not in tag:
+                tag = '%s-updates' % tag
+            koji.getLatestRPMS(tag, package=d.package, arch='src')
+
+        results = koji.multiCall()
+        koji.multicall = False
+        for i, result in enumerate(results):
+            build = result[0][0][0]
+            build['nvr'] = '%s-%s-%s.%s.rpm' % (build['name'],
+                    build['version'], build['release'], build['arch'])
+            sources.append({
+                'release': dist_tags[releases[i]],
+                'released_version': '%s-%s' % (build['version'],
+                                               build['release']),
+                'size': number_to_human_size(build['size']),
+                'nvr': build['nvr'],
+                'url': 'http://kojipkgs.fedoraproject.org/packages/%s/%s/%s/%s/%s' % (build['name'], build['version'], build['release'], build['arch'], build['nvr']),
+                })
+        d.sources = sources
+
+source_downloads_widget = SourceDownloadsWidget('source_downloads_widget')
+
 class DownloadsController(Controller):
 
     @expose('mako:moksha.templates.widget')
@@ -74,7 +127,11 @@ class DownloadsController(Controller):
         return dict(options={'package': package})
 
     @expose('mako:moksha.templates.widget')
-    def source(self, package, release, *args, **kw):
-        print "DownloadsController.source(%s)" % locals()
+    def downloads(self, package, release, *args, **kw):
         tmpl_context.widget = downloads_widget
         return dict(options={'package': package, 'release': release})
+
+    @expose('mako:moksha.templates.widget')
+    def source(self, package, *args, **kw):
+        tmpl_context.widget = source_downloads_widget
+        return dict(options={'package': package})
