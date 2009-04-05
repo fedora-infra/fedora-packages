@@ -18,8 +18,10 @@ class UserPkgsGrid(Grid, ContextAwareWidget):
 
 class PackageNavContainer(SubTabbedContainer):
     template='mako:fedoracommunity.mokshaapps.packages.templates.package_nav'
-    tabs= (MokshaApp('Overview', 'fedoracommunity.packages/package',
-                     params={'package':''}),
+    tabs= (Category('',
+                    MokshaApp('Overview', 'fedoracommunity.packages/package',
+                     params={'package':''})
+                   ),
            Category('Package Details',
                     (MokshaApp('Downloads', 'fedoracommunity.packages/package/downloads',
                               params={'package':''}),

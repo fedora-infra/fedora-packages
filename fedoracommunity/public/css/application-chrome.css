@@ -453,6 +453,7 @@ span.timestamp {
 }
 
 /** simple list for side panel **/
+/** styles for right content area panels **/
 
 .panel {
   background-color: #f4f4f4;
@@ -463,9 +464,20 @@ span.timestamp {
   padding: 3px 12px !important;
 }
 
-.panel .list ul {
-  margin-left: 0px !important;
+.panel ul {
   width: 100%;
+  list-style: inside none none !important;
+  margin-left: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.panel ul li {
+  padding: 4px 6px;
+  border-bottom: 1px solid #d2d2d2;
+}
+
+.panel ul li.ui-tabs-selected {
+  background-color: #6aa6e2;
 }
 
 .panel .announce li {
@@ -478,7 +490,26 @@ span.timestamp {
   width: 95%;
 }
 
-/** styles for right content area panels **/
+
+.panel ul li.ui-tabs-selected a,
+.panel ul li.ui-tabs-selected a:link,
+.panel ul li.ui-tabs-selected a:active,
+.panel ul li.ui-tabs-selected a:visited {
+  color: white !important;
+  font-weight: bold;
+}
+
+.panel ul li.ui-tabs-selected a:before,
+.panel ul li.ui-tabs-selected a:link:before,
+.panel ul li.ui-tabs-selected a:active:before,
+.panel ul li.ui-tabs-selected a:visited:before {
+  content: '⚫';
+}
+
+.panel h4 {
+  padding-top: 0px !important;
+}
+
 
 /** FIXME html should really be using div, not span, this is a workaround **/
 span.panel {
@@ -983,4 +1014,66 @@ div.info_content .right-col div {
 .app {
   padding-top: 6px;
   padding-bottom: 6px;
+}
+
+/*** links-toolbar
+ *   this is used to create a horizontal rounded box 
+ *   of links in the main content area.
+***/
+
+div.links-toolbar {
+  margin-top: 2ex;
+  background-color: #e9e9e9;
+  -moz-border-radius: 9px;
+  padding: 2px 12px !important;
+}
+
+div.links-toolbar p {
+  font-weight: bold;
+  color: #888;
+}
+
+div.links-toolbar ul {
+  margin: -8px 0 12px 0 !important;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+  height: 5ex;
+}
+
+div.links-toolbar li {
+  float: left;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+  padding-right:2ex;
+  padding-left: 2ex;
+  border-right: 1px solid #ccc;
+  height: 4ex !important;
+  margin-top: 1ex;
+}
+
+div.links-toolbar li:last-child {
+  border-right: none;
+}
+
+div.links-toolbar img {
+  padding-right: 1.2ex;
+  margin-top: 1ex !important;
+  float: left;
+}
+
+
+div.links-toolbar li a,
+div.links-toolbar li a:link,
+div.links-toolbar li a:active,
+div.links-toolbar li a:visited {
+  font-weight: bold;
+  text-decoration: none;
+  }
+
+div.links-toolbar li a span {
+  float: right;
+  display: block;
+  padding-top: 1ex;
 }
