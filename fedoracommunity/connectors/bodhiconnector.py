@@ -41,7 +41,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         return None
 
     #ICall
-    def call(self, resource_path, params, _cookies):
+    def call(self, resource_path, params, _cookies=None):
         # proxy client only returns structured data so we can pass
         # this off to request_data but we should fix that in ProxyClient
         return self.request_data(resource_path, params, _cookies)
