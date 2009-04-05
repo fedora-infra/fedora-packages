@@ -74,6 +74,7 @@ setup(
     bodhi = fedoracommunity.connectors:BodhiConnector
     pkgdb = fedoracommunity.connectors:PkgdbConnector
     fas = fedoracommunity.connectors:FasConnector
+    bugzilla = fedoracommunity.connectors:BugzillaConnector
 
     [moksha.application]
     login = fedoracommunity.mokshaapps.login:RootController
