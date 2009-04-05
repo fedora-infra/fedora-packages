@@ -1,10 +1,12 @@
 from paste.deploy.converters import asbool
 from pylons import config
 from fedora.client import ProxyClient
+from beaker.cache import Cache
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
 
+bodhi_cache = Cache('bodhi_cache')
 
 class BodhiConnector(IConnector, ICall, IQuery):
     def __init__(self, environ, request):
@@ -333,3 +335,10 @@ class BodhiConnector(IConnector, ICall, IQuery):
                          y['dist_updates'][0][sort_col]))
 
         return result
+
+    def get_releases(self):
+        return bodhi_cache.get_value(key='releases', expiretime=86400,
+                                     createfunc=self._get_releases)
+
+    def _get_releases(self):
+        return self._bodhi_client.send_request('get_releases')[1]['releases']
