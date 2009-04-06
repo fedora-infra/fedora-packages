@@ -1,4 +1,5 @@
 import re
+import time
 import koji
 
 from datetime import datetime
@@ -129,7 +130,8 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         bugs_list = []
 
         for bug in bugs:
-            modified = datetime.strptime(str(bug.last_change_time), '%Y%m%dT%H:%M:%S')
+            modified = datetime(*time.strptime(str(bug.last_change_time),
+                                               '%Y%m%dT%H:%M:%S')[:-2])
             bugs_list.append({
                 'id': bug.bug_id,
                 'status': bug.bug_status.title(),
