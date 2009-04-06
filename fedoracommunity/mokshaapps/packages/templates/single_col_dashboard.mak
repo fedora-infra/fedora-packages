@@ -3,7 +3,8 @@
       <div>
        <div id="content-column">
           <div>
-             <H3><strong>${package}</strong> - ${pkg_summary}</H3>
+             <H2><span class="package-name">${package}</span> <span class="package-summary">${pkg_summary}</span></H2>
+
           </div>
           ${applist_widget(category = 'content-col-apps', layout = layout)}
        </div>
