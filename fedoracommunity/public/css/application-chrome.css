@@ -487,7 +487,9 @@ span.timestamp {
 }
 
 .panel p.placeholder {
-  width: 95%;
+  width: 90% !important;
+  margin-left: 1em !important;
+  margin-right: 1em !important;
 }
 
 
@@ -889,114 +891,6 @@ table * {
   display: none;
 }
 
-/** Styles for People Profiles **/
-
-
-/** just a quick hack to get ssh key out of the way **/
-div.info_identity td {
-  display: none;
-}
-
-/** info_content styles **/
-/** general **/
-
-div.info_content {
-  background-color: #eee;
-  -moz-border-radius: 6px;
-  padding: 12px;
-}
-
-div.info_content div.hackergotchi {
-  background-color: red;
-  height: 100px;
-  width: 100px;
-  float: left;
-  margin-right: 12px;
-}
-
-div.info_content h4 {
-  text-transform: uppercase;
-  color: black;
-}
-
-div.info_content table td {
-  border: none !important;
-}
-
-div.info_content td,
-div.info_content th {
-  padding-bottom: 1px !important;
-  padding-top: 1px !important;
-  font-size: 9pt;
-}
-
-div.info_content th {
-  border: none !important;
-  background: none !important;
-  text-align: right;
-  vertical-align: top;
-  color: #666 !important;
-  font-weight: bold !important;
-}
-
-div.info_content table {
-  margin-bottom: 10px;
-}
-
-
-div.info_content th {
-  min-width: 100px !important;
-}
-
-div.info_content .col div {
-  margin-top: 1em !important;
-  padding-right: 1.5em;
-}
-
-div.info_content {
-  height: 200px !important;
-  margin-bottom: 1em;
-}
-
-div.info_content table {
-  width: 100%;
-}
-
-div.info_content div.info_container {
-  float: left;
-  border-bottom: 1px solid #ccc;
-}
-
-div.info_content .info_container .col div:first-child {
-  border-bottom: 1px solid #ccc;
-}
-
-div.info_content .info_container .col div:last-child {
-  border-bottom: none;
-}
-
-/** left-column styles **/
-
-div.info_content .left_col {
-  float: left;
-}
-
-div.info_content .left-col div {
-  padding-top: 1em;
-}
-
-/** right-column styles **/
-
-div.info_content .right_col {
-  float: right;
-  border-left: 1px solid #ccc;
-  padding-left: 1em;
-}
-
-div.info_content .right-col div {
-  width: 100%;
-}
-
 /** moz ellipsis hackery **/
 
 .ellipsis {
@@ -1076,4 +970,121 @@ div.links-toolbar li a span {
   float: right;
   display: block;
   padding-top: 1ex;
+}
+
+
+/** PROFILE PAGE USER PROFILE WIDGET **/
+
+.info_identity td {
+  display: none;
+}
+
+div.info_content {
+  background-color: #eee;
+  -moz-border-radius: 6px;
+  padding: 12px;
+}
+
+div.info_content div.hackergotchi {
+  background-color: red;
+  height: 100px;
+  width: 100px;
+  float: left;
+  margin-right: 12px;
+}
+
+div.info_content h4 {
+  text-transform: uppercase;
+  color: black;
+}
+
+div.info_content table td,
+div.info_content table th {
+  border: none !important;
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+  font-size: 9pt;
+}
+
+div.info_content th {
+  border: none !important;
+  background: none !important;
+  text-align: right;
+  vertical-align: top;
+  color: #666 !important;
+  font-weight: bold !important;
+  min-width: 100px !important;
+}
+
+div.info_content table {
+  margin-bottom: 10px;
+}
+
+div.info_content th {
+  min-width: 100px !important;
+}
+
+div.info_content {
+  margin-bottom: 1em;
+  min-height: 220px;
+}
+
+div.info_content .col div {
+  margin-top: 1em !important;
+  padding-right: 1.5em;
+}
+
+div.info_content div.info_container:first-child {
+  border-bottom: 1px solid #ccc;
+}
+div.info_content .info_container:last-child {
+  border-bottom: none !important;
+}
+
+div.info_content .col div {
+  margin-top: 1em !important;
+  padding-right: 1.5em;
+}
+
+/** left-column styles **/
+
+div.info_content .left_col {
+  float: left;
+  border-right: 1px solid #ccc;
+}
+
+div.info_content .left_col div {
+  padding-top: 1em;
+}
+
+/** right-column styles **/
+
+div.info_content .right_col {
+  padding-left: 1em;
+}
+
+div.info_content .right_col div {
+  float: left;
+}
+
+.col {
+  float: left;
+}
+
+/* package details header styles */
+
+#content h2.package-header {
+  border-bottom: 1px solid #c4c4c4;
+}
+
+#content h2 span.package-name {
+  color: #777;
+  text-transform: capitalize;
+}
+
+#content h2 span.package-summary {
+  color: #aaa;
+  font-size: 70%;
+  font-style: italic;
+  font-weight: normal;
 }

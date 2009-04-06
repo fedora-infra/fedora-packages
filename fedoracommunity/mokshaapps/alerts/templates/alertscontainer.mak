@@ -6,8 +6,8 @@
         <dd>
           <img src="/images/${i['icon']}" />
             <span>
-            <a href="${i['url']}">${i['count']} ${i['label']}</a>
-                 [ <a href="${i['url']}">View details</a> ]
+            <a href="javascript:moksha.goto('${i['url']}')">${i['count']} ${i['label']}</a>
+                 [ <a href="javascript:moksha.goto('${i['url']}')]">View details</a> ]
             </span>
         </dd>
       % endfor

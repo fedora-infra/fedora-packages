@@ -141,8 +141,8 @@ class AlertsContainer(ContextAwareWidget):
         stable_updates = self.query_updates_count(None, None, today_start, 'stable')
         testing_updates = self.query_updates_count(None, None, today_start, 'testing')
 
-        complete_builds['url'] = '/package_maintenance/builds/success'
-        failed_builds['url'] = '/package_maintenance/builds/fail'
+        complete_builds['url'] = '/package_maintenance/builds/successful'
+        failed_builds['url'] = '/package_maintenance/builds/failed'
         stable_updates['url'] = '/package_maintenance/updates/stable'
         testing_updates['url'] = '/package_maintenance/updates/testing'
 
@@ -163,8 +163,8 @@ class AlertsContainer(ContextAwareWidget):
         stable_updates = self.query_updates_count(userid, None, week_start, 'stable')
         testing_updates = self.query_updates_count(userid, None, week_start, 'testing')
 
-        complete_builds['url'] = '/profile/builds/success'
-        failed_builds['url'] = '/profile/builds/fail'
+        complete_builds['url'] = '/profile/builds/my_successful'
+        failed_builds['url'] = '/profile/builds/my_failed'
         stable_updates['url'] = '/profile/updates/stable'
         testing_updates['url'] = '/profile/updates/testing'
 

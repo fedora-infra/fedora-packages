@@ -71,14 +71,14 @@ class RootController(Controller):
                        owner_label='Owned',
                        maintainer_label='Maintained',
                        watcher_label='Watched',
-                       rows_per_page=5, view="home"):
+                       rows_per_page=5, morelink=None, view="home"):
         if view=="home":
             categories = []
             if owner:
                 owner = int(owner)
                 cat = {'label': owner_label,
                        'rows_per_page': owner,
-                       'filters':{'owner': True, 'u':username, 'eol': False}
+                       'filters':{'owner': True, 'u':username, 'eol': False, 'morelink': False}
                       }
                 categories.append(cat)
 
