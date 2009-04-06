@@ -1,5 +1,4 @@
-
-        <div class="list header-list">
+<div class="list header-list">
         <table id="${id}">
             <thead>
                 <tr>
@@ -14,6 +13,7 @@
                             </span>
                         </td>
                     </tr>
-                </tbody>
-
+            </tbody>
         </table>
+</div>
+

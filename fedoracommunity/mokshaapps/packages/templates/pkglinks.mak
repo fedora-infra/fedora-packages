@@ -3,7 +3,7 @@
     <ul>
       <li><a href="https://admin.fedoraproject.org/updates/${package}"
              target="_blank">
-             <img border=0 src="/images/16_bodhi.png" />
+             <img border="0" src="/images/16_bodhi.png" />
              <span>Updates</span>
           </a>
       </li>

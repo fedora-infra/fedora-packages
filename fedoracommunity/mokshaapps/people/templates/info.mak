@@ -67,7 +67,7 @@
           % if person.get('postal_address'):
           <tr>
             <th>Postal Address</th>
-            <td><address>
+            <td class="address">
                   % for l in person['postal_address'].split('\n'):
                       ${l}<br />
                   % endfor
