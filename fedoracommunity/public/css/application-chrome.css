@@ -487,7 +487,9 @@ span.timestamp {
 }
 
 .panel p.placeholder {
-  width: 95%;
+  width: 90% !important;
+  margin-left: 1em !important;
+  margin-right: 1em !important;
 }
 
 
