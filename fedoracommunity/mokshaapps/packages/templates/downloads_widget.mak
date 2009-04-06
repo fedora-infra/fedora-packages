@@ -1,3 +1,10 @@
+<script>
+var package_name = "${package}";
+</script>
+
+<h3>Release</h3>
+${c.releases(options=releases, value=release)}
+
 <h3>Source</h3>
 <table>
   <tr>
