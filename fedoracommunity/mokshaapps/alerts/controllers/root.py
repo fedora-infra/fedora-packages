@@ -112,8 +112,8 @@ class AlertsContainer(ContextAwareWidget):
         complete_builds = self.query_builds_count(None, None, today_start, 1)
         failed_builds = self.query_builds_count(None, None, today_start, 3)
 
-        complete_builds['url'] = '/package_maintenance/builds/success'
-        failed_builds['url'] = '/package_maintenance/builds/fail'
+        complete_builds['url'] = '/package_maintenance/builds/successful'
+        failed_builds['url'] = '/package_maintenance/builds/failed    '
 
         results.append(complete_builds)
         results.append(failed_builds)
@@ -128,8 +128,8 @@ class AlertsContainer(ContextAwareWidget):
         complete_builds = self.query_builds_count(userid, None, week_start, 1)
         failed_builds = self.query_builds_count(userid, None, week_start, 3)
 
-        complete_builds['url'] = '/profile/builds/success'
-        failed_builds['url'] = '/profile/builds/fail'
+        complete_builds['url'] = '/package_maintenance/builds/my_successful'
+        failed_builds['url'] = '/package_maintenance/builds/my_failed'
 
         results.append(complete_builds)
         results.append(failed_builds)
