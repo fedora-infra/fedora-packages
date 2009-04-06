@@ -1,3 +1,5 @@
+import logging
+
 from tg import expose, tmpl_context, require, request
 from tw.api import Widget
 from tw.forms import SingleSelectField
@@ -9,6 +11,8 @@ from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets import ContextAwareWidget
 from moksha.api.connectors import get_connector
 from helpers import PackagesDashboardContainer
+
+log = logging.getLogger(__name__)
 
 def get_fedora_releases():
     releases = []
@@ -103,6 +107,7 @@ class SourceDownloadsWidget(Widget):
         super(SourceDownloadsWidget, self).update_params(d)
         sources = []
         releases = []
+        dist_tags = {}
 
         koji = get_connector('koji')._koji_client
         koji.multicall = True
@@ -112,6 +117,9 @@ class SourceDownloadsWidget(Widget):
         for id, collection in collections.items():
             if collection['name'] == 'Fedora':
                 tag = collection['koji_name']
+                releases.append(tag)
+                dist_tags[tag] = '%s %s' % (collection['name'],
+                                            collection['version'])
                 if 'rawhide' not in tag:
                     tag += '-updates'
                 koji.getLatestRPMS(tag, package=d.package, arch='src')
@@ -120,6 +128,9 @@ class SourceDownloadsWidget(Widget):
         koji.multicall = False
 
         for i, result in enumerate(results):
+            if 'faultCode' in result:
+                log.warning('Skipping koji result: %s' % result['faultString'])
+                continue
             build = result[0][0][0]
             build['nvr'] = '%s-%s-%s.%s.rpm' % (build['name'],
                     build['version'], build['release'], build['arch'])
