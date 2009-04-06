@@ -6,6 +6,7 @@ from moksha.api.widgets import ContextAwareWidget, Grid
 from tg import expose, tmpl_context, require, request
 
 from helpers import PackagesDashboardContainer
+from links import changelog_links
 
 class ChangelogGrid(ContextAwareWidget, Grid):
     template='mako:fedoracommunity.mokshaapps.packages.templates.changelog_table_widget'
@@ -34,7 +35,8 @@ class ChangelogController(Controller):
         return {'options':{'package': package}}
 
     @expose('mako:moksha.templates.widget')
-    def table(self, package):
+    def table(self, filters, more_link_code):
         tmpl_context.widget = changelog_grid
+        more_link = changelog_links.get_data(more_link_code)
 
-        return {'options':{'package': package}}
+        return {'options':{'filters': filters, 'more_link': more_link}}

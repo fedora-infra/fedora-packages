@@ -15,6 +15,8 @@ from updates import UpdatesController
 from versions import VersionsController
 
 from helpers import PackagesDashboardContainer
+from links import changelog_links
+
 
 class PkgDetails(twWidget):
     template = 'mako:fedoracommunity.mokshaapps.packages.templates.pkgdetails'
@@ -37,7 +39,8 @@ class OverviewDashboard(PackagesDashboardContainer):
                                                   params={'package':''}),
                                            MokshaApp('Latest Changelog Entries',
                                                      'fedoracommunity.packages/package/changelog/table',
-                                                     params={'package':''})
+                                                     params={'filters':{'package':''},
+                                                             'more_link_code': changelog_links.get_code('CHANGELOG')})
 
                                            )
                       )
