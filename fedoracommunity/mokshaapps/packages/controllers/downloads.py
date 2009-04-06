@@ -66,24 +66,7 @@ downloads_widget = DownloadsWidget('downloads_widget')
 
 
 class SourceDownloadsWidget(Widget):
-    template = """
-    <h3>Source for Active Releases</h3>
-    <table>
-      <tr>
-        <th>Release</th>
-        <th>Released Version</th>
-        <th>Newest SRPM</th>
-      </tr>
-      % for source in sources:
-        <tr>
-          <td>${source['release']}</td>
-          <td>${source['released_version']}</td>
-          <td><a href="${source['url']}">${source['nvr']}</a> <span class="filesize">(${source['size']} SRPM file)</span></td>
-        </tr>
-      % endfor
-    </table>
-    """
-    engine_name='mako'
+    template = "mako:fedoracommunity.mokshaapps.packages.templates.source_downloads_widget"
     params = ['id', 'package', 'sources']
 
     def update_params(self, d):
