@@ -487,7 +487,9 @@ span.timestamp {
 }
 
 .panel p.placeholder {
-  width: 95%;
+  width: 90% !important;
+  margin-left: 1em !important;
+  margin-right: 1em !important;
 }
 
 
@@ -1067,4 +1069,22 @@ div.info_content .right_col div {
 
 .col {
   float: left;
+}
+
+/* package details header styles */
+
+#content h2.package-header {
+  border-bottom: 1px solid #c4c4c4;
+}
+
+#content h2 span.package-name {
+  color: #777;
+  text-transform: capitalize;
+}
+
+#content h2 span.package-summary {
+  color: #aaa;
+  font-size: 70%;
+  font-style: italic;
+  font-weight: normal;
 }
