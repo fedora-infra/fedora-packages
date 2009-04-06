@@ -60,6 +60,10 @@ class PkgdbConnector(IConnector, ICall, ISearch):
         table = {}
         co = self.call('/collections')
         for c in co[1]['collections']:
+            # Skip inactive collections
+            if c[0]['statuscode'] not in (ACTIVE_STATUS,
+                                          UNDER_DEVELOPMENT_STATUS):
+                continue
             d = {}
             for i in c:
                 d.update(i)
