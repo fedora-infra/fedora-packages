@@ -78,7 +78,8 @@ class DownloadsWidget(Widget):
                     download['arch'], download['nvr'])
             arches[download['arch']].append(download)
 
-        d.latest_srpm = arches['src'][0]
+        if len(arches['src']):
+            d.latest_srpm = arches['src'][0]
         del(arches['src'])
 
         # Determine the branch name from the release.
