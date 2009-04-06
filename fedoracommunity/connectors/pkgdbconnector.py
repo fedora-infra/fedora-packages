@@ -6,6 +6,13 @@ from beaker.cache import Cache
 COLLECTION_TABLE_CACHE_TIMEOUT= 60 * 60 * 6 # s * m * h = 6 hours
 BASIC_PACKAGE_DATA_CACHE_TIMEOUT = 60 * 60  # 1 hour
 
+# PackageDB's collection status codes
+ACTIVE_STATUS = 1
+OBSOLETE_STATUS = 13
+APPROVED_STATUS = 3
+EOL_STATUS = 9
+UNDER_DEVELOPMENT_STATUS = 18
+
 pkgdb_cache = Cache('pkgdb_connector_cache')
 
 class PkgdbConnector(IConnector, ICall, ISearch):
