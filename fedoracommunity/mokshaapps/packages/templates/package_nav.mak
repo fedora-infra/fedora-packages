@@ -1,5 +1,5 @@
 <div id="sidebar-nav">
- <div id="${id}" class="panel">
+ <div id="${id}">
    <div class="right-content-column">
      <h3>Package</h3>
      ${tabwidget(root_id=root_id, tabs=tabs)}
