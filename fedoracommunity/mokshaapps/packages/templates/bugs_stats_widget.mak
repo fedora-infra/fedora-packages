@@ -8,7 +8,6 @@
             $('#${id}_num_closed_this_week').text(json.results[4] + ' closed this week.');
         }
         $(document).ready(function(){
-            console.log('making request');
             $.getJSON('/moksha_connector/bugzilla/call/${filters}', {}, got_bug_stats);
         });
     </script>
