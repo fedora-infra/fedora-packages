@@ -82,7 +82,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         Returns (# of open bugs, # of new bugs, # of closed bugs)
         """
         results = []
-        last_week = str(datetime.now() - timedelta(days=7)),
+        last_week = str(datetime.utcnow() - timedelta(days=7)),
 
         # FIXME: For some reason, doing this as multicall doesn't work properly.
         # it returns the same number for each status...
