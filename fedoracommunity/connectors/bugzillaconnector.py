@@ -82,6 +82,8 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         Returns (# of open bugs, # of new bugs, # of closed bugs)
         """
         results = []
+        last_week = str(datetime.now() - timedelta(days=7)),
+
         # FIXME: For some reason, doing this as multicall doesn't work properly.
         # it returns the same number for each status...
         #mc = self._bugzilla._multicall()
@@ -105,7 +107,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'product': collection,
                 'component': package,
                 'bug_status': ['NEW'],
-                'chfieldfrom': str(datetime.now() - timedelta(days=7)),
+                'chfieldfrom': last_week,
                 'chfieldto': 'Now',
                 })))
 
@@ -121,7 +123,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'product': collection,
                 'component': package,
                 'bug_status': ['CLOSED'],
-                'chfieldfrom': str(datetime.now() - timedelta(days=7)),
+                'chfieldfrom': last_week,
                 'chfieldto': 'Now',
                 })))
 
