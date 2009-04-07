@@ -61,6 +61,10 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                         )
                        )]
 
+class PeopleGrid(Grid, ContextAwareWidget):
+    template='mako:fedoracommunity.mokshaapps.people.templates.table_widget'
+
+people_grid = PeopleGrid('people_grid')
 people_container = PeopleContainer('people_container')
 profile_container = ProfileContainer('profile_container')
 
@@ -109,7 +113,7 @@ class RootController(Controller):
 
     @expose('mako:fedoracommunity.mokshaapps.people.templates.table')
     @require(not_anonymous())
-    def table(self, uid="", rows_per_page=5, filters={}):
+    def table(self, rows_per_page=5, filters={}, more_link_code=None):
         ''' table handler
 
         This handler displays the main table by itself
@@ -118,5 +122,7 @@ class RootController(Controller):
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
 
-        tmpl_context.widget = memberships_grid
-        return {'filters': filters, 'uid':uid, 'rows_per_page':rows_per_page}
+        tmpl_context.widget = people_grid
+        return {'filters': filters,
+                'rows_per_page':rows_per_page,
+                'more_link': None}

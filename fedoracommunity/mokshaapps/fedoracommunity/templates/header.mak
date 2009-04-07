@@ -9,13 +9,13 @@
                     <div id="login-toolbar">
                         <form class="login_button" action="/logout">
                             Logged In: <span class="username"><a href="/profile">${tmpl_context.identity['person']['human_name']}</a></span>
-                            <input type="submit"  class="button" value="Log Out" />
+                            <input type="submit"  class="button" value="Log Out" > </input>
                         </form>
                     </div>
                 % else:
                     <div id="login-toolbar">
                         <form onSubmit="document.location='/login?came_from=' + document.location; return false;">
-                            You are not logged in yet  <input type="submit"  value="Login" class="button"/>
+                            You are not logged in yet  <input type="submit"  value="Login" class="button"></input>
                         </form>
                     </div>
                 % endif
@@ -26,12 +26,12 @@
                 	    <input type="text" name="search"
                 	        onFocus="_fedora_community_on_search_focus(this)"
                 	        onBlur="_fedora_community_on_search_blur(this)"
-	               	        value="Type search terms here." />
+	               	        value="Type search terms here." ></input>
 
 	                    <input class="button"
 	                           type="submit"
 	                           value="Search"
-	                           />
+	                           ></input>
 	                    <script type="text/javascript">
 	                       function _fedora_community_on_search_focus(el) {
 

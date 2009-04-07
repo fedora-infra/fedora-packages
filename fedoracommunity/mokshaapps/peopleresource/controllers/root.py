@@ -14,7 +14,7 @@ class NameTabbedNav(SubTabbedContainer):
            )
 
 class IndexDashboard(DashboardContainer):
-    layout = [Category('left-content-col', MokshaApp('All People', 'fedoracommunity.peoplelist'))]
+    layout = [Category('left-content-col', MokshaApp('All People', 'fedoracommunity.people/table'))]
     engine_name = 'mako'
     template = """
 <div id="${id}">

@@ -31,6 +31,7 @@ class FasConnector(IConnector, ICall, ISearch):
 
         cls.register_query_usermemberships()
         cls.register_query_userinfo()
+        cls.register_query_people()
         cls.register_search_people()
 
     def request_data(self, resource_path, params, _cookies):
@@ -110,6 +111,51 @@ class FasConnector(IConnector, ICall, ISearch):
         return result[1]['people']
 
     # IQuery
+    @classmethod
+    def register_query_people(cls):
+        path = cls.register_path(
+                      'query_people',
+                      cls.query_people,
+                      primary_key_col = 'username',
+                      default_sort_col = 'username',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('username',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('human_name',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('prefix',
+                     allow_none = False)
+
+        cls._query_people_filter = f
+
+    def query_people(self, start_row=None,
+                           rows_per_page=None,
+                           order=-1,
+                           sort_col=None,
+                           filters = {},
+                           **params):
+
+        filters = self._query_people_filter.filter(filters, conn=self)
+        f = {}
+        p = filters.get('prefix','a').lower()
+        p.replace('*', '')
+        p += '*'
+        f['search'] = p
+        result = self.call('user/list',
+                           params=f)
+
+
+        people = result[1]['people']
+        return (len(people), people[start_row:rows_per_page + start_row])
+
     @classmethod
     def register_query_usermemberships(cls):
         path = cls.register_path(
