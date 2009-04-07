@@ -137,8 +137,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         collection = filters.get('collection', 'Fedora')
         package = filters['package']
         query = {
-                # FIXME: it doesn't seem to be listening to this collection filter
-                'collection': collection,
+                'product': collection,
                 'component': package,
                 'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
                 'order': 'bug_id',
