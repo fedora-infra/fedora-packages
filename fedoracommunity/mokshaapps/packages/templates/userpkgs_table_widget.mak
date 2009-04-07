@@ -5,7 +5,7 @@
                 var results = "";
                 for (i in v) {
                     collection = v[i];
-                    console.log(collection);
+
                     cname = collection.collectionname
                     cver = collection.collectionversion
                     if (cver == "devel")
