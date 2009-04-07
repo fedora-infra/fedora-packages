@@ -13,11 +13,12 @@ from tg import expose, tmpl_context, require, request
 class BugStatsWidget(TWWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.bugs_stats_widget'
     params = ['id', 'product', 'component', 'version', 'num_closed',
-              'num_open', 'num_new']
+              'num_open', 'num_new', 'num_new_this_week', 'num_closed_this_week']
     product = 'Fedora'
     version = 'rawhide'
     component = None
     num_closed = num_open = num_new = '-'
+    num_new_this_week = num_closed_this_week = ''
 
 bug_stats_widget = BugStatsWidget('bug_stats')
 

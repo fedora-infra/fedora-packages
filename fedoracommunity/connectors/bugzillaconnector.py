@@ -2,7 +2,7 @@ import re
 import time
 import koji
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from pylons import config, request
 from bugzilla import Bugzilla
 from beaker.cache import Cache
@@ -65,11 +65,9 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
     @classmethod
     def register_query_bug_stats(cls):
-        print "register_query_bug_stats"
         path = cls.register_path('query_bug_stats', cls.query_bug_stats)
 
     def query_bug_stats(self, *args, **kw):
-        print 'query_bug_stats(%s)' % locals()
         package = kw.get('package', None)
         if not package:
             raise Exception('No package specified')
@@ -83,33 +81,54 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         """
         Returns (# of open bugs, # of new bugs, # of closed bugs)
         """
-        # FIXME: it doesn't seem to be listening to this collection filter
-        print '_get_bug_stats(%s)' % locals()
         results = []
         # FIXME: For some reason, doing this as multicall doesn't work properly.
         # it returns the same number for each status...
         #mc = self._bugzilla._multicall()
+
+        # Open bugs
         results.append(len(self._bugzilla.query({
-                'collection': collection,
+                'product': collection,
                 'component': package,
                 'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
                 })))
+
+        # New bugs
         results.append(len(self._bugzilla.query({
-                'collection': collection,
+                'product': collection,
                 'component': package,
                 'bug_status': ['NEW'],
                 })))
+
+        # New bugs this week
         results.append(len(self._bugzilla.query({
-                'collection': collection,
+                'product': collection,
+                'component': package,
+                'bug_status': ['NEW'],
+                'chfieldfrom': str(datetime.now() - timedelta(days=7)),
+                'chfieldto': 'Now',
+                })))
+
+        # Closed bugs
+        results.append(len(self._bugzilla.query({
+                'product': collection,
                 'component': package,
                 'bug_status': ['CLOSED'],
                 })))
-        # TODO: Get the # of new bugs this week, and # of closed bugs this week...
+
+        # Closed bugs this week
+        results.append(len(self._bugzilla.query({
+                'product': collection,
+                'component': package,
+                'bug_status': ['CLOSED'],
+                'chfieldfrom': str(datetime.now() - timedelta(days=7)),
+                'chfieldto': 'Now',
+                })))
+
         return dict(results=results)
 
     def query_bugs(self, start_row=None, rows_per_page=10, order=-1,
                    sort_col='number', filters=None, **params):
-        print "query_bugs = %r" % locals()
         if not filters:
             filters = {}
         filters = self._query_bugs_filter.filter(filters, conn=self)
