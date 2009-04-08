@@ -166,12 +166,12 @@ a {
   height: 100%;
 }
 #app-sidebar {
-  background: repeat-y right url(../images/vertical-gradient.png);
+  background: repeat-y right url(/images/vertical-gradient.png);
 }
 
 /** banner-header for banner images **/
 #banner-header {
-  background: url(http://localhost:8080/images/grad_grey_1x116.png);
+  background: url(/images/grad_grey_1x116.png);
   width: 100%;
   height: 116px;
   -moz-border-radius: 12px;
