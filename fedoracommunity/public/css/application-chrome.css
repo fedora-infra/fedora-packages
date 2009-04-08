@@ -1101,11 +1101,11 @@ div.count-summary-dashboard div.action-box {
   padding: 10px;
   max-width: 90px;
   min-height: 110px;
-  background: white url('http://127.0.0.1:8080/images/count-box-gradient_light.png') repeat-x;
+  background: white url('/images/count-box-gradient_light.png') repeat-x;
 }
 
 div.count-summary-dashboard div.action-box {
-  background: white url('http://127.0.0.1:8080/images/count-box-gradient_dark.png') repeat-x;
+  background: white url('/images/count-box-gradient_dark.png') repeat-x;
 }
 
 div.count-summary-dashboard .action-header {
