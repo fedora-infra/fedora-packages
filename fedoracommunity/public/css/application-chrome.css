@@ -499,13 +499,7 @@ span.timestamp {
 .panel ul li.ui-tabs-selected a:visited {
   color: white !important;
   font-weight: bold;
-}
-
-.panel ul li.ui-tabs-selected a:before,
-.panel ul li.ui-tabs-selected a:link:before,
-.panel ul li.ui-tabs-selected a:active:before,
-.panel ul li.ui-tabs-selected a:visited:before {
-  content: '⚫';
+  padding-left: 5px;
 }
 
 .panel h4 {
