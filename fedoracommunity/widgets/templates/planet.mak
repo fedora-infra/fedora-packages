@@ -49,4 +49,5 @@
 
         </script>
     % endfor
+<div align="right"><a href="http://planet.fedoraproject.org" target="_blank">View more ></a></div>
 </div>
