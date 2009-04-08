@@ -41,10 +41,13 @@ class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):
+        options = {'search': ''}
         tmpl_context.widget = search_container
         search = kwds.get('search')
 
-        return {'options':{'search': search}}
+        if search:
+            options['search'] = search
+        return {'options': options}
 
     @expose('mako:moksha.templates.widget')
     def people(self, **kwds):

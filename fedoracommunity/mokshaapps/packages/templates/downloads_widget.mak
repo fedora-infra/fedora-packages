@@ -23,11 +23,11 @@ ${c.releases(options=releases, value=release)}
         <th>Architecture</th>
         <th>Downloads</th>
       </tr>
-      % for arch in arches:
+      % for arch in sorted(arches):
           <tr>
             <td>${arch}</td>
             <td>
-              % for download in arches[arch]:
+              % for download in sorted(arches[arch]):
                 <a href="${download['url']}">${download['nvr']}</a> <span class="filesize">(${download['size']})</span><br/>
               % endfor
             </td>
