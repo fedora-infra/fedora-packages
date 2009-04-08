@@ -1,5 +1,5 @@
 <div id="${id}">
-    % for entry in feed.iterentries(d=d, limit=limit):
+    % for entry in entries[:limit]:
         <div class="entry">
             <div id="${entry['uid']}">
                 <div id="${entry['uid']}_person" class="person-info">
@@ -11,7 +11,7 @@
                 <div class="post">
                     <div class="post-header">
                         <h4 class="post-title">
-                            <a href="${entry.link}" target="_blank">${entry.title}</a>
+                            <a href="${entry.link}" target="_blank">${entry.title}</a></span>
                         </h4>
                     </div>
                     <div class="post-contents" id="${entry['uid']}_text">
@@ -32,11 +32,20 @@
         </div>
         <script>
 
+            function img_error(source) {
+                source.src = "http://planet.fedoraproject.org/images/heads/default.png";
+                source.onerror = "";
+                return true;
+            }
+
             hackergochi = $("#${entry['uid']}_text img:first");
             if (hackergochi) {
+                hackergochi.attr('onerror', 'img_error(this)');
                 $("#${entry['uid']}_person img:first").remove();
-                $("#${entry['uid']}_person").prepend($("#${entry['uid']}_text img:first"));
+                $("#${entry['uid']}_person").prepend(hackergochi);
             }
+
+            $("#${entry['uid']}_text").expander({slicePoint: 300});
 
         </script>
     % endfor
