@@ -14,17 +14,6 @@ from helpers import PackagesDashboardContainer
 
 log = logging.getLogger(__name__)
 
-def get_fedora_releases():
-    releases = []
-    pkgdb = get_connector('pkgdb')
-    collections = pkgdb.get_collection_table()
-    for collection in collections.values():
-        if collection['name'] == 'Fedora':
-            releases.append((collection['koji_name'], '%s %s' % (
-                collection['name'], collection['version'])))
-    return releases
-
-
 class ReleaseDownloadsFilter(SingleSelectField):
     options = []
     attrs = {'onchange': """
@@ -95,7 +84,7 @@ class DownloadsWidget(Widget):
 
         d.latest_spec = 'http://cvs.fedoraproject.org/viewvc/rpms/%s/%s/%s.spec?view=markup' % (d.package, branch, d.package)
         d.arches = arches
-        d.releases = get_fedora_releases()
+        d.releases = pkgdb.get_fedora_releases()
 
 downloads_widget = DownloadsWidget('downloads_widget')
 

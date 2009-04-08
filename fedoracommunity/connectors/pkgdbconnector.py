@@ -400,3 +400,12 @@ class PkgdbConnector(IConnector, ICall, ISearch):
                 c['collectionversion'] = co_info['version']
 
         return (total_count, package_list)
+
+    def get_fedora_releases(self):
+        releases = []
+        collections = self.get_collection_table()
+        for collection in collections.values():
+            if collection['name'] == 'Fedora':
+                releases.append((collection['koji_name'], '%s %s' % (
+                    collection['name'], collection['version'])))
+        return releases
