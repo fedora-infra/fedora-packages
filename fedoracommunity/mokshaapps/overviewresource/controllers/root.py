@@ -14,10 +14,9 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
                                           "more_link_code": builds_links.get_code('ALL_BUILDS')}),
                         MokshaApp('Latest Stable Updates','fedoracommunity.updates/table',
                                   params={"filters":'{"status":"stable"}',
-                                          "rows_per_page": 5,
-                                          "uid":"stable"}),
+                                          "rows_per_page": 5}),
                         MokshaApp('Latest Testing Updates','fedoracommunity.updates/table',
-                                  params={"filters":'{"status":"testing"}', "rows_per_page": 5, "uid":"testing"}),
+                                  params={"filters":'{"status":"testing"}', "rows_per_page": 5}),
                         MokshaWidget('Planet Fedora','fedoracommunity.planet', params={'id': 'planet'}),
                         ]
                        ),

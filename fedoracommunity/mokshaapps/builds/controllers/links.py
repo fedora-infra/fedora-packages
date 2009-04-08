@@ -2,9 +2,9 @@ from moksha.lib.helpers import CategoryEnum
 
 builds_links = CategoryEnum('build_link',
                              ('PACKAGE',
-                              '/package_maint/packages/package'
+                              '/package_maintenance/packages/package/builds'
                              ),
                              ('ALL_BUILDS',
-                              '/package_maint/builds'
+                              '/package_maintenance/builds'
                              )
                            )
