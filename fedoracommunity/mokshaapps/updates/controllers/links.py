@@ -6,5 +6,14 @@ updates_links = CategoryEnum('updates_links',
                              ),
                              ('ALL_UPDATES',
                               '/package_maintenance/updates'
+                             ),
+                             ('STABLE_UPDATES',
+                              '/package_maintenance/updates/stable_updates'
+                             ),
+                             ('TESTING_UPDATES',
+                              '/package_maintenance/updates/testing_updates'
+                             ),
+                             ('UNPUSHED_UPDATES',
+                              '/package_maintenance/updates/unpushed_updates'
                              )
                            )

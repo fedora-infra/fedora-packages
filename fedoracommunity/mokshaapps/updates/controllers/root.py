@@ -11,6 +11,8 @@ from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 
 from fedoracommunity.widgets import SubTabbedContainer
 
+from links import updates_links
+
 class PendingUpdatesGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.updates.templates.pending_table_widget'
 
@@ -26,7 +28,7 @@ stable_updates_grid = StableUpdatesGrid('stable_updates_grid')
 
 unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/table',
                           css_class='main_table', params={
-                              'rows_per_page': 5,
+                              'rows_per_page': 10,
                               'filters': {
                                   'status':'pending',
                                   'profile': False
@@ -34,7 +36,7 @@ unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/ta
                               })
 testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/table',
                           css_class='secondary_table', params={
-                              'rows_per_page': 5,
+                              'rows_per_page': 10,
                               'filters': {
                                   'status':'testing',
                                   'profile': False
@@ -42,7 +44,7 @@ testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/tabl
                               })
 stable_updates_app = MokshaApp('Stable Updates', 'fedoracommunity.updates/table',
                           css_class='secondary_table', params={
-                              'rows_per_page': 5,
+                              'rows_per_page': 10,
                               'filters': {
                                   'status':'stable',
                                   'profile': False
@@ -57,11 +59,11 @@ overview_updates_app = MokshaApp('Overview',
 class UpdatesOverviewContainer(DashboardContainer, ContextAwareWidget):
     javascript = [JSLink(link='/javascript/bodhi.js', modname=__name__)]
     layout = (Category('group-1-apps',
-                       (unpushed_updates_app,
-                        testing_updates_app)
+                       (unpushed_updates_app.clone({'rows_per_page': 5}),
+                        testing_updates_app.clone({'rows_per_page': 5}))
                       ),
               Category('group-2-apps',
-                       stable_updates_app
+                       stable_updates_app.clone({'rows_per_page': 5})
                       )
              )
 
@@ -116,7 +118,7 @@ class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
     @validate(validators={'rows_per_page': validators.Int()})
-    def table(self, rows_per_page=5, filters=None):
+    def table(self, rows_per_page=5, filters=None, more_link_code=None):
         ''' table handler
 
         This handler displays the main table by itself
@@ -134,5 +136,8 @@ class RootController(Controller):
 
         options = dict(filters=filters, rows_per_page=rows_per_page,
                        resource='bodhi', resource_path='query_updates')
+
+        if more_link_code:
+            options['more_link'] = updates_links.get_data(more_link_code)
 
         return dict(options=options)

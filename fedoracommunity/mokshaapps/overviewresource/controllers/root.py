@@ -5,6 +5,7 @@ from moksha.api.widgets import ContextAwareWidget
 from tg import expose, tmpl_context
 
 from fedoracommunity.mokshaapps.builds.controllers.links import builds_links
+from fedoracommunity.mokshaapps.updates.controllers.links import updates_links
 
 class OverviewContainer(DashboardContainer, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.overviewresource.templates.overviewcontainer'
@@ -14,9 +15,12 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
                                           "more_link_code": builds_links.get_code('ALL_BUILDS')}),
                         MokshaApp('Latest Stable Updates','fedoracommunity.updates/table',
                                   params={"filters":'{"status":"stable"}',
-                                          "rows_per_page": 5}),
+                                          "rows_per_page": 5,
+                                          "more_link_code": updates_links.get_code('STABLE_UPDATES')}),
                         MokshaApp('Latest Testing Updates','fedoracommunity.updates/table',
-                                  params={"filters":'{"status":"testing"}', "rows_per_page": 5}),
+                                  params={"filters":'{"status":"testing"}',
+                                          "rows_per_page": 5,
+                                          "more_link_code": updates_links.get_code('TESTING_UPDATES')}),
                         MokshaWidget('Planet Fedora','fedoracommunity.planet', params={'id': 'planet'}),
                         ]
                        ),
