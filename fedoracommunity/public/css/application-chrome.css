@@ -1088,3 +1088,67 @@ div.info_content .right_col div {
   font-style: italic;
   font-weight: normal;
 }
+
+/** count dashboard styles **/
+
+div.count-summary-dashboard {
+  overflow: auto;
+}
+
+
+div.count-summary-dashboard dl,
+div.count-summary-dashboard div.count-box,
+div.count-summary-dashboard div.action-box {
+  text-align: center;
+  -moz-border-radius: 6px;
+  margin: 1em 1.5em;
+  margin-left: 0px;
+  float: left;
+  padding: 10px;
+  max-width: 90px;
+  min-height: 110px;
+  background: white url('http://127.0.0.1:8080/images/count-box-gradient_light.png') repeat-x;
+}
+
+div.count-summary-dashboard div.action-box {
+  background: white url('http://127.0.0.1:8080/images/count-box-gradient_dark.png') repeat-x;
+}
+
+div.count-summary-dashboard .action-header {
+
+}
+
+div.count-summary-dashboard dt,
+div.count-summary-dashboard dd {
+  margin: 0px;
+}
+div.count-summary-dashboard .main-count-value {
+  font-size: 3em;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+}
+
+div.count-summary-dashboard .count-header,
+div.count-summary-dashboard .action-header  {
+  font-size: 1.2em;
+  text-transform: capitalize;
+  font-weight: bold;
+  color: #666;
+  margin-right: .5em;
+}
+
+div.count-summary-dashboard .main-count-header,
+div.count-summary-dashboard .action-header {
+  margin-bottom: -.3em;
+  margin-right: 0px;
+}
+
+div.count-summary-dashboard a.action-header {
+  text-decoration: none !important;
+}
+
+div.count-summary-dashboard .additional-info {
+  line-height: 1em;
+  margin-top: .5em;
+}
