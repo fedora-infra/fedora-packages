@@ -9,6 +9,7 @@ from fedoracommunity.mokshaapps.login import login_widget
 class MainNav(TabbedContainer):
     template = 'mako:fedoracommunity.mokshaapps.fedoracommunity.templates.mainnav'
     config_key = 'fedoracommunity.mainnav.apps'
+    staticLoadOnClick = True
 
 class RootController(BaseController):
 
