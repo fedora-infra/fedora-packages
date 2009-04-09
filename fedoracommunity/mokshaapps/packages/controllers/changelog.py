@@ -1,9 +1,8 @@
-from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, Widget
-from moksha.api.widgets.containers import DashboardContainer
-from moksha.api.widgets import ContextAwareWidget, Grid
+from tg import expose, tmpl_context
 
-from tg import expose, tmpl_context, require, request
+from moksha.lib.base import Controller
+from moksha.lib.helpers import Category, Widget
+from moksha.api.widgets import ContextAwareWidget, Grid
 
 from helpers import PackagesDashboardContainer
 from links import changelog_links

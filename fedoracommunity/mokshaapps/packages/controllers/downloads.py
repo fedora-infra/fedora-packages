@@ -1,14 +1,12 @@
 import logging
 
-from tg import expose, tmpl_context, require, request
+from tg import expose, tmpl_context
 from tw.api import Widget
 from tw.forms import SingleSelectField
 from webhelpers.rails.number import number_to_human_size
 
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget, defaultdict, Widget as WidgetWrapper
-from moksha.api.widgets.containers import DashboardContainer
-from moksha.api.widgets import ContextAwareWidget
+from moksha.lib.helpers import Category, MokshaApp, defaultdict
 from moksha.api.connectors import get_connector
 from helpers import PackagesDashboardContainer
 

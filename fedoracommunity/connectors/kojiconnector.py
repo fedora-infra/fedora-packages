@@ -1,7 +1,6 @@
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
-from moksha.api.connectors import get_connector
-from pylons import config, request
+from pylons import config
 import koji
 import re
 

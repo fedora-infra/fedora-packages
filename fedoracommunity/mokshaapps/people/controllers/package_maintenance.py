@@ -1,10 +1,10 @@
-from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
-from moksha.api.widgets import ContextAwareWidget, Grid
-from moksha.api.widgets.containers import DashboardContainer
-
+from tg import expose, tmpl_context, require
 from repoze.what.predicates import not_anonymous
-from tg import expose, tmpl_context, require, request
+
+from moksha.lib.base import Controller
+from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
+from moksha.api.widgets import ContextAwareWidget
+from moksha.api.widgets.containers import DashboardContainer
 
 class ProfileContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('header-content-column',

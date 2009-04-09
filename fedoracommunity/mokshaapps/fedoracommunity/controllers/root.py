@@ -1,8 +1,9 @@
-from moksha.lib.base import Controller, BaseController
+from tg import expose, tmpl_context, redirect, flash, url, request
+
+from moksha.lib.base import BaseController
 from moksha.api.widgets.containers import TabbedContainer
 from moksha.api.errorcodes import login_err
 
-from tg import expose, tmpl_context, redirect, flash, url, request
 from fedoracommunity.mokshaapps.login import login_widget
 
 # Root for the whole fedora-community tree

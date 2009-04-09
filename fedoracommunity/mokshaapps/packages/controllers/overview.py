@@ -1,10 +1,8 @@
-from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget, Widget
-from moksha.api.widgets.containers import DashboardContainer
-from moksha.api.widgets import ContextAwareWidget
 from tw.api import Widget as twWidget
+from tg import expose, tmpl_context
 
-from tg import expose, tmpl_context, require, request
+from moksha.lib.base import Controller
+from moksha.lib.helpers import Category, MokshaApp, Widget
 
 from bugs import BugsController
 from builds import BuildsController
@@ -13,10 +11,8 @@ from downloads import DownloadsController
 from acls import AclsController
 from updates import UpdatesController
 from versions import VersionsController
-
 from helpers import PackagesDashboardContainer
 from links import changelog_links
-
 
 class PkgDetails(twWidget):
     template = 'mako:fedoracommunity.mokshaapps.packages.templates.pkgdetails'

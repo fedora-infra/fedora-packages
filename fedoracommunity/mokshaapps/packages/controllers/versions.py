@@ -1,9 +1,9 @@
+from tg import expose, tmpl_context
+
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
+from moksha.lib.helpers import Category
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets import ContextAwareWidget
-
-from tg import expose, tmpl_context, require, request
 
 class VersionsDashboard(DashboardContainer, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'

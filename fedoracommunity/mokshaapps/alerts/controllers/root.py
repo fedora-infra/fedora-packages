@@ -1,11 +1,10 @@
-from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
-from moksha.api.widgets.containers import DashboardContainer
-from moksha.api.widgets import ContextAwareWidget
 from tg import expose, tmpl_context
 from pylons import cache, request
-from moksha.api.connectors import get_connector
 from datetime import datetime, timedelta
+
+from moksha.lib.base import Controller
+from moksha.api.widgets import ContextAwareWidget
+from moksha.api.connectors import get_connector
 
 class AlertsContainer(ContextAwareWidget):
     properties = ['categories']

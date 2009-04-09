@@ -7,7 +7,7 @@ from moksha.connector.utils import DateTimeDisplay
 USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
 fas_cache = Cache('fas_connector_cache')
 
-class FasConnector(IConnector, ICall, ISearch):
+class FasConnector(IConnector, ICall, ISearch, IQuery):
     def __init__(self, environ=None, request=None):
         super(FasConnector, self).__init__(environ, request)
         self._fas_client = ProxyClient(self._base_url,

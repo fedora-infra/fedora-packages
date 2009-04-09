@@ -1,16 +1,15 @@
+from tg import expose, tmpl_context, require
+from uuid import uuid4
+from repoze.what.predicates import not_anonymous
+
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
+from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.connectors import get_connector
 
-from repoze.what.predicates import not_anonymous
-from tg import expose, tmpl_context, require, request
-
 from memberships import MembershipsController
 from package_maintenance import PackageMaintenanceController
-
-from uuid import uuid4
 
 class ProfileContainer(DashboardContainer, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.people.templates.peoplecontainer'

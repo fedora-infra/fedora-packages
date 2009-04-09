@@ -1,39 +1,22 @@
-import paste
-import webob
-import time
-import logging
-from fedora.client import ProxyClient, FedoraServiceError, AuthError
-import urllib2
+import os
 import tg
-import uuid
+import sys
+import webob
+import logging
+import pkg_resources
 
-from tg import flash
-
+from beaker.cache import Cache
+from fedora.client import ProxyClient, AuthError
 from paste.httpexceptions import HTTPUnauthorized
-
 from repoze.who.middleware import PluggableAuthenticationMiddleware
-
 from repoze.who.plugins.form import RedirectingFormPlugin
 from repoze.who.classifiers import default_request_classifier
 from repoze.who.classifiers import default_challenge_decider
-
-from repoze.what.adapters import BaseSourceAdapter
-
-from beaker.cache import Cache
-
 from repoze.who.interfaces import IChallenger, IIdentifier
-
 from Cookie import SimpleCookie
 
 from moksha.middleware.csrf import CSRFMetadataProvider
 from moksha.api.errorcodes import login_err
-import beaker
-
-import pkg_resources
-
-import os
-import sys
-import pylons
 
 log = logging.getLogger(__name__)
 
@@ -327,6 +310,7 @@ and identity['permissions'] in our who metadata layer I'm leaving
 this skeleton here just incase we do want to implement getting the
 whole FAS database (we don't though)
 
+from repoze.what.adapters import BaseSourceAdapter
 
 class FASWhatGroupAdaptor(BaseSourceAdaptor):
     def __init__(self):

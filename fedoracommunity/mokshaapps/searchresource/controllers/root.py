@@ -1,6 +1,6 @@
 from moksha.lib.base import Controller
-from moksha.lib.helpers import (Category, MokshaApp, Not, not_anonymous,
-                               MokshaWidget, param_has_value)
+from moksha.lib.helpers import (Category, MokshaApp, not_anonymous,
+                                param_has_value)
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets import Grid
 

@@ -1,14 +1,12 @@
 from tw.api import Widget as TWWidget
-from pylons import cache
-from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
-from moksha.lib.helpers import Widget
-from moksha.api.widgets.containers import DashboardContainer
-from moksha.api.widgets import ContextAwareWidget, Grid
-from moksha.api.connectors import get_connector
-from helpers import PackagesDashboardContainer
+from tg import expose, tmpl_context
 
-from tg import expose, tmpl_context, require, request
+from moksha.lib.base import Controller
+from moksha.lib.helpers import Category
+from moksha.lib.helpers import Widget
+from moksha.api.widgets import Grid
+
+from helpers import PackagesDashboardContainer
 
 class BugStatsWidget(TWWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.bugs_stats_widget'

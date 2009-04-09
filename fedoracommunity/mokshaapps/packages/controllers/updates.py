@@ -1,8 +1,8 @@
-from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
-from helpers import PackagesDashboardContainer
+from tg import expose, tmpl_context
 
-from tg import expose, tmpl_context, require, request
+from moksha.lib.base import Controller
+from moksha.lib.helpers import Category, MokshaApp
+from helpers import PackagesDashboardContainer
 
 class UpdatesDashboard(PackagesDashboardContainer):
     template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'

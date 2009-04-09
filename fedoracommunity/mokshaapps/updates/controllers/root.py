@@ -1,11 +1,10 @@
-from tg import expose, tmpl_context, validate, request
+from tg import expose, tmpl_context, validate
 from tw.api import JSLink
-from tw.jquery import jQuery, jquery_js, js_callback
 from formencode import validators
 
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget, Widget, check_predicates
-from moksha.api.widgets import ContextAwareWidget, Grid, Selectable
+from moksha.lib.helpers import Category, MokshaApp, not_anonymous
+from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 

@@ -1,14 +1,13 @@
+from tg import expose, tmpl_context
+from koji import BUILD_STATES
+
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget, Widget, check_predicates
-from moksha.api.widgets import ContextAwareWidget, Grid, Selectable
+from moksha.lib.helpers import Category, MokshaApp, not_anonymous
+from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 
-from koji import BUILD_STATES
-from tg import expose, tmpl_context, request
-
 from fedoracommunity.widgets import SubTabbedContainer
-
 from links import builds_links
 
 class BuildsGrid(Grid, ContextAwareWidget):

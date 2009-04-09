@@ -1,13 +1,12 @@
+from tg import expose, tmpl_context, require, request
+from repoze.what.predicates import not_anonymous
+
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, Not, not_anonymous, MokshaWidget
+from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 
 from fedoracommunity.widgets import SubTabbedContainer
-
-from repoze.what.predicates import not_anonymous
-from tg import expose, tmpl_context, require, request
-
 from overview import OverviewController
 
 class UserPkgsCompactGrid(Grid, ContextAwareWidget):

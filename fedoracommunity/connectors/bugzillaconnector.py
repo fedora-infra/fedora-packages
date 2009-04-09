@@ -1,13 +1,10 @@
-import re
 import time
-import koji
 
 from datetime import datetime, timedelta
-from pylons import config, request
+from pylons import config
 from bugzilla import Bugzilla
 from beaker.cache import Cache
 
-from moksha.api.connectors import get_connector
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
 
