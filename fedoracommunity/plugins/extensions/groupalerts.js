@@ -1,4 +1,4 @@
-{  
+{
   info: {
     consumes:['alerts_groups'],
     author: 'John (J5) Palmieri <johnp@redhat.com>',
@@ -10,26 +10,26 @@
                   \
                   Required Extension Point Data: \
                   \
-                  \ None, you must be logged in though'   
+                  \ None, you must be logged in though'
   },
-  
+
   run: function (data) {
-    var burl = myfedora.get_page_base_url();
+    var burl = moksha.get_page_base_url();
     var PROXY_URL = burl + 'proxy/fas/get_todo_list_page';
     var FAS_URL = 'http://admin.fedoraproject.org/accounts/';
     var self = this;
     var hidden_parent = undefined;
-    
-    if (data.hide_parent) 
+
+    if (data.hide_parent)
       hidden_parent = jQuery('#' + data.hide_parent);
- 
-    render = function(html) 
-      {     
+
+    render = function(html)
+      {
         var div = jQuery("#" + data.uid);
         var ul = jQuery(".queue", html);
-        
+
         var links = jQuery("a", ul);
-        for (var i=0; i < links.length; i++) 
+        for (var i=0; i < links.length; i++)
           {
             // for now rewrite to bring you to fas
             var l = jQuery(links[i]);
@@ -37,14 +37,14 @@
             var href = l.attr('href');
             l.attr('href', FAS_URL + href);
           }
-     
+
         if(ul.length > 0)
           {
             div.append(ul);
             if (hidden_parent)
               hidden_parent.show();
           }
-       
+
       }
 
     jQuery.get(PROXY_URL,
@@ -53,4 +53,4 @@
 
   }
  }
- 
+

@@ -19,43 +19,40 @@ from tw.jquery import jquery_js
 # FIXME: myfedora js code should go into moksha and be eliminated
 jquery_template_js = JSLink(modname='moksha', filename='public/javascript/jquery.template.js', javascript=[jquery_js])
 jquery_json_js = JSLink(modname='moksha', filename='public/javascript/jquery.json.js', javascript=[jquery_js])
-myfedora_js = JSLink(modname='fedoracommunity', filename='public/javascript/myfedora.js', javascript=[jquery_js])
-myfedora_ui_js = JSLink(modname='moksha', filename='public/javascript/ui/moksha.ui.grid.js', javascript=[myfedora_js, jquery_template_js])
-myfedora_extensions_js = JSLink(modname='fedoracommunity', filename='public/javascript/myfedora.extensions.js', javascript=[myfedora_js])
 
 fedora_css = CSSLink(link='https://fedoraproject.org/static/css/fedora.css')
-myfedora_appchrome_css = CSSLink(modname='fedoracommunity', filename='public/css/application-chrome.css')
-myfedora_branding_css = CSSLink(modname='fedoracommunity', filename='public/css/myfedora-branding.css')
+fedoracommunity_appchrome_css = CSSLink(modname='fedoracommunity', filename='public/css/application-chrome.css')
+fedoracommunity_branding_css = CSSLink(modname='fedoracommunity', filename='public/css/myfedora-branding.css')
 
 class PagerWidget(Widget):
     template = "mako:/myfedora/widgets/templates/pager.html"
     params = ['page', 'last_page', 'show', 'parent_dom_id']
     show = 7
     page = 1
-    
+
     def update_params(self, d):
         super(PagerWidget, self).update_params(d)
-        
+
         page = int(d['page'])
         if page < 1:
             page = 1
-     
+
         last_page = int(d['last_page'])
-        
+
         # how many of the main set do we show
         show = int(d['show'])
-        
+
         parent_id = d['parent_dom_id']
-        
+
         front_set = []
         back_set = []
         main_set = []
-        
+
         max_block_num = last_page / show
-        
+
         # figure out main set
         block_num = page / show
-        
+
         start = block_num * show + 1
         last_in_set = start + show
         if last_in_set >= last_page:
@@ -65,25 +62,25 @@ class PagerWidget(Widget):
 
             last_in_set = last_page + 1
             block_num = max_block_num
-            
+
         main_set = range(start, last_in_set)
-        
+
         # do we need a front set
         if block_num > 0:
             front_set = [1]
-        
+
         # do we need a back set
         if block_num < max_block_num:
             back_set = [last_page]
-            
+
         prev_page = None
         if page > 1:
             prev_page = page - 1
-            
+
         next_page = None
         if page < last_page:
             next_page = page + 1
-            
+
         d.update({'front_set': front_set,
                   'back_set': back_set,
                   'main_set': main_set,
@@ -93,4 +90,4 @@ class PagerWidget(Widget):
                   'page': page,
                   'last_page': page,
                   'show': show})
-        
+

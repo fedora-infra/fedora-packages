@@ -1,4 +1,4 @@
-{  
+{
   info: {
     consumes:['build_message'],
     author: 'John (J5) Palmieri <johnp@redhat.com>',
@@ -12,18 +12,18 @@
                   \
                   - task_id: The task id of the build \
                   - build_state: The status of the build \
-                  '   
+                  '
   },
-  
+
   BUILD_STATE_FAILED: 3,
-         
+
   run: function (data) {
     if (data.build_state != this.BUILD_STATE_FAILED)
       {
         return;
       }
-    
-    render = function(json) 
+
+    render = function(json)
       {
         log_url = json.log_url;
         log_name = json.log_name;
@@ -40,19 +40,18 @@
           msg_div.append(" No logs are available to inspect");
         }
 
-        msg_div.hide(); 
+        msg_div.hide();
         jQuery("#" + data.uid).html(msg_div);
         msg_div.fadeIn("slow");
       }
-      
+
     var params = {'task_id' : data.task_id}
-    var burl = myfedora.get_page_base_url();
+    var burl = moksha.get_base_url();
     jQuery.getJSON(burl + 'proxy/koji/get_error_log',
                    params,
                    render);
-                   
+
     jQuery("#" + data.uid).css('color', 'red');
-    return('Attempting to load error log for failed build...'); 
+    return('Attempting to load error log for failed build...');
   }
  }
- 
