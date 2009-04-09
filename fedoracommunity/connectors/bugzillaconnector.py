@@ -81,50 +81,50 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         """
         Returns (# of open bugs, # of new bugs, # of closed bugs)
         """
-        results = []
+        results = {}
         last_week = str(datetime.utcnow() - timedelta(days=7)),
 
         # FIXME: For some reason, doing this as multicall doesn't work properly.
         #mc = self._bugzilla._multicall()
 
         # Open bugs
-        results.append(len(self._bugzilla.query({
+        results['open'] = len(self._bugzilla.query({
                 'product': collection,
                 'component': package,
                 'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
-                })))
+                }))
 
         # New bugs
-        results.append(len(self._bugzilla.query({
+        results['new'] = len(self._bugzilla.query({
                 'product': collection,
                 'component': package,
                 'bug_status': ['NEW'],
-                })))
+                }))
 
         # New bugs this week
-        results.append(len(self._bugzilla.query({
+        results['new_this_week'] = len(self._bugzilla.query({
                 'product': collection,
                 'component': package,
                 'bug_status': ['NEW'],
                 'chfieldfrom': last_week,
                 'chfieldto': 'Now',
-                })))
+                }))
 
         # Closed bugs
-        results.append(len(self._bugzilla.query({
+        results['closed'] = len(self._bugzilla.query({
                 'product': collection,
                 'component': package,
                 'bug_status': ['CLOSED'],
-                })))
+                }))
 
         # Closed bugs this week
-        results.append(len(self._bugzilla.query({
+        results['closed_this_week'] = len(self._bugzilla.query({
                 'product': collection,
                 'component': package,
                 'bug_status': ['CLOSED'],
                 'chfieldfrom': last_week,
                 'chfieldto': 'Now',
-                })))
+                }))
 
         return dict(results=results)
 

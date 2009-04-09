@@ -2,11 +2,11 @@
   <div class="overlay"><div class="message"></div></div>
     <script type="text/javascript">
         function got_bug_stats(json) {
-            $('#${id}_open_bugs').text(json.results[0]);
-            $('#${id}_num_new').text(json.results[1]);
-            $('#${id}_num_new_this_week').text(json.results[2] + ' new this week.');
-            $('#${id}_num_closed').text(json.results[3]);
-            $('#${id}_num_closed_this_week').text(json.results[4] + ' closed this week.');
+            $('#${id}_open_bugs').text(json.results.open);
+            $('#${id}_num_new').text(json.results.new);
+            $('#${id}_num_new_this_week').text(json.results.new_this_week + ' new this week.');
+            $('#${id}_num_closed').text(json.results.closed);
+            $('#${id}_num_closed_this_week').text(json.results.closed_this_week + ' closed this week.');
         }
         $(document).ready(function(){
             moksha.json_load('/moksha_connector/bugzilla/call/${filters}', {}, got_bug_stats, $(".count-summary-dashboard .overlay"));
