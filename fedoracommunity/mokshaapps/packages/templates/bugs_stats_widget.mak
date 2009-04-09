@@ -1,4 +1,5 @@
 <div class="count-summary-dashboard">
+  <div class="overlay"><div class="message"></div></div>
     <script type="text/javascript">
         function got_bug_stats(json) {
             $('#${id}_open_bugs').text(json.results[0]);
@@ -8,7 +9,7 @@
             $('#${id}_num_closed_this_week').text(json.results[4] + ' closed this week.');
         }
         $(document).ready(function(){
-            $.getJSON('/moksha_connector/bugzilla/call/${filters}', {}, got_bug_stats);
+            moksha.json_load('/moksha_connector/bugzilla/call/${filters}', {}, got_bug_stats, $(".count-summary-dashboard .overlay"));
         });
     </script>
     <dl class="count-box">
