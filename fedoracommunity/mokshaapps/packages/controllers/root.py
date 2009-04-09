@@ -53,7 +53,7 @@ class PackageNavContainer(SubTabbedContainer):
 
 class PackagesListContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('right-content-column',
-                        MokshaApp('Quick Links', 'fedoracommunity.quicklinks')),
+                        MokshaWidget('Quick Links', 'fedoracommunity.quicklinks', auth=not_anonymous())),
               Category('left-content-column', # use the builds packages table for now while Toshio fixes the alphaPager json call for pkgdb
                        MokshaApp('All Packages', 'fedoracommunity.builds/packages_table', params={"rows_per_page": 10, "filters":{}}))]
 

@@ -16,7 +16,7 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
               Category('right-content-column',
                        (MokshaApp('Your Packages', 'fedoracommunity.packages/mypackages'),
                         MokshaApp('Alerts', 'fedoracommunity.alerts'),
-                        MokshaApp('Quick Links', 'fedoracommunity.quicklinks')),
+                        MokshaWidget('Quick Links', 'fedoracommunity.quicklinks', auth=not_anonymous())),
                         default_child_css='panel',
                         css_class='right-content-column'
                       ),
@@ -42,7 +42,7 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                         (MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
                                   params={'username':''}),
                          MokshaApp('Alerts', 'fedoracommunity.alerts'),
-                         MokshaApp('Quick Links', 'fedoracommunity.quicklinks'))
+                         MokshaWidget('Quick Links', 'fedoracommunity.quicklinks', auth=not_anonymous()))
                         ),
               Category('left-content-column',
                        (MokshaApp('Packages', 'fedoracommunity.packages/userpackages',

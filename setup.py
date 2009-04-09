@@ -97,6 +97,7 @@ setup(
     [moksha.widget]
     fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
     fedoracommunity.planet = fedoracommunity.widgets.planet:PlanetFedoraWidget
+    fedoracommunity.quicklinks = fedoracommunity.widgets.quicklinks:QuickLinksWidget
 
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
