@@ -110,6 +110,7 @@ class RootController(Controller):
         return {'options':options}
 
     @expose('mako:moksha.templates.widget')
+    @validate(validators={'profile': validators.StringBool()})
     def overview(self, profile=False):
         options = {'profile': profile}
         tmpl_context.widget = updates_overview_container
