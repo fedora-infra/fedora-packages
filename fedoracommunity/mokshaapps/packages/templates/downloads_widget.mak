@@ -1,5 +1,9 @@
+<div id="${id}">
+<div class="overlay"><div class="message"></div></div>
+
 <script>
 var package_name = "${package}";
+var uid = "${id}";
 </script>
 
 <h3>Release</h3>
@@ -38,3 +42,4 @@ ${c.releases(options=releases, value=release)}
 % else:
     <center>No downloads found</center>
 % endif
+</div>
