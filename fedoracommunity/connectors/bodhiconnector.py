@@ -144,7 +144,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 if ident:
                     user = ident.get('repoze.who.userid')
                 if user or allow_none:
-                    filter_dict['user'] = user
+                    filter_dict['username'] = user
 
         f = ParamFilter()
         f.add_filter('package', ['nvr'], allow_none=False)
