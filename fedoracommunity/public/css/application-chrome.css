@@ -1146,3 +1146,10 @@ div.count-summary-dashboard .additional-info {
   line-height: 1em;
   margin-top: .5em;
 }
+
+.overlay {
+    opacity: .75;
+    z-index: 99;
+    background-color: white;
+    position: absolute;
+}

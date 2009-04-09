@@ -20,7 +20,7 @@ class ReleaseDownloadsFilter(SingleSelectField):
         moksha.html_load(moksha.csrf_rewrite_url('/apps/fedoracommunity.packages/package/downloads/downloads'), {'package': package_name, 'release': $('#downloads_widget_releases').val()}, function(r) {
                     var $stripped = moksha.filter_resources(r);
                     $('div.package_downloads').html($stripped);
-            });"""}
+            }, $("#" + uid + " .overlay"));"""}
 
 
 class DownloadsDashboard(PackagesDashboardContainer):

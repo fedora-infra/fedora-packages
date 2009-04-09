@@ -12,11 +12,11 @@ from tg import expose, tmpl_context, require, request
 
 class BugStatsWidget(TWWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.bugs_stats_widget'
-    params = ['id', 'product', 'component', 'version', 'num_closed',
+    params = ['id', 'product', 'package', 'version', 'num_closed',
               'num_open', 'num_new', 'num_new_this_week', 'num_closed_this_week']
     product = 'Fedora'
     version = 'rawhide'
-    component = None
+    package = None
     num_closed = num_open = num_new = '-'
     num_new_this_week = num_closed_this_week = ''
 
@@ -37,7 +37,7 @@ bugs_grid = BugsGrid('bugs_grid')
 class BugsDashboard(PackagesDashboardContainer):
     layout = [Category('content-col-apps',[
                          Widget('Dashboard', bug_stats_widget,
-                                params={'filters':{'package': ''}}),
+                                params={'package': '', 'filters':{'package': ''}}),
                          Widget('Recently Filed Bugs',
                                 bugs_grid,
                                 params={'filters':{'package': ''}}),
