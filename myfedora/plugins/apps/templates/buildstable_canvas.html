@@ -1,13 +1,13 @@
-<%! 
+<%!
     import tg
-    from pylons import tmpl_context 
+    from pylons import tmpl_context
 %>
 
 <div id="${id}" class="list header-list">
 
     % if builds_list:
         <h3>Builds</h3>
-        ${children.pager.display(value_for(children.pager), 
+        ${children.pager.display(value_for(children.pager),
                                  **args_for(children.pager))}
         <table>
             <thead>
@@ -20,24 +20,24 @@
                     <th>State</th>
                     <th>Release</th>
                 </tr>
-            </thead>         
+            </thead>
             % for i, build in enumerate(builds_list):
-                <tbody> 
-                    <% 
-                        build_id=str(build['build_id']) 
-                        build_state=str(build['state']) 
-                        task_id=str(build['task_id']) 
+                <tbody>
+                    <%
+                        build_id=str(build['build_id'])
+                        build_state=str(build['state'])
+                        task_id=str(build['task_id'])
                         message_id='message_' + build_id
                         nvr=str(build['nvr'])
                         odd_or_even=i%2 and 'row-odd' or 'row-even'
                     %>
                     <tr class="${odd_or_even}">
                         <td>${build_id}</td>
-          
+
                         <td id="${build_id}_name_col">
                             <%  menu_id='menu_' + build_id %>
                             <div class="${odd_or_even}">
-                                <span class="package-name"> 
+                                <span class="package-name">
                                     <a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=${build_id}" target="_blank">${nvr}</a>
                                 </span>
                                 <ul id="${menu_id}" class="hover_menu">
@@ -57,7 +57,7 @@
                                         'run': 'whenReady'
                                     }
                                 </script>
-                            </div>                 
+                            </div>
                         </td>
                         <td>
                             <% user = str(build['owner_name']) %>
@@ -93,34 +93,24 @@
                         </td>
                     </tr>
                     <tr>
-                        <script type="text/x-myfedora-extpoint">
-                            {
-                                'type': 'build_message',
-                                'placeholder_id': '${message_id}',
-                                'build_id': '${build_id}',
-                                'task_id': '${task_id}',
-                                'build_state': ${build_state}, 
-                                'show_effect': 'slideDown("slow")',
-                                'run': 'whenReady'
-                            }
-                        </script>
+
                         <td colspan="7"
                             id="${message_id}"
                             class="message_row">
                         </td>
                     </tr>
-                </tbody> 
+                </tbody>
             %endfor
         </table>
-        ${children.pager.display(value_for(children.pager), 
+        ${children.pager.display(value_for(children.pager),
                                  **args_for(children.pager))}
      % else:
-  
+
         <!-- used if there is no data -->
         % if packages:
             There are no build for the ${package} package
         % endif
-    
+
         % if person:
             Fedora user ${person} has not built anything in the Fedora build systems
         % endif

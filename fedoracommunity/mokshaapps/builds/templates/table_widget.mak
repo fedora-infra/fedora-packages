@@ -35,11 +35,24 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="5"
-                            id="@{message_id}"
+                        <td colspan="6"
+                            id="message_@{build_id}"
                             class="message_row">
+                            <moksha_extpoint>
+                            {
+                                'type': 'build_message',
+                                'placeholder_id': 'message_@{build_id}',
+                                'build_id': '@{build_id}',
+                                'task_id': '@{task_id}',
+                                'build_state': @{state},
+                                'show_effect': 'slideDown(\"slow\")'
+                            }
+                            </moksha_extpoint>
+
                         </td>
+
                     </tr>
+
                 </tbody>
 
         </table>
