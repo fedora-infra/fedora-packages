@@ -15,9 +15,14 @@ class KojiConnector(IConnector, ICall, IQuery):
         cls._base_url = config.get('fedoracommunity.connector.kojihub.baseurl',
                                    'http://koji.fedoraproject.org/kojihub')
 
+        cls._koji_url = config.get('fedoracommunity.connector.koji.baseurl',
+                                   'http://koji.fedoraproject.org/koji')
+
         cls.register_query_builds()
         cls.register_query_packages()
         cls.register_query_changelogs()
+
+        cls.register_method('get_error_log', cls.call_get_error_log)
 
     def request_data(self, resource_path, params, _cookies):
         return self._koji_client.callMethod(resource_path, **params)
@@ -31,6 +36,61 @@ class KojiConnector(IConnector, ICall, IQuery):
         # koji client only returns structured data so we can pass
         # this off to request_data
         return self.request_data(resource_path, params, _cookies)
+
+    def _mock_error_code_to_log_file(self, err_code):
+        if err_code == 1:
+            log_file = 'build.log'
+        elif err_code == 10 or err_code == 30:
+            log_file = 'root.log'
+        else:
+            print "Unhandled error code :", err_code
+
+        return log_file
+
+    def _get_file_url(self, task_id, file_name):
+        return self._koji_url + '/getfile' + '?taskID=' + str(task_id) + '&name=' + file_name
+
+    def call_get_error_log(self, resource_path, params, _cookies=None):
+        results = {'log_url':'', 'log_name':'', 'task_id':''}
+        task_id = int(params.get('task_id'));
+
+        decendents = self.call('getTaskDescendents', {'task_id': task_id})
+        for task in decendents.keys():
+            task_children = decendents[task]
+            for child in task_children:
+                if child['state'] == koji.TASK_STATES['FAILED']:
+                    child_task_id = child['id']
+
+                    error_code = 0
+                    try:
+                        # this should throw an error
+                        child_result = self.call('getTaskResult', {'taskId': child_task_id})
+                    except koji.BuildError, e:
+                        error = str(e)
+                        r = re.compile('mock exited with status (\d*)')
+                        s = r.search(error)
+                        error_code = int(s.group(1))
+
+                    child_files = self.call('listTaskOutput', {'taskID': child_task_id})
+
+                    log_file = self._mock_error_code_to_log_file(error_code)
+
+                    if log_file not in child_files:
+                        continue
+
+                    log_url = self._get_file_url(child_task_id, log_file)
+
+                    results['log_url'] = log_url
+                    results['log_name'] = log_file
+                    results['task_id'] = child_task_id
+
+                    # break out of loop since only one task should fail
+                    # and the others should be canceled or succeed
+                    # of course there is a race condition but first
+                    # failure wins in the rare case there are more than one
+                    break
+
+        return results
 
     #IQuery
     @classmethod
