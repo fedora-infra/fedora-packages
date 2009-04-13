@@ -8,6 +8,7 @@
                     <th>Build Time</th>
                     <th>Finished</th>
                     <th><a href="#state">Status</a></th>
+                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody class="rowtemplate">
@@ -16,7 +17,8 @@
                             <span class="package-name">
                                 <a href="javascript:moksha.goto('/package_maintenance/packages/builds', {'package': '@{package_name}'});">@{package_name}</a>
                             </span>
-                            <div>@{version}</div>&nbsp;
+                            <br/>@{version}&nbsp;
+                        </td>
 
                         <td>
                             <span class="person-name"><a href="javascript:moksha.goto('/people/', {'username': '@{owner_name}'})">@{owner_name}</a></span>&nbsp;
@@ -24,9 +26,8 @@
                         <td>@{completion_time_display:index("elapsed")}
                         </td>
                         <td>@{completion_time_display:index("when")}
-                            <div>
+                            <br/>
                                @{completion_time_display:index("time")}
-                            </div>
                         </td>
 
                         <td><img src="/images/16_build_state_@{state}.png" /></td>
@@ -50,7 +51,6 @@
                             </moksha_extpoint>
 
                         </td>
-
                     </tr>
 
                 </tbody>
