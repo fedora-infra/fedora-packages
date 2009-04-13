@@ -1,10 +1,10 @@
-<div id="${id}">
+<div id="${id}" class="list">
     % for entry in entries[:limit]:
         <div class="entry">
             <div id="${entry['uid']}">
                 <div id="${entry['uid']}_person" class="person-info">
                          <img src="${entry.author_detail.get('hackergotchi', 'http://planet.fedoraproject.org/images/heads/default.png')}" height="40" />
-                    <a title="${entry.author_detail.name}'s blog" href="${entry.author_detail.href}"> 
+                    <a title="${entry.author_detail.name}'s blog" href="${entry.author_detail.href}" target="_blank">
                          ${entry.author_detail.name}
                     </a>
                 </div>
