@@ -28,7 +28,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
     #IQuery
     @classmethod
     def register_query_bugs(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'query_bugs',
                       cls.query_bugs,
                       primary_key_col='id',
@@ -62,7 +62,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
     @classmethod
     def register_query_bug_stats(cls):
-        path = cls.register_path('query_bug_stats', cls.query_bug_stats)
+        path = cls.register_query('query_bug_stats', cls.query_bug_stats)
 
     def query_bug_stats(self, *args, **kw):
         package = kw.get('package', None)

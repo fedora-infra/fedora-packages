@@ -35,7 +35,7 @@ class KojiConnector(IConnector, ICall, IQuery):
     #IQuery
     @classmethod
     def register_query_changelogs(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'query_changelogs',
                       cls.query_changelogs,
                       primary_key_col = 'id',
@@ -162,7 +162,7 @@ class KojiConnector(IConnector, ICall, IQuery):
 
     @classmethod
     def register_query_packages(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'query_packages',
                       cls.query_packages,
                       primary_key_col = 'id',
@@ -246,7 +246,7 @@ class KojiConnector(IConnector, ICall, IQuery):
 
     @classmethod
     def register_query_builds(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'query_builds',
                       cls.query_builds,
                       primary_key_col = 'build_id',
