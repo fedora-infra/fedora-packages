@@ -254,7 +254,7 @@ class FASWhoPlugin(object):
         # may wish to add another metadata plugin to do so
 
         if not identity.has_key('permissions'):
-            identity['permissions'] = set();
+            identity['permissions'] = set()
 
         # we keep the approved_memberships list because there is also an
         # unapproved_membership field.  The groups field is for repoze.who

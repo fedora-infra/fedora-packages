@@ -125,7 +125,7 @@ class KojiConnector(IConnector, ICall, IQuery):
                                                          'offset': 0,
                                                          'order': '-nvr'})
 
-        build_id = builds[0].get('build_id');
+        build_id = builds[0].get('build_id')
         if not build_id:
             return (0, [])
 
@@ -150,7 +150,7 @@ class KojiConnector(IConnector, ICall, IQuery):
 
             # convert the date to a nicer format
             dtd = DateTimeDisplay(entry['date'])
-            entry['display_date'] = dtd.when(0)['date'];
+            entry['display_date'] = dtd.when(0)['date']
 
         total_count = results[0][0]
 

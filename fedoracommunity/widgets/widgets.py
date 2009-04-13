@@ -58,7 +58,7 @@ class PagerWidget(Widget):
         if last_in_set >= last_page:
             start = last_page - show + 1
             if start < 1:
-                start = 1;
+                start = 1
 
             last_in_set = last_page + 1
             block_num = max_block_num

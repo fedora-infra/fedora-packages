@@ -57,7 +57,7 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         return self.request_data(resource_path, params, _cookies)
 
     def request_user_view(self, user):
-        view = self.call('user/view', {'username': user});
+        view = self.call('user/view', {'username': user})
         if not view:
             return None
 

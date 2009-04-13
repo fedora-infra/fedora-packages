@@ -2,7 +2,7 @@ from moksha.lib.base import Controller
 from tg import expose, tmpl_context, override_template, request
 from fedoracommunity.widgets import LoginWidget
 
-login_widget = LoginWidget('login_widget');
+login_widget = LoginWidget('login_widget')
 
 class RootController(Controller):
 
