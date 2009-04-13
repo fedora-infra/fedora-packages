@@ -15,7 +15,7 @@ class MainNav(TabbedContainer):
 class RootController(BaseController):
 
     def __init__(self):
-        self.mainnav_tab_widget = MainNav('main_nav_tabs', action="create");
+        self.mainnav_tab_widget = MainNav('main_nav_tabs', action="create")
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
     def index(self, ec = None, **kwds):

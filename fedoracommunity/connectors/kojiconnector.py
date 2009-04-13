@@ -73,9 +73,11 @@ class KojiConnector(IConnector, ICall, IQuery):
                            rows_per_page=10,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
 
+        if not filters:
+            filters = {}
         filters = self._query_changelogs_filter.filter(filters, conn=self)
 
         package = filters.get('package', '')
@@ -125,7 +127,7 @@ class KojiConnector(IConnector, ICall, IQuery):
                                                          'offset': 0,
                                                          'order': '-nvr'})
 
-        build_id = builds[0].get('build_id');
+        build_id = builds[0].get('build_id')
         if not build_id:
             return (0, [])
 
@@ -150,7 +152,7 @@ class KojiConnector(IConnector, ICall, IQuery):
 
             # convert the date to a nicer format
             dtd = DateTimeDisplay(entry['date'])
-            entry['display_date'] = dtd.when(0)['date'];
+            entry['display_date'] = dtd.when(0)['date']
 
         total_count = results[0][0]
 
@@ -186,9 +188,11 @@ class KojiConnector(IConnector, ICall, IQuery):
                            rows_per_page=10,
                            order=1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
 
+        if not filters:
+            filters = {}
         filters = self._query_packages_filter.filter(filters, conn=self)
         prefix = filters.get('prefix')
         terms = '%'
@@ -293,9 +297,11 @@ class KojiConnector(IConnector, ICall, IQuery):
                            rows_per_page=10,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
 
+        if not filters:
+            filters = {}
         filters = self._query_builds_filter.filter(filters, conn=self)
 
         user = filters.get('user', '')

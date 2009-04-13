@@ -51,13 +51,15 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         return None
 
     #ICall
-    def call(self, resource_path, params={}, _cookies=None):
+    def call(self, resource_path, params=None, _cookies=None):
         # proxy client only returns structured data so we can pass
         # this off to request_data but we should fix that in ProxyClient
+        if not params:
+            params = {}
         return self.request_data(resource_path, params, _cookies)
 
     def request_user_view(self, user):
-        view = self.call('user/view', {'username': user});
+        view = self.call('user/view', {'username': user})
         if not view:
             return None
 
@@ -140,9 +142,11 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
                            rows_per_page=None,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters = None,
                            **params):
 
+        if not filters:
+            filters = {}
         filters = self._query_people_filter.filter(filters, conn=self)
         f = {}
         p = filters.get('prefix','a').lower()

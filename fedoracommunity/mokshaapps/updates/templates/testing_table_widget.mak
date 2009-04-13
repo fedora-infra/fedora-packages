@@ -6,7 +6,7 @@
                 <th>Age</th>
                 <th>Release(s)</th>
                 <th>Status</th>
-                <th></th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
         <tbody class="rowtemplate">
