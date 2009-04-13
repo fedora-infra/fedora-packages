@@ -75,8 +75,6 @@ class KojiConnector(IConnector, ICall, IQuery):
 
                     log_file = self._mock_error_code_to_log_file(error_code)
 
-                    print error_code, log_file, child_files
-
                     if log_file not in child_files:
                         continue
 

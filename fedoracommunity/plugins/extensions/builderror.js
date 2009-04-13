@@ -53,10 +53,9 @@
                    params,
                    render,
                    data.overlay,
-                   moksha.url('/image/spinner-20.gif')
+                   moksha.url('/images/spinner-20.gif')
                    );
 
-    jQuery("#" + data.uid).css('color', 'red');
     return('Attempting to load error log for failed build...');
   }
  }
