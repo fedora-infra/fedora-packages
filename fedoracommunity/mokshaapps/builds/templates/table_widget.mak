@@ -13,25 +13,25 @@
             </thead>
             <tbody class="rowtemplate">
                     <tr>
-                        <td>
+                        <td class="one-row">
                             <span class="package-name">
                                 <a href="javascript:moksha.goto('/package_maintenance/packages/builds', {'package': '@{package_name}'});">@{package_name}</a>
                             </span>
                             <br/>@{version}&nbsp;
                         </td>
 
-                        <td>
+                        <td rowspan="2">
                             <span class="person-name"><a href="javascript:moksha.goto('/people/', {'username': '@{owner_name}'})">@{owner_name}</a></span>&nbsp;
                         </td>
-                        <td>@{completion_time_display:index("elapsed")}
+                        <td rowspan="2">@{completion_time_display:index("elapsed")}
                         </td>
-                        <td>@{completion_time_display:index("when")}
+                        <td rowspan="2">@{completion_time_display:index("when")}
                             <br/>
                                @{completion_time_display:index("time")}
                         </td>
 
-                        <td><img src="/images/16_build_state_@{state}.png" /></td>
-                        <td id="@{release_id}">
+                        <td rowspan="2"><img src="/images/16_build_state_@{state}.png" /></td>
+                        <td rowspan="2" id="@{release_id}">
                             &nbsp;
                         </td>
                     </tr>
