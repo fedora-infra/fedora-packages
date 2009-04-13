@@ -430,8 +430,8 @@ span.more-items {
   padding-bottom: 4px !important;
 }
 
-.header-list table td {
-
+.header-list table td.one-row {
+  border-bottom: none !important;
 }
 
 .header-list table tbody {
@@ -440,6 +440,11 @@ span.more-items {
 
 .message_row {
   display: table-cell;
+}
+
+/* for cells in a table row that has an additional colspan message row beneath. this is for those cells that span one row rather than two.
+td.one-row {
+  border-bottom: none !important;
 }
 
 span.package-name a,
