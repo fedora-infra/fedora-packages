@@ -76,7 +76,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         # Cache for a long time or if we see a collection
         # that is not in the table
 
-        if invalidate:
+        if invalidate and '_pkgdb_collection_table' in pkgdb_cache:
             pkgdb_cache.remove_value('_pkgdb_collection_table')
 
         table = pkgdb_cache.get_value(key='_pkgdb_collection_table',
@@ -99,7 +99,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return co
 
     def get_basic_package_info(self, package, invalidate=False):
-        if invalidate:
+        if invalidate and '_pkgdb_package_info' in pkgdb_cache:
             pkgdb_cache.remove_value('_pkgdb_package_info')
 
         result = {}
