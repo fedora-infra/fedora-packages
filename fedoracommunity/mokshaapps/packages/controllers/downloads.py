@@ -71,7 +71,7 @@ class DownloadsWidget(Widget):
 
         # Determine the branch name from the release.
         pkgdb = get_connector('pkgdb')
-        collections = pkgdb.get_collection_table()
+        collections = pkgdb.get_collection_table(active_only=True)
         branch = None
         for id, collection in collections.items():
             if collection['koji_name'] == d.release:
@@ -101,7 +101,7 @@ class SourceDownloadsWidget(Widget):
         koji.multicall = True
 
         pkgdb = get_connector('pkgdb')
-        collections = pkgdb.get_collection_table()
+        collections = pkgdb.get_collection_table(active_only=True)
         for id, collection in collections.items():
             if collection['name'] == 'Fedora':
                 tag = collection['koji_name']
@@ -118,6 +118,9 @@ class SourceDownloadsWidget(Widget):
         for i, result in enumerate(results):
             if 'faultCode' in result:
                 log.warning('Skipping koji result: %s' % result['faultString'])
+                continue
+            if not result[0][0]:
+                log.warning('Skipping koji result for %s' % releases[i])
                 continue
             build = result[0][0][0]
             build['nvr'] = '%s-%s-%s.%s.rpm' % (build['name'],
