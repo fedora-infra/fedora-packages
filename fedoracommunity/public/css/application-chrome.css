@@ -974,6 +974,10 @@ div.links-toolbar li a span {
 
 /** PROFILE PAGE USER PROFILE WIDGET **/
 
+.header-content-column {
+  overflow: auto;
+}
+
 .info_identity td {
   display: none;
 }
