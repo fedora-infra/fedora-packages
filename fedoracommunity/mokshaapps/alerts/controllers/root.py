@@ -7,8 +7,6 @@ from moksha.api.widgets import ContextAwareWidget
 from moksha.api.connectors import get_connector
 
 class AlertsContainer(ContextAwareWidget):
-    properties = ['categories']
-
     template = 'mako:fedoracommunity.mokshaapps.alerts.templates.alertscontainer'
 
     def update_params(self, d):

@@ -50,9 +50,11 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return None
 
     #ICall
-    def call(self, resource_path, params={}, _cookies=None):
+    def call(self, resource_path, params=None, _cookies=None):
         # proxy client only returns structured data so we can pass
         # this off to request_data but we should fix that in ProxyClient
+        if not params:
+            params = {}
         return self.request_data(resource_path, params, _cookies)
 
     def request_collection_table(self):
@@ -189,8 +191,10 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                            rows_per_page=None,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
+        if not filters:
+            filters = {}
 
         params['tg_paginate_limit'] = rows_per_page
         params['tg_paginate_no'] = int(start_row/rows_per_page)
@@ -293,8 +297,10 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                            rows_per_page=None,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
+        if not filters:
+            filters = {}
 
         params['tg_paginate_limit'] = rows_per_page
         params['tg_paginate_no'] = int(start_row/rows_per_page)
@@ -372,9 +378,11 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                            rows_per_page=None,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
 
+        if not filters:
+            filters = {}
         filters = self._query_userpackages_filter.filter(filters)
 
         params.update(filters)
