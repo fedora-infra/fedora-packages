@@ -28,14 +28,15 @@
         log_url = json.log_url;
         log_name = json.log_name;
 
-        msg_div = jQuery("<div />");
+        msg_div = jQuery("<span />").addClass('error_message');
         msg_div.append("Error in build.");
         if (log_url) {
+
+          msg_div.append("You can refer to log ");
           link = $("<a/>").attr("href", log_url).attr("target", "_blank");
-          link.append("You can refer to log ");
           link.append(log_name);
-          link.append(" for more details");
           msg_div.append(link);
+          msg_div.append(" for more details");
         } else {
           msg_div.append(" No logs are available to inspect");
         }
@@ -47,9 +48,13 @@
 
     var params = {'task_id' : data.task_id}
     var burl = moksha.get_base_url();
-    jQuery.getJSON(burl + 'proxy/koji/get_error_log',
+
+    moksha.connector_load('koji', 'get_error_log',
                    params,
-                   render);
+                   render,
+                   data.overlay,
+                   moksha.url('/image/spinner-20.gif')
+                   );
 
     jQuery("#" + data.uid).css('color', 'red');
     return('Attempting to load error log for failed build...');
