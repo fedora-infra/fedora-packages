@@ -77,7 +77,8 @@
           </table>
         </div>
     </div>
-    </div>
+  </div>
+<div class="clear" />
   </div>
   <script type="text/javascript">
      % if compact:
@@ -85,4 +86,3 @@
      % endif
   </script>
 </div>
-<div class="clear"/>
