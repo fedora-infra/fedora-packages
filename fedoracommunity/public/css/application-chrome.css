@@ -517,18 +517,17 @@ span.panel {
   margin-top: 0px;
 }
 
+#right-content-column .panel dl,
+.right-content-column .panel dl {
+  padding-top: 0em;
+  padding-bottom: .5em;
+}
+
 #right-content-column .panel dt,
 .right-content-column .panel dt {
   display: block;
   background-color: #ddd;
   padding: .2em .5em;
-}
-
-#right-content-column .panel dd span,
-.right-content-column .panel dd span {
-  height: 2em;
-  display: block;
-  width: 80%;
 }
 
 #right-content-column .panel dd img,
@@ -538,6 +537,7 @@ span.panel {
   float: left;
   margin-top: -3px;
   clear: both;
+  padding-top: .3em;
 }
 
 #right-content-column .panel dd,
