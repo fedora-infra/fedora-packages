@@ -3,7 +3,7 @@
       <div>
        <div class="header-content-column">
           ${applist_widget(category = 'header-content-column-apps', layout = layout)}
-          <div class="clearing"></div>
+          <div class="clear"></div>
        </div>
        <div class="right-content-column">
           ${applist_widget(category = 'right-content-column-apps', layout = layout)}

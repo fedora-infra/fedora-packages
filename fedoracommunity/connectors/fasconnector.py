@@ -115,7 +115,7 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
     # IQuery
     @classmethod
     def register_query_people(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'query_people',
                       cls.query_people,
                       primary_key_col = 'username',
@@ -162,7 +162,7 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
 
     @classmethod
     def register_query_usermemberships(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'query_usermemberships',
                       cls.query_usermemberships,
                       primary_key_col = 'id',
@@ -244,7 +244,7 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
 
     @classmethod
     def register_query_userinfo(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'query_userinfo',
                       cls.query_userinfo,
                       can_paginate = False)

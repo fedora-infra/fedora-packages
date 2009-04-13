@@ -52,7 +52,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     @classmethod
     def register_query_updates(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'query_updates',
                       cls.query_updates,
                       primary_key_col = 'request_id',

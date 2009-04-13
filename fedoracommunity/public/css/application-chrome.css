@@ -409,13 +409,12 @@ span.more-items {
 }
 
 .header-list table {
-  border-spacing: 0px;
-  border-collapse: separate !important;
+  border-collapse: collapse !important;
   border-bottom: none !important;
 }
 
 .header-list table th {
-  border-top: 1px solid white !important;
+  border-top: 1px solid #c8c8c8 !important;
   background-color: #f0f0f0 !important;
   vertical-align: top;
   text-align: left;
@@ -601,8 +600,11 @@ div.icon-panel td {
 
 #right-content-column h3,
 #right-content-column h4,
+#right-content-column dt,
 .right-content-column h3,
-.right-content-column h4 {
+.right-content-column h4,
+.right-content-column dt
+ {
   margin: 0px !important;
   font-weight: 900;
 }
