@@ -22,7 +22,7 @@
          <br />
 
        % else:
-         <h2>Welcome back ${tmpl_context.identity['person']['human_name']}!</h2>
+         <h2>Welcome back, ${tmpl_context.identity['person']['human_name']}!</h2>
        % endif
 
        ${applist_widget(category = 'left-content-column-apps', layout = layout)}
