@@ -156,7 +156,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
     # IQuery
     @classmethod
     def register_query_acls(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'acls',
                       cls.query_acls,
                       primary_key_col = 'username',
@@ -265,7 +265,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
     @classmethod
     def register_query_list_packages(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'list_packages',
                       cls.query_list_packages,
                       primary_key_col = 'name',
@@ -302,7 +302,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
     @classmethod
     def register_query_userpackages(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'query_userpackages',
                       cls.query_userpackages,
                       primary_key_col = 'id',
