@@ -73,9 +73,11 @@ class KojiConnector(IConnector, ICall, IQuery):
                            rows_per_page=10,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
 
+        if not filters:
+            filters = {}
         filters = self._query_changelogs_filter.filter(filters, conn=self)
 
         package = filters.get('package', '')
@@ -186,9 +188,11 @@ class KojiConnector(IConnector, ICall, IQuery):
                            rows_per_page=10,
                            order=1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
 
+        if not filters:
+            filters = {}
         filters = self._query_packages_filter.filter(filters, conn=self)
         prefix = filters.get('prefix')
         terms = '%'
@@ -293,9 +297,11 @@ class KojiConnector(IConnector, ICall, IQuery):
                            rows_per_page=10,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
 
+        if not filters:
+            filters = {}
         filters = self._query_builds_filter.filter(filters, conn=self)
 
         user = filters.get('user', '')
