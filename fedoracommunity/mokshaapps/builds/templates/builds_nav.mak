@@ -2,7 +2,7 @@
  <div id="${id}">
    <div class="right-content-column">
      <div class="app panel">
-       <H3>Filters</H3>
+       <h3>Builds</h3>
        ${tabwidget(root_id=root_id, tabs=tabs)}
      </div>
      ${applist_widget(category=sidebar_apps)}
