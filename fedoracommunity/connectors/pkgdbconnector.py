@@ -116,7 +116,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         for dist in info[1]['packageListings']:
             if dist['collection']['koji_name'] == 'dist-rawhide':
                 d = dist
-                break;
+                break
 
         p = d['package']
         result['name'] = p['name']
