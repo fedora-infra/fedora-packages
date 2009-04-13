@@ -600,8 +600,11 @@ div.icon-panel td {
 
 #right-content-column h3,
 #right-content-column h4,
+#right-content-column dt,
 .right-content-column h3,
-.right-content-column h4 {
+.right-content-column h4,
+.right-content-column dt
+ {
   margin: 0px !important;
   font-weight: 900;
 }
