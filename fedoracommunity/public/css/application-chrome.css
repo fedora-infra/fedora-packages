@@ -1094,6 +1094,10 @@ div.count-summary-dashboard {
   overflow: auto;
 }
 
+.count-box a,
+.action-box a {
+  text-decoration: none;
+}
 
 div.count-summary-dashboard dl,
 div.count-summary-dashboard div.count-box,
