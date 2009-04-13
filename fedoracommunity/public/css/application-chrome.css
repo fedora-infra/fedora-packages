@@ -439,7 +439,7 @@ span.more-items {
 }
 
 .message_row {
-  display: none;
+  display: table-cell;
 }
 
 span.package-name a,
