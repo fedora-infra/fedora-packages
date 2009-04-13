@@ -50,9 +50,11 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return None
 
     #ICall
-    def call(self, resource_path, params={}, _cookies=None):
+    def call(self, resource_path, params=None, _cookies=None):
         # proxy client only returns structured data so we can pass
         # this off to request_data but we should fix that in ProxyClient
+        if not params:
+            params = {}
         return self.request_data(resource_path, params, _cookies)
 
     def request_collection_table(self):
@@ -60,10 +62,6 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         table = {}
         co = self.call('/collections')
         for c in co[1]['collections']:
-            # Skip inactive collections
-            if c[0]['statuscode'] not in (ACTIVE_STATUS,
-                                          UNDER_DEVELOPMENT_STATUS):
-                continue
             d = {}
             for i in c:
                 d.update(i)
@@ -72,18 +70,29 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
         return table
 
-    def get_collection_table(self, invalidate=False):
+    def get_collection_table(self, invalidate=False, active_only=False):
         # Cache for a long time or if we see a collection
         # that is not in the table
 
-        if invalidate and '_pkgdb_collection_table' in pkgdb_cache:
-            pkgdb_cache.remove_value('_pkgdb_collection_table')
+        if invalidate:
+            try:
+                pkgdb_cache.remove_value('_pkgdb_collection_table')
+            except KeyError:
+                pass
 
         table = pkgdb_cache.get_value(key='_pkgdb_collection_table',
                                    createfunc=self.request_collection_table,
                                    type="memory",
                                    expiretime=COLLECTION_TABLE_CACHE_TIMEOUT)
-        return table
+        if active_only:
+            collections = {}
+            for id, collection in table.iteritems():
+                if table[id]['statuscode'] in (ACTIVE_STATUS,
+                                               UNDER_DEVELOPMENT_STATUS):
+                    collections[id] = collection
+            return collections
+        else:
+            return table
 
     def request_package_info(self, package):
         co = self.call('/packages/name', {'packageName': package,
@@ -99,8 +108,11 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return co
 
     def get_basic_package_info(self, package, invalidate=False):
-        if invalidate and '_pkgdb_package_info' in pkgdb_cache:
-            pkgdb_cache.remove_value('_pkgdb_package_info')
+        if invalidate:
+            try:
+                pkgdb_cache.remove_value('_pkgdb_package_info')
+            except KeyError:
+                pass
 
         result = {}
         info = pkgdb_cache.get_value(key=package,
@@ -156,7 +168,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
     # IQuery
     @classmethod
     def register_query_acls(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'acls',
                       cls.query_acls,
                       primary_key_col = 'username',
@@ -183,8 +195,10 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                            rows_per_page=None,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
+        if not filters:
+            filters = {}
 
         params['tg_paginate_limit'] = rows_per_page
         params['tg_paginate_no'] = int(start_row/rows_per_page)
@@ -265,7 +279,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
     @classmethod
     def register_query_list_packages(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'list_packages',
                       cls.query_list_packages,
                       primary_key_col = 'name',
@@ -287,8 +301,10 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                            rows_per_page=None,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
+        if not filters:
+            filters = {}
 
         params['tg_paginate_limit'] = rows_per_page
         params['tg_paginate_no'] = int(start_row/rows_per_page)
@@ -302,7 +318,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
     @classmethod
     def register_query_userpackages(cls):
-        path = cls.register_path(
+        path = cls.register_query(
                       'query_userpackages',
                       cls.query_userpackages,
                       primary_key_col = 'id',
@@ -366,9 +382,11 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                            rows_per_page=None,
                            order=-1,
                            sort_col=None,
-                           filters = {},
+                           filters=None,
                            **params):
 
+        if not filters:
+            filters = {}
         filters = self._query_userpackages_filter.filter(filters)
 
         params.update(filters)
@@ -403,7 +421,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
     def get_fedora_releases(self):
         releases = []
-        collections = self.get_collection_table()
+        collections = self.get_collection_table(active_only=True)
         for collection in collections.values():
             if collection['name'] == 'Fedora':
                 releases.append((collection['koji_name'], '%s %s' % (
