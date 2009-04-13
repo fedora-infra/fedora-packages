@@ -62,10 +62,6 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         table = {}
         co = self.call('/collections')
         for c in co[1]['collections']:
-            # Skip inactive collections
-            if c[0]['statuscode'] not in (ACTIVE_STATUS,
-                                          UNDER_DEVELOPMENT_STATUS):
-                continue
             d = {}
             for i in c:
                 d.update(i)
@@ -74,7 +70,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
         return table
 
-    def get_collection_table(self, invalidate=False):
+    def get_collection_table(self, invalidate=False, active_only=False):
         # Cache for a long time or if we see a collection
         # that is not in the table
 
@@ -88,7 +84,15 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                                    createfunc=self.request_collection_table,
                                    type="memory",
                                    expiretime=COLLECTION_TABLE_CACHE_TIMEOUT)
-        return table
+        if active_only:
+            collections = {}
+            for id, collection in table.iteritems():
+                if table[id]['statuscode'] in (ACTIVE_STATUS,
+                                               UNDER_DEVELOPMENT_STATUS):
+                    collections[id] = collection
+            return collections
+        else:
+            return table
 
     def request_package_info(self, package):
         co = self.call('/packages/name', {'packageName': package,
@@ -417,7 +421,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
     def get_fedora_releases(self):
         releases = []
-        collections = self.get_collection_table()
+        collections = self.get_collection_table(active_only=True)
         for collection in collections.values():
             if collection['name'] == 'Fedora':
                 releases.append((collection['koji_name'], '%s %s' % (

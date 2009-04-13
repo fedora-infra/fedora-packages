@@ -71,7 +71,7 @@ class DownloadsWidget(Widget):
 
         # Determine the branch name from the release.
         pkgdb = get_connector('pkgdb')
-        collections = pkgdb.get_collection_table()
+        collections = pkgdb.get_collection_table(active_only=True)
         branch = None
         for id, collection in collections.items():
             if collection['koji_name'] == d.release:
@@ -101,7 +101,7 @@ class SourceDownloadsWidget(Widget):
         koji.multicall = True
 
         pkgdb = get_connector('pkgdb')
-        collections = pkgdb.get_collection_table()
+        collections = pkgdb.get_collection_table(active_only=True)
         for id, collection in collections.items():
             if collection['name'] == 'Fedora':
                 tag = collection['koji_name']
