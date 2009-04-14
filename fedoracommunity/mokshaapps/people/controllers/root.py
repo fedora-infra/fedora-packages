@@ -112,7 +112,7 @@ class RootController(Controller):
 
     @expose('mako:fedoracommunity.mokshaapps.people.templates.table')
     @require(not_anonymous())
-    def table(self, rows_per_page=5, filters={}, more_link_code=None):
+    def table(self, rows_per_page=10, filters={}, more_link_code=None):
         ''' table handler
 
         This handler displays the main table by itself
