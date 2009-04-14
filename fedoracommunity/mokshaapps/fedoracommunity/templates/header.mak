@@ -1,5 +1,4 @@
 <html>
-
     <%def name="header()">
         <div id="head">
             ${tmpl_context.moksha_global_resources()}
@@ -20,7 +19,7 @@
                     </div>
                 % endif
             	<div id="search-toolbar">
-                	<form action="/search/"
+                	<form action="${tg.url('/search/')}"
                 	      onSubmit="moksha.csrf_add_form_field(this)">
                 	    Search:
                 	    <input type="text" name="search"

@@ -1,7 +1,8 @@
+<% import tg %>
 <div id="${id}">
     <div id="container">
        <div class="content-searchbox">
-        <form action="/search"
+        <form action="${tg.url('/search')}"
               onSubmit="moksha.csrf_add_form_field(this);">
             <span class="label">Search </span>
             <div class="content-searchinput">
