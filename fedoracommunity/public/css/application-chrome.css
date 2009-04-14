@@ -1168,3 +1168,19 @@ div.count-summary-dashboard .additional-info {
     background-color: white;
     position: absolute;
 }
+
+moksha_extpoint {
+    display: none;
+}
+
+.menu_panel {
+    display: none;
+    position: absolute;
+    background-color: #FFFFFF;
+}
+
+.menu_panel ul {
+  list-style-image:none !important;
+list-style-position:inside !important;
+list-style-type:none !important;
+}

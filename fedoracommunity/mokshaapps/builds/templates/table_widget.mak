@@ -1,4 +1,3 @@
-
     <div class="list header-list">
         <table id="${id}">
             <thead>
@@ -14,10 +13,38 @@
             <tbody class="rowtemplate">
                     <tr>
                         <td class="one-row">
+                          <div id="menu_@{build_id}" class="menu" panel="menu_panel_@{build_id}">
                             <span class="package-name">
                                 <a href="javascript:moksha.goto('/package_maintenance/packages/builds', {'package': '@{package_name}'});">@{package_name}</a>
                             </span>
                             <br/>@{version}&nbsp;
+                            <div id="menu_panel_@{build_id}" class="menu_panel">
+                            <ul>
+                               <li>
+                                 <a target="_blank" href="http://koji.fedoraproject.org/koji/buildinfo?buildID=@{build_id}">
+                                   View this build in Koji
+                                 </a>
+                                 <a target="_blank" href="https://admin.fedoraproject.org/updates/@{package_name}">
+                                   View updates for this package in Bodhi
+                                 </a>
+                                 <a target="_blank" href="https://admin.fedoraproject.org/pkgdb/packages/name/@{package_name}">
+                                   View this package in PackageDB
+                                 </a>
+                                 <a target="_blank" href="https://translate.fedoraproject.org/module/@{package_name}">
+                                   View translations this package in Transifex
+                                 </a>
+                               </li>
+                            </ul>
+                            </div>
+                          </div>
+                          <moksha_extpoint>
+                            {
+                                'type': 'make_menu',
+                                'placeholder_id': 'menu_@{build_id}',
+                                'build_id': '@{build_id}',
+                                'show_effect': 'slideDown(\"slow\")'
+                            }
+                          </moksha_extpoint>
                         </td>
 
                         <td rowspan="2">
@@ -56,4 +83,6 @@
                 </tbody>
 
         </table>
+
+
     </div>
