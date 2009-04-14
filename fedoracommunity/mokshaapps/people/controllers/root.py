@@ -9,6 +9,7 @@ from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.connectors import get_connector
 
+from fedoracommunity.widgets.expander import expander_js
 from memberships import MembershipsController
 from package_maintenance import PackageMaintenanceController
 
@@ -68,6 +69,7 @@ class PeopleGrid(Grid, ContextAwareWidget):
 class PersonDetailsWidget(Widget):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.info'
     params = ['person', 'id', 'compact', 'profile']
+    javascript = [expander_js]
 
     def update_params(self, d):
         super(PersonDetailsWidget, self).update_params(d)

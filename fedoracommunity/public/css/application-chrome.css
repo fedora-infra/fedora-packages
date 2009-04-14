@@ -980,10 +980,6 @@ div.links-toolbar li a span {
   overflow: auto;
 }
 
-.info_identity td {
-  display: none;
-}
-
 div.info_content {
   background-color: #eee;
   -moz-border-radius: 6px;

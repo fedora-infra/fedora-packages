@@ -26,11 +26,11 @@
         <div class="info_identity info_container">
           <h4>Identity</h4> 
           <table>
-	    % if person.get('ssh_key'):
-            <tr>
-              <th>Public SSH Key</th>
-              <td>${person['ssh_key']}</td>
-            </tr>
+            % if person.get('ssh_key'):
+              <tr>
+                <th>Public SSH Key</th>
+                <td id="ssh_key">${person['ssh_key']}</td>
+              </tr>
             % endif
             % if person.get('gpg_keyid'):
             <tr>
@@ -81,8 +81,17 @@
 <div class="clear" />
   </div>
   <script type="text/javascript">
-     % if compact:
-        $(".label", $("${id}")).hide();
-     % endif
+    $(document).ready(function(){
+       % if compact:
+          $(".label", $("${id}")).hide();
+       % endif
+
+      $("#ssh_key").expander({
+            slicePoint: 35,
+            widow: 1,
+            expandText: '<br/>View full key [>]',
+            userCollapseText: '<br/>Hide full key [<]',
+      });
+    });
   </script>
 </div>
