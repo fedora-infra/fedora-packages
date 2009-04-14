@@ -8,7 +8,7 @@ class TabbedNav(SubTabbedContainer):
                      params={'profile':True}),
            MokshaApp('Memberships', 'fedoracommunity.people/memberships',
                      params={'profile':True}),
-           MokshaApp('Packages Maintenance', 'fedoracommunity.people/packagemaint',
+           MokshaApp('Package Maintenance', 'fedoracommunity.people/packagemaint',
                      params={'profile': True}),
           )
 

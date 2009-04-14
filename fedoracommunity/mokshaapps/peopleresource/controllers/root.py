@@ -9,7 +9,7 @@ class NameTabbedNav(SubTabbedContainer):
                       params={'username':None}),
             MokshaApp('Memberships', 'fedoracommunity.people/memberships',
                       params={'username':None}),
-            MokshaApp('Packages Maintenance', 'fedoracommunity.people/packagemaint',
+            MokshaApp('Package Maintenance', 'fedoracommunity.people/packagemaint',
                       params={'username':None}),
            )
 
