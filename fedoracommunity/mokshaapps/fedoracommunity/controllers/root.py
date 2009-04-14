@@ -42,6 +42,7 @@ class RootController(BaseController):
             came_from = url('/')
 
         return {'title': 'Fedora Community Login',
+                'came_from': came_from,
                 'options':{'came_from': came_from}}
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')

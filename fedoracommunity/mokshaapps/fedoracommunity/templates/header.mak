@@ -2,19 +2,25 @@
     <%def name="header()">
         <div id="head">
             ${tmpl_context.moksha_global_resources()}
-            <h1><a href="/">Fedora Community</a></h1>
+            <h1><a href="${tg.url('/')}">Fedora Community</a></h1>
             <div id="toolbar">
                 % if tmpl_context.auth('not_anonymous()'):
                     <div id="login-toolbar">
-                        <form class="login_button" action="/logout">
-                            Logged In: <span class="username"><a href="/profile">${tmpl_context.identity['person']['human_name']}</a></span>
+                        <form class="login_button" action="${tg.url('/logout')}">
+                            Logged In: <span class="username"><a href="${tg.url('/profile')}">${tmpl_context.identity['person']['human_name']}</a></span>
                             <input type="submit"  class="button" value="Log Out" > </input>
                         </form>
                     </div>
                 % else:
                     <div id="login-toolbar">
-                        <form onSubmit="document.location='/login?came_from=' + document.location; return false;">
+                        <form
+                            method="POST"
+                            action="${tg.url('/login')}"
+                            onSubmit="moksha.add_hidden_form_field(this, 'came_from', document.location, false)">
                             You are not logged in yet  <input type="submit"  value="Login" class="button"></input>
+                            % if not came_from is UNDEFINED:
+                                <input type="hidden" name="came_from" value="${came_from}"></input>
+                            % endif
                         </form>
                     </div>
                 % endif

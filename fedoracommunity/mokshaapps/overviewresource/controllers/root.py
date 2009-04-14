@@ -26,7 +26,7 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
                        ),
               Category('right-content-column-apps',
                        [MokshaWidget(None, 'fedoracommunity.login',
-                                     params={'came_from': '/'},
+                                     params={'came_from': None},
                                      css_class='',
                                      auth=Not(not_anonymous())),
                         MokshaApp('Alerts', 'fedoracommunity.alerts'),

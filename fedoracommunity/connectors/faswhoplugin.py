@@ -7,16 +7,18 @@ import pkg_resources
 
 from beaker.cache import Cache
 from fedora.client import ProxyClient, AuthError
-from paste.httpexceptions import HTTPUnauthorized
+from paste.httpexceptions import HTTPUnauthorized, HTTPFound
 from repoze.who.middleware import PluggableAuthenticationMiddleware
 from repoze.who.plugins.form import RedirectingFormPlugin
 from repoze.who.classifiers import default_request_classifier
 from repoze.who.classifiers import default_challenge_decider
 from repoze.who.interfaces import IChallenger, IIdentifier
 from Cookie import SimpleCookie
+from paste.request import parse_dict_querystring, parse_formvars
 
 from moksha.middleware.csrf import CSRFMetadataProvider
 from moksha.api.errorcodes import login_err
+from moksha.lib.helpers import replace_app_header
 
 log = logging.getLogger(__name__)
 
@@ -203,19 +205,31 @@ class FASWhoPlugin(object):
         except KeyError:
             return None
 
+        err_goto = '/login'
+        default_came_from = '/'
+        if 'SCRIPT_NAME' in environ:
+            sn = environ['SCRIPT_NAME']
+            err_goto = sn + err_goto
+            default_came_from = sn + default_came_from
+
+        query = parse_dict_querystring(environ)
+        form = parse_formvars(environ)
+        form.update(query)
+        came_from = form.get('came_from', default_came_from)
+
         user_data = ""
         try:
             fas = FasClient(self.url)
             user_data = fas.login(login, password)
         except AuthError, e:
             log.info('Authentication failed, setting error')
-            log.error(e)
+            log.warning(e)
             err = 1
             environ['FAS_AUTH_ERROR'] = err
 
-            err_app = HTTPUnauthorized()
-            login_err.USERNAME_PASSWORD_ERROR.replace_app_header(err_app,
-                                        'X-Authorization-Failure-Reason')
+            err_app = HTTPFound(err_goto + '?' +
+                                'came_from=' + came_from +
+                                '&ec=' + login_err.USERNAME_PASSWORD_ERROR.code)
 
             environ['repoze.who.application'] = err_app
 
@@ -231,9 +245,10 @@ class FASWhoPlugin(object):
 
         err = 'An unknown error happened when trying to log you in.  Please try again.'
         environ['FAS_AUTH_ERROR'] = err
-        err_app = HTTPUnauthorized()
-        login_err.UNKNOWN_AUTH_ERROR.replace_app_header(err_app,
-                                        'X-Authorization-Failure-Reason')
+        err_app = HTTPFound(err_goto + '?' +
+                                'came_from=' + came_from +
+                                '&ec=' + login_err.UNKNOWN_AUTH_ERROR.code)
+
         environ['repoze.who.application'] = err_app
 
         return None
