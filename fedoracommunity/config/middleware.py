@@ -1,8 +1,5 @@
 from fedoracommunity.config.app_cfg import base_config
 from fedoracommunity.config.environment import load_environment
-from moksha.middleware import (MokshaMiddleware, MokshaConnectorMiddleware,
-                              MokshaExtensionPointMiddleware)
-
 from paste.cascade import Cascade
 
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
