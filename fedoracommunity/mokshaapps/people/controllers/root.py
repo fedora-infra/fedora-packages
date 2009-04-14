@@ -1,3 +1,4 @@
+from tw.api import Widget
 from tg import expose, tmpl_context, require
 from uuid import uuid4
 from repoze.what.predicates import not_anonymous
@@ -63,9 +64,31 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
 class PeopleGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.people.templates.table_widget'
 
+
+class PersonDetailsWidget(Widget):
+    template = 'mako:fedoracommunity.mokshaapps.people.templates.info'
+    params = ['person', 'id', 'compact', 'profile']
+
+    def update_params(self, d):
+        super(PersonDetailsWidget, self).update_params(d)
+        d.id = 'uuid' + str(uuid4())
+
+        fas = get_connector('fas')
+        person = fas.query_userinfo(filters={
+                'profile': d.profile,
+                'u': d.username
+                })
+
+        if person:
+            person = person[1][0]
+
+        d.person = person
+
+
 people_grid = PeopleGrid('people_grid')
 people_container = PeopleContainer('people_container')
 profile_container = ProfileContainer('profile_container')
+person_details_widget = PersonDetailsWidget('person_details_widget')
 
 class RootController(Controller):
     memberships = MembershipsController()
@@ -94,21 +117,12 @@ class RootController(Controller):
         kwds.update({'u': username})
         return self.index(**kwds)
 
-    @expose('mako:fedoracommunity.mokshaapps.people.templates.info')
     @require(not_anonymous())
+    @expose('mako:moksha.templates.widget')
     def details(self, username=None, profile=False, compact=False):
-        results = {'compact': compact,
-                   'id': 'uuid' + str(uuid4())}
-
-        fas_conn = get_connector('fas')
-        person = fas_conn.query_userinfo(filters = {'profile': profile,
-                                                    'u':username})
-
-        if person:
-            person = person[1][0]
-
-        results['person'] = person
-        return results
+        tmpl_context.widget = person_details_widget
+        return {'options': {'compact': compact, 'profile': profile,
+                            'username': username}}
 
     @expose('mako:fedoracommunity.mokshaapps.people.templates.table')
     @require(not_anonymous())
