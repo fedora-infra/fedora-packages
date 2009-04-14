@@ -16,21 +16,12 @@
 # Copyright 2008, Red Hat, Inc.
 
 """
-:mod:`fedoracommunity.widgets.planet` -- Planet Fedora Widget
+:mod:`fedoracommunity.widgets.expander` -- An Expander Widget
 =============================================================
 
-.. module:: fedoracommunity.widgets.planet
-.. moduleauthor:: Luke Macken <lmacken@redhat.com>
+http://plugins.learningjquery.com/expander
 """
 
-from tw.api import CSSLink, JSLink
-from moksha.api.widgets.feed import Feed
-from fedoracommunity.widgets.expander import expander_js
+from tw.api import JSLink
 
-class PlanetFedoraWidget(Feed):
-    url = 'http://planet.fedoraproject.org/atom.xml'
-    template = "mako:fedoracommunity.widgets.templates.planet"
-    javascript = [expander_js]
-    css = [CSSLink(link='/css/planet-fedora-bubbles.css')]
-    params = ['limit']
-    limit = 3
+expander_js = JSLink(link='/javascript/jquery.expander.js')
