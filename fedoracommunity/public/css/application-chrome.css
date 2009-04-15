@@ -1180,3 +1180,5 @@ moksha_extpoint {
 list-style-position:inside !important;
 list-style-type:none !important;
 }
+
+#content a img { margin: 0px !important; }
