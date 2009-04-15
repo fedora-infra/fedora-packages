@@ -29,7 +29,7 @@
             % if person.get('ssh_key'):
               <tr>
                 <th>Public SSH Key</th>
-                <td id="ssh_key"><div class="horiz-scroll-info-box">${person['ssh_key']}</div></td>
+                <td><div id="ssh_key">${person['ssh_key']}</div></td>
               </tr>
             % endif
             % if person.get('gpg_keyid'):
@@ -89,8 +89,12 @@
       $("#ssh_key").expander({
             slicePoint: 35,
             widow: 1,
+            userCollapse: false,
             expandText: 'View full key <img src="/images/arrow_down.png">',
             userCollapseText: 'Hide full key <img src="/images/arrow_up.png">',
+            beforeExpand: function(elem){
+                    elem.addClass('horiz-scroll-info-box');
+            },
       });
     });
   </script>
