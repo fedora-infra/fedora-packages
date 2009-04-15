@@ -19,6 +19,7 @@ div.person-info {
   width: 9em;
   z-index: 1; 
   overflow: hidden;
+  min-height: 40px;
 }
 
 div.person-info a img {
