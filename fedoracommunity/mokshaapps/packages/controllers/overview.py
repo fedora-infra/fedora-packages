@@ -25,8 +25,7 @@ class PkgLinks(twWidget):
 pkg_links_widget = PkgLinks('details')
 
 class OverviewDashboard(PackagesDashboardContainer):
-    template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
-    layout = [Category('content-col-apps',(Widget('Description', pkg_details_widget,
+    layout = [Category('content-col-apps',(Widget(None, pkg_details_widget,
                                                   params={'pkg_description': '', 'owner': ''}),
                                            MokshaApp('Active Releases',
                                                      'fedoracommunity.updates/table',
