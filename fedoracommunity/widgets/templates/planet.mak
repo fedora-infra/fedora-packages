@@ -45,7 +45,13 @@
                 $("#${entry['uid']}_person").prepend(hackergochi);
             }
 
-            $("#${entry['uid']}_text").expander({slicePoint: 300});
+            $("#${entry['uid']}_text").expander({
+                slicePoint: 300,
+                widow: 1,
+                userCollapse: true,
+                expandText: '<strong>Show more</strong> <img src="/images/arrow_down.png">',
+                userCollapseText: '<strong>Hide full post content</strong> <img src="/images/arrow_up.png">',
+            });
 
         </script>
     % endfor
