@@ -1182,3 +1182,14 @@ list-style-type:none !important;
 }
 
 #content a img { margin: 0px !important; }
+
+.info_content div.horiz-scroll-info-box {
+  border: 1px solid #aaa; 
+  overflow: auto; 
+  margin-top: 0px ! important; 
+  margin-bottom: 1em; 
+  padding-top: 0px ! important; 
+  font-size: 7pt ! important; 
+  width: 200px; 
+  background-color: white;
+}
