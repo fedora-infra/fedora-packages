@@ -546,9 +546,9 @@ span.panel {
 #right-content-column .panel dd img,
 .right-content-column .panel dd img {
   display: block;
-  margin-right: 7px;
+  margin-right: 7px !important;
   float: left;
-  margin-top: -3px;
+  margin-top: -3px !important;
   clear: both;
   padding-top: .3em;
 }
