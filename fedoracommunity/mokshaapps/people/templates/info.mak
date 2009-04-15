@@ -90,7 +90,7 @@
             slicePoint: 35,
             widow: 1,
             userCollapse: true,
-            expandText: 'View full key <img src="/images/arrow_down.png">',
+            expandText: 'Show full key <img src="/images/arrow_down.png">',
             userCollapseText: 'Hide full key <img src="/images/arrow_up.png">',
       });
     });
