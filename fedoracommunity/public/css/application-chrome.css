@@ -1072,6 +1072,11 @@ div.info_content .right_col div {
   float: left;
 }
 
+div.info_content .col td div {
+  padding-top: 0px;
+  margin-top: 0px !important;
+}
+
 /* package details header styles */
 
 #content h2.package-header {
