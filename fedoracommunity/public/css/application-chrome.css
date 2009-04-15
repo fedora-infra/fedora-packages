@@ -459,11 +459,20 @@ span.timestamp {
 /** simple list for side panel **/
 /** styles for right content area panels **/
 
-.panel {
+#right-content-column .panel td,
+#right-content-column .panel div,
+#right-content-column .panel p,
+#right-content-column .panel dl,
+#right-content-column .panel ul, 
+.right-content-column .panel td,
+.right-content-column .panel div,
+.right-content-column .panel p,
+.right-content-column .panel dl,
+.right-content-column .panel ul {
   background-color: #f4f4f4;
 }
 
-.panel .p,
+.panel p,
 .panel .message {
   padding: 3px 12px !important;
 }
@@ -537,9 +546,9 @@ span.panel {
 #right-content-column .panel dd img,
 .right-content-column .panel dd img {
   display: block;
-  margin-right: 7px;
+  margin-right: 7px !important;
   float: left;
-  margin-top: -3px;
+  margin-top: -3px !important;
   clear: both;
   padding-top: .3em;
 }
