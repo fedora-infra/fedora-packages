@@ -1198,19 +1198,21 @@ div.count-summary-dashboard .additional-info {
 }
 
 moksha_extpoint {
-    display: none;
+  display: none;
 }
 
 .menu_panel {
-    display: none;
-    position: absolute;
-    background-color: #FFFFFF;
+  display: none;
+  position: absolute;
+  border: 1px solid #ddd;
+  background-color: #eee;
 }
 
 .menu_panel ul {
-  list-style-image:none !important;
-list-style-position:inside !important;
-list-style-type:none !important;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+  padding-top: 1em;
 }
 
 
