@@ -910,7 +910,7 @@ ul.page-flips li {
 
 
 /* this needs to be fixed in fedora.css */
-table * {
+th, td {
   color: #666;
 }
 
@@ -1206,13 +1206,45 @@ moksha_extpoint {
   position: absolute;
   border: 1px solid #ddd;
   background-color: #eee;
+  padding: .5em 1em;
 }
 
 .menu_panel ul {
+  margin: 0em !important;
+  margin-top: .5em !important;
   list-style-image: none;
   list-style-position: outside;
   list-style-type: none;
-  padding-top: 1em;
+}
+
+.menu_panel li a {
+  vertical-align: middle;
+}
+
+.menu_panel li a img {
+  width: 16px;
+  padding-right: .5em;
+  height: 16px;
+}
+
+.menu_panel li {
+  min-height: 18px !important;
+}
+
+.menu_panel img {
+  padding-top: 4px;
+  float: left;
+}
+
+.menu_panel a {
+  display: block;
+  min-height: 2em;
+}
+
+.menu_panel span {
+  float: left;
+  height: 100%;
+  margin-top: 5px;
 }
 
 
