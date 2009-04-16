@@ -96,7 +96,6 @@ class RootController(Controller):
     memberships = MembershipsController()
     packagemaint = PackageMaintenanceController()
     @expose('mako:moksha.templates.widget')
-    @require(not_anonymous())
     def index(self, **kwds):
         options = {
             'username': kwds.get('username', kwds.get('u')),
@@ -113,13 +112,11 @@ class RootController(Controller):
         return {'options':options}
 
     @expose('mako:moksha.templates.widget')
-    @require(not_anonymous())
     def name(self, username, **kwds):
 
         kwds.update({'u': username})
         return self.index(**kwds)
 
-    @require(not_anonymous())
     @expose('mako:moksha.templates.widget')
     def details(self, username=None, profile=False, compact=False):
         tmpl_context.widget = person_details_widget
@@ -127,7 +124,6 @@ class RootController(Controller):
                             'username': username}}
 
     @expose('mako:fedoracommunity.mokshaapps.people.templates.table')
-    @require(not_anonymous())
     def table(self, rows_per_page=10, filters={}, more_link_code=None):
         ''' table handler
 

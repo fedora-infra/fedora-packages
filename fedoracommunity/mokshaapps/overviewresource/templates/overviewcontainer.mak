@@ -18,7 +18,7 @@
            allows you to keep up with your packages and to keep track of your
            friends&rsquo; packages as well. 
          </p>
-         <p><strong><a href="">Need an account?</a></strong></p>
+         <p><strong><a href="https://admin.fedoraproject.org/accounts/user/new">Need an account?</a></strong></p>
          <br />
 
        % else:

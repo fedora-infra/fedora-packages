@@ -10,17 +10,21 @@ var uid = "${id}";
 ${c.releases(options=releases, value=release)}
 
 % if latest_srpm:
+    <div class="list simple-list">
     <h3>Source</h3>
     <table>
       <tr>
-        <td align="right"><b>Latest Spec File</b></td>
+        <th>Latest Spec File</th>
         <td><a href="${latest_spec}">${latest_srpm['name']}.spec</a></td>
       </tr>
       <tr>
-        <td align="right"><b>Latest SRPM</b></td>
+        <th>Latest SRPM</th>
         <td><a href="${latest_srpm['url']}">${latest_srpm['nvr']}</a> <span class="filesize">(${latest_srpm['size']})</span></td>
       </tr>
     </table>
+    </div>
+
+    <div class="list header-list">
     <h3>Binaries</h3>
     <table>
       <tr>
@@ -38,7 +42,7 @@ ${c.releases(options=releases, value=release)}
           </tr>
       % endfor
     </table>
-
+    </div>
 % else:
     <center>No downloads found</center>
 % endif

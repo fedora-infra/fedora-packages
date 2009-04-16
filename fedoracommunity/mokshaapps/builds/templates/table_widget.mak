@@ -19,21 +19,12 @@
                             </span>
                             <br/>@{version}&nbsp;
                             <div id="menu_panel_@{build_id}" class="menu_panel">
+		            <h4>Quick Links for <strong>@{package_name}</strong>:</h4>
                             <ul>
-                               <li>
-                                 <a target="_blank" href="http://koji.fedoraproject.org/koji/buildinfo?buildID=@{build_id}">
-                                   View this build in Koji
-                                 </a>
-                                 <a target="_blank" href="https://admin.fedoraproject.org/updates/@{package_name}">
-                                   View updates for this package in Bodhi
-                                 </a>
-                                 <a target="_blank" href="https://admin.fedoraproject.org/pkgdb/packages/name/@{package_name}">
-                                   View this package in PackageDB
-                                 </a>
-                                 <a target="_blank" href="https://translate.fedoraproject.org/module/@{package_name}">
-                                   View translations this package in Transifex
-                                 </a>
-                               </li>
+                               <li><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=@{build_id}"><img src="/images/16_koji.png"/><span>Go to this build in Koji</span></a></li>
+                               <li><a href="https://admin.fedoraproject.org/updates/@{package_name}"><img src="/images/16_bodhi.png"/><span>Go to updates for @{package_name} in Bodhi</span></a></li>
+                               <li><a href="https://admin.fedoraproject.org/pkgdb/packages/name/@{package_name}"><img src="/images/16_pkgdb.png"/><span>Go to @{package_name} package info in PackageDB</span></a></li>
+                               <li><a href="https://translate.fedoraproject.org/module/@{package_name}"><img src="/images/16_transifex.png"/><span>Go to translations for @{package_name} in Transifex</span></a></li>
                             </ul>
                             </div>
                           </div>

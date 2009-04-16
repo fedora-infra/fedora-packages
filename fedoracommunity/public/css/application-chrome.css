@@ -26,6 +26,8 @@
   padding-right:		28px;
 }
 
+#content a img { margin: 0px !important; }
+
 a {
   color: #2B80D6;
 }
@@ -129,7 +131,7 @@ a {
 #app-sidebar .nav a:visited,
 #app-sidebar .nav a:active {
   text-decoration: none;
-  font-size: 11pt;
+  font-size: 1.4em;
 }
 
 #app-sidebar .nav .ui-tabs-selected a:link,
@@ -175,6 +177,7 @@ a {
   width: 100%;
   height: 116px;
   -moz-border-radius: 12px;
+  overflow: hidden;
 }
 
 #banner-header img {
@@ -211,7 +214,7 @@ a {
 #content-nav li a:visited {
   text-decoration: none;
   font-weight: bold;
-  font-size: 11pt;
+  font-size: 1.4em;
 }
 
 #content-nav li.ui-tabs-selected a:link,
@@ -272,7 +275,7 @@ a {
 }
 
 .small-text {
-  font-size: 8pt;
+  font-size: .8em;
 }
 
 .content-searchbox form {
@@ -284,7 +287,7 @@ a {
   padding: 2px 5px;
   vertical-align: middle;
   line-height: 1.5 em;
-  font-size: 10pt;
+  font-size: 1em;
   color: #333;
 }
 
@@ -384,6 +387,16 @@ span.more-items {
   text-decoration: none;
 }
 
+.simple-list table {
+  border: none !important;
+}
+
+.simple-list th {
+  text-align: right;
+  background: none !important;
+  width: 14em;
+}
+
 /** more advanced list with columns **/
 
 .header-list .header-details {
@@ -470,6 +483,11 @@ span.timestamp {
 .right-content-column .panel dl,
 .right-content-column .panel ul {
   background-color: #f4f4f4;
+}
+
+#right-content-column .login div,
+.right-content-column .login div { 
+  background: none !important; 
 }
 
 .panel p,
@@ -701,7 +719,7 @@ div.login a.small-text:visited {
 }
 
 .small-text {
-  font-size: 8pt;
+  font-size: .9em;
 }
 
 .label-rule {
@@ -892,7 +910,7 @@ ul.page-flips li {
 
 
 /* this needs to be fixed in fedora.css */
-table * {
+th, td {
   color: #666;
 }
 
@@ -963,7 +981,7 @@ div.links-toolbar li:last-child {
 
 div.links-toolbar img {
   padding-right: 1.2ex;
-  margin-top: 1ex !important;
+  padding-top: 1ex !important;
   float: left;
 }
 
@@ -1180,22 +1198,55 @@ div.count-summary-dashboard .additional-info {
 }
 
 moksha_extpoint {
-    display: none;
+  display: none;
 }
 
 .menu_panel {
-    display: none;
-    position: absolute;
-    background-color: #FFFFFF;
+  display: none;
+  position: absolute;
+  border: 1px solid #ddd;
+  background-color: #eee;
+  padding: .5em 1em;
 }
 
 .menu_panel ul {
-  list-style-image:none !important;
-list-style-position:inside !important;
-list-style-type:none !important;
+  margin: 0em !important;
+  margin-top: .5em !important;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
 }
 
-#content a img { margin: 0px !important; }
+.menu_panel li a {
+  vertical-align: middle;
+}
+
+.menu_panel li a img {
+  width: 16px;
+  padding-right: .5em;
+  height: 16px;
+}
+
+.menu_panel li {
+  min-height: 18px !important;
+}
+
+.menu_panel img {
+  padding-top: 4px;
+  float: left;
+}
+
+.menu_panel a {
+  display: block;
+  min-height: 2em;
+}
+
+.menu_panel span {
+  float: left;
+  height: 100%;
+  margin-top: 5px;
+}
+
 
 .info_content div#ssh_key .details div {
   border: 1px solid #aaa; 

@@ -5,7 +5,9 @@
        <h3>Updates</h3>
        ${tabwidget(root_id=root_id, tabs=tabs)}
      </div>
+     <div class="panel">
      ${applist_widget(category=sidebar_apps)}
+     </div>
      <div id="clear"></div>
    </div>
    <div class="left-content-column">

@@ -77,7 +77,6 @@ profile_memberships_container = ProfileContainer('profile_memberships_container'
 
 class MembershipsController(Controller):
     @expose('mako:moksha.templates.widget')
-    @require(not_anonymous())
     def index(self, **kwds):
         options = {
             'username': kwds.get('username', kwds.get('u')),
@@ -92,7 +91,6 @@ class MembershipsController(Controller):
         return {'options': options}
 
     @expose('mako:fedoracommunity.mokshaapps.people.templates.memberships_table')
-    @require(not_anonymous())
     def table(self, uid="", rows_per_page=5, filters={}):
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)

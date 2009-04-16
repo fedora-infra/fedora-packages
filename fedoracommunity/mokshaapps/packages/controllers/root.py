@@ -119,7 +119,6 @@ class RootController(Controller):
                    rows_per_page, view)
 
     @expose('mako:fedoracommunity.mokshaapps.packages.templates.userpackages')
-    @require(not_anonymous())
     def userpackages(self, owner=5, maintainer=3, watcher=False, username=None,
                      rows_per_page=5, view='home'):
 
