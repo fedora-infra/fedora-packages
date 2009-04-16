@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 FAS_CACHE_TIMEOUT=20 #in seconds
 
-fasurl = tg.config.get('fedoracommunity.fas.baseurl')
+fasurl = tg.config.get('fedoracommunity.connector.fas.baseurl')
 fas_cache = Cache('fas_repozewho_cache', type="memory")
 
 def fas_make_who_middleware(app, log_stream):

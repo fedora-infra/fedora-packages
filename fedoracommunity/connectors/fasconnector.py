@@ -6,6 +6,9 @@ from moksha.connector.utils import DateTimeDisplay
 
 USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
 fas_cache = Cache('fas_connector_cache')
+_fas_minimal_user = config.get('fedoracommunity.connector.fas.minimal_user_name')
+_fas_minimal_pass = config.get('fedoracommunity.connector.fas.minimal_user_password')
+
 
 class FasConnector(IConnector, ICall, ISearch, IQuery):
     def __init__(self, environ=None, request=None):
@@ -41,6 +44,9 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         if fas_info:
             session_id = fas_info[0]
             auth_params={'session_id': session_id}
+        else:
+            # use the minimal login if available
+            auth_params={'user': _fas_minimal_user, 'pass': _fas_minimal_pass}
 
         return self._fas_client.send_request(resource_path,
                                              auth_params = auth_params,
