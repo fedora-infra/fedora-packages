@@ -129,7 +129,7 @@ a {
 #app-sidebar .nav a:visited,
 #app-sidebar .nav a:active {
   text-decoration: none;
-  font-size: 11pt;
+  font-size: 1.4em;
 }
 
 #app-sidebar .nav .ui-tabs-selected a:link,
@@ -212,7 +212,7 @@ a {
 #content-nav li a:visited {
   text-decoration: none;
   font-weight: bold;
-  font-size: 11pt;
+  font-size: 1.4em;
 }
 
 #content-nav li.ui-tabs-selected a:link,
@@ -273,7 +273,7 @@ a {
 }
 
 .small-text {
-  font-size: 8pt;
+  font-size: .8em;
 }
 
 .content-searchbox form {
@@ -285,7 +285,7 @@ a {
   padding: 2px 5px;
   vertical-align: middle;
   line-height: 1.5 em;
-  font-size: 10pt;
+  font-size: 1em;
   color: #333;
 }
 
@@ -707,7 +707,7 @@ div.login a.small-text:visited {
 }
 
 .small-text {
-  font-size: 8pt;
+  font-size: .9em;
 }
 
 .label-rule {
