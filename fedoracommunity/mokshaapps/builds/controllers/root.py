@@ -98,7 +98,6 @@ builds_overview_container = BuildsOverviewContainer('builds_overview')
 
 class RootController(Controller):
 
-    # do something for index, this should be the container stuff
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):
         options = {}
