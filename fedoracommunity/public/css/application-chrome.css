@@ -472,6 +472,11 @@ span.timestamp {
   background-color: #f4f4f4;
 }
 
+#right-content-column .login div,
+.right-content-column .login div { 
+  background: none !important; 
+}
+
 .panel p,
 .panel .message {
   padding: 3px 12px !important;
