@@ -58,7 +58,7 @@ class BuildsNavContainer(SubTabbedContainer):
     params = ['applist_widget']
     applist_widget = applist_widget
     template='mako:fedoracommunity.mokshaapps.builds.templates.builds_nav'
-    sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts'),)
+    sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts', css_class='app panel'),)
     tabs = (Category('Packages I Own',
                      (overview_builds_app.clone({'profile': True},
                                                 content_id='my_overview'),
