@@ -12,7 +12,6 @@ from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 from fedoracommunity.widgets import SubTabbedContainer
 from links import builds_links
 
-
 import simplejson as json
 
 class BuildsGrid(Grid, ContextAwareWidget):
