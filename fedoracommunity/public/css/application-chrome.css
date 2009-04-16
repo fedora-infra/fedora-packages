@@ -26,6 +26,8 @@
   padding-right:		28px;
 }
 
+#content a img { margin: 0px !important; }
+
 a {
   color: #2B80D6;
 }
@@ -129,7 +131,7 @@ a {
 #app-sidebar .nav a:visited,
 #app-sidebar .nav a:active {
   text-decoration: none;
-  font-size: 11pt;
+  font-size: 1.4em;
 }
 
 #app-sidebar .nav .ui-tabs-selected a:link,
@@ -212,7 +214,7 @@ a {
 #content-nav li a:visited {
   text-decoration: none;
   font-weight: bold;
-  font-size: 11pt;
+  font-size: 1.4em;
 }
 
 #content-nav li.ui-tabs-selected a:link,
@@ -273,7 +275,7 @@ a {
 }
 
 .small-text {
-  font-size: 8pt;
+  font-size: .8em;
 }
 
 .content-searchbox form {
@@ -285,7 +287,7 @@ a {
   padding: 2px 5px;
   vertical-align: middle;
   line-height: 1.5 em;
-  font-size: 10pt;
+  font-size: 1em;
   color: #333;
 }
 
@@ -383,6 +385,16 @@ span.more-items {
 
 .list a {
   text-decoration: none;
+}
+
+.simple-list table {
+  border: none !important;
+}
+
+.simple-list th {
+  text-align: right;
+  background: none !important;
+  width: 14em;
 }
 
 /** more advanced list with columns **/
@@ -707,7 +719,7 @@ div.login a.small-text:visited {
 }
 
 .small-text {
-  font-size: 8pt;
+  font-size: .9em;
 }
 
 .label-rule {
@@ -969,7 +981,7 @@ div.links-toolbar li:last-child {
 
 div.links-toolbar img {
   padding-right: 1.2ex;
-  margin-top: 1ex !important;
+  padding-top: 1ex !important;
   float: left;
 }
 
@@ -1201,7 +1213,6 @@ list-style-position:inside !important;
 list-style-type:none !important;
 }
 
-#content a img { margin: 0px !important; }
 
 .info_content div#ssh_key .details div {
   border: 1px solid #aaa; 
