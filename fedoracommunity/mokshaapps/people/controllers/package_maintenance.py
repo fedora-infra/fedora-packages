@@ -59,7 +59,6 @@ profile_memberships_container = ProfileContainer('profile_memberships_container'
 
 class PackageMaintenanceController(Controller):
     @expose('mako:moksha.templates.widget')
-    @require(not_anonymous())
     def index(self, **kwds):
         options = {
             'username': kwds.get('username', kwds.get('u')),
