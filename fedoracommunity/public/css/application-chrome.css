@@ -26,6 +26,8 @@
   padding-right:		28px;
 }
 
+#content a img { margin: 0px !important; }
+
 a {
   color: #2B80D6;
 }
@@ -969,7 +971,7 @@ div.links-toolbar li:last-child {
 
 div.links-toolbar img {
   padding-right: 1.2ex;
-  margin-top: 1ex !important;
+  padding-top: 1ex !important;
   float: left;
 }
 
@@ -1201,7 +1203,6 @@ list-style-position:inside !important;
 list-style-type:none !important;
 }
 
-#content a img { margin: 0px !important; }
 
 .info_content div#ssh_key .details div {
   border: 1px solid #aaa; 
