@@ -20,7 +20,7 @@ class BuildsPackagesGrid(Grid, ContextAwareWidget):
 in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds/table',
                                        css_class='main_table',
                                        content_id='inprogress',
-                                       params={'rows_per_page': 5,
+                                       params={'rows_per_page': 10,
                                                'filters':{'state':BUILD_STATES['BUILDING'],
                                                           'profile': False
                                                          }
@@ -29,7 +29,7 @@ in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds
 failed_builds_app = MokshaApp('Failed Builds', 'fedoracommunity.builds/table',
                                        css_class='secondary_table',
                                        content_id='failed',
-                                       params={'rows_per_page': 5,
+                                       params={'rows_per_page': 10,
                                                'filters':{'state':BUILD_STATES['FAILED'],
                                                           'profile': False
                                                          }
@@ -38,7 +38,7 @@ failed_builds_app = MokshaApp('Failed Builds', 'fedoracommunity.builds/table',
 successful_builds_app = MokshaApp('Successful Builds', 'fedoracommunity.builds/table',
                                        css_class='secondary_table',
                                        content_id='successful',
-                                       params={'rows_per_page': 5,
+                                       params={'rows_per_page': 10,
                                                'filters':{'state':BUILD_STATES['COMPLETE'],
                                                           'profile': False
                                                          }
@@ -86,11 +86,11 @@ builds_packages_grid = BuildsPackagesGrid('builds_packages_table')
 class BuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
 
     layout = [Category('group-1-apps',
-                        (in_progress_builds_app,
-                        failed_builds_app)
+                        (in_progress_builds_app.clone({'rows_per_page': 5}),
+                        failed_builds_app.clone({'rows_per_page': 5}))
                       ),
               Category('group-2-apps',
-                       successful_builds_app
+                       successful_builds_app.clone({'rows_per_page': 5})
                       )
              ]
 
