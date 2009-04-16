@@ -21,16 +21,22 @@
                             <div id="menu_panel_@{build_id}" class="menu_panel">
                             <ul>
                                <li>
-                                 <a target="_blank" href="http://koji.fedoraproject.org/koji/buildinfo?buildID=@{build_id}">
+                                 <a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=@{build_id}">
                                    View this build in Koji
                                  </a>
-                                 <a target="_blank" href="https://admin.fedoraproject.org/updates/@{package_name}">
+                               </li>
+                               <li>
+                                 <a href="https://admin.fedoraproject.org/updates/@{package_name}">
                                    View updates for this package in Bodhi
                                  </a>
-                                 <a target="_blank" href="https://admin.fedoraproject.org/pkgdb/packages/name/@{package_name}">
+                               </li>
+                               <li>
+                                 <a href="https://admin.fedoraproject.org/pkgdb/packages/name/@{package_name}">
                                    View this package in PackageDB
                                  </a>
-                                 <a target="_blank" href="https://translate.fedoraproject.org/module/@{package_name}">
+                               </li>
+                               <li>
+                                 <a href="https://translate.fedoraproject.org/module/@{package_name}">
                                    View translations this package in Transifex
                                  </a>
                                </li>
