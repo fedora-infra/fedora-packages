@@ -1241,6 +1241,11 @@ moksha_extpoint {
   min-height: 2em;
 }
 
+.menu_panel a:hover {
+  background-color: #5f94c9;
+  color: white !important;
+}
+
 .menu_panel span {
   float: left;
   height: 100%;
