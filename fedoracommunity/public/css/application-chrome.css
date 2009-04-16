@@ -387,6 +387,16 @@ span.more-items {
   text-decoration: none;
 }
 
+.simple-list table {
+  border: none !important;
+}
+
+.simple-list th {
+  text-align: right;
+  background: none !important;
+  width: 14em;
+}
+
 /** more advanced list with columns **/
 
 .header-list .header-details {
