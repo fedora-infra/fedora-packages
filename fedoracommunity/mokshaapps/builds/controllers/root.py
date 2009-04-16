@@ -1,6 +1,8 @@
 from tg import expose, tmpl_context
 from koji import BUILD_STATES
 
+from paste.deploy.converters import asbool
+
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, not_anonymous
 from moksha.api.widgets import ContextAwareWidget, Grid
@@ -9,6 +11,9 @@ from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 
 from fedoracommunity.widgets import SubTabbedContainer
 from links import builds_links
+
+
+import simplejson as json
 
 class BuildsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.builds.templates.table_widget'
@@ -86,11 +91,14 @@ builds_packages_grid = BuildsPackagesGrid('builds_packages_table')
 class BuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
 
     layout = [Category('group-1-apps',
-                        (in_progress_builds_app.clone({'rows_per_page': 5}),
-                        failed_builds_app.clone({'rows_per_page': 5}))
+                        (in_progress_builds_app.clone({'rows_per_page': 5,
+                                                       'more_link_code': builds_links.IN_PROGRESS.code}),
+                        failed_builds_app.clone({'rows_per_page': 5,
+                                                       'more_link_code': builds_links.FAILED.code}))
                       ),
               Category('group-2-apps',
-                       successful_builds_app.clone({'rows_per_page': 5})
+                       successful_builds_app.clone({'rows_per_page': 5,
+                                                       'more_link_code': builds_links.SUCCESSFUL.code})
                       )
              ]
 
@@ -119,9 +127,12 @@ class RootController(Controller):
         return self.index(**kwds)
 
     @expose('mako:fedoracommunity.mokshaapps.builds.templates.packages_table')
-    def packages_table(self, uid="", rows_per_page=5, filters={}, more_link_code=None):
+    def packages_table(self, uid="", rows_per_page=5, filters=None, more_link_code=None):
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
+
+        if filters == None:
+            filters = {}
 
         more_link = None
         if more_link_code:
@@ -132,7 +143,7 @@ class RootController(Controller):
                 'more_link': more_link}
 
     @expose('mako:fedoracommunity.mokshaapps.builds.templates.table')
-    def table(self, uid="", rows_per_page=5, filters={}, more_link_code=None):
+    def table(self, uid="", rows_per_page=5, filters=None, more_link_code=None):
         ''' table handler
 
         This handler displays the main table by itself
@@ -141,9 +152,24 @@ class RootController(Controller):
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
 
+        if filters == None:
+            filters = {}
+
         more_link = None
         if more_link_code:
             more_link = builds_links.get_data(more_link_code)
+            if isinstance(filters, basestring):
+                decoded_filters = json.loads(filters)
+            else:
+                decoded_filters = filters
+
+            if asbool(decoded_filters.get('profile')) == True:
+                s = more_link.split('/')
+                last = s[-1]
+                last = 'my_' + last
+                s[-1] = last
+
+                more_link = '/'.join(s)
 
         tmpl_context.widget = builds_grid
         return {'filters': filters, 'uid':uid, 'rows_per_page':rows_per_page,
