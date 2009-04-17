@@ -23,17 +23,30 @@
 </head>
 
 <body id="chrome" class="home">
-    <div id="wrapper">
-        ${header()}
-        <div id="main_app">
-           % if flash.message:
-             ${flash.message}
-           % endif
-           <div class="left-content-column">
-               ${tmpl_context.widget(**options)}
+  <div id="wrapper">
+   ${header()}
+   <div id="main_app">
+        % if flash.message:
+        ${flash.message}
+        % endif
+     <div id="main_nav">
+         <div id="app-sidebar">
+           <div id="navigation_sidebar" class="nav">
            </div>
-        </div>
-    </div>
+         </div>
+         <div id="content">
+           <div class="left-content-column">
+             <div id="banner-header" class="login-banner">
+             <div id="login-box">
+               ${tmpl_context.widget(**options)}
+             </div>
+             </div>
+           </div>
+           <div class="clearingdiv"></div>
+         </div>
+       </div>
+   </div>
+  </div>
     ${footer()}
 </body>
 </html>
