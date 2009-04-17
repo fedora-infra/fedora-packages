@@ -490,6 +490,13 @@ span.timestamp {
   background: none !important; 
 }
 
+#content #left-content-column .login h3,
+#content .left-content-column .login h3 {
+  color: white !important;
+  font-size: 1.3em !important;
+  margin-bottom: .6em;
+}
+
 .panel p,
 .panel .message {
   padding: 3px 12px !important;
