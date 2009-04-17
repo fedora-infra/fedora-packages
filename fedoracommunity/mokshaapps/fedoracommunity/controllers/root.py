@@ -24,7 +24,7 @@ class RootController(BaseController):
 
         return {'title': 'Fedora Community', 'options':kwds}
 
-    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
+    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.login')
     def login(self, came_from = '/', ec = None):
         tmpl_context.widget = login_widget
 

@@ -38,15 +38,14 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         cls.register_search_people()
 
     def request_data(self, resource_path, params, _cookies):
-        fas_info = self._environ.get('FAS_LOGIN_INFO')
-
+        identity = self._environ.get('repoze.who.identity')
         auth_params={}
-        if fas_info:
-            session_id = fas_info[0]
+        if identity:
+            session_id = identity.get('session_id')
             auth_params={'session_id': session_id}
         else:
             # use the minimal login if available
-            auth_params={'user': _fas_minimal_user, 'pass': _fas_minimal_pass}
+            auth_params={'username': _fas_minimal_user, 'password': _fas_minimal_pass}
 
         return self._fas_client.send_request(resource_path,
                                              auth_params = auth_params,

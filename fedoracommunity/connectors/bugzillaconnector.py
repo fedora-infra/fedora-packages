@@ -23,7 +23,8 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                                    'https://bugzilla.redhat.com/xmlrpc.cgi')
 
         cls.register_query_bugs()
-        cls.register_query_bug_stats()
+
+        path = cls.register_method('get_bug_stats', cls.query_bug_stats)
 
     #IQuery
     @classmethod
@@ -60,19 +61,12 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         f.add_filter('package', [], allow_none=False)
         cls._query_bugs_filter = f
 
-    @classmethod
-    def register_query_bug_stats(cls):
-        path = cls.register_query('query_bug_stats', cls.query_bug_stats)
-
     def query_bug_stats(self, *args, **kw):
         package = kw.get('package', None)
         if not package:
             raise Exception('No package specified')
         return bugzilla_cache.get_value(key=package, expiretime=21600,
                            createfunc=lambda: self._get_bug_stats(package))
-
-    # Hack, until I can figure out how to register it has a normal query...
-    call = query_bug_stats
 
     def _get_bug_stats(self, package, collection='Fedora'):
         """
