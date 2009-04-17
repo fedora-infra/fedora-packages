@@ -23,17 +23,29 @@
 </head>
 
 <body id="chrome" class="home">
-    <div id="wrapper">
-        ${header()}
-        <div id="main_app">
-           % if flash.message:
-             ${flash.message}
-           % endif
+  <div id="wrapper">
+   ${header()}
+   <div id="main_app">
+        % if flash.message:
+        ${flash.message}
+        % endif
+     <div id="main_nav">
+         <div id="app-sidebar">
+           <div id="navigation_sidebar" class="nav">
+           </div>
+         </div>
+         <div id="content">
            <div class="left-content-column">
+             <div id="banner-header">
+               <img width="600" src="${tmpl_context.get_url('/images/fedora_intro_banner1.png')}" />
+             </div>
                ${tmpl_context.widget(**options)}
            </div>
-        </div>
-    </div>
+           <div class="clearingdiv"></div>
+         </div>
+       </div>
+   </div>
+  </div>
     ${footer()}
 </body>
 </html>
