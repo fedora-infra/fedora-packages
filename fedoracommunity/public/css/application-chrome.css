@@ -497,6 +497,26 @@ span.timestamp {
   margin-bottom: .6em;
 }
 
+#content #left-content-column .login,
+#content .left-content-column .login {
+  margin-top: 0px !important;
+  -moz-border-radius-topright: 0;
+  -moz-border-radius-bottomright: 0;
+  padding: 2em;
+}
+
+div.login-banner#banner-header {
+  background-image: url(/images/grad_grey_1x225.png) !important;
+}
+
+/*
+#content #left-content-column .login form,
+#content .left-content-column .login form {
+  width: 50% !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+*/
 .panel p,
 .panel .message {
   padding: 3px 12px !important;
