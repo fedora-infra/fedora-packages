@@ -24,12 +24,12 @@
           </table>
         </div>
         <div class="info_identity info_container">
-          <h4>Identity</h4> 
+          <h4>Identity</h4>
           <table>
             % if person.get('ssh_key'):
               <tr>
                 <th>Public SSH Key</th>
-                <td><div id="ssh_key"><div>${person['ssh_key']}</div></div></td>
+                <td>${person['ssh_key'][:7]}<div id="ssh_key"><div>${person['ssh_key']}</div></div></td>
               </tr>
             % endif
             % if person.get('gpg_keyid'):
@@ -42,7 +42,7 @@
         </div>
       </div>
 
-      <div class="col right_col">  
+      <div class="col right_col">
         <div class="info_contact info_container">
           <h4>Contacting ${person['human_name']}</h4>
           <table>
@@ -87,7 +87,7 @@
        % endif
 
       $("#ssh_key").expander({
-            slicePoint: 35,
+            slicePoint: 0,
             widow: 1,
             userCollapse: true,
             expandText: 'Show full key <img src="/images/arrow_down.png">',
