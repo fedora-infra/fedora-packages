@@ -1,4 +1,4 @@
-<div id="${id}">
+<div id="${id}" class="info-profile">
   <h2>${person['human_name']}</h2>
   <div class="info_content">
     <div class="info_details">
