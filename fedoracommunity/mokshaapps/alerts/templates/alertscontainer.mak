@@ -6,7 +6,6 @@
         <dd>
           <img src="/images/${i['icon']}" />
             <a href="javascript:moksha.goto('${i['url']}')">${i['count']} ${i['label']}</a>
-                 <br />[ <a href="javascript:moksha.goto('${i['url']}')">View details</a> ]
         </dd>
       % endfor
    </dl>
