@@ -36,10 +36,11 @@
          </div>
          <div id="content">
            <div class="left-content-column">
-             <div id="banner-header">
-               <img width="600" src="${tmpl_context.get_url('/images/fedora_intro_banner1.png')}" />
-             </div>
+             <div id="banner-header" class="login-banner">
+             <div id="login-box">
                ${tmpl_context.widget(**options)}
+             </div>
+             </div>
            </div>
            <div class="clearingdiv"></div>
          </div>
