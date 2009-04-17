@@ -260,6 +260,7 @@ class FASWhoPlugin(object):
 
         if info is not None:
             identity.update(info[1])
+            identity['session_id'] = info[0]
 
         for plugin in self._metadata_plugins:
             plugin(identity)
