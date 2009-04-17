@@ -1,5 +1,5 @@
-from tg import expose, tmpl_context, validate
-from tw.api import JSLink
+from tg import expose, tmpl_context, validate, request
+from tw.api import JSLink, Widget
 from formencode import validators
 from paste.deploy.converters import asbool
 
@@ -7,13 +7,28 @@ import simplejson as json
 
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, not_anonymous
+from moksha.api.connectors import get_connector
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 
 from fedoracommunity.widgets import SubTabbedContainer
-
 from links import updates_links
+
+class UpdatesDashboardWidget(Widget):
+    params = ['id', 'pending', 'testing', 'stable', 'username']
+    template = 'mako:fedoracommunity.mokshaapps.updates.templates.dashboard_widget'
+
+    def update_params(self, d):
+        super(UpdatesDashboardWidget, self).update_params(d)
+        bodhi = get_connector('bodhi')
+        status = bodhi.get_dashboard_stats(username=d.username)
+        d.pending = status['pending']
+        d.testing = status['testing']
+        d.stable = status['stable']
+
+updates_dashboard_widget = UpdatesDashboardWidget('updates_dashboard')
+
 
 class PendingUpdatesGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.updates.templates.pending_table_widget'
@@ -58,10 +73,17 @@ overview_updates_app = MokshaApp('Overview',
                                  content_id='overview',
                                  params={'profile': False})
 
+dashboard_updates_app = MokshaApp('Updates Dashboard',
+                                  'fedoracommunity.updates/dashboard',
+                                  css_class='secondary_table', params={
+                                      'username': '',
+                                      })
+
 class UpdatesOverviewContainer(DashboardContainer, ContextAwareWidget):
     javascript = [JSLink(link='/javascript/bodhi.js', modname=__name__)]
     layout = (Category('group-1-apps',
-                       (unpushed_updates_app.clone({'rows_per_page': 5,
+                       (dashboard_updates_app.clone(),
+                        unpushed_updates_app.clone({'rows_per_page': 5,
                                                     'more_link_code': updates_links.UNPUSHED_UPDATES.code}),
                         testing_updates_app.clone({'rows_per_page': 5,
                                                     'more_link_code': updates_links.TESTING_UPDATES.code}))
@@ -162,4 +184,12 @@ class RootController(Controller):
                        resource='bodhi', resource_path='query_updates',
                        more_link=more_link)
 
+        return dict(options=options)
+
+    @expose('mako:moksha.templates.widget')
+    def dashboard(self, *args, **kw):
+        options = {}
+        tmpl_context.widget = updates_dashboard_widget
+        if request.identity:
+            options['username'] = request.identity['person']['username']
         return dict(options=options)
