@@ -17,7 +17,7 @@
                             <span class="package-name">
                                 <a href="javascript:moksha.goto('/package_maintenance/packages/builds', {'package': '@{package_name}'});">@{package_name}</a>
                             </span>
-                            <br/>@{version}&nbsp;
+                            <br/>@{version}-@{release}&nbsp;
                             <div id="menu_panel_@{build_id}" class="menu_panel">
 		            <h4>Quick Links for <strong>@{package_name}</strong>:</h4>
                             <ul>
