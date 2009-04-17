@@ -9,7 +9,7 @@
             $('#${id}_num_closed_this_week').text(json.results.closed_this_week + ' closed this week.');
         }
         $(document).ready(function(){
-            moksha.json_load('/moksha_connector/bugzilla/call/${filters}', {}, got_bug_stats, $(".count-summary-dashboard .overlay"));
+            moksha.connector_load('bugzilla', 'call/${filters}', {}, got_bug_stats, $(".count-summary-dashboard .overlay"));
         });
     </script>
     <dl class="count-box">
