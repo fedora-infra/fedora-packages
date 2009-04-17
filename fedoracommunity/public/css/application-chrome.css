@@ -505,18 +505,31 @@ span.timestamp {
   padding: 2em;
 }
 
-div.login-banner#banner-header {
-  background-image: url(/images/grad_grey_1x225.png) !important;
+#left-content-column #login-box,
+.left-content-column #login-box {
+  float: left;
 }
 
-/*
-#content #left-content-column .login form,
-#content .left-content-column .login form {
-  width: 50% !important;
-  margin-left: auto;
-  margin-right: auto;
+#left-content-column .panel#login_widget,
+.left-content-column .panel#login_widget {
+  margin-bottom: 0ex !important;
 }
-*/
+
+#left-content-column div.login-banner#banner-header,
+.left-content-column div.login-banner#banner-header {
+  background-image: url(/images/grad_grey_1x225.png) !important;
+  float: left;
+  margin-left: 1em;
+  height: auto !important;
+}
+
+#left-content-column div.login-banner#banner-header img,
+.left-content-column div.login-banner#banner-header img {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  margin: 0 !important;
+}
+
 .panel p,
 .panel .message {
   padding: 3px 12px !important;
