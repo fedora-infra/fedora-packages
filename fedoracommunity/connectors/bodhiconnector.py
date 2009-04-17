@@ -2,6 +2,7 @@ from paste.deploy.converters import asbool
 from pylons import config
 from fedora.client import ProxyClient
 from beaker.cache import Cache
+from datetime import datetime, timedelta
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
@@ -342,3 +343,55 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def _get_releases(self):
         return self._bodhi_client.send_request('get_releases')[1]['releases']
+
+    def get_dashboard_stats(self, username=None):
+        return bodhi_cache.get_value(key='dashboard_%s' % username,
+                createfunc=lambda: self._get_dashboard_stats(username),
+                expiretime=300)
+
+    def _get_dashboard_stats(self, username):
+        print "_get_dashboard_stats(%s)" % username
+        options = {}
+        results = {}
+
+        if username:
+            options['username'] = username
+
+        for status in ('pending', 'testing'):
+            options['status'] = status
+            results[status] = self.query_updates_count(**options)['count']
+
+        now = datetime.utcnow()
+        options['status'] = 'stable'
+        options['after'] = week_start = now - timedelta(weeks=1)
+        results['stable'] = self.query_updates_count(**options)['count']
+
+        return results
+
+    def query_updates_count(self, status, username=None,
+                            before=None, after=None):
+        # FIXME; this won't cache properly, as the datetimes has miliseconds..
+        return bodhi_cache.get_value(key='count_%s_%s_%s_%s' % (
+                status, username, before, after), expiretime=300,
+                createfunc=lambda: self._query_updates_count(status, username,
+                                                             before, after))
+
+    def _query_updates_count(self, status, username, before, after):
+        print "\n\n_query_updates_count(%s)\n\n" % locals()
+        params = {'count_only': True}
+        label = status + ' updates pushed'
+
+        if username:
+            params['username'] = username
+        if status:
+            params['status'] = status
+        if before:
+            before = str(before)
+            params['end_date'] = before.split('.')[0]
+        if after:
+            after = str(after)
+            params['start_date'] = after.split('.')[0]
+
+        count = self.call('list', params)[1]['num_items']
+
+        return {'count': count, 'label': label, 'state': status}
