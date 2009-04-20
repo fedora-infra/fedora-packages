@@ -34,7 +34,7 @@ bugs_grid = BugsGrid('bugs_grid')
 
 class BugsDashboard(PackagesDashboardContainer):
     layout = [Category('content-col-apps',[
-                         Widget('Dashboard', bug_stats_widget,
+                         Widget('Bugs Dashboard', bug_stats_widget,
                                 params={'package': '', 'filters':{'package': ''}}),
                          Widget('Recently Filed Bugs',
                                 bugs_grid,
