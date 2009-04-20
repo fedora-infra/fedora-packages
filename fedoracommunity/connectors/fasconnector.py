@@ -103,11 +103,13 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
                       default_sort_order = -1,
                       can_paginate = True)
 
-        path.register_column('username',
+        # make human name weighted more
+        path.register_column('human_name',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
-        path.register_column('human_name',
+
+        path.register_column('username',
                         default_visible = True,
                         can_sort = False,
                         can_filter_wildcards = False)
