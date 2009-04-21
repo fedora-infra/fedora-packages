@@ -2,11 +2,11 @@ from moksha.lib.base import Controller
 from moksha.lib.helpers import (Category, MokshaApp, not_anonymous,
                                 param_has_value)
 from moksha.api.widgets.containers import DashboardContainer
-from moksha.api.widgets import Grid
+from moksha.api.widgets import Grid, ContextAwareWidget
 
 from tg import expose, tmpl_context
 
-class SearchContainer(DashboardContainer):
+class SearchContainer(DashboardContainer, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.searchresource.templates.searchcontainer'
     params=['search']
     layout = [Category('content-column',

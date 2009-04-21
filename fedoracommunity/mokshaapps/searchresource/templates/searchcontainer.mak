@@ -11,36 +11,32 @@
             <input class="button" type="submit" value="Search"/>
         </form>
 
-
-        % if tmpl_context.auth('not_anonymous()'):
-          Enter a search to search for Fedora packages and people.  Results will
-          appear bellow with the package search first and people search second.
-          You may also use the search bar at top to perform similar searches
-          at any time.
-
-          Hint: The people search can only search on user names right now.  It does
-          not take into account full names except for ranking purposes so it may
-          be hard to find someone if their user name bears no similarity to
-          their actual name.  A full featured search indexer is being worked on
-          which will greatly expand the relevance of the results.  If you
-          can't find a person you are looking for try searching for a package
-          they maintain or searching a portion of their irc nick which may be
-          closer to their user name.
-
-        % else:
-          Enter a search to search for Fedora packages. You must be logged in to
-          search for people.  Results will appear bellow ranked by relevance.
-          You may also use the search bar at top to perform similar searches
-          at any time
-        % endif
-
-        <p />
-
-
-
        </div>
 
        <div id="left-content-column">
+        % if not search:
+          % if tmpl_context.auth('not_anonymous()'):
+            Enter a search to search for Fedora packages and people.  Results will
+            appear bellow with the package search first and people search second.
+            You may also use the search bar at top to perform similar searches
+            at any time.
+
+            Hint: The people search can only search on user names right now.  It does
+            not take into account full names except for ranking purposes so it may
+            be hard to find someone if their user name bears no similarity to
+            their actual name.  A full featured search indexer is being worked on
+            which will greatly expand the relevance of the results.  If you
+            can't find a person you are looking for try searching for a package
+            they maintain or searching a portion of their irc nick which may be
+            closer to their user name.
+
+          % else:
+            Enter a search to search for Fedora packages. You must be logged in to
+            search for people.  Results will appear bellow ranked by relevance.
+            You may also use the search bar at top to perform similar searches
+            at any time.
+          % endif
+        % endif
           ${applist_widget(category = 'content-column', layout = layout)}
        </div>
     </div>
