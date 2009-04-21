@@ -41,7 +41,7 @@
 	                       function _fedora_community_on_search_focus(el) {
 
 	                          if (el.value === "Type search terms here.")
-	                              el.select();
+	                              el.value = "";
 
 	                          $(el).addClass("search-active");
 	                       }
