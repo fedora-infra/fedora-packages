@@ -1,3 +1,5 @@
+import logging
+
 from tw.api import Widget
 from tg import expose, tmpl_context, require, request
 from uuid import uuid4
@@ -15,6 +17,8 @@ from moksha.connector.utils import DateTimeDisplay
 from fedoracommunity.widgets.expander import expander_js
 from memberships import MembershipsController
 from package_maintenance import PackageMaintenanceController
+
+log = logging.getLogger(__name__)
 
 class ProfileContainer(DashboardContainer, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.people.templates.peoplecontainer'
@@ -109,8 +113,12 @@ class PersonBlogWidget(Feed):
     def update_params(self, d):
         super(PersonBlogWidget, self).update_params(d)
         for entry in d.entries:
-            updated = datetime(*entry['updated_parsed'][:-2])
-            entry['last_modified']= DateTimeDisplay(updated).when(0)['when']
+            try:
+                updated = datetime(*entry['updated_parsed'][:-2])
+                entry['last_modified']= DateTimeDisplay(updated).when(0)['when']
+            except:
+                log.error("Unable to determine updated timestamp for entry")
+                entry['last_modified'] = entry.get('updated', '')
 
 
 people_grid = PeopleGrid('people_grid')
