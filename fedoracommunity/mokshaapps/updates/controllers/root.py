@@ -176,11 +176,12 @@ class RootController(Controller):
 
                 more_link = '/'.join(s)
 
-        if decoded_filters.get('status').lower() == 'stable':
+        status = decoded_filters.get('status','').lower()
+        if status == 'stable':
             tmpl_context.widget = stable_updates_grid
-        elif decoded_filters.get('status').lower() == 'testing':
+        elif status == 'testing':
             tmpl_context.widget = testing_updates_grid
-        elif decoded_filters.get('status').lower() == 'pending':
+        elif status == 'pending':
             tmpl_context.widget = pending_updates_grid
         else:
             tmpl_context.widget = stable_updates_grid
