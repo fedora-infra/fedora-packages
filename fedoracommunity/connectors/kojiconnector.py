@@ -50,9 +50,9 @@ class KojiConnector(IConnector, ICall, IQuery):
     def _get_file_url(self, task_id, file_name):
         return self._koji_url + '/getfile' + '?taskID=' + str(task_id) + '&name=' + file_name
 
-    def call_get_error_log(self, resource_path, params, _cookies=None):
+    def call_get_error_log(self, resource_path, _cookies=None, task_id=None):
         results = {'log_url':'', 'log_name':'', 'task_id':''}
-        task_id = int(params.get('task_id'));
+        task_id = int(task_id);
 
         decendents = self.call('getTaskDescendents', {'task_id': task_id})
         for task in decendents.keys():
