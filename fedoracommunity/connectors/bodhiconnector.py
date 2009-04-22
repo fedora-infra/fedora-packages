@@ -350,7 +350,6 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 expiretime=300)
 
     def _get_dashboard_stats(self, username):
-        print "_get_dashboard_stats(%s)" % username
         options = {}
         results = {}
 
@@ -377,7 +376,6 @@ class BodhiConnector(IConnector, ICall, IQuery):
                                                              before, after))
 
     def _query_updates_count(self, status, username, before, after):
-        print "\n\n_query_updates_count(%s)\n\n" % locals()
         params = {'count_only': True}
         label = status + ' updates pushed'
 
