@@ -2,11 +2,14 @@ from tg import expose, tmpl_context, require, request
 from repoze.what.predicates import not_anonymous
 
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
+from moksha.lib.helpers import Category, MokshaApp, MokshaWidget, Widget
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 
-from fedoracommunity.widgets import SubTabbedContainer
+from fedoracommunity.widgets import (SubTabbedContainer,
+                                    ExtraContentTabbedContainer,
+                                    QuickLinksWidget)
+
 from overview import OverviewController
 
 class UserPkgsCompactGrid(Grid, ContextAwareWidget):
@@ -15,8 +18,25 @@ class UserPkgsCompactGrid(Grid, ContextAwareWidget):
 class UserPkgsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.userpkgs_table_widget'
 
-class PackageNavContainer(SubTabbedContainer):
+class AllPackagesLinks(QuickLinksWidget):
+    links=[('',
+           'All Packages',
+           '/package_maintenance',
+           'all_packages'),
+           ('',
+           'All Builds',
+           '/package_maintenance/builds',
+           'all_builds'),
+           ('',
+           'All Updates',
+           '/package_maintenance',
+           'all_updates')
+          ]
+
+all_packages_links = AllPackagesLinks('all_packages_links')
+class PackageNavContainer(ExtraContentTabbedContainer):
     template='mako:fedoracommunity.mokshaapps.packages.templates.package_nav'
+    sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),)
     tabs= (Category('',
                     MokshaApp('Overview', 'fedoracommunity.packages/package',
                      params={'package':''})
@@ -60,7 +80,7 @@ user_pkgs_compact_grid = UserPkgsCompactGrid('usrpkgs_list')
 user_pkgs_grid = UserPkgsGrid('usrpkgs_table')
 
 packages_list_container = PackagesListContainer('packages_list_container')
-package_nav_container = PackageNavContainer('package_nav_container')
+package_nav_container = PackageNavContainer('selected_package_nav_container')
 
 class RootController(Controller):
 

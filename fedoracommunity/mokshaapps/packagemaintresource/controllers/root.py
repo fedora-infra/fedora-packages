@@ -3,24 +3,30 @@ from moksha.lib.helpers import MokshaApp
 from tg import expose, tmpl_context
 from fedoracommunity.widgets import SubTabbedContainer
 
-class TabbedNav(SubTabbedContainer):
-    tabs= (MokshaApp('Packages', 'fedoracommunity.packages',
-                     params={'package':''}),
+class AllPackagesTabbedNav(SubTabbedContainer):
+    tabs= (MokshaApp('Packages', 'fedoracommunity.packages'),
            MokshaApp('Builds', 'fedoracommunity.builds'),
            MokshaApp('Updates', 'fedoracommunity.updates'),
           )
 
-class RootController(Controller):
+class SelectedPackageTabbedNav(SubTabbedContainer):
+    tabs= (MokshaApp('Overview', 'fedoracommunity.packages',
+                     content_id = 'package_overview',
+                     params={'package':''})
+          )
 
-    def __init__(self):
-        self.widget = TabbedNav('packagemaintnav')
+all_packages_nav = AllPackagesTabbedNav('packagemaintnav')
+selected_package_nav = SelectedPackageTabbedNav('selectedpackagenav')
+
+class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):
         options = {}
         package = kwds.get('package')
+        tmpl_context.widget = all_packages_nav
         if package:
             options['package'] = package
+            tmpl_context.widget = selected_package_nav
 
-        tmpl_context.widget = self.widget
         return {'options': options}
