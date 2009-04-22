@@ -175,6 +175,6 @@ alerts_container = AlertsContainer('alerts')
 class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
-    def index(self, username):
+    def index(self, username=None):
         tmpl_context.widget = alerts_container
         return dict(options={'userid': username})
