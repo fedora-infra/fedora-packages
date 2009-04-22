@@ -67,7 +67,8 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                                                     "username":''}
                                         }
                                  ),
-                        MokshaApp('', 'fedoracommunity.people/planet',
+                        MokshaApp('Latest Blog Posts',
+                                  'fedoracommunity.people/planet',
                                   params={'username': None}),
                         MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
                                  params={'view': 'canvas',
