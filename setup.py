@@ -72,6 +72,7 @@ setup(
     pkgdb = fedoracommunity.connectors:PkgdbConnector
     fas = fedoracommunity.connectors:FasConnector
     bugzilla = fedoracommunity.connectors:BugzillaConnector
+    planet = fedoracommunity.connectors:PlanetConnector
 
     [moksha.application]
     login = fedoracommunity.mokshaapps.login:RootController

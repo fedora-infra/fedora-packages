@@ -3,3 +3,4 @@ from bodhiconnector import BodhiConnector
 from pkgdbconnector import PkgdbConnector
 from fasconnector import FasConnector
 from bugzillaconnector import BugzillaConnector
+from planet import PlanetConnector
