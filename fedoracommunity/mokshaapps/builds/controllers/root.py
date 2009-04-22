@@ -26,7 +26,8 @@ in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds
                                        content_id='inprogress',
                                        params={'rows_per_page': 10,
                                                'filters':{'state':BUILD_STATES['BUILDING'],
-                                                          'profile': False
+                                                          'profile': False,
+                                                          'username': None
                                                          }
                                               })
 
@@ -35,7 +36,8 @@ failed_builds_app = MokshaApp('Failed Builds', 'fedoracommunity.builds/table',
                                        content_id='failed',
                                        params={'rows_per_page': 10,
                                                'filters':{'state':BUILD_STATES['FAILED'],
-                                                          'profile': False
+                                                          'profile': False,
+                                                          'username': None
                                                          }
                                               })
 
@@ -44,14 +46,16 @@ successful_builds_app = MokshaApp('Successful Builds', 'fedoracommunity.builds/t
                                        content_id='successful',
                                        params={'rows_per_page': 10,
                                                'filters':{'state':BUILD_STATES['COMPLETE'],
-                                                          'profile': False
+                                                          'profile': False,
+                                                          'username': None
                                                          }
                                               })
 
 overview_builds_app = MokshaApp('Overview',
                                  'fedoracommunity.builds/overview',
-                                 content_id='overview',
-                                 params={'profile': False})
+                                 content_id='builds_overview',
+                                 params={'profile': False,
+                                         'username': None})
 
 class BuildsNavContainer(SubTabbedContainer):
     params = ['applist_widget']
@@ -60,7 +64,7 @@ class BuildsNavContainer(SubTabbedContainer):
     sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts', css_class='app panel'),)
     tabs = (Category('Packages I Own',
                      (overview_builds_app.clone({'profile': True},
-                                                content_id='my_overview'),
+                                                content_id='my_builds_overview'),
                       in_progress_builds_app.clone({'filters': {'profile': True}},
                                                    content_id='my_inprogress'),
                       failed_builds_app.clone({'filters': {'profile': True}},
@@ -113,8 +117,9 @@ class RootController(Controller):
         return {'options':options}
 
     @expose('mako:moksha.templates.widget')
-    def overview(self, profile=False):
-        options = {'profile': profile}
+    def overview(self, profile=False, username=None):
+        options = {'profile': profile,
+                   'username': username}
 
         tmpl_context.widget = builds_overview_container
         return {'options':options}

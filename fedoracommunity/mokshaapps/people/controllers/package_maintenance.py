@@ -6,6 +6,44 @@ from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
 from moksha.api.widgets import ContextAwareWidget
 from moksha.api.widgets.containers import DashboardContainer
 
+from fedoracommunity.widgets import ExtraContentTabbedContainer
+
+from fedoracommunity.mokshaapps.builds.controllers.root import (
+    in_progress_builds_app,
+    failed_builds_app,
+    successful_builds_app,
+    overview_builds_app)
+
+from fedoracommunity.mokshaapps.updates.controllers.root import (
+    unpushed_updates_app,
+    testing_updates_app,
+    stable_updates_app,
+    overview_updates_app)
+
+class PeopleNavContainer(ExtraContentTabbedContainer):
+    template='mako:fedoracommunity.mokshaapps.people.templates.people_package_nav'
+    sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts',
+                              params={'username':None},
+                              css_class='app panel'),)
+    header_apps = (MokshaApp('', 'fedoracommunity.people/details',
+                                params={'compact': True,
+                                        'username': None}),)
+
+    tabs= (Category('Builds',
+                    (overview_builds_app.clone({'username': None}),
+                     in_progress_builds_app.clone({'filters':{'username':None}}),
+                     failed_builds_app.clone({'filters':{'username':None}}),
+                     successful_builds_app.clone({'filters':{'username':None}})),
+                    ),
+
+           Category('Updates',
+                    (overview_updates_app.clone({'username':None}),
+                     unpushed_updates_app.clone({'filters':{'username':None}}),
+                     testing_updates_app.clone({'filters':{'username':None}}),
+                     stable_updates_app.clone({'filters':{'username':None}}))
+                   )
+          )
+
 class ProfileContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('header-content-column',
                        MokshaApp('', 'fedoracommunity.people/details',
@@ -57,6 +95,9 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
 people_memberships_container = PeopleContainer('people_memberships_container')
 profile_memberships_container = ProfileContainer('profile_memberships_container')
 
+people_nav_container  = PeopleNavContainer('package_maint_people_nav_container')
+
+
 class PackageMaintenanceController(Controller):
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):
@@ -68,6 +109,6 @@ class PackageMaintenanceController(Controller):
         if options['profile']:
             tmpl_context.widget = profile_memberships_container
         elif options['username']:
-            tmpl_context.widget = people_memberships_container
+            tmpl_context.widget = people_nav_container
 
         return {'options': options}

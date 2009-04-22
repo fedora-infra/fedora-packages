@@ -17,15 +17,23 @@ class AlertsContainer(ContextAwareWidget):
         c = cache.get_cache('fedoracommunity_alerts_global')
 
         # cache for a minute
-        yours = []
-        creds = request.environ.get('repoze.what.credentials')
-        print creds
-        if creds and creds.get('repoze.what.userid'):
-            yours = c.get_value(key='userid',
-                 createfunc=lambda : self.get_user_entries(creds['repoze.what.userid']),
+        users = []
+        if d.get('profile') or d.get('userid'):
+            label = 'Error if you see this label'
+            if d.get('profile'):
+                label = 'Your Recent Packages'
+                creds = request.environ.get('repoze.what.credentials')
+                if creds and creds.get('repoze.what.userid'):
+                    userid = creds.get('repoze.what.userid')
+            else:
+                userid = d.get('userid')
+                label = '%s\'s Recent Packages' % userid
+
+            users_data = c.get_value(key=userid,
+                 createfunc=lambda : self.get_user_entries(userid),
                  expiretime=3600)
 
-            d['alerts'] = [{'label': 'Your Packages', 'items': yours}]
+            d['alerts'] = [{'label': label, 'items': users_data}]
         else:
             # cache for 5 minutes
             today = c.get_value(key='today',
@@ -167,6 +175,6 @@ alerts_container = AlertsContainer('alerts')
 class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
-    def index(self):
+    def index(self, username):
         tmpl_context.widget = alerts_container
-        return dict(options={})
+        return dict(options={'userid': username})

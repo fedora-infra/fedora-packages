@@ -48,7 +48,8 @@ unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/ta
                               'rows_per_page': 10,
                               'filters': {
                                   'status':'pending',
-                                  'profile': False
+                                  'profile': False,
+                                  'username': None
                                   }
                               })
 testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/table',
@@ -56,7 +57,8 @@ testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/tabl
                               'rows_per_page': 10,
                               'filters': {
                                   'status':'testing',
-                                  'profile': False
+                                  'profile': False,
+                                  'username': None
                                   }
                               })
 stable_updates_app = MokshaApp('Stable Updates', 'fedoracommunity.updates/table',
@@ -64,14 +66,16 @@ stable_updates_app = MokshaApp('Stable Updates', 'fedoracommunity.updates/table'
                               'rows_per_page': 10,
                               'filters': {
                                   'status':'stable',
-                                  'profile': False
+                                  'profile': False,
+                                  'username': None
                                   }
                               })
 
 overview_updates_app = MokshaApp('Overview',
                                  'fedoracommunity.updates/overview',
                                  content_id='overview',
-                                 params={'profile': False})
+                                 params={'profile': False,
+                                         'username': None})
 
 dashboard_updates_app = MokshaApp('Updates Dashboard',
                                   'fedoracommunity.updates/dashboard',
@@ -138,8 +142,9 @@ class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
     @validate(validators={'profile': validators.StringBool()})
-    def overview(self, profile=False):
-        options = {'profile': profile}
+    def overview(self, profile=False, username=None):
+        options = {'profile': profile,
+                   'username': username}
         tmpl_context.widget = updates_overview_container
 
         return {'options':options}
