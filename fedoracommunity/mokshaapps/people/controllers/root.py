@@ -1,13 +1,16 @@
 from tw.api import Widget
-from tg import expose, tmpl_context, require
+from tg import expose, tmpl_context, require, request
 from uuid import uuid4
+from datetime import datetime
 from repoze.what.predicates import not_anonymous
 
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
+from moksha.api.widgets.feed import Feed
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.connectors import get_connector
+from moksha.connector.utils import DateTimeDisplay
 
 from fedoracommunity.widgets.expander import expander_js
 from memberships import MembershipsController
@@ -33,6 +36,9 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                                          "filters":{"profile": True}
                                         }
                                  ),
+                        MokshaApp('Your Latest Blog Posts',
+                                  'fedoracommunity.people/planet',
+                                  params={'username': None}),
                         MokshaApp('Your Packages', 'fedoracommunity.packages/mypackages',
                                  params={'view': 'canvas'})
                        ),
@@ -87,10 +93,25 @@ class PersonDetailsWidget(Widget):
         d.person = person
 
 
+class PersonBlogWidget(Feed):
+    template = 'mako:fedoracommunity.mokshaapps.people.templates.planet'
+    javascript = [expander_js]
+    params = ['limit']
+    limit = 3
+    url = None
+
+    def update_params(self, d):
+        super(PersonBlogWidget, self).update_params(d)
+        for entry in d.entries:
+            updated = datetime(*entry['updated_parsed'][:-2])
+            entry['last_modified']= DateTimeDisplay(updated).when(0)['when']
+
+
 people_grid = PeopleGrid('people_grid')
 people_container = PeopleContainer('people_container')
 profile_container = ProfileContainer('profile_container')
 person_details_widget = PersonDetailsWidget('person_details_widget')
+person_blog_widget = PersonBlogWidget('person_blog')
 
 class RootController(Controller):
     memberships = MembershipsController()
@@ -137,3 +158,12 @@ class RootController(Controller):
         return {'filters': filters,
                 'rows_per_page':rows_per_page,
                 'more_link': None}
+
+    @expose('mako:moksha.templates.widget')
+    @require(not_anonymous())
+    def planet(self):
+        username = request.identity['repoze.who.userid']
+        planet = get_connector('planet')
+        info = planet.get_user_details(username)
+        tmpl_context.widget = person_blog_widget
+        return dict(options={'url': info['feed']})
