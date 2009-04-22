@@ -7,6 +7,11 @@
             <span class="label">Search </span>
             <div class="content-searchinput">
                 <input class="searchinput" type="text" name="search" value="${search}" />
+                % if tmpl_context.auth('not_anonymous()'):
+                    <br />
+                    <span><input type="checkbox" name="st" value="packages"  ${packages_checked}/>Packages</span>
+                    <span><input type="checkbox" name="st" value="people"  ${people_checked}/>People</span>
+                % endif
             </div>
             <input class="button" type="submit" value="Search"/>
         </form>

@@ -1,6 +1,6 @@
 from moksha.lib.base import Controller
 from moksha.lib.helpers import (Category, MokshaApp, not_anonymous,
-                                param_has_value)
+                                param_has_value, param_contains, Any, Not)
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets import Grid, ContextAwareWidget
 
@@ -12,10 +12,20 @@ class SearchContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('content-column',
                        [MokshaApp('Package Search', 'fedoracommunity.search/packages',
                                   params={'search': None},
-                                  auth=param_has_value('search')),
+                                  auth=(param_has_value('search'),
+                                        Any(param_contains('st', 'packages'),
+                                            Not(param_has_value('st')))
+                                       )
+                                 ),
                         MokshaApp('People Search','fedoracommunity.search/people',
-                                  params={'search': None},
-                                  auth=[not_anonymous(), param_has_value('search')])
+                                  params={'search': None,
+                                          'people_checked': None},
+                                  auth=(not_anonymous(),
+                                        param_has_value('search'),
+                                        Any(param_contains('st', 'people'),
+                                            Not(param_has_value('st')))
+                                       )
+                                  )
                         ])
               ]
 
@@ -41,18 +51,30 @@ class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):
-        options = {'search': ''}
+        options = {'search': '',
+                   'people_checked': '',
+                   'packages_checked':''
+                   }
         tmpl_context.widget = search_container
         search = kwds.get('search')
+        search_types = kwds.get('st', ['people', 'packages'])
+
+        if 'people' in search_types:
+            options['people_checked']='checked="checked"'
+
+        if 'packages' in search_types:
+            options['packages_checked']='checked="checked"'
 
         if search:
             options['search'] = search
+
         return {'options': options}
 
     @expose('mako:moksha.templates.widget')
     def people(self, **kwds):
 
         search = kwds.get('search',kwds.get('s'))
+
         options= {'filters':{'search': search}}
 
         tmpl_context.widget = people_search_grid
