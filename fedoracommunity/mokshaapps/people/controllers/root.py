@@ -74,7 +74,7 @@ class PeopleGrid(Grid, ContextAwareWidget):
 
 class PersonDetailsWidget(Widget):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.info'
-    params = ['person', 'id', 'compact', 'profile']
+    params = ['person', 'id', 'compact', 'profile', 'face']
     javascript = [expander_js]
 
     def update_params(self, d):
@@ -91,6 +91,12 @@ class PersonDetailsWidget(Widget):
             person = person[1][0]
 
         d.person = person
+
+        planet = get_connector('planet')
+        info = planet.get_user_details(d.person['username'])
+        d.face = info.get('face',
+                'http://planet.fedoraproject.org/images/heads/default.png')
+
 
 
 class PersonBlogWidget(Feed):
