@@ -121,6 +121,7 @@ class PersonBlogWidget(Feed):
                 entry['last_modified']= DateTimeDisplay(updated).when(0)['when']
             except:
                 log.error("Unable to determine updated timestamp for entry")
+                log.error(entry)
                 entry['last_modified'] = entry.get('updated', '')
 
 
