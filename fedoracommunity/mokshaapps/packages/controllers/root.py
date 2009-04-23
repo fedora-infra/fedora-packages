@@ -2,7 +2,7 @@ from tg import expose, tmpl_context, require, request
 from repoze.what.predicates import not_anonymous
 
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, MokshaWidget, Widget
+from moksha.lib.helpers import Category, MokshaApp, MokshaWidget, Widget, StaticLink
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 
@@ -34,13 +34,54 @@ class AllPackagesLinks(QuickLinksWidget):
           ]
 
 all_packages_links = AllPackagesLinks('all_packages_links')
-class PackageNavContainer(ExtraContentTabbedContainer):
+
+
+static_overview_links = Category('',
+                    StaticLink('Overview',
+                    '/package_maintenance',
+                    params={'package':''})
+                   )
+
+static_package_detail_links = Category('Package Details',
+                    (StaticLink('Downloads', '/package_maintenance/details/downloads',
+                              params={'package':''}),
+                     StaticLink('Maintainers', '/package_maintenance/details/maintainers',
+                              params={'package':''}),
+                     StaticLink('Owners', '/package_maintenance/details/owners',
+                              params={'package':''}),
+                     StaticLink('Watchers', '/package_maintenance/details/watchers',
+                              params={'package':''}),
+                    )
+                   )
+
+static_package_maint_links = Category('Package Maintenance Tools',
+                    (StaticLink('Bugs', '/package_maintenance/tools/bugs',
+                              params={'package':''}),
+                     StaticLink('Builds', '/package_maintenance/tools/builds',
+                              params={'package':''}),
+                     StaticLink('Changelog', '/package_maintenance/tools/changelog',
+                              params={'package':''}),
+                     StaticLink('Sources', '/package_maintenance/tools/sources',
+                              params={'package':''}),
+                     StaticLink('Updates', '/package_maintenance/tools/updates',
+                              params={'package':''}))
+                   )
+
+class PackageNavOverviewContainer(ExtraContentTabbedContainer):
     template='mako:fedoracommunity.mokshaapps.packages.templates.package_nav'
     sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),)
     tabs= (Category('',
                     MokshaApp('Overview', 'fedoracommunity.packages/package',
                      params={'package':''})
                    ),
+           static_package_detail_links,
+           static_package_maint_links
+          )
+
+class PackageNavDetailsContainer(ExtraContentTabbedContainer):
+    template='mako:fedoracommunity.mokshaapps.packages.templates.package_nav'
+    sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),)
+    tabs= (static_overview_links,
            Category('Package Details',
                     (MokshaApp('Downloads', 'fedoracommunity.packages/package/downloads',
                               params={'package':''}),
@@ -55,8 +96,15 @@ class PackageNavContainer(ExtraContentTabbedContainer):
                                       'roles':"['watcher']"}),
                     )
                    ),
+           static_package_maint_links
+          )
 
-           Category('Package Maintenance',
+class PackageNavMaintContainer(ExtraContentTabbedContainer):
+    template='mako:fedoracommunity.mokshaapps.packages.templates.package_nav'
+    sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),)
+    tabs= (static_overview_links,
+           static_package_detail_links,
+           Category('Package Maintenance Tools',
                     (MokshaApp('Bugs', 'fedoracommunity.packages/package/bugs',
                               params={'package':''}),
                     MokshaApp('Builds', 'fedoracommunity.packages/package/builds',
@@ -80,7 +128,9 @@ user_pkgs_compact_grid = UserPkgsCompactGrid('usrpkgs_list')
 user_pkgs_grid = UserPkgsGrid('usrpkgs_table')
 
 packages_list_container = PackagesListContainer('packages_list_container')
-package_nav_container = PackageNavContainer('selected_package_nav_container')
+package_nav_overview_container = PackageNavOverviewContainer('selected_package_nav_overview_container')
+package_nav_details_container = PackageNavDetailsContainer('selected_package_nav_details_container')
+package_nav_maint_container = PackageNavMaintContainer('selected_package_nav_tools_container')
 
 class RootController(Controller):
 
@@ -160,9 +210,25 @@ class RootController(Controller):
             options = {
                        'package': package
                       }
-            tmpl_context.widget = package_nav_container
+            tmpl_context.widget = package_nav_overview_container
 
         return {'options':options}
+
+    @expose('mako:moksha.templates.widget')
+    def details(self, *args, **kwds):
+        package = kwds.get('package', None)
+        options = {'package': package}
+        tmpl_context.widget = package_nav_details_container
+
+        return {'options': options}
+
+    @expose('mako:moksha.templates.widget')
+    def tools(self, *args, **kwds):
+        package = kwds.get('package', None)
+        options = {'package': package}
+        tmpl_context.widget = package_nav_maint_container
+
+        return {'options': options}
 
     @expose('mako:moksha.templates.widget')
     def name(self, pkg_name, **kwds):
