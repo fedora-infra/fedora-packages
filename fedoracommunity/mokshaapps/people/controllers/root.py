@@ -5,6 +5,7 @@ from tg import expose, tmpl_context, require, request
 from uuid import uuid4
 from datetime import datetime
 from repoze.what.predicates import not_anonymous
+from pytz import utc, timezone
 
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
@@ -15,6 +16,7 @@ from moksha.api.connectors import get_connector
 from moksha.connector.utils import DateTimeDisplay
 
 from fedoracommunity.widgets.expander import expander_js
+from fedoracommunity.widgets.clock import clock_js
 from memberships import MembershipsController
 from package_maintenance import PackageMaintenanceController
 
@@ -43,7 +45,7 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                         MokshaApp('Your Latest Blog Posts',
                                   'fedoracommunity.people/planet',
                                   auth=not_anonymous(),
-                                  params={'user': None}),
+                                  params={'username': None}),
                         MokshaApp('Your Packages', 'fedoracommunity.packages/mypackages',
                                  params={'view': 'canvas'})
                        ),
@@ -82,8 +84,8 @@ class PeopleGrid(Grid, ContextAwareWidget):
 
 class PersonDetailsWidget(Widget):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.info'
-    params = ['person', 'id', 'compact', 'profile', 'face']
-    javascript = [expander_js]
+    params = ['person', 'id', 'compact', 'profile', 'face', 'utc_offset']
+    javascript = [expander_js, clock_js]
     face = 'http://planet.fedoraproject.org/images/heads/default.png'
 
     def update_params(self, d):
@@ -101,10 +103,27 @@ class PersonDetailsWidget(Widget):
 
         d.person = person
 
+        # Get the users hackergochi
         planet = get_connector('planet')
         info = planet.get_user_details(d.person['username'])
         if info:
             d.face = info.get('face', self.face)
+
+        # Determine their UTC offset
+        d.utc_offset = ''
+        now = datetime.now(utc)
+        now = now.astimezone(timezone(person['timezone']))
+        offset = now.strftime('%z')
+        if offset.startswith('-'):
+            offset = offset[1:]
+            d.utc_offset += '-'
+        hours = int(offset[:2])
+        d.utc_offset += str(hours)
+        # FIXME: account for minutes?
+        #minutes = int(offset[2:])
+        #if minutes:
+        #    d.utc_offset += '.%d' % ...
+
 
 
 class PersonBlogWidget(Feed):
@@ -144,6 +163,7 @@ class RootController(Controller):
 
         if options['profile']:
             tmpl_context.widget = profile_container
+            options['username'] = request.identity['repoze.who.userid']
         elif options['username']:
             tmpl_context.widget = people_container
         else:
@@ -179,9 +199,6 @@ class RootController(Controller):
     @expose('mako:moksha.templates.widget')
     def planet(self, username=None):
         options = {}
-
-        if not username:
-            username = request.identity['repoze.who.userid']
 
         planet = get_connector('planet')
         info = planet.get_user_details(username)

@@ -19,7 +19,8 @@
             <td>${person['country_code']}</td>
           </tr><tr>
             <th>Timezone</th>
-            <td>${person['timezone']}</td>
+            <td>${person['timezone']} <div id="clock"/></td>
+            <td>UTC <div id="utc_clock"/></td>
           </tr>
           </table>
         </div>
@@ -93,6 +94,19 @@
             expandText: 'Show full key <img src="/images/arrow_down.png">',
             userCollapseText: 'Hide full key <img src="/images/arrow_up.png">',
       });
+
+      $("#clock").jclock({
+          timeNotation: '12h',
+          am_pm: true,
+          utc_offset: ${utc_offset},
+      });
+
+      $("#utc_clock").jclock({
+          timeNotation: '12h',
+          am_pm: true,
+          utc: true,
+      });
+
     });
   </script>
 </div>
