@@ -12,9 +12,9 @@
                     <li class="first"><a href="/en/sponsors">Sponsors</a></li>
                     <li><a href="http://fedoraproject.org/wiki/Legal">Legal</a></li>
                     <li><a href="http://fedoraproject.org/wiki/Legal/TrademarkGuidelines">Trademark Guidelines</a></li>
-                    <br/>
-                <a href="http://moksha.fedorahosted.org"><img src="/images/Powered-by-moksha_button.png"/></a>
                 </ul>
+                <br />
+                <a href="http://moksha.fedorahosted.org"><img src="/images/Powered-by-moksha_button.png"/></a>
             </div>
         </div>
     </%def>
