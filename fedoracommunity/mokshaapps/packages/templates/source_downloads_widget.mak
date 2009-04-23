@@ -1,3 +1,5 @@
+
+<div class="list header-list">
 <h3>Source for Active Releases</h3>
 <table>
   <tr>
@@ -13,3 +15,4 @@
     </tr>
   % endfor
 </table>
+</div>
