@@ -598,6 +598,8 @@ span.panel {
 #content .right-content-column .panel img {
   margin: 0 !important;
   margin-right: .6em !important;
+  min-height: 16px;
+  margin-top: -2px !important;
 }
 
 #right-content-column .panel dt,
@@ -620,7 +622,9 @@ span.panel {
   margin-left: -.1em;
   display: block;
   padding: .2em  1em;
+  line-height: 1.3em;
 }
+
 
 
 #right-content-column .panel dd,
