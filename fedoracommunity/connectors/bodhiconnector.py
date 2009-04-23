@@ -236,7 +236,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
                 # FIXME: Don't embed HTML
                 up['actions'] += """
-                    <a href="#" id="%s_%s" onclick="%s return false;">%s</a><br/>
+                    <button id="%s_%s" onclick="%s return false;">%s</button><br/>
                     """ % (up['dist_updates'][0]['title'].replace('.', ''),
                            action[0], reqs, action[1])
 
