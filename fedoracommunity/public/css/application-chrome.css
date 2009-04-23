@@ -941,20 +941,19 @@ ul.page-flips li {
 
 /** special list styles **/
 
-.action-button {
-  padding: 4px;
-  line-height: 24px;
-  font-size: 70%;
-  text-transform: uppercase;
-  letter-spacing: -1px;
+.list button {
+  border: 1px solid #777;
   background-color: #ddd;
-  border: 1px solid #aaa;
+  margin-bottom: .5em;
+  min-width: 10em;
+  color: #777;
 }
 
-.action-button:hover {
-  background-color: #eaeaea;
+.list button:hover {
+  background-color: #6AA6E2;
+  background-color: #888;
+  color: white;
 }
-
 
 /* this needs to be fixed in fedora.css */
 th, td {
