@@ -12,7 +12,13 @@ class AllPackagesTabbedNav(SubTabbedContainer):
 class SelectedPackageTabbedNav(SubTabbedContainer):
     tabs= (MokshaApp('Overview', 'fedoracommunity.packages',
                      content_id = 'package_overview',
-                     params={'package':''})
+                     params={'package':''}),
+           MokshaApp('Package Details', 'fedoracommunity.packages/details',
+                     content_id = 'details',
+                     params={'package':''}),
+           MokshaApp('Package Maintenance Tools', 'fedoracommunity.packages/tools',
+                     content_id = 'tools',
+                     params={'package':''}),
           )
 
 all_packages_nav = AllPackagesTabbedNav('packagemaintnav')
