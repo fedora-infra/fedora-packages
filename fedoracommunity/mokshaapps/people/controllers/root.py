@@ -1,3 +1,5 @@
+import logging
+
 from tw.api import Widget
 from tg import expose, tmpl_context, require, request
 from uuid import uuid4
@@ -15,6 +17,8 @@ from moksha.connector.utils import DateTimeDisplay
 from fedoracommunity.widgets.expander import expander_js
 from memberships import MembershipsController
 from package_maintenance import PackageMaintenanceController
+
+log = logging.getLogger(__name__)
 
 class ProfileContainer(DashboardContainer, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.people.templates.peoplecontainer'
@@ -38,7 +42,8 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                                  ),
                         MokshaApp('Your Latest Blog Posts',
                                   'fedoracommunity.people/planet',
-                                  params={'username': None}),
+                                  auth=not_anonymous(),
+                                  params={'user': None}),
                         MokshaApp('Your Packages', 'fedoracommunity.packages/mypackages',
                                  params={'view': 'canvas'})
                        ),
@@ -62,6 +67,9 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                                                     "username":''}
                                         }
                                  ),
+                        MokshaApp('Latest Blog Posts',
+                                  'fedoracommunity.people/planet',
+                                  params={'username': None}),
                         MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
                                  params={'view': 'canvas',
                                          'username': ''})
@@ -74,8 +82,9 @@ class PeopleGrid(Grid, ContextAwareWidget):
 
 class PersonDetailsWidget(Widget):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.info'
-    params = ['person', 'id', 'compact', 'profile']
+    params = ['person', 'id', 'compact', 'profile', 'face']
     javascript = [expander_js]
+    face = 'http://planet.fedoraproject.org/images/heads/default.png'
 
     def update_params(self, d):
         super(PersonDetailsWidget, self).update_params(d)
@@ -92,6 +101,11 @@ class PersonDetailsWidget(Widget):
 
         d.person = person
 
+        planet = get_connector('planet')
+        info = planet.get_user_details(d.person['username'])
+        if info:
+            d.face = info.get('face', self.face)
+
 
 class PersonBlogWidget(Feed):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.planet'
@@ -103,8 +117,13 @@ class PersonBlogWidget(Feed):
     def update_params(self, d):
         super(PersonBlogWidget, self).update_params(d)
         for entry in d.entries:
-            updated = datetime(*entry['updated_parsed'][:-2])
-            entry['last_modified']= DateTimeDisplay(updated).when(0)['when']
+            try:
+                updated = datetime(*entry['updated_parsed'][:-2])
+                entry['last_modified']= DateTimeDisplay(updated).when(0)['when']
+            except:
+                log.error("Unable to determine updated timestamp for entry")
+                log.error(entry)
+                entry['last_modified'] = entry.get('updated', '')
 
 
 people_grid = PeopleGrid('people_grid')
@@ -134,7 +153,6 @@ class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
     def name(self, username, **kwds):
-
         kwds.update({'u': username})
         return self.index(**kwds)
 
@@ -150,7 +168,6 @@ class RootController(Controller):
 
         This handler displays the main table by itself
         '''
-
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
 
@@ -160,10 +177,19 @@ class RootController(Controller):
                 'more_link': None}
 
     @expose('mako:moksha.templates.widget')
-    @require(not_anonymous())
-    def planet(self):
-        username = request.identity['repoze.who.userid']
+    def planet(self, username=None):
+        options = {}
+
+        if not username:
+            username = request.identity['repoze.who.userid']
+
         planet = get_connector('planet')
         info = planet.get_user_details(username)
-        tmpl_context.widget = person_blog_widget
-        return dict(options={'url': info['feed']})
+
+        if info:
+            options['url'] = info['feed']
+            tmpl_context.widget = person_blog_widget
+        else:
+            tmpl_context.widget = lambda: ''
+
+        return dict(options=options)

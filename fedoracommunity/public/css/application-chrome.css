@@ -594,6 +594,14 @@ span.panel {
   padding-bottom: .5em;
 }
 
+#content #right-content-column .panel img,
+#content .right-content-column .panel img {
+  margin: 0 !important;
+  margin-right: .6em !important;
+  min-height: 16px;
+  margin-top: -2px !important;
+}
+
 #right-content-column .panel dt,
 .right-content-column .panel dt {
   display: block;
@@ -604,11 +612,8 @@ span.panel {
 #right-content-column .panel dd img,
 .right-content-column .panel dd img {
   display: block;
-  margin-right: 7px !important;
   float: left;
-  margin-top: -5px !important;
   clear: both;
-  padding-top: .3em;
 }
 
 #right-content-column .panel dd,
@@ -617,12 +622,14 @@ span.panel {
   margin-left: -.1em;
   display: block;
   padding: .2em  1em;
+  line-height: 1.3em;
 }
+
 
 
 #right-content-column .panel dd,
 .right-content-column .panel dd {
-  margin-top: .4em;
+  margin-top: .2em;
 }
 
 /** float clearing **/
@@ -934,20 +941,19 @@ ul.page-flips li {
 
 /** special list styles **/
 
-.action-button {
-  padding: 4px;
-  line-height: 24px;
-  font-size: 70%;
-  text-transform: uppercase;
-  letter-spacing: -1px;
+.list button {
+  border: 1px solid #777;
   background-color: #ddd;
-  border: 1px solid #aaa;
+  margin-bottom: .5em;
+  min-width: 10em;
+  color: #777;
 }
 
-.action-button:hover {
-  background-color: #eaeaea;
+.list button:hover {
+  background-color: #6AA6E2;
+  background-color: #888;
+  color: white;
 }
-
 
 /* this needs to be fixed in fedora.css */
 th, td {
@@ -1054,7 +1060,6 @@ div.info_content {
 }
 
 div.info_content div.hackergotchi {
-  background-color: red;
   height: 100px;
   width: 100px;
   float: left;

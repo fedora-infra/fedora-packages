@@ -2,7 +2,7 @@
   <h2>${person['human_name']}</h2>
   <div class="info_content">
     <div class="info_details">
-      <div class="hackergotchi"></div>
+      <div class="hackergotchi"><img src="${face}"/></div>
 
       <div class="col left_col">
         <div class="info_basic_details info_container">
