@@ -10,20 +10,20 @@ class SearchContainer(DashboardContainer, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.searchresource.templates.searchcontainer'
     params=['search']
     layout = [Category('content-column',
-                       [MokshaApp('Yum Package Search', 'fedoracommunity.search/yum_packages',
+                       [MokshaApp('Package Search', 'fedoracommunity.search/yum_packages',
                                   params={'search': None},
                                   auth=(param_has_value('search'),
                                          Any(param_contains('st', 'packages'),
                                              Not(param_has_value('st')))
                                         )
                                  ),
-                        MokshaApp('Package Search', 'fedoracommunity.search/packages',
-                                  params={'search': None},
-                                  auth=(param_has_value('search'),
-                                        Any(param_contains('st', 'packages'),
-                                            Not(param_has_value('st')))
-                                       )
-                                 ),
+                        #MokshaApp('Package Search', 'fedoracommunity.search/packages',
+                        #          params={'search': None},
+                        #          auth=(param_has_value('search'),
+                        #                Any(param_contains('st', 'packages'),
+                        #                    Not(param_has_value('st')))
+                        #               )
+                        #         ),
                         MokshaApp('People Search','fedoracommunity.search/people',
                                   params={'search': None,
                                           'people_checked': None},
