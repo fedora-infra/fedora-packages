@@ -52,6 +52,11 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                              can_sort = False,
                              can_filter_wildcards = False)
 
+        path.register_column('sourcerpm',
+                             default_visible = True,
+                             can_sort = False,
+                             can_filter_wildcards = False)
+
 
         # cache the column names so we don't have to edit them in two places
         cls._package_search_field_list = []
@@ -71,6 +76,13 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                 row = {}
                 for s in searchlist:
                     row[s] = pkg.__getattribute__(s)
+
+                # get the parent package from the source rpm name
+                # and compare it to the package name to see if this is a
+                # sub package
+                parent_pkg = pkg.sourcerpm.rsplit('-', 2)[0]
+                row['parent_pkg'] = parent_pkg
+                row['is_subpkg'] = (parent_pkg != pkg.name)
 
                 results.append(row)
                 seen.add(pkg.name)
