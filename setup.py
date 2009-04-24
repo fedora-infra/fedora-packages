@@ -73,6 +73,7 @@ setup(
     fas = fedoracommunity.connectors:FasConnector
     bugzilla = fedoracommunity.connectors:BugzillaConnector
     planet = fedoracommunity.connectors:PlanetConnector
+    yum = fedoracommunity.connectors:YumConnector
 
     [moksha.application]
     login = fedoracommunity.mokshaapps.login:RootController

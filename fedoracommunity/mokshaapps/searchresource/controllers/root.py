@@ -10,7 +10,14 @@ class SearchContainer(DashboardContainer, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.searchresource.templates.searchcontainer'
     params=['search']
     layout = [Category('content-column',
-                       [MokshaApp('Package Search', 'fedoracommunity.search/packages',
+                       [MokshaApp('Yum Package Search', 'fedoracommunity.search/yum_packages',
+                                  params={'search': None},
+                                  auth=(param_has_value('search'),
+                                         Any(param_contains('st', 'packages'),
+                                             Not(param_has_value('st')))
+                                        )
+                                 ),
+                        MokshaApp('Package Search', 'fedoracommunity.search/packages',
                                   params={'search': None},
                                   auth=(param_has_value('search'),
                                         Any(param_contains('st', 'packages'),
@@ -36,6 +43,13 @@ class PkgdbSearchGrid(Grid):
         d['resource_path'] = 'search_packages'
         super(PkgdbSearchGrid, self).update_params(d)
 
+class YumSearchGrid(Grid):
+    template="mako:fedoracommunity.mokshaapps.searchresource.templates.pkgdbsearchgrid"
+    def update_params(self, d):
+        d['resource'] = 'yum'
+        d['resource_path'] = 'search_packages'
+        super(YumSearchGrid, self).update_params(d)
+
 class PeopleSearchGrid(Grid):
     template="mako:fedoracommunity.mokshaapps.searchresource.templates.peoplesearchgrid"
     def update_params(self, d):
@@ -44,6 +58,7 @@ class PeopleSearchGrid(Grid):
         super(PeopleSearchGrid, self).update_params(d)
 
 search_container = SearchContainer('search')
+yum_search_grid = YumSearchGrid('yum_search')
 pkgdb_search_grid = PkgdbSearchGrid('pkgdb_grid')
 people_search_grid = PeopleSearchGrid('people_grid')
 
@@ -88,6 +103,16 @@ class RootController(Controller):
         options= {'filters':{'search': search}}
 
         tmpl_context.widget = pkgdb_search_grid
+
+        return {'options': options}
+
+    @expose('mako:moksha.templates.widget')
+    def yum_packages(self, **kwds):
+
+        search = kwds.get('search',kwds.get('s'))
+        options= {'filters':{'search': search}}
+
+        tmpl_context.widget = yum_search_grid
 
         return {'options': options}
 

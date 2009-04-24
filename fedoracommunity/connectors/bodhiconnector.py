@@ -10,6 +10,9 @@ from moksha.connector.utils import DateTimeDisplay
 bodhi_cache = Cache('bodhi_cache')
 
 class BodhiConnector(IConnector, ICall, IQuery):
+    _method_paths = {}
+    _query_paths = {}
+
     def __init__(self, environ, request):
         super(BodhiConnector, self).__init__(environ, request)
         self._bodhi_client = ProxyClient(self._base_url,

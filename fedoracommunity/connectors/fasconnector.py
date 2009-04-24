@@ -11,6 +11,9 @@ _fas_minimal_pass = config.get('fedoracommunity.connector.fas.minimal_user_passw
 
 
 class FasConnector(IConnector, ICall, ISearch, IQuery):
+    _method_paths = {}
+    _query_paths = {}
+
     def __init__(self, environ=None, request=None):
         super(FasConnector, self).__init__(environ, request)
         self._fas_client = ProxyClient(self._base_url,

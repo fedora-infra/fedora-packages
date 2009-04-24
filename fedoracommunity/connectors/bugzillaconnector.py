@@ -11,6 +11,8 @@ from moksha.connector.utils import DateTimeDisplay
 bugzilla_cache = Cache('bugzilla_cache')
 
 class BugzillaConnector(IConnector, ICall, IQuery):
+    _method_paths = {}
+    _query_paths = {}
 
     def __init__(self, environ=None, request=None):
         super(BugzillaConnector, self).__init__(environ, request)

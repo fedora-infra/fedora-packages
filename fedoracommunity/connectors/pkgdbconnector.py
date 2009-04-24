@@ -16,6 +16,9 @@ UNDER_DEVELOPMENT_STATUS = 18
 pkgdb_cache = Cache('pkgdb_connector_cache')
 
 class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
+    _method_paths = {}
+    _query_paths = {}
+
     def __init__(self, environ=None, request=None):
         super(PkgdbConnector, self).__init__(environ, request)
         self._pkgdb_client = ProxyClient(self._base_url,

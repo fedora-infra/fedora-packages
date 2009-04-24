@@ -1,6 +1,7 @@
 from kojiconnector import KojiConnector
 from bodhiconnector import BodhiConnector
 from pkgdbconnector import PkgdbConnector
+from yumconnector import YumConnector
 from fasconnector import FasConnector
 from bugzillaconnector import BugzillaConnector
 from planet import PlanetConnector

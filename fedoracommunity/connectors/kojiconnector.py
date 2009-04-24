@@ -5,6 +5,9 @@ import koji
 import re
 
 class KojiConnector(IConnector, ICall, IQuery):
+    _method_paths = {}
+    _query_paths = {}
+
     def __init__(self, environ=None, request=None):
         super(KojiConnector, self).__init__(environ, request)
         self._koji_client = koji.ClientSession(self._base_url)

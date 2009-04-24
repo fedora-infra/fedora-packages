@@ -20,6 +20,8 @@ from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 planet_cache = Cache('planet')
 
 class PlanetConnector(IConnector):
+    _method_paths = {}
+    _query_paths = {}
 
     @classmethod
     def register(cls):
