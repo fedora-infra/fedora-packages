@@ -12,9 +12,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
     def __init__(self, environ=None, request=None):
         super(YumConnector, self).__init__(environ, request)
         self._yum_client = yum.YumBase()
-        self._yum_client.conf.fn = self._conf_file
-        self._yum_client.conf.cache = 1
-
+        self._yum_client.doConfigSetup(fn = self._conf_file)
 
     # IConnector
     @classmethod
