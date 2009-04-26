@@ -24,6 +24,7 @@ def make_app(global_conf, full_stack=True, **app_conf):
                 app,
                 log_filename='profile.log',
                 discard_first_request=True,
+                cachegrind_filename='./cachegrind.out',
                 flush_at_shutdown=True,
                 path='/__profile__'
                 )
