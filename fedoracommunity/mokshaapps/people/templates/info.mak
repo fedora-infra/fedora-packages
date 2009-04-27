@@ -98,11 +98,13 @@
       $("#clock").jclock({
           format: '%I:%M %p',
           utc_offset: ${utc_offset},
+          timeout: 60000
       });
 
       $("#utc_clock").jclock({
           format: '%I:%M %p',
           utc: true,
+          timeout: 60000
       });
      });
 

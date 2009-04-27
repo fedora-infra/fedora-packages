@@ -24,6 +24,7 @@
       $this.format = o.format;
       $this.utc = o.utc;
       $this.utc_offset = o.utc_offset;
+      $this.timeout = o.timeout;
 
       $this.css({
         fontFamily: o.fontFamily,
@@ -102,7 +103,7 @@
   $.fn.jclock.displayTime = function(el) {
     var time = $.fn.jclock.getTime(el);
     el.html(time);
-    el.timerID = setTimeout(function(){$.fn.jclock.displayTime(el)},1000);
+    el.timerID = setTimeout(function(){$.fn.jclock.displayTime(el)},el.timeout);
   }
 
   $.fn.jclock.getTime = function(el) {
@@ -184,7 +185,8 @@
     fontFamily: '',
     fontSize: '',
     foreground: '',
-    background: ''
+    background: '',
+    timeout: 1000   // 1000 = one second, 60000 = one minute 
   };
 
 })(jQuery);

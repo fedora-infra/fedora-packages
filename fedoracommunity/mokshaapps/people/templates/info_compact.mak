@@ -55,15 +55,15 @@
   <script type="text/javascript">
     $(document).ready(function(){
       $("#clock_${id}").jclock({
-          timeNotation: '12h',
-          am_pm: true,
+          format: '%I:%M %p',
           utc_offset: ${utc_offset},
+          timeout: 60000
       });
 
       $("#utc_clock_${id}").jclock({
-          timeNotation: '12h',
-          am_pm: true,
+          format: '%I:%M %p',
           utc: true,
+          timeout: 60000
       });
 
     });
