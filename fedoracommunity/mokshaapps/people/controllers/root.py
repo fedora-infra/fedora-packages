@@ -124,7 +124,8 @@ class PersonDetailsWidget(Widget):
         #if minutes:
         #    d.utc_offset += '.%d' % ...
 
-
+class CompactPersonDetailsWidget(PersonDetailsWidget):
+    template = 'mako:fedoracommunity.mokshaapps.people.templates.info_compact'
 
 class PersonBlogWidget(Feed):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.planet'
@@ -149,6 +150,8 @@ people_grid = PeopleGrid('people_grid')
 people_container = PeopleContainer('people_container')
 profile_container = ProfileContainer('profile_container')
 person_details_widget = PersonDetailsWidget('person_details_widget')
+compact_person_details_widget = CompactPersonDetailsWidget('person_details_widget')
+
 person_blog_widget = PersonBlogWidget('person_blog')
 
 class RootController(Controller):
@@ -178,7 +181,10 @@ class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
     def details(self, username=None, profile=False, compact=False):
-        tmpl_context.widget = person_details_widget
+        if compact:
+            tmpl_context.widget = compact_person_details_widget
+        else:
+            tmpl_context.widget = person_details_widget
         return {'options': {'compact': compact, 'profile': profile,
                             'username': username}}
 
