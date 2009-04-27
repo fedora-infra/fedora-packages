@@ -39,6 +39,40 @@ packages_watched_app = MokshaApp('Packages Watched',
                                                   'username': '',
                                                   'eol': False}})
 
+
+class ProfileNavContainer(ExtraContentTabbedContainer):
+    template='mako:fedoracommunity.mokshaapps.people.templates.people_package_nav'
+    sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts',
+                              params={'profile':True},
+                              css_class='app panel'),)
+    header_apps = (MokshaApp('', 'fedoracommunity.people/details',
+                                params={'compact': True,
+                                        'profile': True}),)
+
+    tabs= (Category('Packages',
+                    (packages_owned_app.clone({'filters':{'profile': True}
+                                              }),
+                     packages_maintained_app.clone({'filters':{'profile': True}
+                                              }),
+                     packages_watched_app.clone({'filters':{'profile': True}
+                                              })
+                     )
+                    ),
+           Category('Builds',
+                    (overview_builds_app.clone({'profile': True}),
+                     in_progress_builds_app.clone({'filters':{'profile':True}}),
+                     failed_builds_app.clone({'filters':{'profile':True}}),
+                     successful_builds_app.clone({'filters':{'profile':True}})),
+                    ),
+
+           Category('Updates',
+                    (overview_updates_app.clone({'profile':True}),
+                     unpushed_updates_app.clone({'filters':{'profile':True}}),
+                     testing_updates_app.clone({'filters':{'profile':True}}),
+                     stable_updates_app.clone({'filters':{'profile':True}}))
+                   )
+          )
+
 class PeopleNavContainer(ExtraContentTabbedContainer):
     template='mako:fedoracommunity.mokshaapps.people.templates.people_package_nav'
     sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts',
@@ -69,59 +103,8 @@ class PeopleNavContainer(ExtraContentTabbedContainer):
                    )
           )
 
-class ProfileContainer(DashboardContainer, ContextAwareWidget):
-    layout = [Category('header-content-column',
-                       MokshaApp('', 'fedoracommunity.people/details',
-                                 params={'compact': True,
-                                         'profile': True}),
-                       css_class='header-content-column'
-                       ),
-              Category('right-content-column',
-                       (MokshaApp('Your Packages', 'fedoracommunity.packages/mypackages'),
-                        MokshaApp('Alerts', 'fedoracommunity.alerts'),
-                        MokshaWidget('Quick Links', 'fedoracommunity.quicklinks', auth=not_anonymous())),
-                        default_child_css='panel',
-                        css_class='right-content-column'
-                      ),
-              Category('left-content-column',
-                       (MokshaApp('Your Packages',
-                                 'fedoracommunity.packages/mypackages',
-                                 params={'rows_per_page': 10,
-                                         'view': 'canvas'
-                                        }
-                                 ),
-
-                       ),
-                       css_class='left-content-column'
-                      )]
-
-class PeopleContainer(DashboardContainer, ContextAwareWidget):
-    layout = [Category('header-content-column',
-                       MokshaApp('', 'fedoracommunity.people/details',
-                                 params={'username':'',
-                                         'compact': True})
-                       ),
-              Category('right-content-column',
-                        (MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
-                                  params={'username':''}),
-                         MokshaApp('Alerts', 'fedoracommunity.alerts'),
-                         MokshaWidget('Quick Links', 'fedoracommunity.quicklinks', auth=not_anonymous()))
-                        ),
-              Category('left-content-column',
-                       (MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
-                                 params={'rows_per_page': 10,
-                                         'username':'',
-                                         'view': 'canvas'
-                                        }
-                                 ),
-                        )
-                       )]
-
-people_memberships_container = PeopleContainer('people_memberships_container')
-profile_memberships_container = ProfileContainer('profile_memberships_container')
-
 people_nav_container  = PeopleNavContainer('package_maint_people_nav_container')
-
+profile_nav_container = ProfileNavContainer('package_maint_profile_nav_container')
 
 class PackageMaintenanceController(Controller):
     @expose('mako:moksha.templates.widget')
@@ -132,7 +115,7 @@ class PackageMaintenanceController(Controller):
         }
 
         if options['profile']:
-            tmpl_context.widget = profile_memberships_container
+            tmpl_context.widget = profile_nav_container
         elif options['username']:
             tmpl_context.widget = people_nav_container
 
