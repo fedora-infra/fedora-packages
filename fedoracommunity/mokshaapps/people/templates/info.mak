@@ -95,15 +95,13 @@
       });
      % endif
 
-      $("#clock_${id}").jclock({
-          timeNotation: '12h',
-          am_pm: true,
+      $("#clock").jclock({
+          format: '%I:%M %p',
           utc_offset: ${utc_offset},
       });
 
-      $("#utc_clock_${id}").jclock({
-          timeNotation: '12h',
-          am_pm: true,
+      $("#utc_clock").jclock({
+          format: '%I:%M %p',
           utc: true,
       });
      });

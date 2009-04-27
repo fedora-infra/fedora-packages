@@ -223,7 +223,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
             distname = i['collection']['name']
             distver = i['collection']['version']
             owner = i['owneruser']
-            if 'owner' in roles:
+            if 'owner' in roles or 'maintainer' in roles:
                 entities[owner] = {'name': owner, 'roles': ['Owner'],'type': 'user'}
 
             if distname == 'Fedora' and distver == 'devel':
