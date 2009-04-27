@@ -20,6 +20,8 @@ from fedoracommunity.widgets.clock import clock_js
 from memberships import MembershipsController
 from package_maintenance import PackageMaintenanceController
 
+from links import membership_links
+
 log = logging.getLogger(__name__)
 
 class ProfileContainer(DashboardContainer, ContextAwareWidget):
@@ -39,7 +41,8 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                        (MokshaApp('Your Group Memberships',
                                  'fedoracommunity.people/memberships/table',
                                  params={"rows_per_page": 5,
-                                         "filters":{"profile": True}
+                                         "filters":{"profile": True},
+                                         "more_link_code": membership_links.MEMBERSHIPS.code
                                         }
                                  ),
                         MokshaApp('Your Latest Blog Posts',
@@ -67,6 +70,7 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
               Category('left-content-column-apps',
                        (MokshaApp('Group Memberships', 'fedoracommunity.people/memberships/table',
                                  params={"rows_per_page": 5,
+                                         "more_link_code": membership_links.MEMBERSHIPS.code,
                                          "filters":{"profile": False,
                                                     "username":''}
                                         }

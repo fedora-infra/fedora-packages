@@ -1,10 +1,14 @@
 from tg import expose, tmpl_context, require
 from repoze.what.predicates import not_anonymous
+from paste.deploy.converters import asbool
 
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
+
+from links import membership_links, profile_membership_links
+import simplejson as json
 
 class UserMembershipsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.people.templates.memberships_table_widget'
@@ -86,12 +90,26 @@ class MembershipsController(Controller):
         return {'options': options}
 
     @expose('mako:fedoracommunity.mokshaapps.people.templates.memberships_table')
-    def table(self, rows_per_page=5, filters=None):
+    def table(self, rows_per_page=5, filters=None, more_link_code=None):
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
 
         if filters == None:
             filters = {}
 
+        more_link = None
+        if more_link_code:
+            if isinstance(filters, basestring):
+                decoded_filters = json.loads(filters)
+            else:
+                decoded_filters = filters
+
+            if asbool(decoded_filters.get('profile')) == True:
+                more_link = profile_membership_links.get_data(more_link_code)
+            else:
+                more_link = membership_links.get_data(more_link_code)
+
         tmpl_context.widget = memberships_grid
-        return {'filters': filters, 'rows_per_page':rows_per_page}
+        return {'filters': filters,
+                'rows_per_page':rows_per_page,
+                'more_link': more_link}
