@@ -20,8 +20,8 @@
             <td>${person['country_code']}</td>
           </tr><tr>
             <th>Timezone</th>
-            <td>${person['timezone']} <span><span id="clock_${id}" class="clock"/></span></td>
-            <td>UTC <span><span id="utc_clock_${id}" class="clock" /></span></td>
+            <td>${person['timezone']} <span id="clock_${id}" class="clock"/><br/>
+            UTC <span id="utc_clock_${id}" class="clock" /></td>
           </tr>
           </table>
         </div>
@@ -95,13 +95,13 @@
       });
      % endif
 
-      $("#clock").jclock({
+      $("#clock_${id}").jclock({
           format: '%I:%M %p',
           utc_offset: ${utc_offset},
           timeout: 60000
       });
 
-      $("#utc_clock").jclock({
+      $("#utc_clock_${id}").jclock({
           format: '%I:%M %p',
           utc: true,
           timeout: 60000
