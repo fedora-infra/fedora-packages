@@ -74,9 +74,17 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                         MokshaApp('Latest Blog Posts',
                                   'fedoracommunity.people/planet',
                                   params={'username': None}),
-                        MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
-                                 params={'view': 'canvas',
-                                         'username': ''})
+                        MokshaApp('Packages', 'fedoracommunity.packages/userpackages_table',
+                                 params={'rows_per_page': 5,
+                                         'filters':{'owner': True,
+                                         'approveacls': True,
+                                         'commit': True,
+                                         'watchcommits': True,
+                                         'watchbugzilla': True,
+                                         'eol': False,
+                                         'username': ''}
+                                        }
+                                 )
                         )
                        )]
 

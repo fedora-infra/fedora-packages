@@ -390,11 +390,14 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
         if not filters:
             filters = {}
+
         filters = self._query_userpackages_filter.filter(filters)
         # hack since pkgdb equates 'false' = True
         if filters.get('eol') == False:
             del filters['eol']
 
+        rows_per_page = int(rows_per_page)
+        start_row = int(start_row)
         params.update(filters)
         params['tg_paginate_limit'] = rows_per_page
         params['tg_paginate_no'] = int(start_row/rows_per_page) + 1
