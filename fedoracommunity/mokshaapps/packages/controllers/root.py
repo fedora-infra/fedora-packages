@@ -140,30 +140,53 @@ class RootController(Controller):
                        owner_label='Owned',
                        maintainer_label='Maintained',
                        watcher_label='Watched',
-                       rows_per_page=5, morelink=None, view="home"):
+                       rows_per_page=5, more_link_prefix=None, view="home"):
         if view=="home":
             categories = []
             if owner:
                 owner = int(owner)
+
+                more_link = None
+                if more_link_prefix:
+                    more_link = more_link_prefix + '/packages_owned'
                 cat = {'label': owner_label,
                        'rows_per_page': owner,
-                       'filters':{'owner': True, 'u':username, 'eol': False, 'morelink': False}
+                       'filters':{'owner': True,
+                                  'username':username,
+                                  'eol': False},
+                       'more_link': more_link
                       }
                 categories.append(cat)
 
             if maintainer:
                 maintainer = int(maintainer)
+
+                more_link = None
+                if more_link_prefix:
+                    more_link = more_link_prefix + '/packages_maintained'
                 cat = {'label': maintainer_label,
                        'rows_per_page': maintainer,
-                       'filters':{'approveacls': True, 'commit': True,'u':username, 'eol': False}
+                       'filters':{'approveacls': True,
+                                  'commit': True,
+                                  'username':username,
+                                  'eol': False},
+                       'more_link': more_link
                       }
                 categories.append(cat)
 
             if watcher:
                 watcher = int(watcher)
+
+                more_link = None
+                if more_link_prefix:
+                    more_link = more_link_prefix + '/packages_watched'
                 cat = {'label': watcher_label,
                        'rows_per_page': watcher,
-                       'filters':{'watchcommits': True, 'watchbugzilla': True,'u':username, 'eol': False}
+                       'filters':{'watchcommits': True,
+                                  'watchbugzilla': True,
+                                  'username':username,
+                                  'eol': False},
+                       'more_link': more_link
                       }
                 categories.append(cat)
 
@@ -173,9 +196,14 @@ class RootController(Controller):
         else:
             rows_per_page = int(rows_per_page)
             tmpl_context.widget = user_pkgs_grid
+
+            more_link = None
+            if more_link_prefix:
+                more_link = more_link_prefix
+
             return {'categories': None,
-                    'filters':{'u':username},
-                    'rows_per_page': rows_per_page,
+                    'filters':{'username':username},
+                    'rows_per_page': rows_per_page
                     }
 
     @expose('mako:fedoracommunity.mokshaapps.packages.templates.userpackages')
@@ -185,8 +213,12 @@ class RootController(Controller):
         username = request.identity['repoze.who.userid']
 
         return self._user_packages_view(username, owner, maintainer, watcher,
-                   'Packages I Own', 'Packages I Maintain', 'Packages I Watch',
-                   rows_per_page, view)
+                   'Packages I Own',
+                   'Packages I Maintain',
+                   'Packages I Watch',
+                   rows_per_page,
+                   '/my_profile/package_maintenance',
+                   view)
 
     @expose('mako:fedoracommunity.mokshaapps.packages.templates.userpackages')
     def userpackages(self, owner=5, maintainer=3, watcher=False, username=None,
@@ -196,7 +228,8 @@ class RootController(Controller):
                   'Packages %s Owns' % username,
                   'Packages %s Maintains' % username,
                   'Packages %s Watch' % username,
-                   rows_per_page, view)
+                   rows_per_page, '/people/package_maintenance',
+                   view)
 
     @expose('mako:fedoracommunity.mokshaapps.packages.templates.userpackages')
     def userpackages_table(self, filters=None, rows_per_page=10):
