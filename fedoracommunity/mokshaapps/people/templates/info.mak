@@ -96,14 +96,12 @@
       });
 
       $("#clock").jclock({
-          timeNotation: '12h',
-          am_pm: true,
+          format: '%I:%M %p',
           utc_offset: ${utc_offset},
       });
 
       $("#utc_clock").jclock({
-          timeNotation: '12h',
-          am_pm: true,
+          format: '%I:%M %p',
           utc: true,
       });
 
