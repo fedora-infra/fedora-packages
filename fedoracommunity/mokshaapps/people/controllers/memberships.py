@@ -86,9 +86,12 @@ class MembershipsController(Controller):
         return {'options': options}
 
     @expose('mako:fedoracommunity.mokshaapps.people.templates.memberships_table')
-    def table(self, uid="", rows_per_page=5, filters={}):
+    def table(self, rows_per_page=5, filters=None):
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
 
+        if filters == None:
+            filters = {}
+
         tmpl_context.widget = memberships_grid
-        return {'filters': filters, 'uid':uid, 'rows_per_page':rows_per_page}
+        return {'filters': filters, 'rows_per_page':rows_per_page}
