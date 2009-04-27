@@ -20,8 +20,8 @@
             <td>${person['country_code']}</td>
           </tr><tr>
             <th>Timezone</th>
-            <td>${person['timezone']} <div id="clock_${id}" class="clock"/></td>
-            <td>UTC <div id="utc_clock_${id}" class="clock" /></td>
+            <td>${person['timezone']} <span><span id="clock_${id}" class="clock"/></span></td>
+            <td>UTC <span><span id="utc_clock_${id}" class="clock" /></span></td>
           </tr>
           </table>
         </div>
