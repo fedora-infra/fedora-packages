@@ -52,6 +52,8 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                       )]
 
 class PeopleContainer(DashboardContainer, ContextAwareWidget):
+    template='mako:fedoracommunity.mokshaapps.people.templates.peoplecontainer'
+
     layout = [Category('header-content-column-apps',
                        MokshaApp('', 'fedoracommunity.people/details',
                                  params={'username':''})

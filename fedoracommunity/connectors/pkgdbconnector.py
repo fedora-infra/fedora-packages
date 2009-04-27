@@ -371,7 +371,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
             d['acls'] = acls
 
         f = ParamFilter()
-        f.add_filter('fasname',['u', 'user', 'name'], allow_none = False)
+        f.add_filter('fasname',['u', 'user', 'name', 'username'], allow_none = False)
         f.add_filter('owner', ['o'], cast=bool, allow_none = False, filter_func=filter_acls)
         f.add_filter('maintainer', ['m', 'commit'], cast=bool, allow_none = False, filter_func=filter_acls)
         f.add_filter('approveacls', ['a', 'acls'], cast=bool, allow_none = False, filter_func=filter_acls)
@@ -391,10 +391,13 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         if not filters:
             filters = {}
         filters = self._query_userpackages_filter.filter(filters)
+        # hack since pkgdb equates 'false' = True
+        if filters.get('eol') == False:
+            del filters['eol']
 
         params.update(filters)
         params['tg_paginate_limit'] = rows_per_page
-        params['tg_paginate_no'] = int(start_row/rows_per_page)
+        params['tg_paginate_no'] = int(start_row/rows_per_page) + 1
 
         results = self._pkgdb_client.send_request('users/packages', req_params = params)
         total_count = results[1]['pkgCount']

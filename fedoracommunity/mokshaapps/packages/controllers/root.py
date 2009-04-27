@@ -198,6 +198,15 @@ class RootController(Controller):
                   'Packages %s Watch' % username,
                    rows_per_page, view)
 
+    @expose('mako:fedoracommunity.mokshaapps.packages.templates.userpackages')
+    def userpackages_table(self, filters=None, rows_per_page=10):
+        if filters==None:
+            filters = {}
+
+        tmpl_context.widget = user_pkgs_grid
+        return {'filters': filters,
+                'rows_per_page':rows_per_page}
+
     # do something for index, this should be the container stuff
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):
@@ -237,7 +246,7 @@ class RootController(Controller):
         return self.index(**kwds)
 
     @expose('mako:fedoracommunity.mokshaapps.packages.templates.table')
-    def table(self, user="", rows_per_page=5, filters={}):
+    def table(self, rows_per_page=5, filters={}):
         ''' table handler
 
         This handler displays the main table by itself
@@ -247,4 +256,4 @@ class RootController(Controller):
             rows_per_page = int(rows_per_page)
 
         tmpl_context.widget = user_pkgs_grid
-        return {'filters': filters, 'uid':user, 'rows_per_page':rows_per_page}
+        return {'filters': filters, 'rows_per_page':rows_per_page}

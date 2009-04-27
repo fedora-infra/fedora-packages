@@ -20,6 +20,25 @@ from fedoracommunity.mokshaapps.updates.controllers.root import (
     stable_updates_app,
     overview_updates_app)
 
+packages_owned_app = MokshaApp('Packages Owned',
+                               'fedoracommunity.packages/userpackages_table',
+                               params={'filters':{'username': '',
+                                                  'owner': True,
+                                                  'eol': False}})
+
+packages_maintained_app = MokshaApp('Packages Maintained',
+                               'fedoracommunity.packages/userpackages_table',
+                               params={'filters':{'approveacls': True,
+                                                  'commit': True,
+                                                  'username': '',
+                                                  'eol': False}})
+packages_watched_app = MokshaApp('Packages Watched',
+                               'fedoracommunity.packages/userpackages_table',
+                               params={'filters':{'watchcommits': True,
+                                                  'watchbugzilla': True,
+                                                  'username': '',
+                                                  'eol': False}})
+
 class PeopleNavContainer(ExtraContentTabbedContainer):
     template='mako:fedoracommunity.mokshaapps.people.templates.people_package_nav'
     sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts',
@@ -29,7 +48,13 @@ class PeopleNavContainer(ExtraContentTabbedContainer):
                                 params={'compact': True,
                                         'username': None}),)
 
-    tabs= (Category('Builds',
+    tabs= (Category('Packages',
+                    (packages_owned_app,
+                     packages_maintained_app,
+                     packages_watched_app
+                     )
+                    ),
+           Category('Builds',
                     (overview_builds_app.clone({'username': None}),
                      in_progress_builds_app.clone({'filters':{'username':None}}),
                      failed_builds_app.clone({'filters':{'username':None}}),
