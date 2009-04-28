@@ -20,6 +20,8 @@ from fedoracommunity.widgets.clock import clock_js
 from memberships import MembershipsController
 from package_maintenance import PackageMaintenanceController
 
+from links import membership_links
+
 log = logging.getLogger(__name__)
 
 class ProfileContainer(DashboardContainer, ContextAwareWidget):
@@ -39,7 +41,8 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                        (MokshaApp('Your Group Memberships',
                                  'fedoracommunity.people/memberships/table',
                                  params={"rows_per_page": 5,
-                                         "filters":{"profile": True}
+                                         "filters":{"profile": True},
+                                         "more_link_code": membership_links.MEMBERSHIPS.code
                                         }
                                  ),
                         MokshaApp('Your Latest Blog Posts',
@@ -52,6 +55,8 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                       )]
 
 class PeopleContainer(DashboardContainer, ContextAwareWidget):
+    template='mako:fedoracommunity.mokshaapps.people.templates.peoplecontainer'
+
     layout = [Category('header-content-column-apps',
                        MokshaApp('', 'fedoracommunity.people/details',
                                  params={'username':''})
@@ -65,6 +70,7 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
               Category('left-content-column-apps',
                        (MokshaApp('Group Memberships', 'fedoracommunity.people/memberships/table',
                                  params={"rows_per_page": 5,
+                                         "more_link_code": membership_links.MEMBERSHIPS.code,
                                          "filters":{"profile": False,
                                                     "username":''}
                                         }
@@ -72,9 +78,17 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                         MokshaApp('Latest Blog Posts',
                                   'fedoracommunity.people/planet',
                                   params={'username': None}),
-                        MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
-                                 params={'view': 'canvas',
-                                         'username': ''})
+                        MokshaApp('Packages', 'fedoracommunity.packages/userpackages_table',
+                                 params={'rows_per_page': 5,
+                                         'filters':{'owner': True,
+                                         'approveacls': True,
+                                         'commit': True,
+                                         'watchcommits': True,
+                                         'watchbugzilla': True,
+                                         'eol': False,
+                                         'username': ''}
+                                        }
+                                 )
                         )
                        )]
 
@@ -124,7 +138,8 @@ class PersonDetailsWidget(Widget):
         #if minutes:
         #    d.utc_offset += '.%d' % ...
 
-
+class CompactPersonDetailsWidget(PersonDetailsWidget):
+    template = 'mako:fedoracommunity.mokshaapps.people.templates.info_compact'
 
 class PersonBlogWidget(Feed):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.planet'
@@ -149,6 +164,8 @@ people_grid = PeopleGrid('people_grid')
 people_container = PeopleContainer('people_container')
 profile_container = ProfileContainer('profile_container')
 person_details_widget = PersonDetailsWidget('person_details_widget')
+compact_person_details_widget = CompactPersonDetailsWidget('person_details_widget')
+
 person_blog_widget = PersonBlogWidget('person_blog')
 
 class RootController(Controller):
@@ -178,7 +195,10 @@ class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
     def details(self, username=None, profile=False, compact=False):
-        tmpl_context.widget = person_details_widget
+        if compact:
+            tmpl_context.widget = compact_person_details_widget
+        else:
+            tmpl_context.widget = person_details_widget
         return {'options': {'compact': compact, 'profile': profile,
                             'username': username}}
 

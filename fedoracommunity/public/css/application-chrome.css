@@ -420,7 +420,7 @@ span.more-items {
 }
 
 .simple-border-list ul {
-  margin-left: .2em !important; 
+  margin-left: .2em !important;
   margin-top: .5em !important;
   margin-bottom: .5em !important;
 }
@@ -509,7 +509,7 @@ span.timestamp {
 #right-content-column .panel div,
 #right-content-column .panel p,
 #right-content-column .panel dl,
-#right-content-column .panel ul, 
+#right-content-column .panel ul,
 .right-content-column .panel td,
 .right-content-column .panel div,
 .right-content-column .panel p,
@@ -519,8 +519,8 @@ span.timestamp {
 }
 
 #right-content-column .login div,
-.right-content-column .login div { 
-  background: none !important; 
+.right-content-column .login div {
+  background: none !important;
 }
 
 #content #left-content-column .login h3,
@@ -906,7 +906,7 @@ h1#greeter img {
   width: 1.5em;
 }
 
-.list .pager a { 
+.list .pager a {
   vertical-align: middle !important;
   height: 19px !important;
 }
@@ -1018,7 +1018,7 @@ th, td {
 }
 
 /*** links-toolbar
- *   this is used to create a horizontal rounded box 
+ *   this is used to create a horizontal rounded box
  *   of links in the main content area.
 ***/
 
@@ -1086,6 +1086,7 @@ div.links-toolbar li a span {
   overflow: auto;
 }
 
+div.compact_info_content,
 div.info_content {
   background-color: #eee;
   -moz-border-radius: 6px;
@@ -1099,11 +1100,26 @@ div.info_content div.hackergotchi {
   margin-right: 12px;
 }
 
+div.compact_info_content div.hackergotchi {
+  height: 50px;
+  width: 50px;
+  float: left;
+  margin-right: 12px;
+}
+
+div.compact_info_content div.hackergotchi img {
+  height: 50px;
+  width: 50px;
+}
+
+div.compact_info_content h4,
 div.info_content h4 {
   text-transform: uppercase;
   color: black;
 }
 
+div.compact_info_content td,
+div.compact_info_content th,
 div.info_content table td,
 div.info_content table th {
   border: none !important;
@@ -1112,6 +1128,7 @@ div.info_content table th {
   font-size: 9pt;
 }
 
+div.compact_info_content th,
 div.info_content th {
   border: none !important;
   background: none !important;
@@ -1122,6 +1139,7 @@ div.info_content th {
   min-width: 100px !important;
 }
 
+div.compact_info_content table,
 div.info_content table {
   margin-bottom: 10px;
 }
@@ -1135,6 +1153,7 @@ div.info_content {
   min-height: 220px;
 }
 
+div.compact_info_content .col div,
 div.info_content .col div {
   margin-top: 1em !important;
   padding-right: 1.5em;
@@ -1147,6 +1166,7 @@ div.info_content .info_container:last-child {
   border-bottom: none !important;
 }
 
+div.compact_info_content .col div,
 div.info_content .col div {
   margin-top: 1em !important;
   padding-right: 1.5em;
@@ -1332,13 +1352,13 @@ moksha_extpoint {
 
 
 .info_content div#ssh_key .details div {
-  border: 1px solid #aaa; 
-  overflow: auto; 
-  margin-top: 0px ! important; 
-  margin-bottom: 1em; 
-  padding-top: 0px ! important; 
-  font-size: 7pt ! important; 
-  width: 200px; 
+  border: 1px solid #aaa;
+  overflow: auto;
+  margin-top: 0px ! important;
+  margin-bottom: 1em;
+  padding-top: 0px ! important;
+  font-size: 7pt ! important;
+  width: 200px;
   background-color: white;
 }
 
