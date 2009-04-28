@@ -20,8 +20,16 @@
             <td>${person['country_code']}</td>
           </tr><tr>
             <th>Timezone</th>
-            <td>${person['timezone']} <span id="clock_${id}" class="clock"/><br/>
-            UTC <span id="utc_clock_${id}" class="clock" /></td>
+            <td>
+<div class="timezone">
+<span id="clock_${id}" class="clock"/>
+<span class="timezone_label">${person['timezone']}</span>
+</div>
+<div class="timezone">
+<span id="utc_clock_${id}" class="clock" />
+<span class="timezone_label">UTC</span>
+</div>
+</td>
           </tr>
           </table>
         </div>
@@ -31,7 +39,7 @@
             % if person.get('ssh_key'):
               <tr>
                 <th>Public SSH Key</th>
-                <td>${person['ssh_key'][:7]}<div id="ssh_key_${id}"><div>${person['ssh_key']}</div></div></td>
+                <td>${person['ssh_key'][:7]}<div class="ssh_key" id="ssh_key_${id}"><div>${person['ssh_key']}</div></div></td>
               </tr>
             % endif
             % if person.get('gpg_keyid'):
