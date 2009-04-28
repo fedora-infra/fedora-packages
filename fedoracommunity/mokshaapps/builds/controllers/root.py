@@ -10,7 +10,7 @@ from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 
 from fedoracommunity.widgets import SubTabbedContainer
-from links import builds_links
+from links import builds_links_group, builds_links, my_builds_links
 
 import simplejson as json
 
@@ -107,6 +107,22 @@ class BuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
 
 builds_overview_container = BuildsOverviewContainer('builds_overview')
 
+class MyBuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
+
+    layout = [Category('group-1-apps',
+                        (in_progress_builds_app.clone({'rows_per_page': 5,
+                                                       'more_link_code': my_builds_links.IN_PROGRESS.code}),
+                        failed_builds_app.clone({'rows_per_page': 5,
+                                                       'more_link_code': my_builds_links.FAILED.code}))
+                      ),
+              Category('group-2-apps',
+                       successful_builds_app.clone({'rows_per_page': 5,
+                                                       'more_link_code': my_builds_links.SUCCESSFUL.code})
+                      )
+             ]
+
+my_builds_overview_container = MyBuildsOverviewContainer('my_builds_overview')
+
 class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
@@ -117,11 +133,15 @@ class RootController(Controller):
         return {'options':options}
 
     @expose('mako:moksha.templates.widget')
-    def overview(self, profile=False, username=None):
-        options = {'profile': profile,
-                   'username': username}
+    def overview(self, profile=False, username=None, ):
+        profile = asbool(profile)
+        if profile:
+            options = {'profile': profile}
+            tmpl_context.widget = my_builds_overview_container
+        else:
+            options = {'username': username}
+            tmpl_context.widget = builds_overview_container
 
-        tmpl_context.widget = builds_overview_container
         return {'options':options}
 
     @expose('mako:moksha.templates.widget')
@@ -161,19 +181,7 @@ class RootController(Controller):
 
         more_link = None
         if more_link_code:
-            more_link = builds_links.get_data(more_link_code)
-            if isinstance(filters, basestring):
-                decoded_filters = json.loads(filters)
-            else:
-                decoded_filters = filters
-
-            if asbool(decoded_filters.get('profile')) == True:
-                s = more_link.split('/')
-                last = s[-1]
-                last = 'my_' + last
-                s[-1] = last
-
-                more_link = '/'.join(s)
+            more_link = builds_links_group[more_link_code]
 
         tmpl_context.widget = builds_grid
         return {'filters': filters, 'uid':uid, 'rows_per_page':rows_per_page,
