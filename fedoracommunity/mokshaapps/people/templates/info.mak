@@ -45,7 +45,7 @@
             % if person.get('gpg_keyid'):
             <tr>
               <th>PGP Key</th>
-              <td>${person['gpg_keyid']}</td>
+              <td><a href="http://pgp.mit.edu:11371/pks/lookup?search=0x${person['gpg_keyid']}&op=index&exact=on">${person['gpg_keyid']}</a></td>
             </tr>
             % endif
           </table>
