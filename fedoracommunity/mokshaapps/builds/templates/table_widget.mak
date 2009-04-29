@@ -16,7 +16,7 @@
                         <td class="one-row">
                           <div id="menu_@{build_id}" class="menu" panel="menu_panel_@{build_id}">
                             <span class="package-name">
-                                <a href="/package_maintenance/tools/builds?package=@{package_name}">@{package_name}</a>
+                                <a href="/package_maintenance/tools/builds?package=@{package_name}" moksha_url="dynamic">@{package_name}</a>
                             </span>
                             <br/>@{version}-@{release}&nbsp;
                             <div id="menu_panel_@{build_id}" class="menu_panel" >
@@ -41,7 +41,7 @@
                         </td>
 
                         <td rowspan="2">
-                            <span class="person-name"><a href="/people/?username=@{owner_name}">@{owner_name}</a></span>&nbsp;
+                            <span class="person-name"><a href="/people/?username=@{owner_name}" moksha_url="dynamic">@{owner_name}</a></span>&nbsp;
                         </td>
                         <td rowspan="2">@{completion_time_display:index("elapsed")}
                         </td>

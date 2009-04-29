@@ -8,7 +8,7 @@
                 <tr>
                     <td>
                         <span class="group-name">
-                            <a href="">@{display_name}</a>
+                            @{display_name}
                         </span>
                     </td>
                     <td>

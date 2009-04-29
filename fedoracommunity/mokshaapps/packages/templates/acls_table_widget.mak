@@ -22,7 +22,7 @@
                     <tr>
                         <td>
                             <span>
-                                <a href="">@{name}</a>
+                                @{name}
                             </span>
                         </td>
                         <td>
