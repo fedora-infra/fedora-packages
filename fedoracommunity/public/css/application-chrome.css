@@ -884,6 +884,9 @@ h1#greeter img {
   float: left;
   width: auto;
   margin-top: 2px;
+}
+
+#right-content-column .message {
   display: none;
 }
 
