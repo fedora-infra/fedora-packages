@@ -1,5 +1,6 @@
-from tg import expose, tmpl_context
+from tg import expose, tmpl_context, validate
 from pylons import cache, request
+from formencode import validators
 from datetime import datetime, timedelta
 
 from moksha.lib.base import Controller
@@ -175,6 +176,7 @@ alerts_container = AlertsContainer('alerts')
 class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
-    def index(self, username=None):
+    @validate({'profile': validators.StringBool()})
+    def index(self, username=None, profile=False):
         tmpl_context.widget = alerts_container
-        return dict(options={'userid': username})
+        return dict(options={'userid': username, 'profile': profile})
