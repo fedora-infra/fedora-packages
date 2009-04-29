@@ -11,7 +11,7 @@
             <tr>
                 <td>
                     <span class="package-name">
-                        <a href="javascript:moksha.goto('/package_maintenance/package/updates', {'package': '@{name}'})">@{name}</a>&nbsp;
+                        <a href="/package_maintenance/tools/updates?package=@{name}">@{name}</a>&nbsp;
                     </span>
                     <div>@{versions}&nbsp;</div>
                 </td>

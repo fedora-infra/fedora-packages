@@ -11,7 +11,7 @@
                 <div class="post">
                     <div class="post-header">
                         <h4 class="post-title">
-                            <a href="${entry.link}">${entry.title}</a></span>
+                            <span><a href="${entry.link}">${entry.title}</a></span>
                         </h4>
                     </div>
                     <div class="post-contents" id="${entry['uid']}_text">

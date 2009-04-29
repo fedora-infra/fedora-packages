@@ -5,7 +5,7 @@
       % for i in a['items']:
         <dd>
           <img src="/images/${i['icon']}" />
-            <a href="javascript:moksha.goto('${i['url']}')">${i['count']} ${i['label']}</a>
+            <a href="${i['url']}" moksha_url="dynamic">${i['count']} ${i['label']}</a>
         </dd>
       % endfor
    </dl>

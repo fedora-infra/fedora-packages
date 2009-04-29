@@ -5,7 +5,7 @@
   % endif
   <div class="latest-build"></div>
   % if owner:
-    <div class="package-owner"><a href="moksha.goto('/people/', {'person':'${owner}'}">${owner}</a></div>
+    <div class="package-owner"><a href="/people/?username=${owner}" moksha_url="dynamic">${owner}</a></div>
   % endif
 
 </div>
