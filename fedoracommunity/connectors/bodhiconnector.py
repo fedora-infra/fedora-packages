@@ -388,9 +388,9 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def query_updates_count(self, status, username=None,
                             before=None, after=None):
-        # FIXME; this won't cache properly, as the datetimes has miliseconds..
         return bodhi_cache.get_value(key='count_%s_%s_%s_%s' % (
-                status, username, before, after), expiretime=300,
+                status, username, str(before).split('.')[0],
+                str(after).split('.')[0]), expiretime=300,
                 createfunc=lambda: self._query_updates_count(status, username,
                                                              before, after))
 
