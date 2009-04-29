@@ -1283,6 +1283,19 @@ div.info_content .col td div {
   margin-top: 0px !important;
 }
 
+/* updates karma styles */
+
+div.karma {
+  font-size: .8em;
+  vertical-align: middle !important;
+  color: #999;
+}
+
+div.karma img {
+  margin-top: .3em !important;
+  margin-bottom: -.4em !important;
+}
+
 /* package details header styles */
 
 #content h2.package-header {
