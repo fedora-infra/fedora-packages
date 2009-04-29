@@ -42,7 +42,7 @@
              </div>
              </div>
            </div>
-           <div class="clearingdiv"></div>
+           <div class="clear"/>
          </div>
        </div>
    </div>
