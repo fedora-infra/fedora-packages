@@ -55,5 +55,5 @@
 
         </script>
     % endfor
-<div align="right"><a href="http://planet.fedoraproject.org">View more ></a></div>
+<div align="right"><a href="http://planet.fedoraproject.org">View more Planet Fedora &gt;</a></div>
 </div>
