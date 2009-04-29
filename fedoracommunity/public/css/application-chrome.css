@@ -729,6 +729,11 @@ div.icon-panel td {
   font-weight: 900;
 }
 
+#right-content-column h4,
+.right-content-column h4 {
+  clear: left;
+}
+
 #right-content-column h3,
 .right-content-column h3 {
   background-color: #d2d2d2;
