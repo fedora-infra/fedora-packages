@@ -106,7 +106,10 @@ class FasClient(ProxyClient):
         except AuthError, e:
             log.warning(e)
 
-        del(result[1]['person']['password'])
+        try:
+            del(result[1]['person']['password'])
+        except:
+            pass
 
         return result
 
