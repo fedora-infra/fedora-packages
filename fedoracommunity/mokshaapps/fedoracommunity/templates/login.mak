@@ -42,7 +42,6 @@
              </div>
              </div>
            </div>
-           <div class="clearingdiv"></div>
          </div>
        </div>
    </div>

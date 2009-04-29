@@ -1,4 +1,4 @@
-<div id="${id}" class="simple-list list">
+<div id="${id}" class="simple-border-list list">
   <table>
     % for entry in entries[:limit]:
       <tr>

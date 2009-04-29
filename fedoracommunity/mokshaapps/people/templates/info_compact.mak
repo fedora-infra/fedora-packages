@@ -7,46 +7,36 @@
 
       <div class="col left_col">
         <div class="info_basic_details info_container">
-          <table>
-          <tr>
-            <td colspan="2">${person['username']}</td>
-          </tr><tr>
-            <td colspan="2">${person['country_code']}</td>
-          </tr><tr>
-            <td>
-              <img src="/images/16_clock.png" />
-            </td>
-            <td><span><span id="clock_${id}" class="clock"/></span><br />${person['timezone']}</td>
-          </tr>
-          <tr>
-            <td>
-              &nbsp;
-            </td>
-            <td><span><span id="utc_clock_${id}" class="clock" /></span><br />UTC</td>
-          </tr>
-          </table>
+            <h3>${person['username']}</h3>
+            <p><strong>Location:</strong> ${person['country_code']}</p>
+            <div class="timezone">
+               <img src="/images/16_clock.png" />
+               <p>
+                  <span id="clock_${id}" class="clock" />
+                  <span class="timezone_label">${person['timezone']}</span>
+               </p>
+            </div>
+            <div class="timezone">
+               <img src="/images/16_clock.png" />
+               <p>
+                  <span id="utc_clock_${id}" class="clock" /> 
+                  <span class="timezone_label">UTC</span>
+               </p>
+            </div>
         </div>
       </div>
 
       <div class="col right_col">
         <div class="info_contact info_container">
-          <table>
           % if person.get('ircnick'):
-          <tr>
-            <td><img src="/images/16_chat.png" /></td><td>${person['ircnick']}</td>
-          </tr>
+          <p><img src="/images/16_chat.png" /> ${person['ircnick']}</p>
           % endif
           % if person.get('email'):
-          <tr>
-            <td><img src="/images/16_mail.png" /><td>${person['email']}</td>
-          </tr>
+          <p><img src="/images/16_mail.png" /> ${person['email']}</p>
           % endif
           % if person.get('telephone'):
-          <tr>
-            <td><img src="/images/16_phone.png" /><td>${person['telephone']}</td>
-          </tr>
+          <p><img src="/images/16_phone.png" />${person['telephone']}</p>
           % endif
-          </table>
         </div>
     </div>
   </div>
