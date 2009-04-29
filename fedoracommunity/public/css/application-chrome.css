@@ -1289,6 +1289,7 @@ div.karma {
   font-size: .8em;
   vertical-align: middle !important;
   color: #999;
+  padding-bottom: .2em;
 }
 
 div.karma img {
