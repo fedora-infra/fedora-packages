@@ -1,6 +1,7 @@
 from tw.api import Widget as twWidget
 from tg import expose, tmpl_context
 
+from moksha.api.connectors import get_connector
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, Widget
 
@@ -24,10 +25,35 @@ class PkgLinks(twWidget):
 
 pkg_links_widget = PkgLinks('details')
 
+class RawhideBuildOwner(twWidget):
+    """
+    A widget to display the latest rawhide build and owner for a package.
+    """
+    params = ['id', 'package', 'build', 'owner']
+    template = 'mako:fedoracommunity.mokshaapps.packages.templates.rawhide'
+
+    def update_params(self, d):
+        super(RawhideBuildOwner, self).update_params(d)
+        koji = get_connector('koji')
+        builds = koji._koji_client.getLatestBuilds('dist-rawhide',
+                                                   package=d.package)
+        d.build = builds[0]['nvr']
+        pkgdb = get_connector('pkgdb')
+        pkginfo = pkgdb.request_package_info(d.package)
+        for pkg in pkginfo[1]['packageListings']:
+            if pkg['collection']['branchname'] == 'devel':
+                d.owner = pkg['owneruser']
+                break
+
+rawhide_build_and_owner = RawhideBuildOwner('rawhide_build_and_owner')
+
 class OverviewDashboard(PackagesDashboardContainer):
     layout = [Category('content-col-apps', (
                 Widget(None, pkg_details_widget,
                        params={'pkg_description': '', 'owner': ''}),
+                MokshaApp('',
+                    'fedoracommunity.packages/package/rawhide_build_and_owner',
+                    params={'package': ''}),
                 MokshaApp('Active Releases',
                           'fedoracommunity.updates/table',
                           params={'filters': {'package':''}}),
@@ -61,3 +87,9 @@ class OverviewController(Controller):
     def overview(self, package):
         tmpl_context.widget = overview_dashboard
         return dict(options={'package':package})
+
+    @expose('mako:moksha.templates.widget')
+    def rawhide_build_and_owner(self, package):
+        """ Display the latest rawhide build and owner of a given package """
+        tmpl_context.widget = rawhide_build_and_owner
+        return dict(options={'package': package})
