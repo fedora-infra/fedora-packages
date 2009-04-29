@@ -25,21 +25,21 @@ class PkgLinks(twWidget):
 pkg_links_widget = PkgLinks('details')
 
 class OverviewDashboard(PackagesDashboardContainer):
-    layout = [Category('content-col-apps',(Widget(None, pkg_details_widget,
-                                                  params={'pkg_description': '', 'owner': ''}),
-                                           MokshaApp('Active Releases',
-                                                     'fedoracommunity.updates/table',
-                                                     params={'filters':{'package':''}}),
-                                           Widget('Package Links', pkg_links_widget,
-                                                  params={'package':''}),
-                                           MokshaApp('Latest Changelog Entries',
-                                                     'fedoracommunity.packages/package/changelog/table',
-                                                     params={'filters':{'package':''},
-                                                             'more_link_code': changelog_links.get_code('CHANGELOG')})
+    layout = [Category('content-col-apps', (
+                Widget(None, pkg_details_widget,
+                       params={'pkg_description': '', 'owner': ''}),
+                MokshaApp('Active Releases',
+                          'fedoracommunity.updates/table',
+                          params={'filters': {'package':''}}),
+                Widget('Package Links', pkg_links_widget,
+                       params={'package':''}),
+                MokshaApp('Latest Changelog Entries',
+                          'fedoracommunity.packages/package/changelog/table',
+                          params={'filters': {'package': ''},
+                              'more_link_code': changelog_links.get_code('CHANGELOG')}),
 
-                                           )
-                      )
-              ]
+               ))
+    ]
 
 overview_dashboard = OverviewDashboard('overview_dashboard')
 
