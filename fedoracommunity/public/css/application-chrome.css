@@ -414,11 +414,6 @@ span.more-items {
   width: 14em;
 }
 
-.simple-border-list {
-  border-bottom: 1px solid #b3b3b3 !important;
-  border-top: 1px solid #b3b3b3 !important;
-}
-
 .simple-border-list li {
   list-style-type: none;
   min-height: 16px;
@@ -435,6 +430,18 @@ span.more-items {
   float: left;
   padding-right: 5px !important;
 }
+
+.simple-border-list td.blog-post {
+  border-bottom: 1px solid #b3b3b3 !important;
+  border-collapse: separate !important;
+}
+
+.simple-border-list td.blog-post .last-modified {
+  margin-top: .8em;
+  font-size: .8em;
+  color: #ababab;
+}
+
 
 /** more advanced list with columns **/
 
