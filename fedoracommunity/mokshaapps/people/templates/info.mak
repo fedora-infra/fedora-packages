@@ -89,7 +89,6 @@
     </div>
   </div>
 <div class="clear" />
-  </div>
 
   <script type="text/javascript">
     $(document).ready(function(){

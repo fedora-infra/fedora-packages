@@ -12,7 +12,7 @@
             Posted ${entry['last_modified']}
           </div>
         </td>
-        <script>
+        <script type="text/javascript">
             $("#${entry['uid']}_text").expander({
                 slicePoint: 300,
                 widow: 1,

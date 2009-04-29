@@ -11,11 +11,11 @@
                     <tr>
                         <td>
                             <span class="person-name">
-                                <a href="javascript:moksha.goto('/people/', {'username': '@{username}'});">@{human_name}</a>
+                                <a href="/people?username=@{username}">@{human_name}</a>
                             </span>
 
                         <td>
-                            <span class="person-name"><a href="javascript:moksha.goto('/people/', {'username': '@{username}'})">@{username}</a></span>&nbsp;
+                            <span class="person-name"><a href="/people?username=@{username}">@{username}</a></span>&nbsp;
                         </td>
                 </tbody>
 

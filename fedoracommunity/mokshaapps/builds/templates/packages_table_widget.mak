@@ -9,7 +9,7 @@
                     <tr>
                         <td>
                             <span class="package-name">
-                                <a href="javascript:moksha.goto('/package_maintenance/packages/', {'package': '@{name}'});">@{name}</a>
+                                <a href="/package_maintenance/packages?package=@{name}">@{name}</a>
                             </span>
                         </td>
                     </tr>

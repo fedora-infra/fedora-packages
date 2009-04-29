@@ -8,7 +8,7 @@
         <tr>
             <td>
                 <span class="package-name">
-                    <a href="javascript:moksha.goto('/package_maintenance/packages',{'package':'@{parent_pkg}'})">@{name}</a>
+                    <a href="/package_maintenance/packages?package=@{parent_pkg}">@{name}</a>
                 </span>
             </td>
             <td>
