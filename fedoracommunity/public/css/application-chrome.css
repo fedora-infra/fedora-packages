@@ -1,3 +1,9 @@
+/* image margin override to override fedora.css */
+
+img {
+  margin: auto !important;
+}
+
 /* overrides for footer. edit these to make footer taller */
 
 #footer {
