@@ -8,7 +8,7 @@
         <tr>
             <td>
                 <span class="package-name">
-                    <a href="/package_maintenance/packages?package=@{parent_pkg}">@{name}</a>
+                    <a href="/package_maintenance/packages?package=@{parent_pkg}" moksha_url="dynamic">@{name}</a>
                 </span>
             </td>
             <td>
