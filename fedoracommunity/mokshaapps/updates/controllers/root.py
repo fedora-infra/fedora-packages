@@ -125,21 +125,31 @@ class UpdatesNavContainer(SubTabbedContainer):
     tabs = (Category('Packages I Own',
                      (overview_updates_app.clone({'profile': True},
                                                   content_id='my_overview_updates'),
-                      unpushed_updates_app.clone({'filters': {'profile': True}},
-                                                   content_id='my_unpushed_updates'),
-                      testing_updates_app.clone({'filters': {'profile': True}},
-                                                   content_id='my_testing_updates'),
-                      stable_updates_app.clone({'filters': {'profile': True}},
-                                                   content_id='my_stable_updates'),
+                      unpushed_updates_app.clone({'filters': {'profile': True,
+                                                  'group_updates': False}},
+                                                 content_id='my_unpushed_updates'),
+                      testing_updates_app.clone({'filters': {'profile': True,
+                                                 'group_updates': False}},
+                                                content_id='my_testing_updates'),
+                      stable_updates_app.clone({'filters': {'profile': True,
+                                                'group_updates': False}},
+                                               content_id='my_stable_updates'),
                      ),
                      auth=not_anonymous()),
-            Category('All Packages',
-                     (overview_updates_app,
-                      unpushed_updates_app,
-                      testing_updates_app,
-                      stable_updates_app)
-                    )
+            Category('All Packages', (
+                overview_updates_app,
+                unpushed_updates_app.clone({
+                    'filters': {'group_updates': False}
+                    }),
+                testing_updates_app.clone({
+                   'filters': {'group_updates': False}
+                    }),
+                stable_updates_app.clone({
+                    'filters': {'group_updates': False}
+                    }),
+                )
            )
+        )
 
     def update_params(self, d):
         d['sidebar_apps'] = Category('sidebar-apps', self.sidebar_apps).process(d)

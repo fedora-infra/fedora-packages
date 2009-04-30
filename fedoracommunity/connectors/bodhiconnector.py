@@ -173,6 +173,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                      filter_func=_profile_user,
                      cast=bool)
         f.add_filter('status',['status'], allow_none = True)
+        f.add_filter('group_updates', allow_none=True, cast=bool)
         cls._query_updates_filter = f
 
     def query_updates(self, start_row=None,
@@ -185,39 +186,54 @@ class BodhiConnector(IConnector, ICall, IQuery):
             filters = {}
 
         filters = self._query_updates_filter.filter(filters, conn=self)
+        group_updates = filters.get('group_updates', True)
 
         params.update(filters)
-        params['tg_paginate_no'] = int(start_row/rows_per_page)
+        params['tg_paginate_no'] = int(start_row/rows_per_page) + 1
 
         # Ask for twice as many updates.  This is so we can handle the case
         # where there are two updates for each package, one for each release.
         # Yes, worst case we get twice as much data as we ask for, but this
         # allows us to do *much* more efficient database calls on the server.
-        params['tg_paginate_limit'] = rows_per_page * 2
+        if group_updates:
+            params['tg_paginate_limit'] = rows_per_page * 2
+        else:
+            params['tg_paginate_limit'] = rows_per_page
 
         results = self._bodhi_client.send_request('list', req_params=params)
 
         total_count = results[1]['num_items']
-        updates_list = self._group_updates(results[1]['updates'],
-                                           num_packages=rows_per_page)
+
+        if group_updates:
+            updates_list = self._group_updates(results[1]['updates'],
+                                               num_packages=rows_per_page)
+        else:
+            updates_list = results[1]['updates']
 
         for up in updates_list:
             versions = []
             releases = []
 
-            for dist_update in up['dist_updates']:
-                versions.append(dist_update['version'])
-                releases.append(dist_update['release_name'])
+            if group_updates:
+                for dist_update in up['dist_updates']:
+                    versions.append(dist_update['version'])
+                    releases.append(dist_update['release_name'])
 
-            up['name'] = up['package_name']
-            # FIXME: Don't embed HTML, just send it as a list and have the
-            #        template handle it
-            up['versions'] = '<br/>'.join(versions)
-            up['releases'] = '<br/>'.join(releases)
-            up['status'] = up['dist_updates'][0]['status']
+                up['name'] = up['package_name']
 
-            # fix this...
-            up['nvr'] = up['dist_updates'][0]['title']
+                # FIXME: Don't embed HTML, just send it as a list and have the
+                #        template handle it
+                up['versions'] = '<br/>'.join(versions)
+                up['releases'] = '<br/>'.join(releases)
+                up['status'] = up['dist_updates'][0]['status']
+                up['nvr'] = up['dist_updates'][0]['title']
+            else:
+                chunks = up['title'].split('-')
+                up['name'] = '-'.join(chunks[:-2])
+                up['versions'] = chunks[-2]
+                up['releases'] = up['release']['long_name']
+                up['nvr'] = up['title']
+
             up['request_id'] = up['nvr']
 
             actions = []
@@ -231,7 +247,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 # If we have multiple updates that are all in the same state,
                 # then create a single set of action buttons to control all
                 # of them.  If not,then supply separate ones.
-                if len(up['dist_updates']) > 1:
+                if 'dist_updates' in up and len(up['dist_updates']) > 1:
                     if up['dist_updates'][0]['status'] != \
                        up['dist_updates'][1]['status']:
                         for update in up['dist_updates']:
@@ -243,25 +259,38 @@ class BodhiConnector(IConnector, ICall, IQuery):
                                 actions.append(action)
                 else:
                     # Create a single set of action buttons
-                    update = up['dist_updates'][0]
+                    if 'dist_updates' in up:
+                        update = up['dist_updates'][0]
+                    else:
+                        update = up
                     for action in self._get_update_actions(update):
                         actions.append(action)
 
             up['actions'] = ''
             for action in actions:
                 reqs = ''
-                for u in up['dist_updates']:
-                    reqs += "update_action('%s', '%s');" % (u['title'], action[0])
+                if group_updates:
+                    for u in up['dist_updates']:
+                        reqs += "update_action('%s', '%s');" % (u['title'],
+                                                                action[0])
+                    title = up['dist_updates'][0]['title']
+                else:
+                    reqs += "update_action('%s', '%s');" % (up['title'],
+                                                            action[0])
+                    title = up['title']
 
                 # FIXME: Don't embed HTML
                 up['actions'] += """
                     <button id="%s_%s" onclick="%s return false;">%s</button><br/>
-                    """ % (up['dist_updates'][0]['title'].replace('.', ''),
-                           action[0], reqs, action[1])
+                    """ % (title.replace('.', ''), action[0], reqs, action[1])
 
             #dates
-            dp = up['dist_updates'][0]['date_pushed']
-            ds = up['dist_updates'][0]['date_submitted']
+            if group_updates:
+                dp = up['dist_updates'][0]['date_pushed']
+                ds = up['dist_updates'][0]['date_submitted']
+            else:
+                dp = up['date_pushed']
+                ds = up['date_submitted']
 
             dtd = DateTimeDisplay(ds)
             ds_when = dtd.when(0)
@@ -277,7 +306,10 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
             # karma
             # FIXME: take into account karma from both updates
-            k = up['dist_updates'][0]['karma']
+            if group_updates:
+                k = up['dist_updates'][0]['karma']
+            else:
+                k = up['karma']
             if k:
                 up['karma_str'] = "%+d"%k
             else:
