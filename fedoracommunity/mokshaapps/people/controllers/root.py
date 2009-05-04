@@ -65,8 +65,6 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                                   'fedoracommunity.people/planet',
                                   auth=not_anonymous(),
                                   params={'username': None}),
-                        MokshaApp('Your Packages', 'fedoracommunity.packages/mypackages',
-                                 params={'view': 'canvas'})
                        ),
                       )]
 
