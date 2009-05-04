@@ -166,7 +166,7 @@ class RootController(Controller):
         kwds.update({'p': pkg_name})
         return self.index(**kwds)
 
-    @expose('mako:fedoracommunity.mokshaapps.builds.templates.packages_table')
+    @expose('mako:moksha.templates.widget')
     def packages_table(self, uid="", rows_per_page=5, filters=None, more_link_code=None):
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
@@ -177,10 +177,19 @@ class RootController(Controller):
         more_link = None
         if more_link_code:
             more_link = builds_links.get_data(more_link_code)
+        else:
+            alphaPager = numericPager = True
 
         tmpl_context.widget = builds_packages_grid
-        return {'filters': filters, 'rows_per_page':rows_per_page,
+        return {'options':
+                {'resource':'koji',
+                'resource_path': 'query_packages',
+                'alphaPager': alphaPager,
+                'numericPager': numericPager,
+                'filters': filters,
+                'rows_per_page':rows_per_page,
                 'more_link': more_link}
+               }
 
     @expose('mako:moksha.templates.widget')
     def table(self, uid="", rows_per_page=5, filters=None, more_link_code=None):
