@@ -1016,7 +1016,7 @@ th, td {
 }
 
 /* loading row for table */
-.rowtemplate {
+.rowtemplate, .template {
   display: none;
 }
 

@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2009  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -182,7 +182,7 @@ class RootController(Controller):
         return {'filters': filters, 'rows_per_page':rows_per_page,
                 'more_link': more_link}
 
-    @expose('mako:fedoracommunity.mokshaapps.builds.templates.table')
+    @expose('mako:moksha.templates.widget')
     def table(self, uid="", rows_per_page=5, filters=None, more_link_code=None):
         ''' table handler
 
@@ -196,9 +196,17 @@ class RootController(Controller):
             filters = {}
 
         more_link = None
+        numericPager = False
         if more_link_code:
             more_link = builds_links_group[more_link_code]
+        else:
+            numericPager = True
 
         tmpl_context.widget = builds_grid
-        return {'filters': filters, 'uid':uid, 'rows_per_page':rows_per_page,
-                'more_link': more_link}
+        return {'options':{'resource': 'koji',
+                           'resource_path': 'query_builds',
+                           'filters': filters,
+                           'rows_per_page':rows_per_page,
+                           'more_link': more_link,
+                           'numericPager': numericPager}
+               }
