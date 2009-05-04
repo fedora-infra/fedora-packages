@@ -1,4 +1,4 @@
-<div id="${id}" class="simple-list list">
+<div id="${id}" class="simple-border-list list">
   <table>
     % for entry in entries[:limit]:
       <tr>
@@ -12,7 +12,7 @@
             Posted ${entry['last_modified']}
           </div>
         </td>
-        <script>
+        <script type="text/javascript">
             $("#${entry['uid']}_text").expander({
                 slicePoint: 300,
                 widow: 1,

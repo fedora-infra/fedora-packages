@@ -1,3 +1,19 @@
+# This file is part of Fedora Community.
+# Copyright (C) 2008-2009  Red Hat, Inc.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 from tg import expose, tmpl_context, validate, request
 from tw.api import JSLink, Widget
 from formencode import validators
@@ -109,21 +125,31 @@ class UpdatesNavContainer(SubTabbedContainer):
     tabs = (Category('Packages I Own',
                      (overview_updates_app.clone({'profile': True},
                                                   content_id='my_overview_updates'),
-                      unpushed_updates_app.clone({'filters': {'profile': True}},
-                                                   content_id='my_unpushed_updates'),
-                      testing_updates_app.clone({'filters': {'profile': True}},
-                                                   content_id='my_testing_updates'),
-                      stable_updates_app.clone({'filters': {'profile': True}},
-                                                   content_id='my_stable_updates'),
+                      unpushed_updates_app.clone({'filters': {'profile': True,
+                                                  'group_updates': False}},
+                                                 content_id='my_unpushed_updates'),
+                      testing_updates_app.clone({'filters': {'profile': True,
+                                                 'group_updates': False}},
+                                                content_id='my_testing_updates'),
+                      stable_updates_app.clone({'filters': {'profile': True,
+                                                'group_updates': False}},
+                                               content_id='my_stable_updates'),
                      ),
                      auth=not_anonymous()),
-            Category('All Packages',
-                     (overview_updates_app,
-                      unpushed_updates_app,
-                      testing_updates_app,
-                      stable_updates_app)
-                    )
+            Category('All Packages', (
+                overview_updates_app,
+                unpushed_updates_app.clone({
+                    'filters': {'group_updates': False}
+                    }),
+                testing_updates_app.clone({
+                   'filters': {'group_updates': False}
+                    }),
+                stable_updates_app.clone({
+                    'filters': {'group_updates': False}
+                    }),
+                )
            )
+        )
 
     def update_params(self, d):
         d['sidebar_apps'] = Category('sidebar-apps', self.sidebar_apps).process(d)

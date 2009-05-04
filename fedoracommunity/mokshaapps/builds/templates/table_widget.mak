@@ -10,16 +10,17 @@
                     <th>&nbsp;</th>
                 </tr>
             </thead>
+
             <tbody class="rowtemplate">
                     <tr>
                         <td class="one-row">
                           <div id="menu_@{build_id}" class="menu" panel="menu_panel_@{build_id}">
                             <span class="package-name">
-                                <a href="javascript:moksha.goto('/package_maintenance/packages/builds', {'package': '@{package_name}'});">@{package_name}</a>
+                                <a href="/package_maintenance/tools/builds?package=@{package_name}" moksha_url="dynamic">@{package_name}</a>
                             </span>
                             <br/>@{version}-@{release}&nbsp;
-                            <div id="menu_panel_@{build_id}" class="menu_panel">
-                    <h4>Quick Links for <strong>@{package_name}</strong>:</h4>
+                            <div id="menu_panel_@{build_id}" class="menu_panel" >
+                            <h4>Quick Links for <strong>@{package_name}</strong>:</h4>
                             <ul>
                                <li><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=@{build_id}"><img src="/images/16_koji.png"/><span>Go to this <strong>build</strong> in Koji</span><img src="/images/16_offsite-link.png"/></a></li>
                                <li><a href="https://admin.fedoraproject.org/updates/@{package_name}"><img src="/images/16_bodhi.png"/><span>Go to @{package_name} <strong>updates</strong> in Bodhi</span><img src="/images/16_offsite-link.png"/></a></li>
@@ -40,7 +41,7 @@
                         </td>
 
                         <td rowspan="2">
-                            <span class="person-name"><a href="javascript:moksha.goto('/people/', {'username': '@{owner_name}'})">@{owner_name}</a></span>&nbsp;
+                            <span class="person-name"><a href="/people/?username=@{owner_name}" moksha_url="dynamic">@{owner_name}</a></span>&nbsp;
                         </td>
                         <td rowspan="2">@{completion_time_display:index("elapsed")}
                         </td>
@@ -71,10 +72,6 @@
 
                         </td>
                     </tr>
-
                 </tbody>
-
         </table>
-
-
     </div>

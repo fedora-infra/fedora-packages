@@ -1,3 +1,9 @@
+/* image margin override to override fedora.css */
+
+img {
+  margin: auto !important;
+}
+
 /* overrides for footer. edit these to make footer taller */
 
 #footer {
@@ -408,11 +414,6 @@ span.more-items {
   width: 14em;
 }
 
-.simple-border-list {
-  border-bottom: 1px solid #b3b3b3 !important;
-  border-top: 1px solid #b3b3b3 !important;
-}
-
 .simple-border-list li {
   list-style-type: none;
   min-height: 16px;
@@ -429,6 +430,18 @@ span.more-items {
   float: left;
   padding-right: 5px !important;
 }
+
+.simple-border-list td.blog-post {
+  border-bottom: 1px solid #b3b3b3 !important;
+  border-collapse: separate !important;
+}
+
+.simple-border-list td.blog-post .last-modified {
+  margin-top: .8em;
+  font-size: .8em;
+  color: #ababab;
+}
+
 
 /** more advanced list with columns **/
 
@@ -716,6 +729,11 @@ div.icon-panel td {
   font-weight: 900;
 }
 
+#right-content-column h4,
+.right-content-column h4 {
+  clear: left;
+}
+
 #right-content-column h3,
 .right-content-column h3 {
   background-color: #d2d2d2;
@@ -866,6 +884,10 @@ h1#greeter img {
   float: left;
   width: auto;
   margin-top: 2px;
+}
+
+#right-content-column .message {
+  display: none;
 }
 
 .list .pager {
@@ -1093,6 +1115,17 @@ div.info_content {
   padding: 12px;
 }
 
+div.info_content img,
+div.compact_info_content img {
+  margin:  0em !important;
+  margin-right: .4em !important;
+}
+
+div.info_content .timezone img,
+div.compact_info_content .timezone img {
+  margin-top: .2em !important;
+}
+
 div.info_content div.hackergotchi {
   height: 100px;
   width: 100px;
@@ -1110,6 +1143,17 @@ div.compact_info_content div.hackergotchi {
 div.compact_info_content div.hackergotchi img {
   height: 50px;
   width: 50px;
+}
+
+div.compact_info_content p {
+  margin-bottom: 0px;
+}
+
+div.compact_info_content h3 {
+  text-transform: lowercase;
+  font-size: 1.5em !important;
+  padding: 0px;
+  margin: 0px !important;
 }
 
 div.compact_info_content h4,
@@ -1172,6 +1216,43 @@ div.info_content .col div {
   padding-right: 1.5em;
 }
 
+div.compact_info_content .timezone span,
+div.info_content .timezone span {
+  font-weight: 700;
+}
+
+div.compact_info_content .col span.timezone_label,
+div.info_content .col span.timezone_label {
+  margin: auto !important;
+  font-size: .8em;
+  color: #999;
+  display: block;
+  font-weight: normal;
+}
+
+/* compact info widget specific styles */
+
+div.compact_info_content p {
+  margin: .3em !important;
+}
+
+div.compact_info_content .timezone,
+div.info_content .timezone {
+  min-width: 7em !important;
+  clear: right;
+  margin-top: 0px !important;
+  margin-bottom: 5px;
+}
+
+div.compact_info_content .timezone p {
+  float: left;
+}
+
+div.compact_info_content img {
+  float: left;
+}
+
+
 /** left-column styles **/
 
 div.info_content .left_col {
@@ -1200,6 +1281,20 @@ div.info_content .right_col div {
 div.info_content .col td div {
   padding-top: 0px;
   margin-top: 0px !important;
+}
+
+/* updates karma styles */
+
+div.karma {
+  font-size: .8em;
+  vertical-align: middle !important;
+  color: #999;
+  padding-bottom: .2em;
+}
+
+div.karma img {
+  margin-top: .3em !important;
+  margin-bottom: -.4em !important;
 }
 
 /* package details header styles */
@@ -1258,7 +1353,7 @@ div.count-summary-dashboard dd {
   margin: 0px;
 }
 div.count-summary-dashboard .main-count-value {
-  font-size: 3em;
+  font-size: 2.4em;
   font-weight: bold;
   width: 100%;
   text-align: center;
@@ -1351,14 +1446,13 @@ moksha_extpoint {
 }
 
 
-.info_content div#ssh_key .details div {
+.info_content div.ssh_key .details div {
   border: 1px solid #aaa;
-  overflow: auto;
   margin-top: 0px ! important;
   margin-bottom: 1em;
   padding-top: 0px ! important;
   font-size: 7pt ! important;
-  width: 200px;
   background-color: white;
+  max-width: 200px !important;
+  overflow: auto !important;
 }
-

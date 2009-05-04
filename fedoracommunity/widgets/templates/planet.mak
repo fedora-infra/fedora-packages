@@ -11,7 +11,7 @@
                 <div class="post">
                     <div class="post-header">
                         <h4 class="post-title">
-                            <a href="${entry.link}">${entry.title}</a></span>
+                            <span><a href="${entry.link}">${entry.title}</a></span>
                         </h4>
                     </div>
                     <div class="post-contents" id="${entry['uid']}_text">
@@ -55,5 +55,5 @@
 
         </script>
     % endfor
-<div align="right"><a href="http://planet.fedoraproject.org">View more ></a></div>
+<div align="right"><a href="http://planet.fedoraproject.org">View more Planet Fedora &gt;</a></div>
 </div>

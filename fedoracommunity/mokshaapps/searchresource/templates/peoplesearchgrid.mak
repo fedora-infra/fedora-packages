@@ -7,10 +7,10 @@
     <tbody class="rowtemplate">
         <tr>
             <td>
-                <span class="person-name"><a href="javascript:moksha.goto('/people/?username=@{username}')">@{human_name}</a></span>
+                <span class="person-name"><a href="/people/?username=@{username}" moksha_url="dynamic">@{human_name}</a></span>
             </td>
             <td>
-                <span class="person-name"><a href="javascript:moksha.goto('/people/?username=@{username}')">@{username}</a></span>
+                <span class="person-name"><a href="/people/?username=@{username}" moksha_url="dynamic">@{username}</a></span>
             </td>
         </tr>
     </tbody>

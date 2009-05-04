@@ -8,7 +8,6 @@
 
   <div id="content">
     ${panewidget(root_id=root_id, tabs=tabs)}
-    <div class="clearingdiv"></div>
   </div>
  </div>
 </div>

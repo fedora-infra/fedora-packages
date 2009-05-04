@@ -29,7 +29,7 @@
                         @{status}
                     </td>
                     <td>
-                        @{description}</div>
+                        @{description}
                     </td>
                     <td>
                         @{release}
