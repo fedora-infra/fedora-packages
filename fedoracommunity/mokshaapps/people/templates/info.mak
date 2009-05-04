@@ -65,7 +65,7 @@
           % if person.get('email'):
           <tr>
             <th>Email</th>
-            <td>${person['email']}</td>
+              <td><a href="mailto:${person['email']}">${person['email']}</a></td>
           </tr>
           % endif
           % if person.get('telephone'):
