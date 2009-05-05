@@ -235,6 +235,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 up['releases'] = up['release']['long_name']
                 up['nvr'] = up['title']
 
+            up['id'] = up['nvr'].split(',')[0]
+
             up['request_id'] = up['nvr']
 
             actions = []
