@@ -1,7 +1,7 @@
     <div class="list header-list">
         <div id="grid-controls">
           <form>
-              % if tmpl_context.auth('not_anonymous()'):
+              % if tmpl_context.auth('not_anonymous()') and show_owner_filter:
               <div id="filter" class="grid_filter" name="owner_filter">
                   <label for="owner">Display:</label><select name="username">
                                <option selected="selected" value="${tmpl_context.identity['person']['username']}">Builds I Own</option>

@@ -32,9 +32,13 @@ import simplejson as json
 
 class BuildsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.builds.templates.table_widget'
+    resource='koji'
+    resource_path='query_builds'
 
 class BuildsPackagesGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.builds.templates.packages_table_widget'
+    resource='koji'
+    resource_path='query_package'
 
 
 in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds/table',
@@ -182,9 +186,7 @@ class RootController(Controller):
 
         tmpl_context.widget = builds_packages_grid
         return {'options':
-                {'resource':'koji',
-                'resource_path': 'query_packages',
-                'alphaPager': alphaPager,
+                {'alphaPager': alphaPager,
                 'numericPager': numericPager,
                 'filters': filters,
                 'rows_per_page':rows_per_page,
@@ -192,7 +194,12 @@ class RootController(Controller):
                }
 
     @expose('mako:moksha.templates.widget')
-    def table(self, uid="", rows_per_page=5, filters=None, more_link_code=None):
+    def table(self,
+              uid="",
+              rows_per_page=5,
+              filters=None,
+              more_link_code=None,
+              show_owner_filter=False):
         ''' table handler
 
         This handler displays the main table by itself
@@ -212,10 +219,9 @@ class RootController(Controller):
             numericPager = True
 
         tmpl_context.widget = builds_grid
-        return {'options':{'resource': 'koji',
-                           'resource_path': 'query_builds',
-                           'filters': filters,
+        return {'options':{'filters': filters,
                            'rows_per_page':rows_per_page,
                            'more_link': more_link,
-                           'numericPager': numericPager}
+                           'numericPager': numericPager,
+                           'show_owner_filter': show_owner_filter}
                }
