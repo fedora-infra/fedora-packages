@@ -190,6 +190,7 @@ class RootController(Controller):
         else:
             decoded_filters = filters
 
+        numericPager = False
         more_link = None
         if more_link_code:
             more_link = updates_links.get_data(more_link_code)
@@ -201,6 +202,8 @@ class RootController(Controller):
                 s[-1] = last
 
                 more_link = '/'.join(s)
+        else:
+            numericPager = True
 
         status = decoded_filters.get('status','').lower()
         if status == 'stable':
@@ -213,8 +216,7 @@ class RootController(Controller):
             tmpl_context.widget = stable_updates_grid
 
         options = dict(filters=filters, rows_per_page=rows_per_page,
-                       resource='bodhi', resource_path='query_updates',
-                       more_link=more_link)
+                       more_link=more_link, numericPager=numericPager)
 
         return dict(options=options)
 

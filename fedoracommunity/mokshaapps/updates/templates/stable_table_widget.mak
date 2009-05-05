@@ -20,4 +20,13 @@
             </tr>
         </tbody>
     </table>
+    <div id="grid-controls">
+        <div class="message template" id="info_display" >
+           Viewing @{visible_rows} of @{total_rows} updates 
+        </div>
+        <div class="pager" id="pager" type="numeric" ></div>
+        <div class="pager template" id="pager" type="more_link">
+           <a href="@{more_link}" moksha_url="dynamic">View more stable updates &gt;</a>
+        </div>
+    </div>
 </div>
