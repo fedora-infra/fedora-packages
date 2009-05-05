@@ -24,7 +24,7 @@ import simplejson as json
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, not_anonymous
 from moksha.api.connectors import get_connector
-from moksha.api.widgets import ContextAwareWidget, Grid
+from moksha.api.widgets import Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 
@@ -46,13 +46,17 @@ class UpdatesDashboardWidget(Widget):
 updates_dashboard_widget = UpdatesDashboardWidget('updates_dashboard')
 
 
-class PendingUpdatesGrid(Grid, ContextAwareWidget):
+class UpdatesGrid(Grid):
+    resource = 'bodhi'
+    resource_path = 'query_updates'
+
+class PendingUpdatesGrid(UpdatesGrid):
     template='mako:fedoracommunity.mokshaapps.updates.templates.pending_table_widget'
 
-class StableUpdatesGrid(Grid, ContextAwareWidget):
+class StableUpdatesGrid(UpdatesGrid):
     template='mako:fedoracommunity.mokshaapps.updates.templates.stable_table_widget'
 
-class TestingUpdatesGrid(Grid, ContextAwareWidget):
+class TestingUpdatesGrid(UpdatesGrid):
     template='mako:fedoracommunity.mokshaapps.updates.templates.testing_table_widget'
 
 pending_updates_grid =  PendingUpdatesGrid('pending_updates_grid')
@@ -89,7 +93,7 @@ stable_updates_app = MokshaApp('Stable Updates', 'fedoracommunity.updates/table'
 
 overview_updates_app = MokshaApp('Overview',
                                  'fedoracommunity.updates/overview',
-                                 content_id='overview',
+                                 content_id='all_overview',
                                  params={'profile': False,
                                          'username': None})
 
@@ -99,7 +103,7 @@ dashboard_updates_app = MokshaApp('Updates Dashboard',
                                       'username': '',
                                       })
 
-class UpdatesOverviewContainer(DashboardContainer, ContextAwareWidget):
+class UpdatesOverviewContainer(DashboardContainer):
     javascript = [JSLink(link='/javascript/bodhi.js', modname=__name__)]
     layout = (Category('group-1-apps',
                        (dashboard_updates_app.clone(),
