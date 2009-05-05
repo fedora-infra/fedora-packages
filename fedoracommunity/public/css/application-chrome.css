@@ -493,7 +493,7 @@ span.more-items {
 }
 
 .header-list table tbody {
-  background: repeat-x left bottom url('../images/c8c8c8_dot.png') !important;
+  background: repeat-x left bottom url('/images/c8c8c8_dot.png') !important;
 }
 
 .message_row {
