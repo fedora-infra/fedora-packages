@@ -60,7 +60,7 @@ testing_updates_grid = TestingUpdatesGrid('testing_updates_grid')
 stable_updates_grid = StableUpdatesGrid('stable_updates_grid')
 
 unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/table',
-                          css_class='main_table', params={
+                          params={
                               'rows_per_page': 10,
                               'filters': {
                                   'status':'pending',
@@ -69,7 +69,7 @@ unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/ta
                                   }
                               })
 testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/table',
-                          css_class='secondary_table', params={
+                          params={
                               'rows_per_page': 10,
                               'filters': {
                                   'status':'testing',
@@ -78,7 +78,7 @@ testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/tabl
                                   }
                               })
 stable_updates_app = MokshaApp('Stable Updates', 'fedoracommunity.updates/table',
-                          css_class='secondary_table', params={
+                          params={
                               'rows_per_page': 10,
                               'filters': {
                                   'status':'stable',
@@ -95,7 +95,7 @@ overview_updates_app = MokshaApp('Overview',
 
 dashboard_updates_app = MokshaApp('Updates Dashboard',
                                   'fedoracommunity.updates/dashboard',
-                                  css_class='secondary_table', params={
+                                  params={
                                       'username': '',
                                       })
 
