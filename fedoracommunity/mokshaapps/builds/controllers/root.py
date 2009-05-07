@@ -36,9 +36,9 @@ class BuildsGrid(Grid, ContextAwareWidget):
     resource_path='query_builds'
 
 class BuildsPackagesGrid(Grid, ContextAwareWidget):
-    template='mako:fedoracommunity.mokshaapps.builds.templates.packages_table_widget'
-    resource='koji'
-    resource_path='query_package'
+    template = 'mako:fedoracommunity.mokshaapps.builds.templates.packages_table_widget'
+    resource = 'koji'
+    resource_path = 'query_packages'
 
 
 in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds/table',
