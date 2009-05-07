@@ -32,7 +32,7 @@
           <p><img src="/images/16_chat.png" /> ${person['ircnick']}</p>
           % endif
           % if person.get('email'):
-          <p><img src="/images/16_mail.png" /> ${person['email']}</p>
+              <p><img src="/images/16_mail.png" /> <a href="mailto:${person['email']}">${person['email']}</a></p>
           % endif
           % if person.get('telephone'):
           <p><img src="/images/16_phone.png" />${person['telephone']}</p>
