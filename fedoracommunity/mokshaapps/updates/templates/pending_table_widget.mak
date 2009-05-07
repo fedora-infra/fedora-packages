@@ -36,7 +36,7 @@
                       </moksha_extpoint>
                     <div>@{versions}&nbsp;</div>
                 </td>
-                <td>@{date_submitted_display:index("when")}</td>
+                <td>@{date_submitted_display}</td>
                 <td>@{releases}</td>
                 <td>@{actions}</td>
             </tr>

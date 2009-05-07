@@ -14,11 +14,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import time
+
 from paste.deploy.converters import asbool
 from pylons import config
 from fedora.client import ProxyClient
 from beaker.cache import Cache
 from datetime import datetime, timedelta
+from webhelpers.date import distance_of_time_in_words
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
@@ -287,25 +290,20 @@ class BodhiConnector(IConnector, ICall, IQuery):
                     <button id="%s_%s" onclick="%s return false;">%s</button><br/>
                     """ % (title.replace('.', ''), action[0], reqs, action[1])
 
-            #dates
+            # Dates
             if group_updates:
                 dp = up['dist_updates'][0]['date_pushed']
                 ds = up['dist_updates'][0]['date_submitted']
             else:
                 dp = up['date_pushed']
                 ds = up['date_submitted']
-
-            dtd = DateTimeDisplay(ds)
-            ds_when = dtd.when(0)
-            dp_when = None
-            elapsed = dtd.time_elapsed(0)
+            if ds: ds = datetime(*time.strptime(ds, '%Y-%m-%d %H:%M:%S')[:-2])
+            if dp: dp = datetime(*time.strptime(dp, '%Y-%m-%d %H:%M:%S')[:-2])
+            up['date_pushed_display'] = None
+            up['date_submitted_display'] = distance_of_time_in_words(ds, granularity='hour')
             if dp:
-                dtd = DateTimeDisplay(ds, dp)
-                dp_when = dtd.when(1)
-                elapsed = dtd.time_elapsed(0, 1)
-            up['date_pushed_display'] = dp_when
-            up['date_submitted_display'] = ds_when
-            up['elapsed_display'] = elapsed
+                up['date_pushed_display'] = distance_of_time_in_words(dp, granularity='hour')
+                up['date_pushed'] = dp.strftime('%d %B %Y')
 
             # karma
             # FIXME: take into account karma from both updates

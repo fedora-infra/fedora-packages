@@ -17,7 +17,7 @@
                     </span>
                     <div>@{versions}&nbsp;</div>
                 </td>
-                <td>@{date_pushed_display:index("when")}</td>
+                <td>@{date_pushed_display}</td>
                 <td>@{releases}</td>
                 <td><span>@{status}</span>
                     <div class="karma"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</div>

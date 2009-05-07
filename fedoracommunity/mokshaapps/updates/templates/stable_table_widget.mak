@@ -15,7 +15,7 @@
                     </span>
                     <div>@{versions}&nbsp;</div>
                 </td>
-                <td>@{date_pushed_display:index("date")}</td>
+                <td>@{date_pushed}</td>
                 <td>@{releases}</td>
             </tr>
         </tbody>
