@@ -8,11 +8,11 @@
                 <tr>
                     <td>
                         <span class="group-name">
-                            @{display_name}
+                            <a href="https://admin.fedoraproject.org/accounts/group/view/@{name}">@{display_name}</a>
                         </span>
                     </td>
                     <td>
-                      @{group_type}
+                        @{group_type}
                     </td>
                 </tr>
             </tbody>
