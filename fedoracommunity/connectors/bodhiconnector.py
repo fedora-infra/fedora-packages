@@ -391,13 +391,6 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
         return result
 
-    def get_releases(self):
-        return bodhi_cache.get_value(key='releases', expiretime=86400,
-                                     createfunc=self._get_releases)
-
-    def _get_releases(self):
-        return self._bodhi_client.send_request('get_releases')[1]['releases']
-
     def get_dashboard_stats(self, username=None):
         return bodhi_cache.get_value(key='dashboard_%s' % username,
                 createfunc=lambda: self._get_dashboard_stats(username),
