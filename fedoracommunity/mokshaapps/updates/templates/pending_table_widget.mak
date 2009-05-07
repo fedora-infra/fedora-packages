@@ -11,11 +11,11 @@
         <tbody class="rowtemplate">
             <tr>
                 <td>
-                  <div id="menu_@{id}" class="menu" panel="menu_panel_@{id}">
+                  <div id="menu_@{requestid}" class="menu" panel="menu_panel_@{requestid}">
                     <span class="package-name">
                         <a href="/package_maintenance/tools/updates?package=@{name}">@{name}</a>&nbsp;
                     </span>
-                            <div id="menu_panel_@{id}" class="menu_panel" >
+                            <div id="menu_panel_@{requestid}" class="menu_panel" >
                             <h4>Quick Links for <strong>@{name}</strong>:</h4>
                             <ul>
                                <li><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=@{id}"><img src="/images/16_koji.png"/><span>Go to this <strong>build</strong> in Koji</span><img src="/images/16_offsite-link.png"/></a></li>
@@ -29,7 +29,7 @@
                       <moksha_extpoint>
                         {
                             'type': 'make_menu',
-                            'placeholder_id': 'menu_@{id}',
+                            'placeholder_id': 'menu_@{requestid}',
                             'id': '@{id}',
                             'show_effect': 'slideDown(\"slow\")'
                         }
@@ -44,7 +44,7 @@
     </table>
     <div id="grid-controls">
         <div class="message template" id="info_display" >
-           Viewing @{visible_rows} of @{total_rows} updates 
+           Viewing @{visible_rows} of @{total_rows} updates
         </div>
         <div class="pager" id="pager" type="numeric" ></div>
         <div class="pager template" id="pager" type="more_link">
