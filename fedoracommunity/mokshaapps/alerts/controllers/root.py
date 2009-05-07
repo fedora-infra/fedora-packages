@@ -33,7 +33,6 @@ class AlertsContainer(ContextAwareWidget):
         #        we will have it query directly and cache the results
         c = cache.get_cache('fedoracommunity_alerts_global')
 
-        # cache for a minute
         users = []
         if d.get('profile') or d.get('userid'):
             label = 'Error if you see this label'
@@ -46,6 +45,7 @@ class AlertsContainer(ContextAwareWidget):
                 userid = d.get('userid')
                 label = '%s\'s Recent Packages' % userid
 
+            # Cache for an hour
             users_data = c.get_value(key=userid,
                  createfunc=lambda : self.get_user_entries(userid),
                  expiretime=3600)
@@ -60,7 +60,7 @@ class AlertsContainer(ContextAwareWidget):
             # cache for a day
             this_week = c.get_value(key='this_week',
                                     createfunc=self.get_this_week_entries,
-                                    expiretime=3600)
+                                    expiretime=86400)
 
             # add today's results to this_week as an optimization
             # e.g. this week only contains a count up to 11:59 of the
