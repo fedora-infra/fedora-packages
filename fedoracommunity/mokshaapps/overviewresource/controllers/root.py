@@ -47,7 +47,7 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
                                      css_class='',
                                      auth=Not(not_anonymous())),
                         MokshaApp('Alerts', 'fedoracommunity.alerts'),
-                        MokshaWidget('Quick Links', 'fedoracommunity.quicklinks', auth=not_anonymous()),
+                        MokshaWidget('Tasks', 'fedoracommunity.quicklinks', auth=not_anonymous()),
                         MokshaApp('My Packages', 'fedoracommunity.packages/mypackages', auth=not_anonymous())
                        ],
                        default_child_css="panel"
