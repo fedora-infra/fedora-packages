@@ -70,7 +70,7 @@ static_package_detail_links = Category('Package Details',
                     )
                    )
 
-static_package_maint_links = Category('Package Maintenance Tools',
+static_package_maint_links = Category('Maintenance Tools',
                     (StaticLink('Bugs', '/package_maintenance/tools/bugs',
                               params={'package':''}),
                      StaticLink('Builds', '/package_maintenance/tools/builds',
@@ -117,7 +117,7 @@ class PackageNavMaintContainer(ExtraContentTabbedContainer):
     sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),)
     tabs= (static_overview_links,
            static_package_detail_links,
-           Category('Package Maintenance Tools',
+           Category('Maintenance Tools',
                     (MokshaApp('Bugs', 'fedoracommunity.packages/package/bugs',
                               params={'package':''}),
                     MokshaApp('Builds', 'fedoracommunity.packages/package/builds',
