@@ -15,21 +15,13 @@
         <table id="${id}">
             <thead>
               <th>Name</th>
-              <th>Type</th>
-              <th>Role(s)</th>
             </thead>
             <tbody class="rowtemplate">
                     <tr>
                         <td>
-                            <span>
-                                @{name}
+                            <span class="@{roles}">
+                                <a href="/people/?username=@{name}" moksha_url="dynamic">@{name}</a>
                             </span>
-                        </td>
-                        <td>
-                            @{type}
-                        </td>
-                        <td>
-                            @{roles:filter(_roles_filter)}
                         </td>
                     </tr>
                 </tbody>
