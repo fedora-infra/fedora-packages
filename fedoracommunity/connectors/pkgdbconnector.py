@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2009  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -207,6 +207,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         f = ParamFilter()
         f.add_filter('package',['p', 'pkg'], allow_none = False)
         f.add_filter('roles', allow_none = True)
+        f.add_filter('type', allow_none = False)
 
         cls._query_acls_filter = f
 
@@ -219,12 +220,11 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         if not filters:
             filters = {}
 
-        params['tg_paginate_limit'] = rows_per_page
-        params['tg_paginate_no'] = int(start_row/rows_per_page)
         filters = self._query_acls_filter.filter(filters)
 
         package = filters.get('package')
         roles = filters.get('roles', ['owner', 'maintainer', 'watcher'])
+        type = filters.get('type', 'users')
 
         info = pkgdb_cache.get_value(key=package,
                                    createfunc=lambda : self.request_package_info(package),
@@ -239,50 +239,54 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
             distname = i['collection']['name']
             distver = i['collection']['version']
             owner = i['owneruser']
-            if 'owner' in roles or 'maintainer' in roles:
-                entities[owner] = {'name': owner, 'roles': ['Owner'],'type': 'user'}
 
             if distname == 'Fedora' and distver == 'devel':
                 distname = 'Rawhide'
                 distver = ''
 
-            for person in i['people']:
-                aclorder = person['aclOrder']
-                username = person['name']
-                record = entities.get(username,
-                                    {'name': username,
-                                     'roles': []})
-                record['type'] = 'user'
 
-                if (aclorder['commit'] or
-                    aclorder['approveacls']) and 'maintainer' in roles:
+            if type == 'users':
+                if 'owner' in roles or 'maintainer' in roles:
+                    entities[owner] = {'name': owner, 'roles': ['Owner'],'type': 'user'}
 
-                    record['roles'].append('Maintainer')
-                    entities[username] = record
+                for person in i['people']:
+                    aclorder = person['aclOrder']
+                    username = person['name']
+                    record = entities.get(username,
+                                        {'name': username,
+                                         'roles': []})
+                    record['type'] = 'user'
 
-                if (aclorder['watchbugzilla']  or
-                    aclorder['watchcommits']) and 'watcher' in roles:
-                    record['roles'].append('Watcher')
-                    entities[username] = record
+                    if (aclorder['commit'] or
+                        aclorder['approveacls']) and 'maintainer' in roles:
 
-            for group in i['groups']:
-                aclorder = group['aclOrder']
-                name = group['name']
-                record = group.get(name,
-                                   {'name': name,
-                                    'roles': []})
-                record['type'] = 'group'
+                        record['roles'].append('Maintainer')
+                        entities[username] = record
 
-                if (aclorder['commit'] or
-                    aclorder['approveacls']) and 'maintainer' in roles:
+                    if (aclorder['watchbugzilla']  or
+                        aclorder['watchcommits']) and 'watcher' in roles:
+                        record['roles'].append('Watcher')
+                        entities[username] = record
 
-                    record['roles'].append('Maintainer')
-                    group[name] = record
+            if type == 'groups':
+                for group in i['groups']:
+                    aclorder = group['aclOrder']
+                    name = group['name']
+                    record = group.get(name,
+                                       {'name': name,
+                                        'roles': []})
+                    record['type'] = 'group'
 
-                if (aclorder['watchbugzilla']  or
-                    aclorder['watchcommits']) and 'watcher' in roles:
-                    record['roles'].append('Watcher')
-                    group[name] = record
+                    if (aclorder['commit'] or
+                        aclorder['approveacls']) and 'maintainer' in roles:
+
+                        record['roles'].append('Maintainer')
+                        group[name] = record
+
+                    if (aclorder['watchbugzilla']  or
+                        aclorder['watchcommits']) and 'watcher' in roles:
+                        record['roles'].append('Watcher')
+                        group[name] = record
 
         def sort_entity_list(a, b):
             if order < 0:
