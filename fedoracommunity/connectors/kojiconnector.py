@@ -452,6 +452,8 @@ class KojiConnector(IConnector, ICall, IQuery):
         builds_list = results[1][0]
         total_count = results[0][0]
         for b in builds_list:
+            state = b['state']
+            b['state_str'] = koji.BUILD_STATES[state].lower()
             start = b['creation_time']
             complete = b['completion_time']
             completion_display = None

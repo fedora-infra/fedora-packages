@@ -62,7 +62,7 @@
                                @{completion_time_display:index("time")}
                         </td>
 
-                        <td rowspan="2"><img src="/images/16_build_state_@{state}.png" /></td>
+                        <td rowspan="2"><img src="/images/16_build_state_@{state}.png" /><br/>@{state_str}</td>
                         <td rowspan="2" id="@{release_id}">
                             &nbsp;
                         </td>
