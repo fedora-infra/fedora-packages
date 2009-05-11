@@ -86,7 +86,21 @@
                     </tr>
                 </tbody>
         </table>
-        <div id="grid-controls">
+        <div id="grid-controls" if="options.total_rows == 0">
+            <div class="message template" id="info_display" >
+                No builds found.
+            </div>
+        </div>
+        <div id="grid-controls" if="options.visible_rows >= options.total_rows">
+            <div class="message template" id="info_display" >
+               Viewing all @{total_rows} builds.
+            </div>
+
+            <div class="pager template" id="pager" type="more_link">
+               <a href="@{more_link}" moksha_url="dynamic">View builds &gt;</a>
+            </div>
+        </div>
+        <div id="grid-controls" if="options.visible_rows < options.total_rows">
             <div class="message template" id="info_display" >
                Viewing @{visible_rows} of @{total_rows} builds.
             </div>
