@@ -24,8 +24,14 @@ class FedoraCommunityConfig(AppConfig):
     def add_auth_middleware(self, app, *args):
         """ Add our FAS authentication middleware """
         from fedoracommunity.connectors.faswhoplugin import fas_make_who_middleware
+        #from repoze.what.plugins.pylonshq import booleanize_predicates
         from copy import copy
         import logging
+
+        # TODO: go through moksha.lib.helpers and clean up the Predicate usage.
+        # Eventually we want to be using this, because this is how TG2/Pylons
+        # does it, however it currently breaks things for us...
+        #booleanize_predicates()
 
         # Configuring auth logging:
         if 'log_stream' not in self.fas_auth:
