@@ -93,7 +93,7 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                         MokshaApp('Latest Blog Posts',
                                   'fedoracommunity.people/planet',
                                   params={'username': None}),
-                       )]
+                       ))]
 
 class PeopleGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.people.templates.table_widget'
