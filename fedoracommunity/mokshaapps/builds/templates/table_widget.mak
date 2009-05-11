@@ -93,7 +93,7 @@
         </div>
         <div id="grid-controls" if="options.visible_rows >= options.total_rows">
             <div class="message template" id="info_display" >
-               Viewing all @{total_rows} builds.
+               Viewing all @{total_rows} builds
             </div>
 
             <div class="pager template" id="pager" type="more_link">
@@ -102,7 +102,7 @@
         </div>
         <div id="grid-controls" if="options.visible_rows < options.total_rows">
             <div class="message template" id="info_display" >
-               Viewing @{visible_rows} of @{total_rows} builds.
+               Viewing @{visible_rows} of @{total_rows} builds
             </div>
             <div class="pager" id="pager" type="numeric" ></div>
             <div class="pager template" id="pager" type="more_link">
