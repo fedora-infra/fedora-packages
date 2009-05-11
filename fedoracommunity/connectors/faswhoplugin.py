@@ -38,7 +38,8 @@ from moksha.lib.helpers import replace_app_header
 
 log = logging.getLogger(__name__)
 
-FAS_CACHE_TIMEOUT=20 #in seconds
+#FAS_CACHE_TIMEOUT=20 #in seconds
+FAS_CACHE_TIMEOUT=900 # 15 minutes (FAS visits timeout after 20)
 
 fasurl = tg.config.get('fedoracommunity.connector.fas.baseurl')
 fas_cache = Cache('fas_repozewho_cache', type="memory")
