@@ -151,6 +151,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'order': 'bug_id',
                 }
         results = self._bugzilla.query(query)
+        results.reverse()
         total_count = len(results)
         bugids = [bug.bug_id for bug in results][start_row:start_row+rows_per_page]
         bugs = self._bugzilla.getbugs(bugids)
