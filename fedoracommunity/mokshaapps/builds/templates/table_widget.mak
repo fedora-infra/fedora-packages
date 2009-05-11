@@ -86,7 +86,12 @@
                     </tr>
                 </tbody>
         </table>
-        <div id="grid-controls">
+        <div id="grid-controls" if="options.total_rows == 0">
+            <div class="message template" id="info_display" >
+                No builds found.
+            </div>
+        </div>
+        <div id="grid-controls" if="options.total_rows != 0">
             <div class="message template" id="info_display" >
                Viewing @{visible_rows} of @{total_rows} builds.
             </div>
