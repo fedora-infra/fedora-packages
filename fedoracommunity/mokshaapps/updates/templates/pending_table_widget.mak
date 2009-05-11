@@ -22,7 +22,7 @@
                                <li><a href="https://admin.fedoraproject.org/updates/@{name}"><img src="/images/16_bodhi.png"/><span>Go to @{name} <strong>updates</strong> in Bodhi</span><img src="/images/16_offsite-link.png"/></a></li>
                                <li><a href="https://admin.fedoraproject.org/pkgdb/packages/name/@{name}"><img src="/images/16_pkgdb.png"/><span>Go to @{name} <strong>package info</strong> in PackageDB</span><img src="/images/16_offsite-link.png"/></a></li>
                                <li><a href="https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&classification=Fedora&product=Fedora&component=@{name}&bug_status=NEW&bug_status=ASSIGNED&bug_status=MODIFIED"><img src="/images/16_bugzilla.png"/><span>Go to @{name} <strong>bugs</strong> in Bugzilla</span><img src="/images/16_offsite-link.png"/></a></li>
-                               <li><a href="https://translate.fedoraproject.org/module/@{name}"><img src="/images/16_transifex.png"/><span>Go to @{name} <strong>translations</strong> in Transifex</span><img src="/images/16_offsite-link.png"/></a></li>
+                               <!-- <li><a href="https://translate.fedoraproject.org/module/@{name}"><img src="/images/16_transifex.png"/><span>Go to @{name} <strong>translations</strong> in Transifex</span><img src="/images/16_offsite-link.png"/></a></li> -->
                             </ul>
                         </div>
                       </div>
