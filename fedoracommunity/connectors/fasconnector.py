@@ -95,6 +95,17 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
 
         view = view['person']
         view.update(extra)
+
+
+        # Check to see if this user has enabled VOIP for their account
+        #config = self._fas_client.send_request('config/list/%s/asterisk/enabled'
+        #                                       % user, req_params={},
+        #                                       auth_params={
+        #                                          'username': _fas_minimal_user,
+        #                                          'password': _fas_minimal_pass
+        #                                          })
+        #print config
+
         return view
 
     def get_user_view(self, user, invalidate=False):
