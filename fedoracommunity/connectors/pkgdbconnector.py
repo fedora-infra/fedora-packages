@@ -457,7 +457,13 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         releases = []
         collections = self.get_collection_table(active_only=True)
         for collection in collections.values():
-            if collection['name'] == 'Fedora':
+            name = collection['name']
+            if name == 'Fedora':
+                version = collection['version']
+                if version == 'devel':
+                    version = ''
+                    name = 'Rawhide'
+
                 releases.append((collection['koji_name'], '%s %s' % (
-                    collection['name'], collection['version'])))
+                    name, version)))
         return releases
