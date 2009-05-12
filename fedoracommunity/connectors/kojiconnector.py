@@ -146,7 +146,7 @@ class KojiConnector(IConnector, ICall, IQuery):
         f.add_filter('package',[], allow_none = False)
         cls._query_changelogs_filter = f
 
-        cls._changelog_version_extract_re = re.compile('(.*)\W*(<.*>)\W*-?\W*(.*)')
+        cls._changelog_version_extract_re = re.compile('(.*)\W*<(.*)>\W*-?\W*(.*)')
 
     def query_changelogs(self, start_row=None,
                            rows_per_page=10,
