@@ -62,7 +62,15 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         cls.register_query_acls()
 
     def request_data(self, resource_path, params, _cookies):
-        return self._pkgdb_client.send_request(resource_path, req_params = params)
+        identity = self._environ.get('repoze.who.identity')
+        auth_params={}
+        if identity:
+            session_id = identity.get('session_id')
+            auth_params={'session_id': session_id}
+
+        return self._pkgdb_client.send_request(resource_path,
+                                               req_params = params,
+                                               auth_params=auth_params)
 
     def introspect(self):
         # FIXME: return introspection data
@@ -117,9 +125,6 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         co = self.call('/packages/name', {'packageName': package,
                                           'collectionName':'Fedora',
                                           'collectionVersion': 'devel'})
-
-        from pprint import pprint
-        pprint (co)
 
         if not co:
             return {}
@@ -333,7 +338,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         params['tg_paginate_no'] = int(start_row/rows_per_page)
         params['searchwords'] = ''
 
-        results = self._pkgdb_client.send_request('packages', req_params = params)
+        results = self.call('packages', params)
         total_count = results[1]['pkgCount']
         package_list = results[1]['packages']
 
@@ -422,7 +427,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         params['tg_paginate_limit'] = rows_per_page
         params['tg_paginate_no'] = int(start_row/rows_per_page) + 1
 
-        results = self._pkgdb_client.send_request('users/packages', req_params = params)
+        results = self.call('users/packages', params)
         total_count = results[1]['pkgCount']
         package_list = results[1]['pkgs']
 
