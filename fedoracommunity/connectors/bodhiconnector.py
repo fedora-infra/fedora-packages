@@ -17,16 +17,13 @@
 import time
 
 from paste.deploy.converters import asbool
-from pylons import config
+from pylons import config, cache
 from fedora.client import ProxyClient
-from beaker.cache import Cache
 from datetime import datetime, timedelta
 from webhelpers.date import distance_of_time_in_words
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
-
-bodhi_cache = Cache('bodhi_cache')
 
 class BodhiConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -390,6 +387,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         return result
 
     def get_dashboard_stats(self, username=None):
+        bodhi_cache = cache.get_cache('bodhi')
         return bodhi_cache.get_value(key='dashboard_%s' % username,
                 createfunc=lambda: self._get_dashboard_stats(username),
                 expiretime=300)
@@ -414,6 +412,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def query_updates_count(self, status, username=None,
                             before=None, after=None):
+        bodhi_cache = cache.get_cache('bodhi')
         return bodhi_cache.get_value(key='count_%s_%s_%s_%s' % (
                 status, username, str(before).split('.')[0],
                 str(after).split('.')[0]), expiretime=300,
