@@ -20,7 +20,7 @@ from koji import BUILD_STATES
 from paste.deploy.converters import asbool
 
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, not_anonymous
+from moksha.lib.helpers import Category, MokshaApp, not_anonymous, MokshaWidget
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets.containers.dashboardcontainer import applist_widget
@@ -84,7 +84,8 @@ class BuildsNavContainer(SubTabbedContainer):
     params = ['applist_widget']
     applist_widget = applist_widget
     template='mako:fedoracommunity.mokshaapps.builds.templates.builds_nav'
-    sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts', css_class='app panel'),)
+    sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts', css_class='app panel'),
+                    MokshaWidget('Tasks', 'fedoracommunity.quicklinks', css_class="app panel", auth=not_anonymous()))
     tabs = (Category('Packages I Own',
                      (overview_builds_app.clone({'profile': True},
                                                 content_id='my_builds_overview'),

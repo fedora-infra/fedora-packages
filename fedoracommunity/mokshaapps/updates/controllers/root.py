@@ -22,7 +22,7 @@ from paste.deploy.converters import asbool
 import simplejson as json
 
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, not_anonymous
+from moksha.lib.helpers import Category, MokshaApp, not_anonymous, MokshaWidget
 from moksha.api.connectors import get_connector
 from moksha.api.widgets import Grid
 from moksha.api.widgets.containers import DashboardContainer
@@ -132,7 +132,8 @@ class UpdatesNavContainer(SubTabbedContainer):
     applist_widget = applist_widget
 
     template='mako:fedoracommunity.mokshaapps.updates.templates.updates_nav'
-    sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts'),)
+    sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts'),
+                    MokshaWidget('Tasks', 'fedoracommunity.quicklinks', css_class="app panel", auth=not_anonymous()))
     tabs = (Category('Packages I Own',
                      (overview_updates_app.clone({'profile': True},
                                                   content_id='my_overview_updates'),

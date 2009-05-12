@@ -85,7 +85,8 @@ static_package_maint_links = Category('Maintenance Tools',
 
 class PackageNavOverviewContainer(ExtraContentTabbedContainer):
     template='mako:fedoracommunity.mokshaapps.packages.templates.package_nav'
-    sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),)
+    sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),
+                  MokshaWidget('Tasks', 'fedoracommunity.quicklinks', css_class="app panel", auth=not_anonymous()))
     tabs= (Category('',
                     MokshaApp('Overview', 'fedoracommunity.packages/package',
                      params={'package':''})
@@ -96,7 +97,8 @@ class PackageNavOverviewContainer(ExtraContentTabbedContainer):
 
 class PackageNavDetailsContainer(ExtraContentTabbedContainer):
     template='mako:fedoracommunity.mokshaapps.packages.templates.package_nav'
-    sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),)
+    sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),
+                  MokshaWidget('Tasks', 'fedoracommunity.quicklinks', css_class="app panel", auth=not_anonymous()))
     tabs= (static_overview_links,
            Category('Package Details',
                     (MokshaApp('Downloads', 'fedoracommunity.packages/package/downloads',
@@ -114,7 +116,8 @@ class PackageNavDetailsContainer(ExtraContentTabbedContainer):
 
 class PackageNavMaintContainer(ExtraContentTabbedContainer):
     template='mako:fedoracommunity.mokshaapps.packages.templates.package_nav'
-    sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),)
+    sidebar_apps=(Widget('All Packages', all_packages_links, css_class="app panel"),
+                  MokshaWidget('Tasks', 'fedoracommunity.quicklinks', css_class="app panel", auth=not_anonymous()))
     tabs= (static_overview_links,
            static_package_detail_links,
            Category('Maintenance Tools',
