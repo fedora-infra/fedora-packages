@@ -32,8 +32,10 @@ import simplejson as json
 
 class BuildsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.builds.templates.table_widget'
+    params=['table_class']
     resource='koji'
     resource_path='query_builds'
+    table_class=''
 
 class BuildsPackagesGrid(Grid, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.builds.templates.packages_table_widget'
@@ -225,9 +227,12 @@ class RootController(Controller):
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
 
+
         if filters == None:
             filters = {}
-        elif isinstance(filters, basestring):
+
+        decoded_filters=filters
+        if isinstance(filters, basestring):
             # no point re-encoding so we will decode to a temp variable
             decoded_filters = json.loads(filters)
 
@@ -257,11 +262,21 @@ class RootController(Controller):
         else:
             numericPager = True
 
+
+        state = decoded_filters.get('state')
+        table_class = ''
+        if not state:
+            table_class = 'mixed-builds-table'
+        elif state == BUILD_STATES['FAILED']:
+            table_class = 'failed-builds-table'
+
         tmpl_context.widget = builds_grid
+
         return {'options':{'filters': filters,
                            'rows_per_page':rows_per_page,
                            'more_link': more_link,
                            'numericPager': numericPager,
-                           'show_owner_filter': show_owner_filter},
+                           'show_owner_filter': show_owner_filter,
+                           'table_class': table_class},
                 'title': title
                }

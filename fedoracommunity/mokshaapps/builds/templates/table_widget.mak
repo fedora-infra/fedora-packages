@@ -11,7 +11,15 @@
               % endif
           </form>
         </div>
-        <table id="${id}">
+        <script type="text/javascript">
+            function get_state_class(state) {
+                if (state == 3)
+                    return 'failed-build';
+
+                return '';
+            }
+        </script>
+        <table id="${id}" class="${table_class}">
             <thead>
                 <tr>
                     <th><a href="#nvr">Package</a></th>
@@ -24,7 +32,7 @@
             </thead>
 
             <tbody class="rowtemplate">
-                    <tr>
+                    <tr class="@{state:filter(get_state_class)}">
                         <td class="one-row">
                           <div id="menu_@{build_id}" class="menu" panel="menu_panel_@{build_id}">
                             <span class="package-name">
@@ -67,7 +75,7 @@
                             &nbsp;
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="@{state:filter(get_state_class)}">
                         <td colspan="6"
                             id="message_@{build_id}"
                             class="message_row">
