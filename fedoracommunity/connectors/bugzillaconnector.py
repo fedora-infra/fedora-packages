@@ -17,14 +17,11 @@
 import time
 
 from datetime import datetime, timedelta
-from pylons import config
+from pylons import config, cache
 from bugzilla import Bugzilla
-from beaker.cache import Cache
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
-
-bugzilla_cache = Cache('bugzilla_cache')
 
 class BugzillaConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -83,6 +80,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         package = kw.get('package', None)
         if not package:
             raise Exception('No package specified')
+        bugzilla_cache = cache.get_cache('bugzilla')
         return bugzilla_cache.get_value(key=package, expiretime=21600,
                            createfunc=lambda: self._get_bug_stats(package))
 
