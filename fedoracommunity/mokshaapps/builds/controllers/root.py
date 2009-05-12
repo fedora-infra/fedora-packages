@@ -233,18 +233,18 @@ class RootController(Controller):
         if asbool(show_title):
             state = decoded_filters.get('state')
             if state == BUILD_STATES['FAILED']:
-                title = 'Failed: '
+                title = 'Failed Builds: '
             elif state == BUILD_STATES['BUILDING']:
-                title = 'In-progress: '
+                title = 'In-progress Builds: '
             elif state == BUILD_STATES['COMPLETE']:
-                title = 'Finished: '
+                title = 'Finished Builds: '
 
             profile = decoded_filters.get('profile')
             user = decoded_filters.get('username')
             if profile:
-                title += "Packages I Built"
+                title += "Packages I Own"
             elif user:
-                title += "Packages " + username + " Built"
+                title += "Packages " + username + " Owns"
             else:
                 title += "All Packages"
 

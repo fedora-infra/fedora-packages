@@ -1,6 +1,6 @@
 <div>
   <div id="container">
-    <h2>Builds Overview:
+    <h2>Updates Overview:
     % if profile:
         Packages I Own
     % else:

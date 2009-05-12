@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2009  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -66,6 +66,7 @@ stable_updates_grid = StableUpdatesGrid('stable_updates_grid')
 unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/table',
                           params={
                               'rows_per_page': 10,
+                              'show_title': True,
                               'filters': {
                                   'status':'pending',
                                   'profile': False,
@@ -75,6 +76,7 @@ unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/ta
 testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/table',
                           params={
                               'rows_per_page': 10,
+                              'show_title': True,
                               'filters': {
                                   'status':'testing',
                                   'profile': False,
@@ -84,6 +86,7 @@ testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/tabl
 stable_updates_app = MokshaApp('Stable Updates', 'fedoracommunity.updates/table',
                           params={
                               'rows_per_page': 10,
+                              'show_title': True,
                               'filters': {
                                   'status':'stable',
                                   'profile': False,
@@ -104,17 +107,21 @@ dashboard_updates_app = MokshaApp('Updates Dashboard',
                                       })
 
 class UpdatesOverviewContainer(DashboardContainer):
+    template = 'mako:fedoracommunity.mokshaapps.updates.templates.updates_overview_container'
     javascript = [JSLink(link='/javascript/bodhi.js', modname=__name__)]
     layout = (Category('group-1-apps',
                        (dashboard_updates_app.clone(),
                         unpushed_updates_app.clone({'rows_per_page': 5,
+                                                    'show_title': False,
                                                     'more_link_code': updates_links.UNPUSHED_UPDATES.code}),
                         testing_updates_app.clone({'rows_per_page': 5,
+                                                   'show_title': False,
                                                     'more_link_code': updates_links.TESTING_UPDATES.code}))
                       ),
               Category('group-2-apps',
                        stable_updates_app.clone({'rows_per_page': 5,
-                                                    'more_link_code': updates_links.STABLE_UPDATES.code})
+                                                 'show_title': False,
+                                                 'more_link_code': updates_links.STABLE_UPDATES.code})
                       )
              )
 
@@ -179,9 +186,9 @@ class RootController(Controller):
 
         return {'options':options}
 
-    @expose('mako:moksha.templates.widget')
+    @expose('mako:fedoracommunity.mokshaapps.updates.templates.table_container')
     @validate(validators={'rows_per_page': validators.Int()})
-    def table(self, rows_per_page=5, filters=None, more_link_code=None):
+    def table(self, rows_per_page=5, filters=None, more_link_code=None, show_title = False):
         ''' table handler
 
         This handler displays the main table by itself
@@ -194,12 +201,15 @@ class RootController(Controller):
         else:
             decoded_filters = filters
 
+        profile = asbool(decoded_filters.get('profile'))
+        username = decoded_filters.get('username')
+
         numericPager = False
         more_link = None
         if more_link_code:
             more_link = updates_links.get_data(more_link_code)
 
-            if asbool(decoded_filters.get('profile')) == True:
+            if profile == True:
                 s = more_link.split('/')
                 last = s[-1]
                 last = 'my_' + last
@@ -209,20 +219,36 @@ class RootController(Controller):
         else:
             numericPager = True
 
+        table_title = ''
         status = decoded_filters.get('status','').lower()
         if status == 'stable':
+            table_title = 'Stable Updates: '
             tmpl_context.widget = stable_updates_grid
         elif status == 'testing':
+            table_title = 'Testing Updates: '
             tmpl_context.widget = testing_updates_grid
         elif status == 'pending':
+            table_title = 'Unpushed Updates: '
             tmpl_context.widget = pending_updates_grid
         else:
             tmpl_context.widget = stable_updates_grid
 
+        title = ''
+        if asbool(show_title):
+            if table_title:
+                title = table_title
+
+            if profile:
+                title += 'Packages I Own'
+            elif username:
+                title += 'Packages ' + username + ' Owns'
+            else:
+                title += 'All Packages'
+
         options = dict(filters=filters, rows_per_page=rows_per_page,
                        more_link=more_link, numericPager=numericPager)
 
-        return dict(options=options)
+        return dict(options=options, title = title)
 
     @expose('mako:moksha.templates.widget')
     def dashboard(self, *args, **kw):
