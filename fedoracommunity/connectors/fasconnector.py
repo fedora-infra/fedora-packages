@@ -15,13 +15,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from moksha.connector import IConnector, ICall, IQuery, ISearch, ParamFilter
-from pylons import config
+from pylons import config, cache
 from fedora.client import ProxyClient
-from beaker.cache import Cache
 from moksha.connector.utils import DateTimeDisplay
 
 USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
-fas_cache = Cache('fas_connector_cache')
 _fas_minimal_user = config.get('fedoracommunity.connector.fas.minimal_user_name')
 _fas_minimal_pass = config.get('fedoracommunity.connector.fas.minimal_user_password')
 
@@ -111,6 +109,8 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
     def get_user_view(self, user, invalidate=False):
         if not isinstance(user, basestring):
             return None
+
+        fas_cache = cache.get_cache('fas')
 
         key = '_fas_user_info_' + user
         if invalidate:
