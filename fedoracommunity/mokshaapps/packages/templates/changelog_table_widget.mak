@@ -31,8 +31,8 @@
                             @{text:filter(_text_filter)}
                         </td>
                         <td>
-                            <div>@{author}</div>
-                            <div>@{email}</div>
+                            @{author}<br/>
+                            <a href="mailto:@{email}">&lt;@{email}&gt;</a>
                         </td>
                         <td>
                             @{display_date}
@@ -40,4 +40,28 @@
                     </tr>
                 </tbody>
         </table>
+        <div id="grid-controls" if="total_rows == 0">
+            <div class="message template" id="info_display" >
+                This package has no Changelog entries
+            </div>
+        </div>
+        <div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
+            <div class="message template" id="info_display" >
+               Viewing all Changelog entries
+            </div>
+
+            <div class="pager template" id="pager" type="more_link">
+               <a href="@{more_link}" moksha_url="dynamic">View builds &gt;</a>
+            </div>
+        </div>
+        <div id="grid-controls" if="visible_rows < total_rows">
+            <div class="message template" id="info_display" >
+               Viewing @{visible_rows} of @{total_rows} Changelog entries
+            </div>
+            <div class="pager" id="pager" type="numeric" ></div>
+
+            <div class="pager template" id="pager" type="more_link">
+               <a href="@{more_link}" moksha_url="dynamic">View more entries &gt;</a>
+            </div>
+        </div>
     </div>

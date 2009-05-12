@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2009  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -38,7 +38,8 @@ class ChangelogDashboard(PackagesDashboardContainer):
     layout = [Category('content-col-apps',[
                           Widget('Latest Build Changelogs',
                                  changelog_grid,
-                                 params={'filters':{'package': ''}})
+                                 params={'filters':{'package': ''},
+                                         'numericPager':True})
                        ])]
 
 changelog_dashboard = ChangelogDashboard('changelog_dashboard')
@@ -52,6 +53,12 @@ class ChangelogController(Controller):
     @expose('mako:moksha.templates.widget')
     def table(self, filters, more_link_code):
         tmpl_context.widget = changelog_grid
-        more_link = changelog_links.get_data(more_link_code)
 
-        return {'options':{'filters': filters, 'more_link': more_link}}
+        more_link = None
+        numericPager = False
+        if more_link_code:
+            more_link = changelog_links.get_data(more_link_code)
+        else:
+            numericPager = True
+
+        return {'options':{'filters': filters, 'more_link': more_link, 'numericPager': numericPager}}
