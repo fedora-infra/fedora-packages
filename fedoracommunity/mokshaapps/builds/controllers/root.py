@@ -45,6 +45,7 @@ in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds
                                        css_class='main_table',
                                        content_id='inprogress',
                                        params={'rows_per_page': 10,
+                                               'show_title': True,
                                                'filters':{'state':BUILD_STATES['BUILDING'],
                                                           'profile': False,
                                                           'username': None
@@ -55,6 +56,7 @@ failed_builds_app = MokshaApp('Failed Builds', 'fedoracommunity.builds/table',
                                        css_class='secondary_table',
                                        content_id='failed',
                                        params={'rows_per_page': 10,
+                                               'show_title': True,
                                                'filters':{'state':BUILD_STATES['FAILED'],
                                                           'profile': False,
                                                           'username': None
@@ -65,6 +67,7 @@ successful_builds_app = MokshaApp('Successful Builds', 'fedoracommunity.builds/t
                                        css_class='secondary_table',
                                        content_id='successful',
                                        params={'rows_per_page': 10,
+                                               'show_title': True,
                                                'filters':{'state':BUILD_STATES['COMPLETE'],
                                                           'profile': False,
                                                           'username': None
@@ -112,32 +115,43 @@ builds_grid = BuildsGrid('builds_table')
 builds_packages_grid = BuildsPackagesGrid('builds_packages_table')
 
 class BuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
-
+    template = 'mako:fedoracommunity.mokshaapps.builds.templates.builds_overview_container'
     layout = [Category('group-1-apps',
                         (in_progress_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': builds_links.IN_PROGRESS.code}),
+                                                       'more_link_code': builds_links.IN_PROGRESS.code,
+                                                       'show_title': False}),
                         failed_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': builds_links.FAILED.code}))
+                                                 'more_link_code': builds_links.FAILED.code,
+                                                 'show_title': False
+                                                }))
                       ),
               Category('group-2-apps',
                        successful_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': builds_links.SUCCESSFUL.code})
+                                                    'more_link_code': builds_links.SUCCESSFUL.code,
+                                                    'show_title': False
+                                                   })
                       )
              ]
 
 builds_overview_container = BuildsOverviewContainer('builds_overview')
 
 class MyBuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
-
+    template = 'mako:fedoracommunity.mokshaapps.builds.templates.builds_overview_container'
     layout = [Category('group-1-apps',
                         (in_progress_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': my_builds_links.IN_PROGRESS.code}),
+                                                       'more_link_code': my_builds_links.IN_PROGRESS.code,
+                                                       'show_title': False
+                                                      }),
                         failed_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': my_builds_links.FAILED.code}))
+                                                 'more_link_code': my_builds_links.FAILED.code,
+                                                 'show_title': False
+                                                }))
                       ),
               Category('group-2-apps',
                        successful_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': my_builds_links.SUCCESSFUL.code})
+                                                    'more_link_code': my_builds_links.SUCCESSFUL.code,
+                                                    'show_title': False
+                                                   })
                       )
              ]
 
@@ -193,23 +207,47 @@ class RootController(Controller):
                 'more_link': more_link}
                }
 
-    @expose('mako:moksha.templates.widget')
+    @expose('mako:fedoracommunity.mokshaapps.builds.templates.table_container')
     def table(self,
-              uid="",
               rows_per_page=5,
               filters=None,
               more_link_code=None,
-              show_owner_filter=False):
+              show_owner_filter=False,
+              show_title=False):
         ''' table handler
 
         This handler displays the main table by itself
         '''
+
+        title = ''
 
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
 
         if filters == None:
             filters = {}
+        elif isinstance(filters, basestring):
+            # no point re-encoding so we will decode to a temp variable
+            decoded_filters = json.loads(filters)
+
+        if asbool(show_title):
+            state = decoded_filters.get('state')
+            if state == BUILD_STATES['FAILED']:
+                title = 'Failed: '
+            elif state == BUILD_STATES['BUILDING']:
+                title = 'In-progress: '
+            elif state == BUILD_STATES['COMPLETE']:
+                title = 'Finished: '
+
+            profile = decoded_filters.get('profile')
+            user = decoded_filters.get('username')
+            if profile:
+                title += "Packages I Built"
+            elif user:
+                title += "Packages " + username + " Built"
+            else:
+                title += "All Packages"
+
 
         more_link = None
         numericPager = False
@@ -223,5 +261,6 @@ class RootController(Controller):
                            'rows_per_page':rows_per_page,
                            'more_link': more_link,
                            'numericPager': numericPager,
-                           'show_owner_filter': show_owner_filter}
+                           'show_owner_filter': show_owner_filter},
+                'title': title
                }
