@@ -122,8 +122,14 @@ class SourceDownloadsWidget(Widget):
             if collection['name'] == 'Fedora':
                 tag = collection['koji_name']
                 releases.append(tag)
-                dist_tags[tag] = '%s %s' % (collection['name'],
-                                            collection['version'])
+                name = collection['name']
+                version = collection['version']
+                if name == 'Fedora' and version == 'devel':
+                    name = 'Rawhide'
+                    version = ''
+
+                dist_tags[tag] = '%s %s' % (name,
+                                            version)
                 if 'rawhide' not in tag:
                     tag += '-updates'
                 koji.getLatestRPMS(tag, package=d.package, arch='src')
