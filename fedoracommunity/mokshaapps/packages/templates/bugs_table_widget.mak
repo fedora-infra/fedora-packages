@@ -37,4 +37,20 @@
                 </tr>
             </tbody>
     </table>
+    <div id="grid-controls" if="total_rows == 0">
+        <div class="message template" id="info_display" >
+            This package has no bugs - go file some!!!
+        </div>
+    </div>
+    <div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
+        <div class="message template" id="info_display" >
+           Viewing all bugs for this package
+        </div>
+    </div>
+    <div id="grid-controls" if="visible_rows < total_rows">
+        <div class="message template" id="info_display" >
+           Viewing @{visible_rows} of @{total_rows} bugs
+        </div>
+        <div class="pager" id="pager" type="numeric" ></div>
+    </div>
 </div>
