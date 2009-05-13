@@ -14,11 +14,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
+import koji
+
+from pylons import config
+from datetime import datetime
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
-from pylons import config
-import koji
-import re
+from moksha.api.connectors import get_connector
 
 class KojiConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -370,6 +373,7 @@ class KojiConnector(IConnector, ICall, IQuery):
                      cast=bool)
         f.add_filter('package',['p'], allow_none = True)
         f.add_filter('state',['s'], allow_none = True)
+        f.add_filter('query_updates', allow_none=True, cast=bool)
         cls._query_builds_filter = f
 
     def query_builds(self, start_row=None,
@@ -471,6 +475,35 @@ class KojiConnector(IConnector, ICall, IQuery):
                 completion_display['elapsed'] = elapsed['display']
 
             b['completion_time_display'] = completion_display
+
+        # Query the bodhi update status for each build
+        if filters.get('query_updates'):
+            start = datetime.now()
+            bodhi = get_connector('bodhi')
+            updates = bodhi.call('get_updates_from_builds', {
+                'builds': ' '.join([b['nvr'] for b in builds_list])})
+            if updates:
+                updates = updates[1]
+            for build in builds_list:
+                if build['nvr'] in updates:
+                    build['update'] = updates[build['nvr']]
+                    status = build['update']['status']
+                    update_details = ''
+# FIXME: ideally, we should just return the update JSON and do this
+# logic client-side in the template when the grid data comes in.
+                    if status == 'stable':
+                        update_details = 'Pushed to updates'
+                    elif status == 'testing':
+                        update_details = 'Pushed to updates-testing'
+                    elif status == 'pending':
+                        update_details = 'Pending push to %s' % build['update']['request']
+                    update_details += '<br/><a href="https://admin.fedoraproject.org/updates/%s">View update details &gt;</a>' % build['update']['title']
+
+                else:
+                    update_details = '<a href="https://admin.fedoraproject.org/updates/new?builds.text=%s">Push to updates</a>' % build['nvr']
+                build['update_details'] = update_details
+
+            #print "Completed in: %s" %  (datetime.now() - start)
 
         self._koji_client.multicall = False
 

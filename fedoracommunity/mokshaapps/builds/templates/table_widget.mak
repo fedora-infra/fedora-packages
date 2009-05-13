@@ -73,6 +73,9 @@
                         </td>
                         <td rowspan="2" id="@{release_id}">
                             &nbsp;
+                            <div class="update_details">
+                               @{update_details}
+                            </div>
                         </td>
                     </tr>
                     <tr class="@{state:filter(get_state_class)}">

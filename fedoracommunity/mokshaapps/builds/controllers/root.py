@@ -72,7 +72,8 @@ successful_builds_app = MokshaApp('Successful Builds', 'fedoracommunity.builds/t
                                                'show_title': True,
                                                'filters':{'state':BUILD_STATES['COMPLETE'],
                                                           'profile': False,
-                                                          'username': None
+                                                          'username': None,
+                                                          'query_updates': True,
                                                          }
                                               })
 
