@@ -478,33 +478,10 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         # Query the bodhi update status for each build
         if filters.get('query_updates'):
-            start = datetime.now()
             bodhi = get_connector('bodhi')
-            updates = bodhi.call('get_updates_from_builds', {
-                'builds': ' '.join([b['nvr'] for b in builds_list])})
-            if updates:
-                updates = updates[1]
-            for build in builds_list:
-                if build['nvr'] in updates:
-                    build['update'] = updates[build['nvr']]
-                    status = build['update']['status']
-                    update_details = ''
-# FIXME: ideally, we should just return the update JSON and do this
-# logic client-side in the template when the grid data comes in.
-                    if status == 'stable':
-                        update_details = 'Pushed to updates'
-                    elif status == 'testing':
-                        update_details = 'Pushed to updates-testing'
-                    elif status == 'pending':
-                        update_details = 'Pending push to %s' % build['update']['request']
-                    update_details += '<br/><a href="https://admin.fedoraproject.org/updates/%s">View update details &gt;</a>' % build['update']['title']
-
-                else:
-                    update_details = '<a href="https://admin.fedoraproject.org/updates/new?builds.text=%s">Push to updates</a>' % build['nvr']
-                build['update_details'] = update_details
-
-            #print "Completed in: %s" %  (datetime.now() - start)
+            bodhi.add_updates_to_builds(builds_list)
 
         self._koji_client.multicall = False
 
         return (total_count, builds_list)
+

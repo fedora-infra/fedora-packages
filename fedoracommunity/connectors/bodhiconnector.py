@@ -15,15 +15,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import time
+import logging
 
 from paste.deploy.converters import asbool
 from pylons import config, cache
 from fedora.client import ProxyClient
 from datetime import datetime, timedelta
 from webhelpers.date import distance_of_time_in_words
+from webhelpers.html import HTML
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.connector.utils import DateTimeDisplay
+
+log = logging.getLogger(__name__)
 
 class BodhiConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -64,12 +68,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     #ICall
     def call(self, resource_path, params, _cookies=None):
+        log.debug('BodhiConnector.call(%s)' % locals())
         # proxy client only returns structured data so we can pass
         # this off to request_data but we should fix that in ProxyClient
         return self.request_data(resource_path, params, _cookies)
 
     #IQuery
-
     @classmethod
     def register_query_updates(cls):
         path = cls.register_query(
@@ -437,3 +441,51 @@ class BodhiConnector(IConnector, ICall, IQuery):
         count = self.call('list', params)[1]['num_items']
 
         return {'count': count, 'label': label, 'state': status}
+
+    def add_updates_to_builds(self, builds):
+        """Update a list of koji builds with the corresponding bodhi updates.
+
+        This method makes a single query to bodhi, asking if it knows about
+        any updates for a given list of koji builds.  For builds with existing
+        updates, the `update` will be added to it's dictionary. 
+
+        Currently it also adds `update_details`, which is HTML for rendering
+        the builds update options.  Ideally, this should be done client-side
+        in the template (builds/templates/table_widget.mak).
+
+        """
+        start = datetime.now()
+        updates = self.call('get_updates_from_builds', {
+            'builds': ' '.join([b['nvr'] for b in builds])})
+        if updates:
+            # FIXME: Lets stop changing the upstream APIs by putting the
+            # session id as the first element, and the results in the second.
+            updates = updates[1]
+
+        for build in builds:
+            if build['nvr'] in updates:
+                build['update'] = updates[build['nvr']]
+                status = build['update']['status']
+                details = ''
+                # FIXME: ideally, we should just return the update JSON and do
+                # this logic client-side in the template when the grid data
+                # comes in.
+                if status == 'stable':
+                    details = 'Pushed to updates'
+                elif status == 'testing':
+                    details = 'Pushed to updates-testing'
+                elif status == 'pending':
+                    details = 'Pending push to %s' % build['update']['request']
+
+                details += HTML.tag('br')
+                details += HTML.tag('a', c="View update details >",
+                                    href="%s/%s" % (self._base_url,
+                                                    build['update']['title']))
+            else:
+                details = HTML.tag('a', c='Push to updates >',
+                                   href='%s/new?builds.text=%s' % (
+                                       self._base_url, build['nvr']))
+
+            build['update_details'] = details
+
+        log.debug("Queried bodhi for builds in: %s" %  (datetime.now() - start))
