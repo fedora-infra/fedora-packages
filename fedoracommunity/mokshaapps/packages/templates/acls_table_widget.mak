@@ -16,6 +16,23 @@
             function _role_filter_br(v) { return _role_filter(v, "<br/>"); }
             function _role_filter_sp(v) { return _role_filter(v, " "); }
         </script>
+        <div id="grid-controls">
+            <form>
+              <div id="filter" class="grid_filter" name="release_filter">
+
+                <label for="release">Release:</label>
+                <select name="release">
+                    % for (i, rel) in enumerate(release_table):
+                      % if i == 0:
+                        <option selected="selected" value="${rel['value']}">${rel['label']}</option>
+                      % else:
+                        <option value="${rel['value']}">${rel['label']}</option>
+                      % endif
+                    % endfor
+                </select>
+              </div>
+            </form>
+        </div>
         <table id="${id}">
             <thead>
               <th>Name</th>

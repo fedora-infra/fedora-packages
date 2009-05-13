@@ -121,10 +121,11 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         else:
             return table
 
-    def request_package_info(self, package):
+    def request_package_info(self, package, release = 'Fedora devel'):
+        (name, version) = release.rsplit(" ", 1)
         co = self.call('/packages/name', {'packageName': package,
-                                          'collectionName':'Fedora',
-                                          'collectionVersion': 'devel'})
+                                          'collectionName': name,
+                                          'collectionVersion': version})
 
         if not co:
             return {}
@@ -213,6 +214,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('package',['p', 'pkg'], allow_none = False)
         f.add_filter('roles', allow_none = True)
         f.add_filter('type', allow_none = False)
+        f.add_filter('release', allow_none = False)
 
         cls._query_acls_filter = f
 
@@ -230,11 +232,17 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         package = filters.get('package')
         roles = filters.get('roles', ['owner', 'maintainer', 'watcher'])
         type = filters.get('type', 'users')
+        release = filters.get('release', 'Fedora devel')
 
-        info = pkgdb_cache.get_value(key=package,
-                                   createfunc=lambda : self.request_package_info(package),
+        info = pkgdb_cache.get_value(key=package + release,
+                                   createfunc=lambda : self.request_package_info(package,
+                                                                                 release),
                                    type="memory",
                                    expiretime=BASIC_PACKAGE_DATA_CACHE_TIMEOUT)
+
+        err_message = info[1].get('message')
+        if err_message:
+            return (0, [err_message])
 
         p = info[1]['packageListings']
 
@@ -248,7 +256,6 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
             if distname == 'Fedora' and distver == 'devel':
                 distname = 'Rawhide'
                 distver = ''
-
 
             if type == 'users':
                 if 'owner' in roles or 'maintainer' in roles:
@@ -267,10 +274,14 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                     is_watcher = (aclorder['watchbugzilla'] or
                                   aclorder['watchcommits'])
 
-                    if is_maintainer:
-                        record['roles'].append('Maintainer')
-                    if is_watcher:
-                        record['roles'].append('Watcher')
+                    if aclorder['approveacls']:
+                        record['roles'].append('ACL Approver')
+                    if aclorder['commit']:
+                        record['roles'].append('Committer')
+                    if aclorder['watchbugzilla']:
+                        record['roles'].append('Bug Watcher')
+                    if aclorder['watchcommits']:
+                        record['roles'].append('Commit Watcher')
 
                     if is_maintainer and 'maintainer' in roles:
                         entities[username] = record
@@ -292,15 +303,19 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                     is_watcher = (aclorder['watchbugzilla'] or
                                   aclorder['watchcommits'])
 
-                    if is_maintainer:
-                        record['roles'].append('Maintainer')
-                    if is_watcher:
-                        record['roles'].append('Watcher')
+                    if aclorder['approveacls']:
+                        record['roles'].append('ACL Approver')
+                    if aclorder['commit']:
+                        record['roles'].append('Committer')
+                    if aclorder['watchbugzilla']:
+                        record['roles'].append('Bug Watcher')
+                    if aclorder['watchcommits']:
+                        record['roles'].append('Commit Watcher')
 
                     if is_maintainer and 'maintainer' in roles:
-                        group[name] = record
+                        entities[name] = record
                     if is_watcher and 'watcher' in roles:
-                        group[name] = record
+                        entities[name] = record
 
         def sort_entity_list(a, b):
             if order < 0:

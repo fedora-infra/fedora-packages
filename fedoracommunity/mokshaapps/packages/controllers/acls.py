@@ -21,11 +21,34 @@ from moksha.lib.helpers import Category, Widget
 from moksha.api.widgets import ContextAwareWidget, Grid
 
 from helpers import PackagesDashboardContainer
+from moksha.api.connectors import get_connector
 
 class AclsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.acls_table_widget'
     resource = 'pkgdb'
     resource_path ='acls'
+
+    def update_params(self, d):
+        pkgdb = get_connector('pkgdb')
+
+        collections = pkgdb.get_collection_table(active_only=True)
+        releases = [{'label': 'Rawhide', 'value': 'Fedora devel', 'version': 999999999}];
+        for id, collection in collections.items():
+            name = collection['name']
+            ver = collection['version']
+            label = "%s %s" % (name, ver)
+            # restrict to Fedora until we can get dists per package
+            if label != 'Fedora devel' and name == 'Fedora':
+                releases.append({'label': label, 'value': label, 'version': ver})
+
+        def _sort(a,b):
+            return cmp(int(b['version']), int(a['version']))
+
+        releases.sort(_sort)
+
+        d['release_table'] = releases
+
+        super(AclsGrid, self).update_params(d)
 
 acls_grid = AclsGrid('acls_grid')
 
