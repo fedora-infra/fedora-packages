@@ -22,18 +22,19 @@
         <table id="${id}" class="${table_class}">
             <thead>
                 <tr>
+                    <th><a href="#state">Status</a></th>
                     <th><a href="#nvr">Package</a></th>
-                    <th><a href="#owner_name">Built By</a></th>
                     <th>Build Time</th>
                     <th>Finished</th>
-                    <th><a href="#state">Status</a></th>
+                    <th><a href="#owner_name">Built By</a></th>
                     <th>&nbsp;</th>
                 </tr>
             </thead>
 
             <tbody class="rowtemplate">
                     <tr class="@{state:filter(get_state_class)}">
-                        <td class="one-row">
+                        <td class="one-row"><img src="/images/16_build_state_@{state}.png" /><br/>@{state_str}</td>
+                        <td rowspan="2">
                           <div id="menu_@{build_id}" class="menu" panel="menu_panel_@{build_id}">
                             <span class="package-name">
                                 <a href="/package_maintenance/tools/builds?package=@{package_name}" moksha_url="dynamic">@{package_name}</a>
@@ -60,9 +61,6 @@
                           </moksha_extpoint>
                         </td>
 
-                        <td rowspan="2">
-                            <span class="person-name"><a href="/people/?username=@{owner_name}" moksha_url="dynamic">@{owner_name}</a></span>&nbsp;
-                        </td>
                         <td rowspan="2">@{completion_time_display:index("elapsed")}
                         </td>
                         <td rowspan="2">@{completion_time_display:index("when")}
@@ -70,7 +68,9 @@
                                @{completion_time_display:index("time")}
                         </td>
 
-                        <td rowspan="2"><img src="/images/16_build_state_@{state}.png" /><br/>@{state_str}</td>
+                        <td rowspan="2">
+                            <span class="person-name"><a href="/people/?username=@{owner_name}" moksha_url="dynamic">@{owner_name}</a></span>&nbsp;
+                        </td>
                         <td rowspan="2" id="@{release_id}">
                             &nbsp;
                         </td>
