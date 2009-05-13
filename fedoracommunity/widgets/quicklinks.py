@@ -19,7 +19,7 @@ from moksha.api.widgets import Selectable
 class QuickLinksWidget(Selectable):
     links = [('My Profile',
               'View my profile',
-              '/profile',
+              '/my_profile',
               'view_profile'),
              ('Package Maintenance',
               'View my packages',
