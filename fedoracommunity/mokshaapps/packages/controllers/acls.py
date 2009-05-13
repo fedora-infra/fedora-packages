@@ -61,4 +61,3 @@ class AclsController(Controller):
 
         tmpl_context.widget = acls_dashboard
         return {'options':{'package': package, 'roles': roles}}
-

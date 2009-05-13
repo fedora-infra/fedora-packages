@@ -262,15 +262,20 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                                          'roles': []})
                     record['type'] = 'user'
 
-                    if (aclorder['commit'] or
-                        aclorder['approveacls']) and 'maintainer' in roles:
+                    is_maintainer = (aclorder['commit'] or
+                                     aclorder['approveacls'])
+                    is_watcher = (aclorder['watchbugzilla'] or
+                                  aclorder['watchcommits'])
 
+                    if is_maintainer:
                         record['roles'].append('Maintainer')
+                    if is_watcher:
+                        record['roles'].append('Watcher')
+
+                    if is_maintainer and 'maintainer' in roles:
                         entities[username] = record
 
-                    if (aclorder['watchbugzilla']  or
-                        aclorder['watchcommits']) and 'watcher' in roles:
-                        record['roles'].append('Watcher')
+                    if  is_watcher and 'watcher' in roles:
                         entities[username] = record
 
             if type == 'groups':
@@ -282,15 +287,19 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                                         'roles': []})
                     record['type'] = 'group'
 
-                    if (aclorder['commit'] or
-                        aclorder['approveacls']) and 'maintainer' in roles:
+                    is_maintainer = (aclorder['commit'] or
+                                     aclorder['approveacls'])
+                    is_watcher = (aclorder['watchbugzilla'] or
+                                  aclorder['watchcommits'])
 
+                    if is_maintainer:
                         record['roles'].append('Maintainer')
-                        group[name] = record
-
-                    if (aclorder['watchbugzilla']  or
-                        aclorder['watchcommits']) and 'watcher' in roles:
+                    if is_watcher:
                         record['roles'].append('Watcher')
+
+                    if is_maintainer and 'maintainer' in roles:
+                        group[name] = record
+                    if is_watcher and 'watcher' in roles:
                         group[name] = record
 
         def sort_entity_list(a, b):
