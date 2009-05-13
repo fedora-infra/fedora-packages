@@ -61,7 +61,7 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                                          "more_link_code": membership_links.MEMBERSHIPS.code
                                         }
                                  ),
-                        MokshaApp('Your Latest Blog Posts',
+                        MokshaApp(None,
                                   'fedoracommunity.people/planet',
                                   auth=not_anonymous(),
                                   params={'username': None}),
@@ -90,7 +90,7 @@ class PeopleContainer(DashboardContainer, ContextAwareWidget):
                                                     "username":''}
                                         }
                                  ),
-                        MokshaApp('Latest Blog Posts',
+                        MokshaApp(None,
                                   'fedoracommunity.people/planet',
                                   params={'username': None}),
                        ))]
