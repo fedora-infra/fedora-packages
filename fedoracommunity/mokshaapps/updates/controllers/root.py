@@ -45,10 +45,16 @@ class UpdatesDashboardWidget(Widget):
 
 updates_dashboard_widget = UpdatesDashboardWidget('updates_dashboard')
 
+class UpdateHoverMenu(Widget):
+    template = 'mako:fedoracommunity.mokshaapps.updates.templates.update_hover_menu'
+    params = ['show_package', 'show_version']
+    show_package = True
+    show_version = False
 
 class UpdatesGrid(Grid):
     resource = 'bodhi'
     resource_path = 'query_updates'
+    children = [UpdateHoverMenu('update_hover_menu')]
 
 class PendingUpdatesGrid(UpdatesGrid):
     template='mako:fedoracommunity.mokshaapps.updates.templates.pending_table_widget'

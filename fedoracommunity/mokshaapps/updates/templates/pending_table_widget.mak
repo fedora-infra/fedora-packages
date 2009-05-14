@@ -11,29 +11,7 @@
         <tbody class="rowtemplate">
             <tr>
                 <td>
-                  <div id="menu_@{requestid}" class="menu" panel="menu_panel_@{requestid}">
-                    <span class="package-name">
-                        <a href="/package_maintenance/tools/updates?package=@{name}">@{name}</a>&nbsp;
-                    </span>
-                            <div id="menu_panel_@{requestid}" class="menu_panel" >
-                            <h4>Quick Links for <strong>@{name}</strong>:</h4>
-                            <ul>
-                               <li><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=@{id}"><img src="/images/16_koji.png"/><span>Go to this <strong>build</strong> in Koji</span><img src="/images/16_offsite-link.png"/></a></li>
-                               <li><a href="https://admin.fedoraproject.org/updates/@{name}"><img src="/images/16_bodhi.png"/><span>Go to @{name} <strong>updates</strong> in Bodhi</span><img src="/images/16_offsite-link.png"/></a></li>
-                               <li><a href="https://admin.fedoraproject.org/pkgdb/packages/name/@{name}"><img src="/images/16_pkgdb.png"/><span>Go to @{name} <strong>package info</strong> in PackageDB</span><img src="/images/16_offsite-link.png"/></a></li>
-                               <li><a href="https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&classification=Fedora&product=Fedora&component=@{name}&bug_status=NEW&bug_status=ASSIGNED&bug_status=MODIFIED"><img src="/images/16_bugzilla.png"/><span>Go to @{name} <strong>bugs</strong> in Bugzilla</span><img src="/images/16_offsite-link.png"/></a></li>
-                               <!-- <li><a href="https://translate.fedoraproject.org/module/@{name}"><img src="/images/16_transifex.png"/><span>Go to @{name} <strong>translations</strong> in Transifex</span><img src="/images/16_offsite-link.png"/></a></li> -->
-                            </ul>
-                        </div>
-                      </div>
-                      <moksha_extpoint>
-                        {
-                            'type': 'make_menu',
-                            'placeholder_id': 'menu_@{requestid}',
-                            'id': '@{id}',
-                            'show_effect': 'slideDown(\"slow\")'
-                        }
-                      </moksha_extpoint>
+                    ${c.update_hover_menu()}
                     <div>@{versions}&nbsp;</div>
                 </td>
                 <td>@{date_submitted_display}</td>

@@ -10,9 +10,7 @@
         <tbody class="rowtemplate">
             <tr>
                 <td>
-                    <span class="package-name">
-                        <a href="/package_maintenance/tools/updates?package=@{name}">@{name}</a>&nbsp;
-                    </span>
+                    ${c.update_hover_menu()}
                     <div>@{versions}&nbsp;</div>
                 </td>
                 <td>@{date_pushed}</td>

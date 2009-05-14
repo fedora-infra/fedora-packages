@@ -12,15 +12,13 @@
         <tbody class="rowtemplate">
             <tr>
                 <td>
-                    <span class="package-name">
-                        <a href="/package_maintenance/tools/updates?package=@{name}">@{name}</a>&nbsp;
-                    </span>
+                    ${c.update_hover_menu()}
                     <div>@{versions}&nbsp;</div>
                 </td>
                 <td>@{date_pushed_display}</td>
                 <td>@{releases}</td>
                 <td><span>@{status}</span>
-				<div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</a></div>
+                <div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</a></div>
                 </td>
                 <td>@{actions}</td>
             </tr>
