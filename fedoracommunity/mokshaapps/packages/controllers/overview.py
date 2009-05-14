@@ -72,7 +72,12 @@ class OverviewDashboard(PackagesDashboardContainer):
                     params={'package': ''}),
                 MokshaApp('Active Releases',
                           'fedoracommunity.updates/table',
-                          params={'filters': {'package':''}}),
+                          params={
+                              'filters': {
+                                  'package': '',
+                                  'active_releases': True,
+                                  }
+                              }),
                 Widget('Package Links', pkg_links_widget,
                        params={'package':''}),
                 MokshaApp('Latest Changelog Entries',

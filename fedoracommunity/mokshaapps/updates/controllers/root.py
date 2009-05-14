@@ -66,6 +66,10 @@ class StableUpdatesGrid(UpdatesGrid):
 class PackageUpdatesGrid(UpdatesGrid):
     template='mako:fedoracommunity.mokshaapps.updates.templates.package_updates_table_widget'
 
+class ActiveReleasesGrid(Grid):
+    template='mako:fedoracommunity.mokshaapps.updates.templates.active_releases'
+    resource = 'bodhi'
+    resource_path = 'query_active_releases'
 
 class TestingUpdatesGrid(UpdatesGrid):
     template='mako:fedoracommunity.mokshaapps.updates.templates.testing_table_widget'
@@ -74,6 +78,7 @@ pending_updates_grid =  PendingUpdatesGrid('pending_updates_grid')
 testing_updates_grid = TestingUpdatesGrid('testing_updates_grid')
 stable_updates_grid = StableUpdatesGrid('stable_updates_grid')
 package_updates_grid = PackageUpdatesGrid('package_updates_grid')
+active_releases_grid = ActiveReleasesGrid('active_releases')
 
 unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/table',
                           params={
@@ -263,6 +268,9 @@ class RootController(Controller):
             tmpl_context.widget = pending_updates_grid
         else:
             tmpl_context.widget = package_updates_grid
+
+        if decoded_filters.get('active_releases'):
+            tmpl_context.widget = active_releases_grid
 
         title = ''
         if asbool(show_title):

@@ -24,8 +24,11 @@ from datetime import datetime, timedelta
 from webhelpers.date import distance_of_time_in_words
 from webhelpers.html import HTML
 
+from moksha.api.connectors import get_connector
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import DateTimeDisplay
+
+from fedoracommunity.lib.helpers import parse_build
 
 log = logging.getLogger(__name__)
 
@@ -49,6 +52,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         cls._insecure = not check_certs
 
         cls.register_query_updates()
+        cls.register_query_active_releases()
 
     def request_data(self, resource_path, params, _cookies):
         auth_params={}
@@ -496,3 +500,98 @@ class BodhiConnector(IConnector, ICall, IQuery):
             build['update_details'] = details
 
         log.debug("Queried bodhi for builds in: %s" %  (datetime.now() - start))
+
+    @classmethod
+    def register_query_active_releases(cls):
+        path = cls.register_query('query_active_releases',
+                                  cls.query_active_releases,
+                                  primary_key_col='release',
+                                  default_sort_col='release',
+                                  default_sort_order=-1,
+                                  can_paginate=True)
+        path.register_column('release',
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
+        path.register_column('stable_version',
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
+        path.register_column('testing_version',
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
+
+        f = ParamFilter()
+        f.add_filter('package', ['nvr'], allow_none=False)
+        cls._query_active_releases = f
+
+    def query_active_releases(self, filters=None, **params):
+        releases = []
+        if not filters:
+            filters = {}
+
+        filters = self._query_updates_filter.filter(filters, conn=self)
+        package = filters.get('package')
+
+        pkgdb = get_connector('pkgdb')
+        koji = get_connector('koji')._koji_client
+
+        for release in pkgdb.get_fedora_releases():
+            tag = release[0]
+            name = release[1]
+            row = {'release': name, 'stable_version': 'None',
+                   'testing_version': 'None' }
+            if tag == 'dist-rawhide':
+                rawhide_builds = koji.listTagged(tag, package=package,
+                                                 latest=True, inherit=True)
+                if rawhide_builds:
+                    nvr = parse_build(rawhide_builds[0]['nvr'])
+                    row['stable_version'] = '%(version)s-%(release)s' % nvr
+                else:
+                    row['stable_version'] = 'No builds tagged with' % tag
+                row['testing_version'] = HTML.tag('i', c='Not Applicable')
+            else:
+                stable_updates = koji.listTagged(tag + '-updates',
+                                                 package=package,
+                                                 latest=True,
+                                                 inherit=True)
+                if stable_updates:
+                    nvr = parse_build(stable_updates[0]['nvr'])
+                    if not stable_updates[0]['tag_name'].endswith('-updates') :
+                        row['stable_version'] = '%(version)s-%(release)s' % nvr
+                    else:
+                        row['stable_version'] = HTML.tag('a',
+                                c='%(version)s-%(release)s' % nvr,
+                                href='%s/%s' % (self._base_url, nvr['nvr']))
+
+                testing_updates = koji.listTagged(tag + '-updates-testing',
+                                                  package=package, latest=True)
+                if testing_updates:
+                    nvr = parse_build(testing_updates[0]['nvr'])
+                    if testing_updates[0]['tag_name'].endswith('-testing'):
+                        row['testing_version'] = HTML.tag('a',
+                                c='%(version)s-%(release)s' % nvr,
+                                href='%s/%s' % (self._base_url, nvr['nvr']))
+                        updates = self.call('list', {'package': nvr['nvr']})
+                        if updates[1].get('num_items') == 1:
+                            up = updates[1]['updates'][0]
+                            if up['karma'] > 1:
+                                up['karma_icon'] = 'good'
+                            elif up['karma'] < 0:
+                                up['karma_icon'] = 'bad'
+                            else:
+                                up['karma_icon'] = 'meh'
+                            row['testing_version'] += HTML.tag('div',
+                                    c=HTML.tag('a', href="%s/%s" % (
+                                        self._base_url, up['title']),
+                                        c=HTML.tag('img',
+                                            src='/images/16_karma-%s.png' %
+                                            up['karma_icon']) +
+                                        HTML.tag('span', c='%s karma' %
+                                            up['karma'])),
+                                        **{'class': 'karma'})
+
+            releases.append(row)
+
+        return (len(releases), releases)
