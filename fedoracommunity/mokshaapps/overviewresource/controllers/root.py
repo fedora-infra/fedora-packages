@@ -31,13 +31,21 @@ class OverviewContainer(DashboardContainer, ContextAwareWidget):
                                           "more_link_code": builds_links.get_code('ALL_BUILDS'),
                                           "show_owner_filter": True}),
                         MokshaApp('Latest Stable Updates','fedoracommunity.updates/table',
-                                  params={"filters":'{"status":"stable"}',
-                                          "rows_per_page": 5,
-                                          "more_link_code": updates_links.get_code('STABLE_UPDATES')}),
+                                  params={
+                                      "filters": {
+                                          "status":"stable",
+                                          "granularity": "minute",
+                                          },
+                                      "rows_per_page": 5,
+                                      "more_link_code": updates_links.get_code('STABLE_UPDATES')}),
                         MokshaApp('Latest Testing Updates','fedoracommunity.updates/table',
-                                  params={"filters":'{"status":"testing"}',
-                                          "rows_per_page": 5,
-                                          "more_link_code": updates_links.get_code('TESTING_UPDATES')}),
+                                  params={
+                                      "filters": {
+                                          "status":"testing",
+                                          "granularity": "minute",
+                                          },
+                                      "rows_per_page": 5,
+                                      "more_link_code": updates_links.get_code('TESTING_UPDATES')}),
                         MokshaWidget('Planet Fedora','fedoracommunity.planet', params={'id': 'planet'}),
                         ]
                        ),

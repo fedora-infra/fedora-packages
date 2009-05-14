@@ -24,11 +24,17 @@ class UpdatesDashboard(PackagesDashboardContainer):
     template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
     layout = [Category('content-col-apps',
                        MokshaApp('Updates', 'fedoracommunity.updates/table',
-                                 params={'filters':{'package':''}}))]
+                                 params={'filters':{
+                                     'package':'',
+                                     'group_updates': False,
+                                     'status': None,
+                                     'granularity': 'day',
+                                     }}))]
 
 updates_dashboard = UpdatesDashboard('updates_dashboard')
 
 class UpdatesController(Controller):
+
     @expose('mako:moksha.templates.widget')
     def index(self, package):
         tmpl_context.widget = updates_dashboard

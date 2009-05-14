@@ -115,21 +115,29 @@ dashboard_updates_app = MokshaApp('Updates Dashboard',
 class UpdatesOverviewContainer(DashboardContainer):
     template = 'mako:fedoracommunity.mokshaapps.updates.templates.updates_overview_container'
     javascript = [JSLink(link='/javascript/bodhi.js', modname=__name__)]
-    layout = (Category('group-1-apps',
-                       (dashboard_updates_app.clone(),
-                        unpushed_updates_app.clone({'rows_per_page': 5,
-                                                    'show_title': False,
-                                                    'more_link_code': updates_links.UNPUSHED_UPDATES.code}),
-                        testing_updates_app.clone({'rows_per_page': 5,
-                                                   'show_title': False,
-                                                    'more_link_code': updates_links.TESTING_UPDATES.code}))
-                      ),
+    layout = (Category('group-1-apps', (
+                       dashboard_updates_app.clone(),
+                       unpushed_updates_app.clone({
+                           'rows_per_page': 5,
+                           'show_title': False,
+                           'more_link_code':updates_links.UNPUSHED_UPDATES.code,
+                           'filters': {'granularity': 'hour'},
+                           }),
+                       testing_updates_app.clone({
+                           'rows_per_page': 5,
+                           'show_title': False,
+                           'more_link_code':updates_links.TESTING_UPDATES.code,
+                           'filters': {'granularity': 'hour' },
+                           })),
+                       ),
               Category('group-2-apps',
-                       stable_updates_app.clone({'rows_per_page': 5,
-                                                 'show_title': False,
-                                                 'more_link_code': updates_links.STABLE_UPDATES.code})
+                       stable_updates_app.clone({
+                           'rows_per_page': 5,
+                           'show_title': False,
+                           'more_link_code': updates_links.STABLE_UPDATES.code,
+                           }),
                       )
-             )
+              )
 
 updates_overview_container = UpdatesOverviewContainer('updates_overview')
 
@@ -140,18 +148,28 @@ class UpdatesNavContainer(SubTabbedContainer):
     template='mako:fedoracommunity.mokshaapps.updates.templates.updates_nav'
     sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts'),
                     MokshaWidget('Tasks', 'fedoracommunity.quicklinks', css_class="app panel", auth=not_anonymous()))
-    tabs = (Category('Packages I Own',
-                     (overview_updates_app.clone({'profile': True},
-                                                  content_id='my_overview_updates'),
-                      unpushed_updates_app.clone({'filters': {'profile': True,
-                                                  'group_updates': False}},
-                                                 content_id='my_unpushed_updates'),
-                      testing_updates_app.clone({'filters': {'profile': True,
-                                                 'group_updates': False}},
-                                                content_id='my_testing_updates'),
-                      stable_updates_app.clone({'filters': {'profile': True,
-                                                'group_updates': False}},
-                                               content_id='my_stable_updates'),
+    tabs = (Category('Packages I Own', (
+                     overview_updates_app.clone({
+                         'profile': True,
+                         }, content_id='my_overview_updates'),
+                     unpushed_updates_app.clone({
+                         'filters': {
+                             'profile': True,
+                             'group_updates': False
+                             }
+                         }, content_id='my_unpushed_updates'),
+                     testing_updates_app.clone({
+                         'filters': {
+                             'profile': True,
+                             'group_updates': False
+                             }
+                         }, content_id='my_testing_updates'),
+                     stable_updates_app.clone({
+                         'filters': {
+                             'profile': True,
+                             'group_updates': False
+                             }
+                         }, content_id='my_stable_updates'),
                      ),
                      auth=not_anonymous()),
             Category('All Packages', (
