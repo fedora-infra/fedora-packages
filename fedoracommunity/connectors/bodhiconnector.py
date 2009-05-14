@@ -245,7 +245,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
             up['id'] = up['nvr'].split(',')[0]
 
-            up['request_id'] = up['nvr']
+            # A unique id that we can use in HTML class fields.
+            up['request_id'] = up.get('updateid') or up['nvr'].replace('.', '')
 
             actions = []
 
