@@ -25,7 +25,7 @@ from webhelpers.date import distance_of_time_in_words
 from webhelpers.html import HTML
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
-from moksha.connector.utils import DateTimeDisplay
+from moksha.lib.helpers import DateTimeDisplay
 
 log = logging.getLogger(__name__)
 
@@ -178,6 +178,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                      cast=bool)
         f.add_filter('status',['status'], allow_none = True)
         f.add_filter('group_updates', allow_none=True, cast=bool)
+        f.add_filter('granularity', allow_none=True)
         cls._query_updates_filter = f
 
     def query_updates(self, start_row=None,
@@ -296,18 +297,20 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
             # Dates
             if group_updates:
-                dp = up['dist_updates'][0]['date_pushed']
-                ds = up['dist_updates'][0]['date_submitted']
+                date_submitted = up['dist_updates'][0]['date_submitted']
+                date_pushed = up['dist_updates'][0]['date_pushed']
             else:
-                dp = up['date_pushed']
-                ds = up['date_submitted']
-            if ds: ds = datetime(*time.strptime(ds, '%Y-%m-%d %H:%M:%S')[:-2])
-            if dp: dp = datetime(*time.strptime(dp, '%Y-%m-%d %H:%M:%S')[:-2])
-            up['date_pushed_display'] = None
-            up['date_submitted_display'] = distance_of_time_in_words(ds, granularity='hour')
-            if dp:
-                up['date_pushed_display'] = distance_of_time_in_words(dp, granularity='hour')
-                up['date_pushed'] = dp.strftime('%d %B %Y')
+                date_submitted = up['date_submitted']
+                date_pushed = up['date_pushed']
+
+            granularity = filters.get('granularity', 'day')
+            ds = DateTimeDisplay(date_submitted)
+            up['date_submitted_display'] = ds.age(granularity=granularity)
+
+            if date_pushed:
+                dp = DateTimeDisplay(date_pushed)
+                up['date_pushed'] = dp.datetime.strftime('%d %b %Y')
+                up['date_pushed_display'] = dp.age(granularity=granularity)
 
             # karma
             # FIXME: take into account karma from both updates
