@@ -50,6 +50,7 @@ class UpdateHoverMenu(Widget):
     params = ['show_package', 'show_version']
     show_package = True
     show_version = False
+    strip_name = False
 
 class UpdatesGrid(Grid):
     resource = 'bodhi'
