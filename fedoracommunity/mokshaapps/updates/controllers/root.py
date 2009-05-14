@@ -62,12 +62,17 @@ class PendingUpdatesGrid(UpdatesGrid):
 class StableUpdatesGrid(UpdatesGrid):
     template='mako:fedoracommunity.mokshaapps.updates.templates.stable_table_widget'
 
+class PackageUpdatesGrid(UpdatesGrid):
+    template='mako:fedoracommunity.mokshaapps.updates.templates.package_updates_table_widget'
+
+
 class TestingUpdatesGrid(UpdatesGrid):
     template='mako:fedoracommunity.mokshaapps.updates.templates.testing_table_widget'
 
 pending_updates_grid =  PendingUpdatesGrid('pending_updates_grid')
 testing_updates_grid = TestingUpdatesGrid('testing_updates_grid')
 stable_updates_grid = StableUpdatesGrid('stable_updates_grid')
+package_updates_grid = PackageUpdatesGrid('package_updates_grid')
 
 unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/table',
                           params={
@@ -256,7 +261,7 @@ class RootController(Controller):
             table_title = 'Unpushed Updates: '
             tmpl_context.widget = pending_updates_grid
         else:
-            tmpl_context.widget = stable_updates_grid
+            tmpl_context.widget = package_updates_grid
 
         title = ''
         if asbool(show_title):
