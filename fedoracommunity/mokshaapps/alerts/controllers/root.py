@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2009  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -34,42 +34,65 @@ class AlertsContainer(ContextAwareWidget):
         c = cache.get_cache('fedoracommunity_alerts_global')
 
         users = []
-        if d.get('profile') or d.get('userid'):
-            label = 'Error if you see this label'
-            if d.get('profile'):
-                label = 'Your Recent Packages'
-                creds = request.environ.get('repoze.what.credentials')
-                if creds and creds.get('repoze.what.userid'):
-                    userid = creds.get('repoze.what.userid')
-            else:
-                userid = d.get('userid')
-                label = '%s\'s Recent Packages' % userid
+        alerts = []
 
-            # Cache for an hour
-            users_data = c.get_value(key=userid,
-                 createfunc=lambda : self.get_user_entries(userid),
-                 expiretime=3600)
+        profile_userid = None
+        creds = request.environ.get('repoze.what.credentials')
+        if creds and creds.get('repoze.what.userid'):
+            profile_userid = creds.get('repoze.what.userid')
 
-            d['alerts'] = [{'label': label, 'items': users_data}]
-        else:
-            # cache for 5 minutes
-            today = c.get_value(key='today',
-                                createfunc=self.get_todays_entries,
-                                expiretime=300)
+        userid = d.get('userid')
 
-            # cache for a day
-            this_week = c.get_value(key='this_week',
-                                    createfunc=self.get_this_week_entries,
-                                    expiretime=86400)
+        if userid or profile_userid:
+            my_alerts = []
+            label = 'Your Packages'
+            if d.get('profile'): # if we specify profile this has precedence
+                userid = profile_userid
+            elif userid: # if we specify userid then use that
+                label = '%s\'s Packages' % userid
+            else: # else we default to the profile when logged in
+                userid = profile_userid
 
-            # add today's results to this_week as an optimization
-            # e.g. this week only contains a count up to 11:59 of the
-            #      previous day
-            for w, t in zip(this_week, today):
+            # Cache for 5 minutes
+            users_today = c.get_value(key=userid + '_today',
+                 createfunc=lambda : self.get_todays_user_entries(userid),
+                 expiretime=300)
+
+            # Cache for a day
+            users_this_week = c.get_value(key=userid + '_this_week',
+                 createfunc=lambda : self.get_this_weeks_user_entries(userid),
+                 expiretime=86400)
+
+            for w, t in zip(users_this_week, users_today):
                 w['count'] += t['count']
 
-            d['alerts'] = [{'label': 'This Week', 'items': this_week},
-                           {'label': 'Today', 'items': today}]
+            my_alerts.append({'label': 'This Week', 'items': users_this_week})
+            my_alerts.append({'label': 'Today', 'items': users_today})
+
+            alerts.append({'label': label, 'alerts': my_alerts})
+
+        all_alerts = []
+        # cache for 5 minutes
+        today = c.get_value(key='today',
+                            createfunc=self.get_todays_entries,
+                            expiretime=300)
+
+        # cache for a day
+        this_week = c.get_value(key='this_week',
+                                createfunc=self.get_this_week_entries,
+                                expiretime=86400)
+
+        # add today's results to this_week as an optimization
+        # e.g. this week only contains a count up to 11:59 of the
+        #      previous day
+        for w, t in zip(this_week, today):
+            w['count'] += t['count']
+
+        all_alerts.append({'label': 'This Week', 'items': this_week})
+        all_alerts.append({'label': 'Today', 'items': today})
+        alerts.append({'label': 'All Packages', 'alerts': all_alerts})
+
+        d['alerts'] = alerts
 
     def query_builds_count(self, userid, before, after, state):
         # FIXME: Add this as an alerts query to the connector
@@ -159,19 +182,55 @@ class AlertsContainer(ContextAwareWidget):
 
         return results
 
-    def get_user_entries(self, userid):
+    def get_todays_user_entries(self, userid):
         bodhi = get_connector('bodhi')
         now = datetime.utcnow()
-        week_start = now - timedelta(weeks=1)
+        today_start = datetime.utcnow()
+        today_start = today_start.replace(hour = 0)
         results = []
 
-        complete_builds = self.query_builds_count(userid, None, week_start, 1)
-        failed_builds = self.query_builds_count(userid, None, week_start, 3)
+        complete_builds = self.query_builds_count(userid, None, today_start, 1)
+        failed_builds = self.query_builds_count(userid, None, today_start, 3)
         stable_updates = bodhi.query_updates_count('stable',
                                                    username=userid,
+                                                   after=today_start)
+        testing_updates = bodhi.query_updates_count('testing',
+                                                    username=userid,
+                                                    after=today_start)
+
+        complete_builds['url'] = '/profile/builds/my_successful'
+        failed_builds['url'] = '/profile/builds/my_failed'
+        stable_updates['url'] = '/profile/updates/stable'
+        testing_updates['url'] = '/profile/updates/testing'
+        stable_updates['icon'] = testing_updates['icon'] = '16_bodhi.png'
+
+        results.append(complete_builds)
+        results.append(failed_builds)
+        results.append(stable_updates)
+        results.append(testing_updates)
+
+        return results
+
+    def get_this_weeks_user_entries(self, userid):
+        bodhi = get_connector('bodhi')
+        now = datetime.utcnow()
+        a_day_ago = now - timedelta(days=1)
+        a_day_ago = a_day_ago.replace(hour = 23,
+                                      minute = 59,
+                                      second = 59)
+        week_start = now - timedelta(weeks=1)
+
+        results = []
+
+        complete_builds = self.query_builds_count(userid, week_start, a_day_ago, 1)
+        failed_builds = self.query_builds_count(userid, week_start, a_day_ago, 3)
+        stable_updates = bodhi.query_updates_count('stable',
+                                                   username=userid,
+                                                   before=a_day_ago,
                                                    after=week_start)
         testing_updates = bodhi.query_updates_count('testing',
                                                     username=userid,
+                                                    before=a_day_ago,
                                                     after=week_start)
 
         complete_builds['url'] = '/profile/builds/my_successful'
