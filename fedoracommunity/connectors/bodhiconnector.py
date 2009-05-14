@@ -237,6 +237,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
             else:
                 chunks = up['title'].split('-')
                 up['name'] = '-'.join(chunks[:-2])
+                up['version'] = '-'.join(chunks[-2:])
                 up['versions'] = chunks[-2]
                 up['releases'] = up['release']['long_name']
                 up['nvr'] = up['title']
