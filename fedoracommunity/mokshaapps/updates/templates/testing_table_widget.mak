@@ -20,7 +20,7 @@
                 <td>@{date_pushed_display}</td>
                 <td>@{releases}</td>
                 <td><span>@{status}</span>
-                    <div class="karma"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</div>
+				<div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</a></div>
                 </td>
                 <td>@{actions}</td>
             </tr>

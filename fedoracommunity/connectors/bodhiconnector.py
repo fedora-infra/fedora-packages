@@ -220,6 +220,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
             releases = []
 
             if group_updates:
+                up['title'] = up['dist_updates'][0]['title']
+
                 for dist_update in up['dist_updates']:
                     versions.append(dist_update['version'])
                     releases.append(dist_update['release_name'])
