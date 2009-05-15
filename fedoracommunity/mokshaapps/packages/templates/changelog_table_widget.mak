@@ -49,10 +49,6 @@
             <div class="message template" id="info_display" >
                Viewing all Changelog entries
             </div>
-
-            <div class="pager template" id="pager" type="more_link">
-               <a href="@{more_link}" moksha_url="dynamic">View builds &gt;</a>
-            </div>
         </div>
         <div id="grid-controls" if="visible_rows < total_rows">
             <div class="message template" id="info_display" >
@@ -61,7 +57,7 @@
             <div class="pager" id="pager" type="numeric" ></div>
 
             <div class="pager template" id="pager" type="more_link">
-               <a href="@{more_link}" moksha_url="dynamic">View more entries &gt;</a>
+               <a href="@{more_link}?package=@{filters:index('package')}" moksha_url="dynamic">View more entries &gt;</a>
             </div>
         </div>
     </div>
