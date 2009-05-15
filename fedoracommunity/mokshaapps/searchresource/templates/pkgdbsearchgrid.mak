@@ -17,4 +17,10 @@
         </tr>
     </tbody>
    </table>
+   <div id="grid-controls">
+        <div class="message template" id="info_display" >
+           Viewing @{visible_rows} of @{total_rows} packages in search results
+        </div>
+        <div class="pager" id="pager" type="numeric" ></div>
+   </div>
 </div>

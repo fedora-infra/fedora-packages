@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2009  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -54,24 +54,21 @@ class SearchContainer(DashboardContainer, ContextAwareWidget):
 
 class PkgdbSearchGrid(Grid):
     template="mako:fedoracommunity.mokshaapps.searchresource.templates.pkgdbsearchgrid"
-    def update_params(self, d):
-        d['resource'] = 'pkgdb'
-        d['resource_path'] = 'search_packages'
-        super(PkgdbSearchGrid, self).update_params(d)
+    resource = 'pkgdb'
+    resource_path = 'search_packages'
+    numericPager = True
 
 class YumSearchGrid(Grid):
     template="mako:fedoracommunity.mokshaapps.searchresource.templates.pkgdbsearchgrid"
-    def update_params(self, d):
-        d['resource'] = 'yum'
-        d['resource_path'] = 'search_packages'
-        super(YumSearchGrid, self).update_params(d)
+    resource = 'yum'
+    resource_path = 'search_packages'
+    numericPager = True
 
 class PeopleSearchGrid(Grid):
     template="mako:fedoracommunity.mokshaapps.searchresource.templates.peoplesearchgrid"
-    def update_params(self, d):
-        d['resource'] = 'fas'
-        d['resource_path'] = 'search_people'
-        super(PeopleSearchGrid, self).update_params(d)
+    resource = 'fas'
+    resource_path = 'search_people'
+    numericPager = True
 
 search_container = SearchContainer('search')
 yum_search_grid = YumSearchGrid('yum_search')
