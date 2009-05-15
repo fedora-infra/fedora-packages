@@ -12,7 +12,7 @@
                     <tr>
                         <td>
                             <span class="package-name">
-                                <a href="/package_maintenance/packages?package=@{name}">@{name}</a>
+                                <a href="/package_maintenance/packages?package=@{name}" moksha_url="dynamic">@{name}</a>
                             </span>
                         </td>
                     </tr>
