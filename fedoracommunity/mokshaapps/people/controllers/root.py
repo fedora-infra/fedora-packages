@@ -217,7 +217,7 @@ class RootController(Controller):
         tmpl_context.widget = people_grid
         return {'filters': filters,
                 'rows_per_page':rows_per_page,
-                'more_link': None}
+                'numericPager': True}
 
     @expose('mako:moksha.templates.widget')
     def planet(self, username=None):
