@@ -57,6 +57,33 @@ class UpdatesGrid(Grid):
     resource_path = 'query_updates'
     children = [UpdateHoverMenu('update_hover_menu')]
 
+    def update_params(self, d):
+        pkgdb = get_connector('pkgdb')
+
+        collections = pkgdb.get_collection_table(active_only=True)
+        releases = []
+        for id, collection in collections.items():
+            name = collection['name']
+            ver = collection['version']
+            label = "%s %s" % (name, ver)
+            print collection['koji_name']
+            koji_name = collection['koji_name']
+            value = ""
+            if koji_name:
+                value = koji_name.rsplit('-', 1)[1]
+            else: print name, ver
+            if label != 'Fedora devel' and name =='Fedora':
+                releases.append({'label': label, 'value': value, 'version': ver})
+
+        def _sort(a,b):
+            return cmp(int(b['version']), int(a['version']))
+
+        releases.sort(_sort)
+
+        d['release_table'] = releases
+
+        super(UpdatesGrid, self).update_params(d)
+
 class PendingUpdatesGrid(UpdatesGrid):
     template='mako:fedoracommunity.mokshaapps.updates.templates.pending_table_widget'
 

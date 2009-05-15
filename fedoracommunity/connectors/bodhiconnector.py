@@ -183,6 +183,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         f.add_filter('status',['status'], allow_none = True)
         f.add_filter('group_updates', allow_none=True, cast=bool)
         f.add_filter('granularity', allow_none=True)
+        f.add_filter('release', allow_none=False)
         cls._query_updates_filter = f
 
     def query_updates(self, start_row=None,
@@ -458,7 +459,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
         This method makes a single query to bodhi, asking if it knows about
         any updates for a given list of koji builds.  For builds with existing
-        updates, the `update` will be added to it's dictionary. 
+        updates, the `update` will be added to it's dictionary.
 
         Currently it also adds `update_details`, which is HTML for rendering
         the builds update options.  Ideally, this should be done client-side
