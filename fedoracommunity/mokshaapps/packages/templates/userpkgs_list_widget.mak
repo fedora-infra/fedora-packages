@@ -18,7 +18,7 @@
         </table>
         <div id="grid-controls">
             <div class="pager template" id="pager" type="more_link">
-               <a href="@{more_link}" moksha_url="dynamic">View more packages &gt;</a>
+               <a href="@{more_link}?username=@{filters:index('username')}" moksha_url="dynamic">View more packages &gt;</a>
             </div>
         </div>
         <div class="clear"></div>

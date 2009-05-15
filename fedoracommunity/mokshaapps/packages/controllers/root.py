@@ -32,6 +32,7 @@ class UserPkgsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.userpkgs_table_widget'
     resource='pkgdb'
     resource_path='query_userpackages'
+    numericPager=True
 
 class UserPkgsCompactGrid(UserPkgsGrid):
     template='mako:fedoracommunity.mokshaapps.packages.templates.userpkgs_list_widget'

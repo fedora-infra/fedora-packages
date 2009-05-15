@@ -22,7 +22,7 @@
         <table id="${id}">
             <thead>
               <th>Package Name</th>
-              <th>Release(s)</th>
+              <th>Summary</th>
             </thead>
             <tbody class="rowtemplate">
                     <tr>
@@ -32,10 +32,15 @@
                             </span>
                         </td>
                         <td>
-                            @{collections:filter(_release_filter)}
+                            @{summary}
                         </td>
                     </tr>
                 </tbody>
         </table>
-
+        <div id="grid-controls">
+            <div class="message template" id="info_display" >
+               Viewing @{visible_rows} of @{total_rows} packages
+            </div>
+            <div class="pager" id="pager" type="numeric" ></div>
+        </div>
     </div>
