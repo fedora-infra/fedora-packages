@@ -14,23 +14,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Setup the myfedora application"""
+"""Setup the Fedora Community application"""
 import logging
 
 import transaction
 from paste.deploy import appconfig
 from pylons import config
 
-from myfedora.config.environment import load_environment
+from fedoracommunity.config.environment import load_environment
 
 log = logging.getLogger(__name__)
 
 def setup_config(command, filename, section, vars):
-    """Place any commands to setup myfedora here"""
+    """Place any commands to setup Fedora Community here"""
     conf = appconfig('config:' + filename)
     load_environment(conf.global_conf, conf.local_conf)
     # Load the models
-    from myfedora import model
+    from fedoracommunity import model
     print "Creating tables"
     model.metadata.create_all(bind=config['pylons.app_globals'].sa_engine)
 
