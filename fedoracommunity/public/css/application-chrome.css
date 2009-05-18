@@ -1456,3 +1456,40 @@ moksha_extpoint {
   max-width: 200px !important;
   overflow: auto !important;
 }
+
+/* the following are used in the package details page, for the two bubble columns (latest rawhide buid & owner) */
+
+div.description-details-columns {
+  overflow: auto !important;
+}
+
+
+div.description-details-columns dt {
+  margin-top: 5px !important;
+  text-transform: capitalize;
+  font-weight: bold;
+  color: #777;
+}
+
+div.description-details-columns dl {
+  width: 47%;
+  padding: 0px 8px 5px;
+  -moz-border-radius: 5px;
+  background-color: #dae9f8;
+}
+
+div.description-details-columns dl.left-col {
+  float: left;
+}
+
+div.description-details-columns dl.right-col {
+  float: right;
+}
+
+div.description-details-columns dd a {
+  font-weight: bold;
+}
+
+div.description-details-columns dd em {
+  color: #777;
+}
