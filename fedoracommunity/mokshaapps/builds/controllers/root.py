@@ -251,7 +251,7 @@ class RootController(Controller):
             if profile:
                 title += "Packages I Own"
             elif user:
-                title += "Packages " + username + " Owns"
+                title += "Packages " + user + " Owns"
             else:
                 title += "All Packages"
 
