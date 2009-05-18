@@ -1493,3 +1493,9 @@ div.description-details-columns dd a {
 div.description-details-columns dd em {
   color: #777;
 }
+
+/* this style is used for SRPM sizes on package details sources */
+em.note {
+  color: #aaa;
+  font-size: .9em;
+}
