@@ -39,7 +39,7 @@
         return;
       }
 
-    render = function(json)
+    var render = function(json)
       {
         log_url = json.log_url;
         log_name = json.log_name;
@@ -58,7 +58,8 @@
         }
 
         msg_div.hide();
-        jQuery("#" + data.uid).html(msg_div);
+        var $uid = jQuery("#" + data.uid)
+        $uid.html(msg_div);
         msg_div.fadeIn("slow");
       }
 
