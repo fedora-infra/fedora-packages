@@ -25,13 +25,13 @@
             <tbody class="rowtemplate">
                     <tr>
                         <td>
-                            @{version}
+                            <strong>@{version}</strong>
                         </td>
                         <td>
                             @{text:filter(_text_filter)}
                         </td>
                         <td>
-                            @{author}<br/>
+                            <strong>@{author}</strong><br/>
                             <a href="mailto:@{email}">&lt;@{email}&gt;</a>
                         </td>
                         <td>
