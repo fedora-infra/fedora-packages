@@ -1,4 +1,9 @@
 <div id="${id}" class="info-profile">
+  % if not profile:
+      <script type="text/javascript">
+          moksha.update_title("User: ${person['username']}", 2);
+      </script>
+  % endif
   <h2>${person['human_name']}</h2>
   <div class="compact_info_content">
     <div class="info_details">
@@ -19,7 +24,7 @@
             <div class="timezone">
                <img src="/images/16_clock.png" />
                <p>
-                  <span id="utc_clock_${id}" class="clock" /> 
+                  <span id="utc_clock_${id}" class="clock" />
                   <span class="timezone_label">UTC</span>
                </p>
             </div>
