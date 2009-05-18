@@ -45,6 +45,7 @@ class KojiConnector(IConnector, ICall, IQuery):
         cls.register_query_changelogs()
 
         cls.register_method('get_error_log', cls.call_get_error_log)
+        cls.register_method('get_latest_changelog', cls.call_get_latest_changelog)
 
     def request_data(self, resource_path, params, _cookies):
         return self._koji_client.callMethod(resource_path, **params)
@@ -71,6 +72,40 @@ class KojiConnector(IConnector, ICall, IQuery):
 
     def _get_file_url(self, task_id, file_name):
         return self._koji_url + '/getfile' + '?taskID=' + str(task_id) + '&name=' + file_name
+
+    def call_get_latest_changelog(self, resource_path, _cookies=None, build_id=None, task_id=None, state=None):
+        build_id = int(build_id);
+        task_id = int(task_id);
+        state = int(state);
+
+        queryOpts = {'limit':1, 'offset':0}
+
+        if state != koji.BUILD_STATES['COMPLETE']:
+            srpm_tasks = self.call('listTasks', {'opts':{'parent': task_id, 'method': 'buildSRPMFromSCM'}})
+            if srpm_tasks:
+                srpm_task = srpm_tasks[0]
+                if srpm_task['state'] == koji.TASK_STATES['CLOSED']:
+                    srpm_path = None
+                    for output in self.call('listTaskOutput', {'taskID': srpm_task['id']}):
+                        if output.endswith('.src.rpm'):
+                            srpm_path = output
+                            break
+                    if srpm_path:
+                        changelogs = self.call('getChangelogEntries', {'taskID':srpm_task['id'],
+                                                                      'filepath':srpm_path,
+                                                                      'queryOpts': queryOpts
+                                                                      })
+        else:
+            changelogs = self.call('getChangelogEntries', {'buildID':build_id,
+                                                           'queryOpts': queryOpts
+                                                          })
+        if not changelogs:
+            changeslogs = [{'author':'',
+                            'text':'No changelogs could be found for this package',
+                            'date':''
+                            }]
+        return changelogs[0]
+
 
     def call_get_error_log(self, resource_path, _cookies=None, task_id=None):
         results = {'log_url':'', 'log_name':'', 'task_id':''}
