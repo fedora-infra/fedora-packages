@@ -6,6 +6,9 @@
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title>${title}</title>
 
+    <script type="text/javascript">
+        moksha.update_title("${title}", 0);
+    </script>
     <link href="/images/favicon.ico"
       type="image/vnd.microsoft.icon" rel="shortcut icon" />
     <link href="http://fedoraproject.org/favicon.ico"

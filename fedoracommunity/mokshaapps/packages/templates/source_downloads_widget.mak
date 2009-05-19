@@ -9,9 +9,9 @@
   </tr>
   % for source in sources:
     <tr>
-      <td>${source['release']}</td>
+      <td><strong>${source['release']}</strong></td>
       <td>${source['released_version']}</td>
-      <td><a href="${source['url']}">${source['nvr']}</a> <span class="filesize">(${source['size']} SRPM file)</span></td>
+      <td><a href="${source['url']}">${source['nvr']}</a><br /><em class="note">${source['size']} SRPM file</em></td>
     </tr>
   % endfor
 </table>

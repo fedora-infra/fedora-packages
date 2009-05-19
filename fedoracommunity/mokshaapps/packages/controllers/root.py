@@ -135,17 +135,45 @@ class PackageNavMaintContainer(ExtraContentTabbedContainer):
                    )
           )
 
-class PackagesListContainer(DashboardContainer, ContextAwareWidget):
-    template = 'mako:fedoracommunity.mokshaapps.packages.templates.packages_main'
-    layout = [Category('right-content-column-apps',
-                        MokshaWidget('Tasks', 'fedoracommunity.quicklinks', auth=not_anonymous()), default_child_css='panel'),
-              Category('left-content-column-apps', # use the builds packages table for now while Toshio fixes the alphaPager json call for pkgdb
-                       MokshaApp('', 'fedoracommunity.builds/packages_table', params={"rows_per_page": 10, "filters":{}}))]
+class PackagesListNavContainer(ExtraContentTabbedContainer):
+    template = 'mako:fedoracommunity.mokshaapps.packages.templates.package_nav'
+    sidebar_apps=(MokshaWidget('Tasks', 'fedoracommunity.quicklinks',
+                               auth=not_anonymous(), css_class='app panel'),
+                 )
+    tabs = (MokshaApp('All Packages', 'fedoracommunity.builds/packages_table',
+                                      params={"rows_per_page": 10, "filters":{}}),
+            MokshaApp('Packages I Own', 'fedoracommunity.packages/userpackages_table',
+                                      params={"rows_per_page": 10,
+                                              "filters":{'username': None,
+                                                         'owner': True,
+                                                         'eol': False
+                                                        }
+                                             },
+                                      auth=not_anonymous()),
+            MokshaApp('Packages I Maintain', 'fedoracommunity.packages/userpackages_table',
+                                      params={"rows_per_page": 10,
+                                              "filters":{'username': None,
+                                                         'approveacls': True,
+                                                         'commit': True,
+                                                         'eol': False
+                                                        }
+                                             },
+                                      auth=not_anonymous()),
+            MokshaApp('Packages I Watch', 'fedoracommunity.packages/userpackages_table',
+                                      params={"rows_per_page": 10,
+                                              "filters":{'username': None,
+                                                         'watchcommits': True,
+                                                         'watchbugzilla': True,
+                                                         'eol': False
+                                                        }
+                                             },
+                                      auth=not_anonymous()),
+            )
 
 user_pkgs_compact_grid = UserPkgsCompactGrid('usrpkgs_list')
 user_pkgs_grid = UserPkgsGrid('usrpkgs_table')
 
-packages_list_container = PackagesListContainer('packages_list_container')
+packages_list_nav_container = PackagesListNavContainer('packages_list_nav_container')
 package_nav_overview_container = PackageNavOverviewContainer('selected_package_nav_overview_container')
 package_nav_details_container = PackageNavDetailsContainer('selected_package_nav_details_container')
 package_nav_maint_container = PackageNavMaintContainer('selected_package_nav_tools_container')
@@ -258,14 +286,16 @@ class RootController(Controller):
         return {'filters': filters,
                 'rows_per_page':rows_per_page}
 
-    # do something for index, this should be the container stuff
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):
         package = kwds.get('package', None)
 
         if not package:
-            options = {}
-            tmpl_context.widget = packages_list_container
+            username = ''
+            if request.identity:
+                username = request.identity.get('repoze.who.userid', '')
+            options = {'username': username}
+            tmpl_context.widget = packages_list_nav_container
         else:
             options = {
                        'package': package
