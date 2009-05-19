@@ -4,7 +4,6 @@
           moksha.update_title("User: ${person['username']}", 2);
       </script>
   % endif
-  <h2>${person['human_name']}</h2>
   <div class="compact_info_content">
     <div class="info_details">
 

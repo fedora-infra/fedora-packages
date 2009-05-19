@@ -25,6 +25,8 @@ from moksha.api.widgets.containers import DashboardContainer
 
 from fedoracommunity.widgets import ExtraContentTabbedContainer
 
+from helpers import PeopleDashboardContainer
+
 from fedoracommunity.mokshaapps.builds.controllers.root import (
     in_progress_builds_app,
     failed_builds_app,
@@ -38,7 +40,7 @@ from fedoracommunity.mokshaapps.updates.controllers.root import (
     stable_updates_app,
     overview_updates_app)
 
-class PeopleBuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
+class PeopleBuildsOverviewContainer(PeopleDashboardContainer):
 
     layout = [Category('group-1-apps',
                         (in_progress_builds_app.clone({'rows_per_page': 5,
@@ -54,7 +56,7 @@ class PeopleBuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
 
 people_builds_overview_container = PeopleBuildsOverviewContainer('people_builds_overview')
 
-class ProfileBuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
+class ProfileBuildsOverviewContainer(PeopleDashboardContainer):
 
     layout = [Category('group-1-apps',
                         (in_progress_builds_app.clone({'rows_per_page': 5,
@@ -92,7 +94,7 @@ packages_watched_app = MokshaApp('Packages Watched',
                                                   'eol': False}})
 
 
-class ProfileNavContainer(ExtraContentTabbedContainer):
+class ProfileNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer):
     template='mako:fedoracommunity.mokshaapps.people.templates.people_package_nav'
     sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts',
                               params={'profile':True},
@@ -126,7 +128,7 @@ class ProfileNavContainer(ExtraContentTabbedContainer):
                    )
           )
 
-class PeopleNavContainer(ExtraContentTabbedContainer):
+class PeopleNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer):
     template='mako:fedoracommunity.mokshaapps.people.templates.people_package_nav'
     sidebar_apps = (MokshaApp('Alerts', 'fedoracommunity.alerts',
                               params={'username':None},

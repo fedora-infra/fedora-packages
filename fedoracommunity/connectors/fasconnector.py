@@ -1,28 +1,32 @@
+
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2009  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from moksha.connector import IConnector, ICall, IQuery, ISearch, ParamFilter
 from pylons import config, cache
-from fedora.client import ProxyClient
+from fedora.client import ProxyClient, ServerError
 from moksha.connector.utils import DateTimeDisplay
+from webob.exc import HTTPInternalServerError, HTTPNotFound
 
 USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
 _fas_minimal_user = config.get('fedoracommunity.connector.fas.minimal_user_name')
 _fas_minimal_pass = config.get('fedoracommunity.connector.fas.minimal_user_password')
 
+class UserNotFoundError(HTTPNotFound):
+    pass
 
 class FasConnector(IConnector, ICall, ISearch, IQuery):
     _method_paths = {}
@@ -81,7 +85,11 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         return self.request_data(resource_path, params, _cookies)
 
     def request_user_view(self, user):
-        view = self.call('user/view', {'username': user})
+        try:
+            view = self.call('user/view', {'username': user})
+        except ServerError, e:
+            raise UserNotFoundError('User %s can not be found.' % user)
+
         if not view:
             return None
 
@@ -115,11 +123,16 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         key = '_fas_user_info_' + user
         if invalidate:
             fas_cache.remove_value(key)
-
-        info = fas_cache.get_value(key = key ,
+        try:
+             info = fas_cache.get_value(key = key ,
                                    createfunc=lambda : self.request_user_view(user),
                                    type="memory",
                                    expiretime=USERINFO_CACHE_TIMEOUT)
+        except UserNotFoundError, e:
+            return {'error_type': e.__class__.__name__,
+                    'error': e.message
+                    }
+
         return info
 
     # ISearch
@@ -315,6 +328,8 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
             view = current_id['person']
         else:
             view = self.get_user_view(un)
+            if 'error_type' in view:
+                return (-1, view)
 
         if not view:
             return None

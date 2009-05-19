@@ -27,7 +27,6 @@ from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
 from moksha.api.widgets.feed import Feed
 from moksha.api.widgets import ContextAwareWidget, Grid
-from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.connectors import get_connector
 from moksha.connector.utils import DateTimeDisplay
 
@@ -37,11 +36,11 @@ from memberships import MembershipsController
 from package_maintenance import PackageMaintenanceController
 
 from links import membership_links
+from helpers import PeopleDashboardContainer
 
 log = logging.getLogger(__name__)
 
-class ProfileContainer(DashboardContainer, ContextAwareWidget):
-    template='mako:fedoracommunity.mokshaapps.people.templates.peoplecontainer'
+class ProfileContainer(PeopleDashboardContainer):
     layout = [Category('header-content-column-apps',
                        MokshaApp('', 'fedoracommunity.people/details',params=
                                  {"profile": True}
@@ -68,9 +67,7 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                        ),
                       )]
 
-class PeopleContainer(DashboardContainer, ContextAwareWidget):
-    template='mako:fedoracommunity.mokshaapps.people.templates.peoplecontainer'
-
+class UserContainer(PeopleDashboardContainer):
     layout = [Category('header-content-column-apps',
                        MokshaApp('', 'fedoracommunity.people/details',
                                  params={'username':''})
@@ -164,7 +161,7 @@ class PersonBlogWidget(Feed):
 
 
 people_grid = PeopleGrid('people_grid')
-people_container = PeopleContainer('people_container')
+user_container = UserContainer('user_container')
 profile_container = ProfileContainer('profile_container')
 person_details_widget = PersonDetailsWidget('person_details_widget')
 compact_person_details_widget = CompactPersonDetailsWidget('person_details_widget')
@@ -185,7 +182,7 @@ class RootController(Controller):
             tmpl_context.widget = profile_container
             options['username'] = request.identity['repoze.who.userid']
         elif options['username']:
-            tmpl_context.widget = people_container
+            tmpl_context.widget = user_container
         else:
             pass # todo - make a container for the people list app
 
