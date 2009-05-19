@@ -66,7 +66,6 @@ class UpdatesGrid(Grid):
             name = collection['name']
             ver = collection['version']
             label = "%s %s" % (name, ver)
-            print collection['koji_name']
             koji_name = collection['koji_name']
             value = ""
             if koji_name:
