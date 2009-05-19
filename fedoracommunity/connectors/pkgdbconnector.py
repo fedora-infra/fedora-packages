@@ -18,7 +18,6 @@ from moksha.connector import IConnector, ICall, IQuery, ParamFilter, ISearch
 from pylons import config
 from fedora.client import ProxyClient
 from beaker.cache import Cache
-from webob.exc import HTTPNotFound
 
 COLLECTION_TABLE_CACHE_TIMEOUT= 60 * 60 * 6 # s * m * h = 6 hours
 BASIC_PACKAGE_DATA_CACHE_TIMEOUT = 60 * 60  # 1 hour
@@ -32,7 +31,7 @@ UNDER_DEVELOPMENT_STATUS = 18
 
 pkgdb_cache = Cache('pkgdb_connector_cache')
 
-class PackageNameError(HTTPNotFound):
+class PackageNameError(LookupError):
     pass
 
 class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
@@ -154,7 +153,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                                    expiretime=BASIC_PACKAGE_DATA_CACHE_TIMEOUT)
         except PackageNameError, e:
             result['error_type'] = e.__class__.__name__
-            result['error'] = e.message
+            result['error'] = str(e)
 
             return result
 

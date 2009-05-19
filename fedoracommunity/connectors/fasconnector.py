@@ -19,13 +19,12 @@ from moksha.connector import IConnector, ICall, IQuery, ISearch, ParamFilter
 from pylons import config, cache
 from fedora.client import ProxyClient, ServerError
 from moksha.connector.utils import DateTimeDisplay
-from webob.exc import HTTPInternalServerError, HTTPNotFound
 
 USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
 _fas_minimal_user = config.get('fedoracommunity.connector.fas.minimal_user_name')
 _fas_minimal_pass = config.get('fedoracommunity.connector.fas.minimal_user_password')
 
-class UserNotFoundError(HTTPNotFound):
+class UserNotFoundError(LookupError):
     pass
 
 class FasConnector(IConnector, ICall, ISearch, IQuery):
@@ -130,7 +129,7 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
                                    expiretime=USERINFO_CACHE_TIMEOUT)
         except UserNotFoundError, e:
             return {'error_type': e.__class__.__name__,
-                    'error': e.message
+                    'error': str(e)
                     }
 
         return info
