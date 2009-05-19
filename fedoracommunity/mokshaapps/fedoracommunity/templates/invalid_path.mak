@@ -42,7 +42,9 @@
                 with the path to the page that brought you here.
                 <br/><br/>
                 <a href="/" moksha_url="dynamic">Click here to go back to the Fedora Community front page.</a>
-
+                <script type="text/javascript">
+                    moksha.update_marked_anchors($('a'));
+                </script>
              </div>
            </div>
          </div>
