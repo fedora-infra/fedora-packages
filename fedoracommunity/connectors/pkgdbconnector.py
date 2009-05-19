@@ -31,6 +31,9 @@ UNDER_DEVELOPMENT_STATUS = 18
 
 pkgdb_cache = Cache('pkgdb_connector_cache')
 
+class PackageNameError(LookupError):
+    pass
+
 class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
     _method_paths = {}
     _query_paths = {}
@@ -130,6 +133,9 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         if not co:
             return {}
 
+        if 'message' in co[1]:
+            raise PackageNameError(co[1]['message'])
+
         return co
 
     def get_basic_package_info(self, package, invalidate=False):
@@ -140,10 +146,16 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                 pass
 
         result = {}
-        info = pkgdb_cache.get_value(key=package,
+        try:
+            info = pkgdb_cache.get_value(key=package,
                                    createfunc=lambda : self.request_package_info(package),
                                    type="memory",
                                    expiretime=BASIC_PACKAGE_DATA_CACHE_TIMEOUT)
+        except PackageNameError, e:
+            result['error_type'] = e.__class__.__name__
+            result['error'] = e.message
+
+            return result
 
         # search for the rawhide records or use the first one
         # we should ask pkgdb to mark which record has the most authority

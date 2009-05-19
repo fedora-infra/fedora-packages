@@ -26,7 +26,14 @@ class PackagesDashboardContainer(DashboardContainer, ContextAwareWidget):
         p = d.get('package')
         conn = get_connector('pkgdb')
         info = conn.get_basic_package_info(p)
-        d['pkg_description'] = info['description']
-        d['pkg_summary'] = info['summary']
+
+        if 'error_type' in info:
+            d['error'] = info['error']
+            d['error_type'] = info['error_type']
+            d['pkg_description'] = ''
+            d['pkg_summary'] = 'Unknown Package'
+        else:
+            d['pkg_description'] = info['description']
+            d['pkg_summary'] = info['summary']
 
         super(PackagesDashboardContainer, self).update_params(d)
