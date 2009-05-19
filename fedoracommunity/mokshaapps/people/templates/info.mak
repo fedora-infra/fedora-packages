@@ -64,7 +64,7 @@
           % if person.get('ircnick'):
           <tr>
             <th>IRC Nick</th>
-            <td>${person['ircnick']}</td>
+            <td>${person['ircnick']}<br /><em class="note">irc.freenode.net</em></td>
           </tr>
           % endif
           % if person.get('email'):

@@ -34,7 +34,7 @@
       <div class="col right_col">
         <div class="info_contact info_container">
           % if person.get('ircnick'):
-          <p><img src="/images/16_chat.png" /> ${person['ircnick']}</p>
+          <p><img src="/images/16_chat.png" /> ${person['ircnick']} <br /><em class="note">irc.freenode.net</em></p>
           % endif
           % if person.get('email'):
               <p><img src="/images/16_mail.png" /> <a href="mailto:${person['email']}">${person['email']}</a></p>
