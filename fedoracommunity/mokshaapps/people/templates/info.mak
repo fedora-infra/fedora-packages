@@ -1,10 +1,4 @@
 <div id="${id}" class="info-profile">
-  % if not profile:
-      <script type="text/javascript">
-          moksha.update_title("User: ${person['username']}", 2);
-      </script>
-  % endif
-  <h2>${person['human_name']}</h2>
   <div class="info_content">
     <div class="info_details">
 
@@ -64,7 +58,7 @@
           % if person.get('ircnick'):
           <tr>
             <th>IRC Nick</th>
-            <td>${person['ircnick']}</td>
+            <td>${person['ircnick']}<br /><em class="note">irc.freenode.net</em></td>
           </tr>
           % endif
           % if person.get('email'):

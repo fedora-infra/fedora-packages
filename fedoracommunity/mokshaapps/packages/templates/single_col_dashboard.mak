@@ -7,7 +7,12 @@
                  moksha.update_title("Package: ${package}", 2);
              </script>
           </div>
-          ${applist_widget(category = 'content-col-apps', layout = layout)}
+
+          % if error:
+              ${error}
+          % else:
+              ${applist_widget(category = 'content-col-apps', layout = layout)}
+          % endif
        </div>
     </div>
 <!-- this is the end of single_col_dashboard.mak -->

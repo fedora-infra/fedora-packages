@@ -31,6 +31,9 @@ UNDER_DEVELOPMENT_STATUS = 18
 
 pkgdb_cache = Cache('pkgdb_connector_cache')
 
+class PackageNameError(LookupError):
+    pass
+
 class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
     _method_paths = {}
     _query_paths = {}
@@ -60,6 +63,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         cls.register_query_list_packages()
         cls.register_search_packages()
         cls.register_query_acls()
+        cls.register_query_owners()
 
     def request_data(self, resource_path, params, _cookies):
         identity = self._environ.get('repoze.who.identity')
@@ -121,14 +125,23 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         else:
             return table
 
-    def request_package_info(self, package, release = 'Fedora devel'):
-        (name, version) = release.rsplit(" ", 1)
+    def request_package_info(self, package, release = None):
+
+        if not release:
+            name = ''
+            version = ''
+        else:
+            (name, version) = release.rsplit(" ", 1)
+
         co = self.call('/packages/name', {'packageName': package,
                                           'collectionName': name,
                                           'collectionVersion': version})
 
         if not co:
             return {}
+
+        if 'message' in co[1]:
+            raise PackageNameError(co[1]['message'])
 
         return co
 
@@ -140,10 +153,16 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                 pass
 
         result = {}
-        info = pkgdb_cache.get_value(key=package,
+        try:
+            info = pkgdb_cache.get_value(key=package,
                                    createfunc=lambda : self.request_package_info(package),
                                    type="memory",
                                    expiretime=BASIC_PACKAGE_DATA_CACHE_TIMEOUT)
+        except PackageNameError, e:
+            result['error_type'] = e.__class__.__name__
+            result['error'] = str(e)
+
+            return result
 
         # search for the rawhide records or use the first one
         # we should ask pkgdb to mark which record has the most authority
@@ -191,6 +210,100 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return result[1]['packages']
 
     # IQuery
+    @classmethod
+    def register_query_owners(cls):
+        path = cls.register_query(
+                      'owners',
+                      cls.query_owners,
+                      primary_key_col = 'release',
+                      default_sort_col = 'release',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('release',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('username',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        f = ParamFilter()
+        f.add_filter('package',['p', 'pkg'], allow_none = False)
+
+        cls._query_acls_filter = f
+
+    def query_owners(self, start_row=None,
+                           rows_per_page=None,
+                           order=-1,
+                           sort_col=None,
+                           filters=None,
+                           **params):
+        if not filters:
+            filters = {}
+
+        filters = self._query_acls_filter.filter(filters)
+
+        package = filters.get('package')
+
+        info = pkgdb_cache.get_value(key=package,
+                                   createfunc=lambda : self.request_package_info(package),
+                                   type="memory",
+                                   expiretime=BASIC_PACKAGE_DATA_CACHE_TIMEOUT)
+
+        err_message = info[1].get('message')
+        if err_message:
+            return (-1, err_message)
+
+        p = info[1]['packageListings']
+
+        collections = self.get_collection_table(False, active_only=True)
+        rows = []
+
+        for i in p:
+            id = i['collection']['collectionid']
+            print id,'=', collections.get(int(id))
+            if not collections.get(int(id)):
+                continue
+
+            distname = i['collection']['name']
+            distver = i['collection']['version']
+            owner = i['owneruser']
+
+            if distname == 'Fedora' and distver == 'devel':
+                # make sure it is first in the sort
+                rows.append({'release': 'Rawhide',
+                            'owner': owner,
+                            'distname': 'Fedora',
+                            'version':99999999})
+            else:
+                rows.append({'release': "%s %s" % (distname, distver),
+                            'owner': owner,
+                            'version':distver,
+                            'distname': distname})
+
+
+        def sort_by_dist(a, b):
+            result = 0
+            if a['distname'] == 'Fedora' and b['distname'] != 'Fedora':
+                result = 1
+            elif  b['distname'] == 'Fedora' and a['distname'] != 'Fedora':
+                result = -1
+            elif a['distname'] != b['distname']:
+                result = cmp(a['distname'], b['distname'])
+            else: # a and b distname the same so cmp versions
+                result = cmp(int(a['version']), int(b['version']))
+
+            if order < 0:
+                return -result
+            else:
+                return result
+
+        rows.sort(sort_by_dist)
+        total_count = len(rows)
+        return (total_count, rows)
+
     @classmethod
     def register_query_acls(cls):
         path = cls.register_query(
@@ -242,7 +355,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
         err_message = info[1].get('message')
         if err_message:
-            return (0, [err_message])
+            return (-1, err_message)
 
         p = info[1]['packageListings']
 

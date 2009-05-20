@@ -24,20 +24,21 @@ from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 
 from links import membership_links, profile_membership_links
+from helpers import PeopleDashboardContainer
 import simplejson as json
 
 class UserMembershipsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.people.templates.memberships_table_widget'
 
-class ProfileContainer(DashboardContainer, ContextAwareWidget):
-    layout = [Category('right-content-column',
+class ProfileContainer(PeopleDashboardContainer):
+    layout = [Category('right-content-column-apps',
                        (MokshaApp('Your Packages', 'fedoracommunity.packages/mypackages'),
                         MokshaApp('Alerts', 'fedoracommunity.alerts'),
                         MokshaWidget('Tasks', 'fedoracommunity.quicklinks', auth=not_anonymous())),
                         default_child_css="app panel",
                         css_class='right-content-column'
                       ),
-              Category('left-content-column',
+              Category('left-content-column-apps',
                        (MokshaApp('', 'fedoracommunity.people/details',
                                  params={'compact': True,
                                          'profile': True}),
@@ -59,15 +60,15 @@ class ProfileContainer(DashboardContainer, ContextAwareWidget):
                        css_class='left-content-column'
                       )]
 
-class PeopleContainer(DashboardContainer, ContextAwareWidget):
-    layout = [Category('right-content-column',
+class PeopleContainer(PeopleDashboardContainer):
+    layout = [Category('right-content-column-apps',
                         (MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
                                   params={'username':''}),
                          MokshaApp('Alerts', 'fedoracommunity.alerts'),
                          MokshaWidget('Tasks', 'fedoracommunity.quicklinks', auth=not_anonymous())),
                          default_child_css='app panel'
                         ),
-              Category('left-content-column',
+              Category('left-content-column-apps',
                        (MokshaApp('', 'fedoracommunity.people/details',
                                  params={'username':'',
                                          'compact': True}),

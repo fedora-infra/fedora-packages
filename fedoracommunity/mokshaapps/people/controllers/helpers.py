@@ -14,26 +14,29 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets import ContextAwareWidget
+from moksha.api.widgets.containers import DashboardContainer
+
 from moksha.api.connectors import get_connector
 
-class PackagesDashboardContainer(DashboardContainer, ContextAwareWidget):
-    template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
+class PeopleDashboardContainer(DashboardContainer, ContextAwareWidget):
+    template='mako:fedoracommunity.mokshaapps.people.templates.peoplecontainer'
 
     def update_params(self, d):
-        # get the package description
-        p = d.get('package')
-        conn = get_connector('pkgdb')
-        info = conn.get_basic_package_info(p)
+        # get the user details
+        user = d.get('username')
+        profile = d.get('profile')
+        conn = get_connector('fas')
+        person = conn.query_userinfo(filters={
+                'profile': profile,
+                'u': user
+                })[1]
 
-        if 'error_type' in info:
-            d['error'] = info['error']
-            d['error_type'] = info['error_type']
-            d['pkg_description'] = ''
-            d['pkg_summary'] = 'Unknown Package'
+        if 'error_type' in person:
+            d['error'] = person['error']
+            d['error_type'] = person['error_type']
+            d['human_name'] = 'Unknown User (%s)' % user
         else:
-            d['pkg_description'] = info['description']
-            d['pkg_summary'] = info['summary']
+            d['human_name'] = person[0]['human_name']
 
-        super(PackagesDashboardContainer, self).update_params(d)
+        super(PeopleDashboardContainer, self).update_params(d)
