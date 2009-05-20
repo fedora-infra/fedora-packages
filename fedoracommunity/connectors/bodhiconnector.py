@@ -234,10 +234,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
                 up['name'] = up['package_name']
 
-                # FIXME: Don't embed HTML, just send it as a list and have the
-                #        template handle it
-                up['versions'] = '<br/>'.join(versions)
-                up['releases'] = '<br/>'.join(releases)
+                up['versions'] = versions
+                up['releases'] = releases
                 up['status'] = up['dist_updates'][0]['status']
                 up['nvr'] = up['dist_updates'][0]['title']
             else:

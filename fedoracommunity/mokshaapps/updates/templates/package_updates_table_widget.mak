@@ -15,7 +15,7 @@
                 </td>
                 <td>@{date_pushed}</td>
                 <td>@{status}
-                    <div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</a></div>
+                    <div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}" moksha_url="dynamic"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</a></div>
                 </td>
                 <td>
                   @{package_update_action}
@@ -25,7 +25,7 @@
     </table>
     <div id="grid-controls">
         <div class="message template" id="info_display" >
-           Viewing @{visible_rows} of @{total_rows} updates 
+           Viewing @{visible_rows} of @{total_rows} updates
         </div>
         <div class="pager" id="pager" type="numeric" ></div>
         <div class="pager template" id="pager" type="more_link">
