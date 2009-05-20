@@ -19,6 +19,8 @@ from tg import url
 from pylons import request
 import paste
 
+architectures = ('i386', 'x86_64', 'ppc', 'ppc64', 'noarch')
+
 def fullurl(path):
     h = url(path)
     h = paste.request.resolve_relative_url(h, request.environ)

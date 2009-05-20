@@ -25,6 +25,7 @@ from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, defaultdict
 from moksha.api.connectors import get_connector
 from helpers import PackagesDashboardContainer
+from fedoracommunity.lib.utils import architectures
 
 log = logging.getLogger(__name__)
 
@@ -61,8 +62,9 @@ source_dashboard = SourceDashboard('source_dashboard')
 class DownloadsWidget(Widget):
     template = "mako:fedoracommunity.mokshaapps.packages.templates.downloads_widget"
     params = ['id', 'package', 'release', 'latest_spec', 'latest_srpm',
-              'arches', 'releases']
+              'arches', 'releases', 'architectures']
     children = [ReleaseDownloadsFilter('releases')]
+    architectures = architectures
 
     def update_params(self, d):
         super(DownloadsWidget, self).update_params(d)

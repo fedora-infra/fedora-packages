@@ -31,7 +31,7 @@ ${c.releases(options=releases, value=release)}
         <th>Architecture</th>
         <th>Downloads</th>
       </tr>
-      % for arch in sorted(arches):
+        % for arch in [arch for arch in architectures if arches[arch]]:
           <tr>
             <td>${arch}</td>
             <td>
