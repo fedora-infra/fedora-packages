@@ -146,6 +146,7 @@ overview_updates_app = MokshaApp('Overview',
 dashboard_updates_app = MokshaApp('Updates Dashboard',
                                   'fedoracommunity.updates/dashboard',
                                   params={
+                                      'profile': True,
                                       'username': '',
                                       })
 
@@ -316,9 +317,11 @@ class RootController(Controller):
         return dict(options=options, title = title)
 
     @expose('mako:moksha.templates.widget')
-    def dashboard(self, *args, **kw):
+    @validate(validators={'profile': validators.StringBool()})
+    def dashboard(self, profile=False, **kw):
         options = {}
         tmpl_context.widget = updates_dashboard_widget
-        if request.identity:
-            options['username'] = request.identity['person']['username']
+        if profile:
+            if request.identity:
+                options['username'] = request.identity['person']['username']
         return dict(options=options)
