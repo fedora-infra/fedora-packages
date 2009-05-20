@@ -12,6 +12,15 @@
           </div>
         </form>
     </div>
+    <script type="text/javascript">
+        function _render_br_list(list) {
+            result = list
+            if (typeof(list) != 'string' && list.join)
+                result = list.join('<br />');
+
+            return result;
+        }
+    </script>
     <table id="${id}">
         <thead>
             <tr>
@@ -24,10 +33,10 @@
             <tr>
                 <td>
                     ${c.update_hover_menu()}
-                    <div>@{versions}&nbsp;</div>
+                    <div>@{versions:filter(_render_br_list)}&nbsp;</div>
                 </td>
                 <td>@{date_pushed}</td>
-                <td>@{releases}</td>
+                <td><br/>@{releases:filter(_render_br_list)}</td>
             </tr>
         </tbody>
     </table>

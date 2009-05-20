@@ -1,7 +1,7 @@
   <div id="menu_@{request_id}" class="menu" panel="menu_panel_@{request_id}">
     % if show_package:
       <span class="package-name">
-        <a href="/package_maintenance/tools/updates?package=@{name}">@{name}</a>&nbsp;
+        <a href="/package_maintenance/tools/updates?package=@{name}" moksha_url="dynamic">@{name}</a>&nbsp;
       </span>
     % elif show_version:
       <span class="version">
