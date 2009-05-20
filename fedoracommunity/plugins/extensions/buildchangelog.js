@@ -33,10 +33,9 @@
                   '
   },
   run: function (data) {
-    var $changelog_container = $('<li />').addClass('changelog');
-
     var render = function(json)
       {
+          var $changelog_container = $('#' + data.uid);
           $changelog_container.append(json.date + ' ' + json.author + '<br/>');
           var v= json.text.split('\n');
           for (i in v) {
@@ -44,12 +43,9 @@
 
               $changelog_container.append(line + "<br/>");
           }
-
-          $('#' + data.uid).append($changelog_container);
       }
 
     var $menu = $('#' + data.menu_id)
-    var $container = $('<div />');
     var on_show_load_changelog = function() {
         var params = {'build_id': data.build_id,
                       'task_id': data.task_id,
@@ -67,6 +63,6 @@
 
     $menu.bind('show.changelog', on_show_load_changelog);
 
-    return($container);
+    return('');
   }
  }
