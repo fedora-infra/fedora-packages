@@ -598,9 +598,13 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
             if name == 'Fedora':
                 version = collection['version']
                 if version == 'devel':
-                    version = ''
-                    name = 'Rawhide'
-
+                    # Assume there is always rawhide...
+                    #version = ''
+                    #name = 'Rawhide'
+                    continue
                 releases.append((collection['koji_name'], '%s %s' % (
-                    name, version)))
+                        name, version)))
+        releases.sort(cmp=lambda x, y: cmp(int(x[1].split()[-1]),
+                                           int(y[1].split()[-1])), reverse=True)
+        releases = [('dist-rawhide', 'Rawhide')] + releases
         return releases
