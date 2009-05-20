@@ -23,6 +23,11 @@ from moksha.api.widgets import ContextAwareWidget, Grid
 from helpers import PackagesDashboardContainer
 from moksha.api.connectors import get_connector
 
+class OwnersGrid(Grid, ContextAwareWidget):
+    template='mako:fedoracommunity.mokshaapps.packages.templates.owners_table_widget'
+    resource = 'pkgdb'
+    resource_path ='owners'
+
 class AclsGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.acls_table_widget'
     resource = 'pkgdb'
@@ -51,6 +56,7 @@ class AclsGrid(Grid, ContextAwareWidget):
         super(AclsGrid, self).update_params(d)
 
 acls_grid = AclsGrid('acls_grid')
+owners_grid = OwnersGrid('acls_grid')
 
 class AclsDashboard(PackagesDashboardContainer):
     template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
@@ -74,7 +80,20 @@ class AclsDashboard(PackagesDashboardContainer):
                       )
              ]
 
+class OwnersDashboard(PackagesDashboardContainer):
+    template = 'mako:fedoracommunity.mokshaapps.packages.templates.single_col_dashboard'
+    layout = Category('content-col-apps',(Widget('Owners', owners_grid,
+                                                 params={'rows_per_page': 999999,
+                                                         'filters': {'package': ''
+                                                                    }
+                                                        }
+                                                 )
+                                            )
+                     )
+
+
 acls_dashboard = AclsDashboard('acl_dashboard')
+owners_dashboard = OwnersDashboard('owners_dashboard')
 
 class AclsController(Controller):
     @expose('mako:moksha.templates.widget')
@@ -84,3 +103,8 @@ class AclsController(Controller):
 
         tmpl_context.widget = acls_dashboard
         return {'options':{'package': package, 'roles': roles}}
+
+    @expose('mako:moksha.templates.widget')
+    def owners(self, package):
+        tmpl_context.widget = owners_dashboard
+        return {'options':{'package': package}}
