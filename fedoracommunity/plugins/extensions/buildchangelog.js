@@ -16,12 +16,12 @@
 
 {
   info: {
-    consumes:['build_message'],
+    consumes:['build_menu'],
     author: 'John (J5) Palmieri <johnp@redhat.com>',
     version: '0.1',
     name: 'Build Changelog Message',
     summary: 'Displays a link to get the latest changelog for this build',
-    description: 'Displays a link that when clicked will show the latest \
+    description: 'Displays a link that when focused will show the latest \
                   changelog for the task_id \
                   Required Extension Point Data: \
                   \
@@ -36,17 +36,17 @@
     var $link = $('<a href="javascript:void(0)" ></a>');
     var $changelog_container = $('<div />').addClass('changelog').hide();
 
-    var on_click_show_changelog = null; // Forward decleration
+    var on_focus_show_changelog = null; // Forward decleration
 
-    var on_click_hide_changelog = function() {
+    var on_focus_hide_changelog = function() {
         $changelog_container.hide();
-        $link.unbind('click').bind('click', on_click_show_changelog);
+        $link.unbind('focus').bind('focus', on_focus_show_changelog);
         $link.html('<strong>View last changelog</strong> <img src="/images/arrow_down.png">');
     }
 
-    on_click_show_changelog = function() {
+    on_focus_show_changelog = function() {
         $changelog_container.show()
-        $link.unbind('click').bind('click', on_click_hide_changelog);
+        $link.unbind('focus').bind('focus', on_focus_hide_changelog);
         $link.html('<strong>Hide last changelog</strong> <img src="/images/arrow_up.png">');
     }
 
@@ -63,13 +63,13 @@
           }
 
           $changelog_container.append(ul);
-          on_click_show_changelog();
+          on_focus_show_changelog();
       }
 
     var $container = $('<div />');
     $container.append($changelog_container).append($link);
 
-    var on_click_load_changelog = function() {
+    var on_focus_load_changelog = function() {
         var params = {'build_id': data.build_id,
                       'task_id': data.task_id,
                       'state': data.build_state}
@@ -84,7 +84,7 @@
 
 
 
-    $link.click(on_click_load_changelog);
+    $link.focus(on_focus_load_changelog);
     $link.html('<strong>View last changelog</strong> <img src="/images/arrow_down.png">');
     return($container);
   }

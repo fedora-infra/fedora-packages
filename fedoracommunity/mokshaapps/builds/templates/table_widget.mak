@@ -41,6 +41,21 @@
                             </span>
                             <br/>@{version}-@{release}&nbsp;
                             <div id="menu_panel_@{build_id}" class="menu_panel" >
+			    	<div
+                            	id="message_@{build_id}"
+                            	class="message_row">
+                            	<moksha_extpoint>
+                            	{
+                            	    'type': 'build_menu',
+                            	    'placeholder_id': 'message_@{build_id}',
+                               	    'build_id': '@{build_id}',
+                               	    'task_id': '@{task_id}',
+                                    'build_state': @{state},
+                                    'show_effect': 'slideDown(\"slow\")'
+                            	}
+                            	</moksha_extpoint>
+                             </div>
+
                             <h4>Quick Links for <strong>@{package_name}</strong>:</h4>
                             <ul>
                                <li><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=@{build_id}"><img src="/images/16_koji.png"/><span>Go to this <strong>build</strong> in Koji</span><img src="/images/16_offsite-link.png"/></a></li>
