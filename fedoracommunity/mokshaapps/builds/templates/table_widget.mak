@@ -41,23 +41,8 @@
                             </span>
                             <br/>@{version}-@{release}&nbsp;
                             <div id="menu_panel_@{build_id}" class="menu_panel" >
-			    	<div
-                            	id="message_@{build_id}"
-                            	class="message_row">
-                            	<moksha_extpoint>
-                            	{
-                            	    'type': 'build_menu',
-                            	    'placeholder_id': 'message_@{build_id}',
-                               	    'build_id': '@{build_id}',
-                               	    'task_id': '@{task_id}',
-                                    'build_state': @{state},
-                                    'show_effect': 'slideDown(\"slow\")'
-                            	}
-                            	</moksha_extpoint>
-                             </div>
-
                             <h4>Quick Links for <strong>@{package_name}</strong>:</h4>
-                            <ul>
+                            <ul id='items_@{build_id}'>
                                <li><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=@{build_id}"><img src="/images/16_koji.png"/><span>Go to this <strong>build</strong> in Koji</span><img src="/images/16_offsite-link.png"/></a></li>
                                <li><a href="https://admin.fedoraproject.org/updates/@{package_name}"><img src="/images/16_bodhi.png"/><span>Go to @{package_name} <strong>updates</strong> in Bodhi</span><img src="/images/16_offsite-link.png"/></a></li>
                                <li><a href="https://admin.fedoraproject.org/pkgdb/packages/name/@{package_name}"><img src="/images/16_pkgdb.png"/><span>Go to @{package_name} <strong>package info</strong> in PackageDB</span><img src="/images/16_offsite-link.png"/></a></li>
@@ -73,6 +58,17 @@
                                 'build_id': '@{build_id}',
                                 'show_effect': 'slideDown(\"slow\")'
                             }
+                          </moksha_extpoint>
+                          <moksha_extpoint>
+                                {
+                                    'type': 'build_menu',
+                                    'placeholder_id': 'items_@{build_id}',
+                                    'menu_id': 'menu_@{build_id}',
+                                    'build_id': '@{build_id}',
+                                    'task_id': '@{task_id}',
+                                    'build_state': @{state},
+                                    'show_effect': 'slideDown(\"slow\")'
+                                }
                           </moksha_extpoint>
                         </td>
 
