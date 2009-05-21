@@ -26,9 +26,6 @@
   <div id="wrapper">
    ${header()}
    <div id="main_app">
-        % if flash.message:
-        ${flash.message}
-        % endif
      <div id="main_nav">
          <div id="app-sidebar">
            <div id="navigation_sidebar" class="nav">
@@ -36,6 +33,11 @@
          </div>
          <div id="content">
            <div class="left-content-column">
+           <div class="login-error-message">
+        % if flash.message:
+        <img src="/images/16_failured.png" alt="" />&nbsp; ${flash.message}
+        % endif
+           </div>
              <div id="banner-header" class="login-banner">
              <div id="login-box">
                ${tmpl_context.widget(**options)}
