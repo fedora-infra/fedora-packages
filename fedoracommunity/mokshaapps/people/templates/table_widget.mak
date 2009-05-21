@@ -1,7 +1,7 @@
 
     <div class="list header-list">
         <div id="grid-controls">
-            <div class="pager" id="pager" type="alpha" ></div>
+            <div class="alpha-pager pager" id="pager" type="alpha" ></div>
         </div>
         <table id="${id}">
             <thead>

@@ -991,6 +991,10 @@ h1#greeter img {
   height: 22px;
 }
 
+.alpha-pager {
+  float: none !important;
+}
+
 #left-content-column .list {
   margin-bottom: 3em !important;
 }
