@@ -78,20 +78,23 @@ packages_owned_app = MokshaApp('Packages Owned',
                                'fedoracommunity.packages/userpackages_table',
                                params={'filters':{'username': '',
                                                   'owner': True,
-                                                  'eol': False}})
+                                                  'eol': False},
+                                       'rows_per_page': 25})
 
 packages_maintained_app = MokshaApp('Packages Maintained',
                                'fedoracommunity.packages/userpackages_table',
                                params={'filters':{'approveacls': True,
                                                   'commit': True,
                                                   'username': '',
-                                                  'eol': False}})
+                                                  'eol': False},
+                                       'rows_per_page': 25})
 packages_watched_app = MokshaApp('Packages Watched',
                                'fedoracommunity.packages/userpackages_table',
                                params={'filters':{'watchcommits': True,
                                                   'watchbugzilla': True,
                                                   'username': '',
-                                                  'eol': False}})
+                                                  'eol': False},
+                                       'rows_per_page': 25})
 
 
 class ProfileNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer):
