@@ -601,6 +601,22 @@ span.timestamp {
   margin: 0 !important;
 }
 
+div.login-error-message {
+  background-color: #F9dBdB;
+  margin-left: 1em;
+-moz-border-radius-bottomleft:12px;
+-moz-border-radius-bottomright:12px;
+-moz-border-radius-topleft:12px;
+-moz-border-radius-topright:12px;
+  padding: 1em;
+  margin-bottom: 1em;
+  color: #000;
+}
+div.login-error-message img {
+  margin-bottom: -4px !important;
+}
+
+
 .panel p,
 .panel .message {
   padding: 3px 12px !important;
