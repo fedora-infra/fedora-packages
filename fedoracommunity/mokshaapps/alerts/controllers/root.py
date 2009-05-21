@@ -198,10 +198,10 @@ class AlertsContainer(ContextAwareWidget):
                                                     username=userid,
                                                     after=today_start)
 
-        complete_builds['url'] = '/profile/builds/my_successful'
-        failed_builds['url'] = '/profile/builds/my_failed'
-        stable_updates['url'] = '/profile/updates/stable'
-        testing_updates['url'] = '/profile/updates/testing'
+        complete_builds['url'] = '/my_profile/builds/my_successful'
+        failed_builds['url'] = '/my_profile/builds/my_failed'
+        stable_updates['url'] = '/my_profile/updates/stable'
+        testing_updates['url'] = '/my_profile/updates/testing'
         stable_updates['icon'] = testing_updates['icon'] = '16_bodhi.png'
 
         results.append(complete_builds)
@@ -233,10 +233,10 @@ class AlertsContainer(ContextAwareWidget):
                                                     before=a_day_ago,
                                                     after=week_start)
 
-        complete_builds['url'] = '/profile/builds/my_successful'
-        failed_builds['url'] = '/profile/builds/my_failed'
-        stable_updates['url'] = '/profile/updates/stable'
-        testing_updates['url'] = '/profile/updates/testing'
+        complete_builds['url'] = '/my_profile/builds/my_successful'
+        failed_builds['url'] = '/my_profile/builds/my_failed'
+        stable_updates['url'] = '/my_profile/updates/stable'
+        testing_updates['url'] = '/my_profile/updates/testing'
         stable_updates['icon'] = testing_updates['icon'] = '16_bodhi.png'
 
         results.append(complete_builds)
