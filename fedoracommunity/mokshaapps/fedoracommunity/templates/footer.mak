@@ -3,7 +3,7 @@
         <div id="bottom">
             <div id="footer">
                 <p class="copy">
-                    Copyright &copy; 2008-2009 Red Hat, Inc. and others.  All Rights Reserved
+                    Copyright &copy; 2008-2009 Red Hat, Inc. and others.
                 </p>
                 <p class="disclaimer">
                     The Fedora Project is maintained and driven by the community and sponsored by Red Hat.  This is a community maintained site.  Red Hat is not responsible for content.
