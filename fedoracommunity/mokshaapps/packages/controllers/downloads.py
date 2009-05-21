@@ -32,7 +32,7 @@ log = logging.getLogger(__name__)
 class ReleaseDownloadsFilter(SingleSelectField):
     options = []
     attrs = {'onchange': """
-        moksha.html_load(moksha.url('/apps/fedoracommunity.packages/package/downloads/downloads'), {'package': package_name, 'release': $('#downloads_widget_releases').val()}, function(r) {
+        moksha.html_load(moksha.url('/apps/fedoracommunity.packages/package/downloads/downloads_table'), {'package': package_name, 'release': $('#downloads_widget_releases').val()}, function(r) {
                     var $stripped = moksha.filter_resources(r);
                     $('div.package_downloads').html($stripped);
             }, $("#" + uid + " .overlay"));"""}
@@ -41,7 +41,7 @@ class ReleaseDownloadsFilter(SingleSelectField):
 class DownloadsDashboard(PackagesDashboardContainer):
     layout = [Category('content-col-apps',[
                 MokshaApp(None,
-                    'fedoracommunity.packages/package/downloads/downloads',
+                    'fedoracommunity.packages/package/downloads/downloads_table',
                     params={'package': '', 'release': 'dist-rawhide'},
                     css_class='package_downloads'),
                 ])]
@@ -52,7 +52,7 @@ downloads_dashboard = DownloadsDashboard('downloads_dashboard')
 class SourceDashboard(PackagesDashboardContainer):
     layout = [Category('content-col-apps',[
                 MokshaApp(None,
-                     'fedoracommunity.packages/package/downloads/source',
+                     'fedoracommunity.packages/package/downloads/source_table',
                      params={'package': ''}),
                 ])]
 
@@ -170,11 +170,16 @@ class DownloadsController(Controller):
         return dict(options={'package': package})
 
     @expose('mako:moksha.templates.widget')
-    def downloads(self, package, release, *args, **kw):
+    def source(self, package):
+        tmpl_context.widget = source_dashboard
+        return dict(options={'package': package})
+
+    @expose('mako:moksha.templates.widget')
+    def downloads_table(self, package, release, *args, **kw):
         tmpl_context.widget = downloads_widget
         return dict(options={'package': package, 'release': release})
 
     @expose('mako:moksha.templates.widget')
-    def source(self, package, *args, **kw):
+    def source_table(self, package, *args, **kw):
         tmpl_context.widget = source_downloads_widget
         return dict(options={'package': package})
