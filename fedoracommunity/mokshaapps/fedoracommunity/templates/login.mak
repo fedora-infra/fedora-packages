@@ -33,11 +33,11 @@
          </div>
          <div id="content">
            <div class="left-content-column">
-           <div class="login-error-message">
         % if flash.message:
+           <div class="login-error-message">
         <img src="/images/16_failured.png" alt="" />&nbsp; ${flash.message}
-        % endif
            </div>
+        % endif
              <div id="banner-header" class="login-banner">
              <div id="login-box">
                ${tmpl_context.widget(**options)}
