@@ -500,6 +500,31 @@ span.more-items {
   display: table-cell;
 }
 
+/* special style for state column of builds table to look nicer */
+
+.list table td.state {
+  color: #999;
+  font-size: .8em !important;
+}
+
+/* special style for hover menu of builds */
+
+div.ui-moksha-popup h4 {
+  padding-top: .5em;
+}
+
+div.ui-moksha-popup-panel .message {
+  padding-bottom: 20px;
+}
+
+/* special style for builds table to highlight failed builds in red */
+
+.list tr.failed-build {
+  background-color: #f9ebeb !important;
+}
+
+
+
 /* for cells in a table row that has an additional colspan message row beneath. this is for those cells that span one row rather than two.
 td.one-row {
   border-bottom: none !important;
