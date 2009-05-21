@@ -5,6 +5,7 @@ div#head h1 a {
 
 .login-banner img {
 	float: right; 
-	padding-top: 20px; 
-	padding-right: 64px;
+	padding-top: 9px; 
+	padding-right: 5px;
+        padding-left: 5px;
 }
