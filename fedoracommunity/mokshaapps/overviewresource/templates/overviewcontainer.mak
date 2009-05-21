@@ -7,7 +7,9 @@
        <div id="left-content-column">
          % if tmpl_context.auth('Not(not_anonymous())'):
          <div id="banner-header">
-           <img width="600" src="${tmpl_context.get_url('/images/fedora_intro_banner1.png')}" />
+<a href="/pages/tour">
+<img src="${tmpl_context.get_url('/images/banners/main-banner_tour-promo.png')}"/>
+</a>
          </div>
 
          <h2>Welcome to Fedora Community!</h2>
