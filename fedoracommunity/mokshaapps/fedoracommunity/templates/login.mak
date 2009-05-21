@@ -39,6 +39,7 @@
            </div>
         % endif
              <div id="banner-header" class="login-banner">
+             <a href="/tour"><img src="/images/banners/paintain.png" alt="" /></a>
              <div id="login-box">
                ${tmpl_context.widget(**options)}
              </div>
