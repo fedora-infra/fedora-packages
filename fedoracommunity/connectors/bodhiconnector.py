@@ -559,6 +559,30 @@ class BodhiConnector(IConnector, ICall, IQuery):
         pkgdb = get_connector('pkgdb')
         koji = get_connector('koji')._koji_client
 
+        # TODO:
+        # Multicall attempt...
+        #koji.multicall = True
+        #for release in pkgdb.get_fedora_releases():
+        #    tag = release[0]
+        #    name = release[1]
+        #    releases.append({'release': name, 'stable_version': 'None',
+        #                     'testing_version': 'None' })
+        #    if tag == 'dist-rawhide':
+        #        koji.listTagged(tag, package=package, latest=True, inherit=True)
+        #    else:
+        #        koji.listTagged(tag + '-updates', package=package,
+        #                        latest=True, inherit=True)
+        #        koji.listTagged(tag + '-updates-testing', package=package, latest=True)
+
+        #results = koji.multiCall()
+
+        # Ok, parsing this result is going to be fun...
+        #for i, release in enumerate(releases):
+        #    release = results[i][0]
+        #    if len(release):
+        #        build = release[0]
+        #        print build['nvr']
+
         for release in pkgdb.get_fedora_releases():
             tag = release[0]
             name = release[1]
