@@ -135,6 +135,21 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         return dict(results=results)
 
+    def _is_security_bug(self, bug):
+        security = False
+        if bug.assigned_to == 'security-response-team@redhat.com':
+            security = True
+        elif bug.component == 'vulnerability':
+            security = True
+        elif 'Security' in bug.keywords:
+            security = True
+        elif bug.alias:
+            for alias in bug.alias:
+                if alias.startswith('CVE'):
+                    security = True
+                    break
+        return security
+
     def query_bugs(self, start_row=None, rows_per_page=10, order=-1,
                    sort_col='number', filters=None, **params):
         if not filters:
@@ -159,12 +174,16 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         for bug in bugs:
             modified = datetime(*time.strptime(str(bug.last_change_time),
                                                '%Y%m%dT%H:%M:%S')[:-2])
+            bug_class = ''
+            if self._is_security_bug(bug):
+                bug_class += 'security-bug '
             bugs_list.append({
                 'id': bug.bug_id,
                 'status': bug.bug_status.title(),
                 'description': bug.summary,
                 'last_modified': DateTimeDisplay(modified).when(0)['when'],
                 'release': '%s %s' % (collection, bug.version),
+                'bug_class': bug_class.strip(),
                 })
 
         return (total_count, bugs_list)

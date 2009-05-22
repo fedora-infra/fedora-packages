@@ -21,7 +21,7 @@
           <th>Release</th>
         </thead>
         <tbody class="rowtemplate">
-                <tr>
+                <tr class="@{bug_class}">
                     <td>
                         <a href="https://bugzilla.redhat.com/show_bug.cgi?id=@{id}" target="_blank">@{id}</a>
                     </td>
