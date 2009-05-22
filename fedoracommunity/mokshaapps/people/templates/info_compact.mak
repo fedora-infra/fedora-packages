@@ -32,10 +32,10 @@
 
       <div class="col right_col">
         <div class="info_contact info_container">
-          % if person.get('ircnick'):
+          % if person.get('ircnick') and not person.get('privacy'):
           <p><img src="/images/16_chat.png" /> ${person['ircnick']} <br /><em class="note">irc.freenode.net</em></p>
           % endif
-          % if person.get('email'):
+          % if person.get('email') and not person.get('privacy'):
               <p><img src="/images/16_mail.png" /> <a href="mailto:${person['email']}">${person['email']}</a></p>
           % endif
         </div>
