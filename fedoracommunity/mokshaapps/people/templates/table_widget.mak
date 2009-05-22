@@ -25,7 +25,7 @@
         </table>
         <div id="grid-controls">
             <div class="message template" id="info_display" >
-               Viewing @{visible_rows} of @{total_rows} people
+               Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} people
             </div>
             <div class="pager" id="pager" type="numeric" ></div>
         </div>

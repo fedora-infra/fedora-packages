@@ -59,7 +59,7 @@
                         	        'build_id': '@{build_id}',
                         	        'show_effect': 'slideDown(\"slow\")'
                         	    }
-                        	</moksha_extpoint>  
+                        	</moksha_extpoint>
 				<moksha_extpoint>
                                 {
                                     'type': 'build_menu',
@@ -122,12 +122,12 @@
             </div>
 
             <div class="pager template" id="pager" type="more_link">
-               <a href="@{more_link}" moksha_url="dynamic">View builds &gt;</a>
+               <a href="@{more_link}" moksha_url="dynamic">Goto builds &gt;</a>
             </div>
         </div>
         <div id="grid-controls" if="visible_rows < total_rows">
             <div class="message template" id="info_display" >
-               Viewing @{visible_rows} of @{total_rows} builds
+               Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} builds
             </div>
             <div class="pager" id="pager" type="numeric" ></div>
             <div class="pager template" id="pager" type="more_link">

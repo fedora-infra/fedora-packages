@@ -47,9 +47,22 @@
             </tr>
         </tbody>
     </table>
-    <div id="grid-controls">
+    <div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
         <div class="message template" id="info_display" >
-           Viewing @{visible_rows} of @{total_rows} updates
+           There are no testing updates
+        </div>
+    </div>
+    <div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
+        <div class="message template" id="info_display" >
+           Viewing all @{total_rows} testing updates
+        </div>
+        <div class="pager template" id="pager" type="more_link">
+           <a href="@{more_link}" moksha_url="dynamic">Goto testing updates &gt;</a>
+        </div>
+    </div>
+    <div id="grid-controls" if="visible_rows < total_rows && total_rows != 0">
+        <div class="message template" id="info_display" >
+           Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} testing updates
         </div>
         <div class="pager" id="pager" type="numeric" ></div>
         <div class="pager template" id="pager" type="more_link">
