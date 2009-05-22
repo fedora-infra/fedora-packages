@@ -13,12 +13,12 @@
                 <td>
                   ${c.update_hover_menu(show_package=False, show_version=True)}
                 </td>
-                <td>@{date_pushed}</td>
+                <td>@{date_pushed_display}</td>
                 <td>@{status}
                     <div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}" moksha_url="dynamic"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</a></div>
                 </td>
                 <td>
-                  @{package_update_action}
+                  @{details}
                 </td>
             </tr>
         </tbody>
