@@ -163,14 +163,26 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
                 'order': 'bug_id',
                 }
+        bugzilla_cache = cache.get_cache('bugzilla')
+        bugs = bugzilla_cache.get_value(key=str(query), expiretime=900,
+                createfunc=lambda: self._query_bugs(
+                    query, filters=filters, collection=collection, **params))
+        total_count = len(bugs)
+        bugs = bugs[start_row:start_row+rows_per_page]
+        bugs = self.get_bugs(bugs, collection=collection)
+        return (total_count, bugs)
+
+    def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
+                   sort_col='number', filters=None, collection='Fedora',
+                   **params):
         results = self._bugzilla.query(query)
         results.reverse()
         total_count = len(results)
-        bugids = [bug.bug_id for bug in results][start_row:start_row+rows_per_page]
+        return [bug.bug_id for bug in results]
+
+    def get_bugs(self, bugids, collection='Fedora'):
         bugs = self._bugzilla.getbugs(bugids)
-
         bugs_list = []
-
         for bug in bugs:
             modified = DateTimeDisplay(str(bug.last_change_time),
                                        format='%Y%m%dT%H:%M:%S')
@@ -185,5 +197,4 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'release': '%s %s' % (collection, bug.version),
                 'bug_class': bug_class.strip(),
                 })
-
-        return (total_count, bugs_list)
+        return bugs_list
