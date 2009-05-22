@@ -41,7 +41,6 @@ from fedoracommunity.mokshaapps.updates.controllers.root import (
     overview_updates_app)
 
 class PeopleBuildsOverviewContainer(PeopleDashboardContainer):
-
     layout = [Category('group-1-apps',
                         (in_progress_builds_app.clone({'rows_per_page': 5,
                                                        'more_link_code': people_builds_links.IN_PROGRESS.code}),
@@ -57,7 +56,6 @@ class PeopleBuildsOverviewContainer(PeopleDashboardContainer):
 people_builds_overview_container = PeopleBuildsOverviewContainer('people_builds_overview')
 
 class ProfileBuildsOverviewContainer(PeopleDashboardContainer):
-
     layout = [Category('group-1-apps',
                         (in_progress_builds_app.clone({'rows_per_page': 5,
                                                        'more_link_code': profile_builds_links.IN_PROGRESS.code}),
