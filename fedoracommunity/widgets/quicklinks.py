@@ -23,7 +23,7 @@ class QuickLinksWidget(Selectable):
               'view_profile'),
              ('Package Maintenance',
               'View my packages',
-              '/my_profile/packages_maintenance',
+              '/my_profile/package_maintenance',
               'view_my_packages'),
              ('Package Maintenance',
               'View my builds',
