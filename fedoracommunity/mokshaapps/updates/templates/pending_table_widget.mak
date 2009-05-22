@@ -25,8 +25,8 @@
         <thead>
             <tr>
                 <th><a href="#nvr">Package</a></th>
-                <th>Age</th>
                 <th>Release(s)</th>
+                <th>Age</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -36,8 +36,9 @@
                     ${c.update_hover_menu()}
                     <div>@{versions:filter(_render_br_list)}&nbsp;</div>
                 </td>
-                <td>@{date_submitted_display}</td>
                 <td><br/>@{releases:filter(_render_br_list)}</td>
+                <td>@{date_submitted_display}</td>
+
                 <td>@{actions}</td>
             </tr>
         </tbody>

@@ -25,8 +25,8 @@
         <thead>
             <tr>
                 <th><a href="#nvr">Package</a></th>
-                <th>Date Pushed to Stable</th>
                 <th>Release(s)</th>
+                <th>Date Pushed to Stable</th>
             </tr>
         </thead>
         <tbody class="rowtemplate">
@@ -35,8 +35,9 @@
                     ${c.update_hover_menu()}
                     <div>@{versions:filter(_render_br_list)}&nbsp;</div>
                 </td>
-                <td>@{date_pushed}</td>
                 <td><br/>@{releases:filter(_render_br_list)}</td>
+                <td>@{date_pushed}</td>
+
             </tr>
         </tbody>
     </table>

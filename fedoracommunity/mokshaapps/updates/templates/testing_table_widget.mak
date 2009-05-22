@@ -25,8 +25,8 @@
         <thead>
             <tr>
                 <th><a href="#nvr">Package</a></th>
-                <th>Age</th>
                 <th>Release(s)</th>
+                <th>Age</th>
                 <th>Status</th>
                 <th>&nbsp;</th>
             </tr>
@@ -38,8 +38,8 @@
                     ${c.update_hover_menu()}
                     <div>@{versions:filter(_render_br_list)}&nbsp;</div>
                 </td>
-                <td>@{date_pushed_display}</td>
                 <td><br/>@{releases:filter(_render_br_list)}</td>
+                <td>@{date_pushed_display}</td>
                 <td><span>@{status}</span>
                 <div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</a></div>
                 </td>
