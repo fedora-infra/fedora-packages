@@ -165,11 +165,18 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 }
         bugzilla_cache = cache.get_cache('bugzilla')
         bugs = bugzilla_cache.get_value(key=str(query), expiretime=900,
-                createfunc=lambda: self._query_bugs(
-                    query, filters=filters, collection=collection, **params))
+                createfunc=lambda: self._query_bugs(query,
+                    filters=filters, collection=collection, **params))
         total_count = len(bugs)
+        five_pages = rows_per_page * 5
+        if start_row <= five_pages: # Cache the first 5 pages of every bug grid
+            bugs = bugs[:five_pages]
+            bugs = bugzilla_cache.get_value(key=str(query) + '_details',
+                    expiretime=900, createfunc=lambda: self.get_bugs(
+                        bugs, collection=collection))
         bugs = bugs[start_row:start_row+rows_per_page]
-        bugs = self.get_bugs(bugs, collection=collection)
+        if start_row > five_pages:
+            bugs = self.get_bugs(bugs, collection=collection)
         return (total_count, bugs)
 
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
@@ -177,7 +184,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                    **params):
         results = self._bugzilla.query(query)
         results.reverse()
-        total_count = len(results)
         return [bug.bug_id for bug in results]
 
     def get_bugs(self, bugids, collection='Fedora'):
