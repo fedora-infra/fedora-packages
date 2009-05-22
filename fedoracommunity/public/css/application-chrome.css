@@ -523,6 +523,17 @@ div.ui-moksha-popup-panel .message {
   background-color: #f9ebeb !important;
 }
 
+.list tr.security-update {
+  background-color: #ffeded !important;
+}
+
+.list tr.security-bug {
+  background-color: #ffeded !important;
+}
+
+.list tr.obsolete-update {
+  background-color: #f2f2f2 !important;
+}
 
 
 /* for cells in a table row that has an additional colspan message row beneath. this is for those cells that span one row rather than two.
