@@ -8,7 +8,7 @@
                 <tr>
                     <td>
                         <span class="group-name">
-                            <a href="https://admin.fedoraproject.org/accounts/group/view/@{name}">@{display_name}</a>
+                        <a href="https://admin.fedoraproject.org/accounts/group/view/@{name}">@{display_name} <img src="/images/16-fas.png"/></a>
                         </span>
                     </td>
                     <td>
