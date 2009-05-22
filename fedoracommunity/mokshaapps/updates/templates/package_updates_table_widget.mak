@@ -9,7 +9,7 @@
             </tr>
         </thead>
         <tbody class="rowtemplate">
-            <tr>
+            <tr class="@{status}-update @{type}-update">
                 <td>
                   ${c.update_hover_menu(show_package=False, show_version=True)}
                 </td>
