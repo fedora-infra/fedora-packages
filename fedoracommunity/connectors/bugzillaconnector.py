@@ -21,7 +21,7 @@ from pylons import config, cache
 from bugzilla import Bugzilla
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
-from moksha.connector.utils import DateTimeDisplay
+from moksha.lib.helpers import DateTimeDisplay
 
 class BugzillaConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -172,8 +172,8 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         bugs_list = []
 
         for bug in bugs:
-            modified = datetime(*time.strptime(str(bug.last_change_time),
-                                               '%Y%m%dT%H:%M:%S')[:-2])
+            modified = DateTimeDisplay(str(bug.last_change_time),
+                                       format='%Y%m%dT%H:%M:%S')
             bug_class = ''
             if self._is_security_bug(bug):
                 bug_class += 'security-bug '
@@ -181,7 +181,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'id': bug.bug_id,
                 'status': bug.bug_status.title(),
                 'description': bug.summary,
-                'last_modified': DateTimeDisplay(modified).when(0)['when'],
+                'last_modified': modified.age(),
                 'release': '%s %s' % (collection, bug.version),
                 'bug_class': bug_class.strip(),
                 })
