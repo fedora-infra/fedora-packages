@@ -309,12 +309,14 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
             granularity = filters.get('granularity', 'day')
             ds = DateTimeDisplay(date_submitted)
-            up['date_submitted_display'] = ds.age(granularity=granularity)
+            up['date_submitted_display'] = ds.age(granularity=granularity,
+                                                  general=True) + ' ago'
 
             if date_pushed:
                 dp = DateTimeDisplay(date_pushed)
                 up['date_pushed'] = dp.datetime.strftime('%d %b %Y')
-                up['date_pushed_display'] = dp.age(granularity=granularity)
+                up['date_pushed_display'] = dp.age(granularity=granularity,
+                                                   general=True) + ' ago'
 
             # karma
             # FIXME: take into account karma from both updates
