@@ -332,7 +332,28 @@ class BodhiConnector(IConnector, ICall, IQuery):
             if k < 0:
                 up['karma_level'] = 'bad'
 
+            up['details'] = self._get_update_details(up)
+
         return (total_count, updates_list)
+
+    def _get_update_details(self, update):
+        details = ''
+        if update['status'] == 'stable':
+            if update.get('updateid'):
+                details += HTML.tag('a', c=update['updateid'], href='%s/%s' % (
+                                    self._base_url, update['updateid']))
+            if update.get('date_pushed'):
+                details += HTML.tag('br') + update['date_pushed']
+            else:
+                details += 'In process...'
+        elif update['status'] == 'obsolete':
+            for comment in update['comments']:
+                if comment['author'] == 'bodhi':
+                    if comment['text'].startswith('This update has been obsoleted by '):
+                        details += 'Obsoleted by %s' % HTML.tag('a',
+                                href='%s/%s' % (self._base_url,update['title']),
+                                c=comment['text'].split()[-1])
+        return details
 
     def _get_update_actions(self, update):
         actions = []
