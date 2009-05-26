@@ -140,10 +140,14 @@ class ProfileNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer)
                     ),
 
            Category('Updates',
-                    (overview_updates_app.clone({'profile':True}),
-                     unpushed_updates_app.clone({'filters':{'profile':True}}),
-                     testing_updates_app.clone({'filters':{'profile':True}}),
-                     stable_updates_app.clone({'filters':{'profile':True}}))
+                    (overview_updates_app.clone({'profile':True,
+                                                 'title_level': 3}),
+                     unpushed_updates_app.clone({'filters':{'profile':True},
+                                                 'title_level': 3}),
+                     testing_updates_app.clone({'filters':{'profile':True},
+                                                'title_level': 3}),
+                     stable_updates_app.clone({'filters':{'profile':True},
+                                               'title_level': 3}))
                    )
           )
 
@@ -170,10 +174,14 @@ class PeopleNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer):
                     ),
 
            Category('Updates',
-                    (overview_updates_app.clone({'username':None}),
-                     unpushed_updates_app.clone({'filters':{'username':None}}),
-                     testing_updates_app.clone({'filters':{'username':None}}),
-                     stable_updates_app.clone({'filters':{'username':None}}))
+                    (overview_updates_app.clone({'username':None,
+                                                 'title_level': 3}),
+                     unpushed_updates_app.clone({'filters':{'username':None},
+                                                 'title_level': 3}),
+                     testing_updates_app.clone({'filters':{'username':None},
+                                                'title_level': 3}),
+                     stable_updates_app.clone({'filters':{'username':None},
+                                               'title_level': 3}))
                    )
           )
 

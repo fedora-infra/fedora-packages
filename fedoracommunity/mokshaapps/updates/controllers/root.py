@@ -242,16 +242,17 @@ class RootController(Controller):
 
     @expose('mako:moksha.templates.widget')
     @validate(validators={'profile': validators.StringBool()})
-    def overview(self, profile=False, username=None):
+    def overview(self, profile=False, username=None, title_level = 2):
         options = {'profile': profile,
-                   'username': username}
+                   'username': username,
+                   'title_level': str(title_level)}
         tmpl_context.widget = updates_overview_container
 
         return {'options':options}
 
     @expose('mako:fedoracommunity.mokshaapps.updates.templates.table_container')
     @validate(validators={'rows_per_page': validators.Int()})
-    def table(self, rows_per_page=5, filters=None, more_link_code=None, show_title = False):
+    def table(self, rows_per_page=5, filters=None, more_link_code=None, show_title = False, title_level = 2):
         ''' table handler
 
         This handler displays the main table by itself
@@ -314,7 +315,7 @@ class RootController(Controller):
         options = dict(filters=filters, rows_per_page=rows_per_page,
                        more_link=more_link, numericPager=numericPager)
 
-        return dict(options=options, title = title)
+        return dict(options=options, title = title, title_level = str(title_level))
 
     @expose('mako:moksha.templates.widget')
     @validate(validators={'profile': validators.StringBool()})
