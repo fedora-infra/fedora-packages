@@ -11,7 +11,7 @@
             </thead>
 
             <tbody class="rowtemplate">
-                    <tr class="@{state:filter(get_state_class)}">
+                    <tr>
                         <td class="one-row">
                           <div id="menu_@{build_id}" class="menu" panel="menu_panel_@{build_id}">
                             <span class="package-name">
@@ -62,7 +62,7 @@
                         </td>
                         % endif
                     </tr>
-                    <tr class="@{state:filter(get_state_class)}">
+                    <tr>
                         <td colspan="6"
                             id="message_@{build_id}"
                             class="message_row">
