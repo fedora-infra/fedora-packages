@@ -230,7 +230,8 @@ class RootController(Controller):
               filters=None,
               more_link_code=None,
               show_owner_filter=False,
-              show_title=False):
+              show_title=False,
+              title_level=2):
         ''' table handler
 
         This handler displays the main table by itself
@@ -291,7 +292,8 @@ class RootController(Controller):
                            'numericPager': numericPager,
                            'show_owner_filter': show_owner_filter,
                            'table_class': table_class},
-                'title': title
+                'title': title,
+                'title_level': str(title_level)
                }
 
     @expose('mako:fedoracommunity.mokshaapps.builds.templates.table_container')
@@ -300,13 +302,15 @@ class RootController(Controller):
               filters=None,
               more_link_code=None,
               show_owner_filter=False,
-              show_title=False):
+              show_title=False,
+              title_level=2):
 
         d = self.table(rows_per_page,
                        filters,
                        more_link_code,
                        show_owner_filter,
-                       show_title)
+                       show_title,
+                       title_level)
 
         tmpl_context.widget = inprogress_builds_grid
 
@@ -318,13 +322,15 @@ class RootController(Controller):
               filters=None,
               more_link_code=None,
               show_owner_filter=False,
-              show_title=False):
+              show_title=False,
+              title_level=2):
 
         d = self.table(rows_per_page,
                        filters,
                        more_link_code,
                        show_owner_filter,
-                       show_title)
+                       show_title,
+                       title_level)
 
         tmpl_context.widget = failed_builds_grid
 
@@ -336,13 +342,15 @@ class RootController(Controller):
               filters=None,
               more_link_code=None,
               show_owner_filter=False,
-              show_title=False):
+              show_title=False,
+              title_level=2):
 
         d = self.table(rows_per_page,
                        filters,
                        more_link_code,
                        show_owner_filter,
-                       show_title)
+                       show_title,
+                       title_level)
 
         tmpl_context.widget = successful_builds_grid
 

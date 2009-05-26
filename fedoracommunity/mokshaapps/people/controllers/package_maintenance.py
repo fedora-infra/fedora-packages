@@ -40,31 +40,49 @@ from fedoracommunity.mokshaapps.updates.controllers.root import (
     stable_updates_app,
     overview_updates_app)
 
-class PeopleBuildsOverviewContainer(PeopleDashboardContainer):
+class PeopleBuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('group-1-apps',
                         (in_progress_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': people_builds_links.IN_PROGRESS.code}),
+                                                       'title_level': 3,
+                                                       'more_link_code': people_builds_links.IN_PROGRESS.code},
+                                                      label='',
+                                                      content_id='in_progress_builds'),
                         failed_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': people_builds_links.FAILED.code}))
+                                                 'title_level': 3,
+                                                 'more_link_code': people_builds_links.FAILED.code},
+                                                label='',
+                                                content_id='failed_builds'))
                       ),
               Category('group-2-apps',
                        successful_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': people_builds_links.SUCCESSFUL.code})
+                                                    'title_level': 3,
+                                                       'more_link_code': people_builds_links.SUCCESSFUL.code},
+                                                    label='',
+                                                    content_id='successful_builds')
                       )
              ]
 
 people_builds_overview_container = PeopleBuildsOverviewContainer('people_builds_overview')
 
-class ProfileBuildsOverviewContainer(PeopleDashboardContainer):
+class ProfileBuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('group-1-apps',
                         (in_progress_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': profile_builds_links.IN_PROGRESS.code}),
+                                                       'more_link_code': profile_builds_links.IN_PROGRESS.code,
+                                                       'title_level': 3},
+                                                      label='',
+                                                      content_id='in_progress_builds'),
                         failed_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': profile_builds_links.FAILED.code}))
+                                                 'more_link_code': profile_builds_links.FAILED.code,
+                                                 'title_level': 3},
+                                                label='',
+                                                content_id='failed_builds'))
                       ),
               Category('group-2-apps',
                        successful_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': profile_builds_links.SUCCESSFUL.code})
+                                                    'more_link_code': profile_builds_links.SUCCESSFUL.code,
+                                                    'title_level': 3},
+                                                   label='',
+                                                   content_id='successful')
                       )
              ]
 
@@ -116,9 +134,9 @@ class ProfileNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer)
                     ),
            Category('Builds',
                     (MokshaApp('Overview', 'fedoracommunity.people/packagemaint/builds_overview', params={'profile': True}, content_id='builds_overview'),
-                     in_progress_builds_app.clone({'filters':{'profile':True}}, content_id='builds_inprogress'),
-                     failed_builds_app.clone({'filters':{'profile':True}}, content_id='builds_failed'),
-                     successful_builds_app.clone({'filters':{'profile':True}}, content_id='builds_succeeded')),
+                     in_progress_builds_app.clone({'filters':{'profile':True}, 'title_level': 3}, content_id='builds_inprogress'),
+                     failed_builds_app.clone({'filters':{'profile':True}, 'title_level': 3}, content_id='builds_failed'),
+                     successful_builds_app.clone({'filters':{'profile':True}, 'title_level': 3}, content_id='builds_succeeded')),
                     ),
 
            Category('Updates',
@@ -146,9 +164,9 @@ class PeopleNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer):
                     ),
            Category('Builds',
                     (MokshaApp('Overview', 'fedoracommunity.people/packagemaint/builds_overview', params={'username': None}, content_id='builds_overview'),
-                     in_progress_builds_app.clone({'filters':{'username':None}}, content_id='builds_inprogress'),
-                     failed_builds_app.clone({'filters':{'username':None}}, content_id='builds_failed'),
-                     successful_builds_app.clone({'filters':{'username':None}}, content_id='builds_succeeded')),
+                     in_progress_builds_app.clone({'filters':{'username':None}, 'title_level': 3}, content_id='builds_inprogress'),
+                     failed_builds_app.clone({'filters':{'username':None}, 'title_level': 3}, content_id='builds_failed'),
+                     successful_builds_app.clone({'filters':{'username':None}, 'title_level': 3}, content_id='builds_succeeded')),
                     ),
 
            Category('Updates',

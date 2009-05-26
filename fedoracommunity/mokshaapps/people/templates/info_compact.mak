@@ -12,6 +12,7 @@
       <div class="col left_col">
         <div class="info_basic_details info_container">
             <h3>${person['username']}</h3>
+            % if not person.get('privacy'):
             <p><strong>Location:</strong> ${person['country_code']}</p>
             <div class="timezone">
                <img src="/images/16_clock.png" />
@@ -27,6 +28,7 @@
                   <span class="timezone_label">UTC</span>
                </p>
             </div>
+            % endif # privacy
         </div>
       </div>
 
