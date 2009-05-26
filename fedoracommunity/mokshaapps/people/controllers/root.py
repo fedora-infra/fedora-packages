@@ -70,10 +70,7 @@ class ProfileContainer(PeopleDashboardContainer):
 
 class UserContainer(PeopleDashboardContainer):
     layout = [Category('right-content-column-apps',
-                        (MokshaApp('', 'fedoracommunity.people/details',
-                                 params={'username':'',
-                                         'compact':True}),
-                         MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
+                        (MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
                                   params={'username':''}),
                          MokshaApp('Alerts', 'fedoracommunity.alerts'),
                          MokshaWidget('Tasks', 'fedoracommunity.quicklinks', auth=not_anonymous())),
@@ -81,7 +78,10 @@ class UserContainer(PeopleDashboardContainer):
                          css_class='right-content-column'
                         ),
               Category('left-content-column-apps',
-                       (MokshaApp('Group Memberships', 'fedoracommunity.people/memberships/table',
+                       (MokshaApp('', 'fedoracommunity.people/details',
+                                 params={'username':'',
+                                         'compact':True}),
+                        MokshaApp('Group Memberships', 'fedoracommunity.people/memberships/table',
                                  params={"rows_per_page": 5,
                                          "more_link_code": membership_links.MEMBERSHIPS.code,
                                          "filters":{"profile": False,

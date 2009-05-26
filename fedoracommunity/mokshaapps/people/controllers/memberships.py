@@ -66,7 +66,8 @@ class PeopleContainer(PeopleDashboardContainer):
                                   params={'username':''}),
                          MokshaApp('Alerts', 'fedoracommunity.alerts'),
                          MokshaWidget('Tasks', 'fedoracommunity.quicklinks', auth=not_anonymous())),
-                         default_child_css='app panel'
+                         default_child_css='app panel',
+                         css_class='right-content-column'
                         ),
               Category('left-content-column-apps',
                        (MokshaApp('', 'fedoracommunity.people/details',
@@ -85,7 +86,8 @@ class PeopleContainer(PeopleDashboardContainer):
                                                     "approved": False}
                                         }
                                  ),
-                        )
+                        ),
+                        css_class='left-content-column'
                        )]
 
 memberships_grid = UserMembershipsGrid('user_memberships')
