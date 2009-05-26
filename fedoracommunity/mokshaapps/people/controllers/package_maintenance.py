@@ -124,11 +124,13 @@ class ProfileNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer)
                                         'profile': True}),)
 
     tabs= (Category('Packages',
-                    (packages_owned_app.clone({'filters':{'profile': True}
+                    (packages_owned_app.clone({'filters':{'profile': True},
+                                               'title': 'Packages I Own'}),
+                     packages_maintained_app.clone({'filters':{'profile': True},
+                                                    'title': 'Packages I Maintain'
                                               }),
-                     packages_maintained_app.clone({'filters':{'profile': True}
-                                              }),
-                     packages_watched_app.clone({'filters':{'profile': True}
+                     packages_watched_app.clone({'filters':{'profile': True},
+                                                 'title': 'Packages I Watch'
                                               })
                      )
                     ),
@@ -161,9 +163,9 @@ class PeopleNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer):
                                         'username': None}),)
 
     tabs= (Category('Packages',
-                    (packages_owned_app,
-                     packages_maintained_app,
-                     packages_watched_app
+                    (packages_owned_app.clone({'title': 'Packages Owned'}),
+                     packages_maintained_app.clone({'title': 'Packages Maintained'}),
+                     packages_watched_app.clone({'title': 'Packages Watched'})
                      )
                     ),
            Category('Builds',
