@@ -5,9 +5,9 @@
                   moksha.update_title("User: ${username}", 2);
               </script>
           % endif
-          % if not profile:
-            <h2>${human_name}</h2>
-          % endif
+
+          <h2>${human_name}</h2>
+
           % if error:
             ${error}
       </div>
