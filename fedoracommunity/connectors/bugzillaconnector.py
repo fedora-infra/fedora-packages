@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2009  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -74,6 +74,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         f = ParamFilter()
         f.add_filter('package', [], allow_none=False)
+        f.add_filter('collection', [], allow_none=False)
         cls._query_bugs_filter = f
 
     def query_bug_stats(self, *args, **kw):
@@ -156,9 +157,16 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             filters = {}
         filters = self._query_bugs_filter.filter(filters, conn=self)
         collection = filters.get('collection', 'Fedora')
+        c_parse = collection.rsplit(' ', 1)
+        release = ''
+        if len(c_parse) > 1:
+            collection = c_parse[0]
+            release = c_parse[1]
+
         package = filters['package']
         query = {
                 'product': collection,
+                'version': release,
                 'component': package,
                 'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
                 'order': 'bug_id',

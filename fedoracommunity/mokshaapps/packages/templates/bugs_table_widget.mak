@@ -13,6 +13,19 @@
             return results.html();
         }
     </script>
+    <div id='grid-controls'>
+    <form>
+        <div id="filter" class="grid_filter" name="release_filter">
+            <label for="collection">Release:</label>
+            <select name="collection">
+                <option selected="selected" value="">All Dists</option>
+                % for (i, rel) in enumerate(release_table):
+                    <option value="${rel['value']}">${rel['label']}</option>
+                % endfor
+            </select>
+        </div>
+    </form>
+    </div>
     <table id="${id}">
         <thead>
           <th>Bug</th>

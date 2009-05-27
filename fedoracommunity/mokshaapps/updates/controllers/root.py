@@ -70,7 +70,7 @@ class UpdatesGrid(Grid):
             value = ""
             if koji_name:
                 value = koji_name.rsplit('-', 1)[1]
-            else: print name, ver
+
             if label != 'Fedora devel' and name =='Fedora':
                 releases.append({'label': label, 'value': value, 'version': ver})
 

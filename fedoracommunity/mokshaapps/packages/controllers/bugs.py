@@ -21,6 +21,7 @@ from moksha.lib.base import Controller
 from moksha.lib.helpers import Category
 from moksha.lib.helpers import Widget
 from moksha.api.widgets import Grid
+from moksha.api.connectors import get_connector
 
 from helpers import PackagesDashboardContainer
 
@@ -39,14 +40,41 @@ bug_stats_widget = BugStatsWidget('bug_stats')
 
 class BugsGrid(Grid):
     template='mako:fedoracommunity.mokshaapps.packages.templates.bugs_table_widget'
+    resource = 'bugzilla'
+    resource_path = 'query_bugs'
 
     def update_params(self, d):
-        d['resource'] = 'bugzilla'
-        d['resource_path'] = 'query_bugs'
+        pkgdb = get_connector('pkgdb')
+
+        collections = pkgdb.get_collection_table(active_only=True)
+        releases = []
+        for id, collection in collections.items():
+            name = collection['name']
+            ver = collection['version']
+            label = "%s %s" % (name, ver)
+            if ver == 'devel':
+                name = 'Rawhide'
+                ver = 9999999
+                label = 'Rawhide'
+
+            koji_name = collection['koji_name']
+            value = ""
+            if koji_name:
+                value = koji_name.rsplit('-', 1)[1]
+
+            if name == 'Fedora' or name == 'Rawhide':
+                releases.append({'label': label, 'value': value, 'version': ver})
+
+        def _sort(a,b):
+            return cmp(int(b['version']), int(a['version']))
+
+        releases.sort(_sort)
+
+        d['release_table'] = releases
+
         super(BugsGrid, self).update_params(d)
 
 bugs_grid = BugsGrid('bugs_grid')
-
 
 class BugsDashboard(PackagesDashboardContainer):
     layout = [Category('content-col-apps',[
