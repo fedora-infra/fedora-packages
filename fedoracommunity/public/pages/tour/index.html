@@ -1,48 +1,176 @@
+
+
 <html>
     <head><link rel="stylesheet" type="text/css" href="https://fedoraproject.org/static/css/fedora.css" media="all" />
 <link rel="stylesheet" type="text/css" href="/toscawidgets/resources/fedoracommunity/public/css/myfedora-branding.css" media="all" />
 <link rel="stylesheet" type="text/css" href="/toscawidgets/resources/fedoracommunity/public/css/application-chrome.css" media="all" />
-<style type="text/css">
-body {
-	background-image: none !important;
-        font-family: sans;
-        padding: 3em;
-}
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.base/static/javascript/jquery-1.3.2.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui_core/static/javascript/ui/ui.core.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui/static/javascript/ui/minified/ui.draggable.min.js"></script>
+<script type="text/javascript" src="http://localhost:9000/static/protocols/stomp/stomp.js"></script>
+<script type="text/javascript" src="http://localhost:9000/static/Orbited.js"></script>
 
-h3 {
-  text-transform: none !important;
-  color: #444 !important;
-  margin-bottom: .6em;
-}
+<script type="text/javascript" src="/toscawidgets/resources/moksha.widgets.misc.ptd.ptd/static/konami.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui/static/javascript/ui/minified/ui.resizable.min.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.direction/static/javascript/jquery.direction.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui_tabs/static/javascript/ui/ui.tabs.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/jquery.json.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/jquery.template.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/moksha.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/moksha.extensions.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/ui/moksha.ui.tabs.js"></script>
 
-ul {
-  list-style-position: inside !important;
-  color: #444;
-  padding-bottom: .5em;
-}
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <title>Fedora Community</title>
 
-.col-spread h4 {
-  font-size: large;
-  font-weight: normal;
-}
+    <script type="text/javascript">
+        moksha.update_title("Fedora Community", 0);
+    </script>
+    <link href="/images/favicon.ico"
+      type="image/vnd.microsoft.icon" rel="shortcut icon" />
+    <link href="http://fedoraproject.org/favicon.ico"
+      type="image/x-icon" rel="shortcut icon"/>
 
-.col-spread div {
-  width: 30%;
-  float: left;
-  margin: 10px;
-}
-
-.col-spread div p {
-  background-color: #eee;
-  -moz-border-radius: 6px;
-  padding: 1em;
-  margin-top: .4em;
-}
-
-</style>
+    <!--[if lt IE 7]>
+    <style type="text/css">
+        #wrapper
+        {
+            height: 100%;
+            overflow: visible!important;
+        }
+    </style>
+    <![endif]-->
 </head>
+
+<body id="chrome" class="home">
+    <div id="wrapper">
+        
+        <div id="head">
+            
+            <script type="text/javascript">
+moksha_base_url = "/";
+moksha_csrf_token = "";
+moksha_userid = "";
+moksha_debug = true;
+moksha_profile = true;
+</script>
+
+    
+            <h1><a href="/">Fedora Community</a></h1>
+            <div id="toolbar">
+                    <div id="login-toolbar">
+
+                        <form
+                            method="POST"
+                            action="/login"
+                            onSubmit="moksha.add_hidden_form_field(this, 'came_from', document.location, false)">
+                            You are not logged in yet  <input type="submit"  value="Login" class="button"></input>
+                        </form>
+                    </div>
+            	<div id="search-toolbar">
+                	<form action="/search/"
+                	      onSubmit="moksha.csrf_add_form_field(this)">
+                	    Search:
+                	    <input type="text" name="search"
+                	        onFocus="_fedora_community_on_search_focus(this)"
+                	        onBlur="_fedora_community_on_search_blur(this)"
+	               	        value="Type search terms here." ></input>
+
+	                    <input class="button"
+	                           type="submit"
+	                           value="Search"
+	                           ></input>
+	                    <script type="text/javascript">
+	                       function _fedora_community_on_search_focus(el) {
+
+	                          if (el.value === "Type search terms here.")
+	                              el.value = "";
+
+	                          $(el).addClass("search-active");
+	                       }
+
+	                       function _fedora_community_on_search_blur(el) {
+	                          $(el).removeClass("search-active");
+	                       }
+
+	                    </script>
+        	        </form>
+            	</div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            moksha.update_marked_anchors($('a'));
+        </script>
+    
+        <div id="main_app">
+
+           <div id="main_nav">
+ <div id="main_nav_tabs">
+  <div id="app-sidebar">
+    <div id="navigation_sidebar" class="nav">
+      
+<div id="main_nav_tabs_tabs">
+
+
+
+
+    
+    
+    <ul>
+        <li>
+
+          
+        <a href="/apps/fedoracommunity.overviewresource"
+           title="Overview"
+           panel="overview-uuida185ad56-f4de-4682-85c8-6afef6ba1de6">
+          Overview
+        </a>
+
+        </li>
+        <li>
+          
+        <a href="/apps/fedoracommunity.packagemaintresource"
+           title="Package Maintenance"
+           panel="package_maintenance-uuida7eb2f98-bd8c-4624-9550-64da02099a58">
+          Package Maintenance
+        </a>
+
+        </li>
+
+        <li>
+          
+        <a href="/apps/fedoracommunity.peopleresource"
+           title="People"
+           panel="people-uuid7e71fae0-170c-4d61-84f5-3bccb90e1a64">
+          People
+        </a>
+
+        </li>
+        <li>
+          
+        <a href="/apps/fedoracommunity.search"
+           title="Search"
+           panel="search-uuid4fe3d23e-504c-40d0-980c-fdff024e415a">
+          Search
+        </a>
+
+        </li>
+    </ul>
+
+</div>
+
+    </div>
+  </div>
+
+  <div id="content">
+    
 <div id="left-content-column">
-<img src="/images/banners/banner-tour-menu.png" alt=""/>
+<!-- STUFF GOES HERE -->
+
+
+<div id="tour">
+
+<img src="/images/banners/banner-tour-menu.png" alt="" style="margin-top: -16px !important;" />
 
 <h2>The Fedora Community Tour</h2>
 
@@ -69,7 +197,11 @@ chock full of useful details
 per package. Changelogs,
 version overviews, build and
 update statuses, downloads,
-source, and more!</p>
+source, and more!
+<br />
+<br />
+<a class="button" href="/tour/pages/packages.html">Learn More</a>
+</p>
 </div>
 
 <div id="col-2">
@@ -82,8 +214,11 @@ look up a package
 maintainer's contact
 information to communicate
 with them about an issue
-and find out their time zone.</p>
-
+and find out their time zone.
+<br />
+<br />
+<a class="button" href="/tour/pages/people.html">Learn More</a>
+</p>
 </div>
 
 <div id="col-3">
@@ -98,11 +233,64 @@ name is for a particular
 application? Know someone's 
 IRC nick but not their name?
 Find out!
+<br />
+<br />
+<a class="button" href="/tour/pages/search.html">Learn More</a>
 </p>
 </div>
-</div>
+
+
+
 
 </div>
 
-</body>
+</div>
+
+
+
+
+
+
+
+
+<!-- STUFF STOPS HERE -->
+
+
+         
+
+  </div>
+
+ </div>
+</div>
+
+        </div>
+    </div>
+    
+        <div id="bottom">
+            <div id="footer">
+                <p class="copy">
+                    Copyright &copy; 2008-2009 Red Hat, Inc. and others.
+                </p>
+
+                <p class="disclaimer">
+                    The Fedora Project is maintained and driven by the community and sponsored by Red Hat.  This is a community maintained site.  Red Hat is not responsible for content.
+                </p>
+                <ul>
+                    <li class="first"><a href="/en/sponsors">Sponsors</a></li>
+                    <li><a href="http://fedoraproject.org/wiki/Legal">Legal</a></li>
+                    <li><a href="http://fedoraproject.org/wiki/Legal/TrademarkGuidelines">Trademark Guidelines</a></li>
+                    <li><a href="http://fedoracommunity.fedorahosted.org">Get the source for Fedora Community</a></li>
+
+                    <li><a href="http://moksha.fedorahosted.org">Get the source for Moksha</a></li>
+                </ul>
+                <br />
+                <a href="http://moksha.fedorahosted.org"><img src="/images/Powered-by-moksha_button.png"/></a>
+            </div>
+        </div>
+    
+<script type="text/javascript">
+jQuery("#main_nav_tabs").mokshatabs({"tabdefault": 0, "staticLoadOnClick": true})
+</script></body>
 </html>
+
+
