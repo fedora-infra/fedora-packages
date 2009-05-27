@@ -41,19 +41,19 @@ from helpers import PeopleDashboardContainer
 log = logging.getLogger(__name__)
 
 class ProfileContainer(PeopleDashboardContainer):
-    layout = [Category('header-content-column-apps',
-                       MokshaApp('', 'fedoracommunity.people/details',params=
-                                 {"profile": True}
-                                 ),
-                       ),
-              Category('right-content-column-apps',
+    layout = [Category('right-content-column-apps',
                        (MokshaApp('Your Packages', 'fedoracommunity.packages/mypackages'),
                         MokshaApp('Alerts', 'fedoracommunity.alerts'),
                         MokshaWidget('Tasks', 'fedoracommunity.quicklinks', auth=not_anonymous())),
                         default_child_css='app panel',
+                        css_class='right-content-column'
                       ),
               Category('left-content-column-apps',
-                       (MokshaApp('Your Group Memberships',
+                       (MokshaApp('', 'fedoracommunity.people/details',params=
+                                 {'profile': True,
+                                  'compact': True}
+                                 ),
+                        MokshaApp('Your Group Memberships',
                                  'fedoracommunity.people/memberships/table',
                                  params={"rows_per_page": 5,
                                          "filters":{"profile": True},
@@ -65,22 +65,23 @@ class ProfileContainer(PeopleDashboardContainer):
                                   auth=not_anonymous(),
                                   params={'username': None}),
                        ),
+                       css_class='left-content-column'
                       )]
 
 class UserContainer(PeopleDashboardContainer):
-    layout = [Category('header-content-column-apps',
-                       MokshaApp('', 'fedoracommunity.people/details',
-                                 params={'username':''})
-                       ),
-              Category('right-content-column-apps',
+    layout = [Category('right-content-column-apps',
                         (MokshaApp('Packages', 'fedoracommunity.packages/userpackages',
                                   params={'username':''}),
                          MokshaApp('Alerts', 'fedoracommunity.alerts'),
                          MokshaWidget('Tasks', 'fedoracommunity.quicklinks', auth=not_anonymous())),
-                         default_child_css='app panel'
+                         default_child_css='app panel',
+                         css_class='right-content-column'
                         ),
               Category('left-content-column-apps',
-                       (MokshaApp('Group Memberships', 'fedoracommunity.people/memberships/table',
+                       (MokshaApp('', 'fedoracommunity.people/details',
+                                 params={'username':'',
+                                         'compact':True}),
+                        MokshaApp('Group Memberships', 'fedoracommunity.people/memberships/table',
                                  params={"rows_per_page": 5,
                                          "more_link_code": membership_links.MEMBERSHIPS.code,
                                          "filters":{"profile": False,
@@ -90,7 +91,9 @@ class UserContainer(PeopleDashboardContainer):
                         MokshaApp(None,
                                   'fedoracommunity.people/planet',
                                   params={'username': None}),
-                       ))]
+                       ),
+                       css_class='left-content-column'
+                     )]
 
 class PeopleGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.people.templates.table_widget'
@@ -194,7 +197,7 @@ class RootController(Controller):
         return self.index(**kwds)
 
     @expose('mako:moksha.templates.widget')
-    def details(self, username=None, profile=False, compact=False):
+    def details(self, username=None, profile=False, compact=True):
         if compact:
             tmpl_context.widget = compact_person_details_widget
         else:

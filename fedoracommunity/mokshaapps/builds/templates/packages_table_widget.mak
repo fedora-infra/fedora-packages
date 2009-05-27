@@ -20,7 +20,7 @@
         </table>
         <div id="grid-controls">
             <div class="message template" id="info_display" >
-               Viewing @{visible_rows} of @{total_rows} packages
+               Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} packages
             </div>
             <div class="pager" id="pager" type="numeric" ></div>
             <div class="pager template" id="pager" type="more_link">

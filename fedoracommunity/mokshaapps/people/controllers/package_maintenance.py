@@ -40,33 +40,49 @@ from fedoracommunity.mokshaapps.updates.controllers.root import (
     stable_updates_app,
     overview_updates_app)
 
-class PeopleBuildsOverviewContainer(PeopleDashboardContainer):
-
+class PeopleBuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('group-1-apps',
                         (in_progress_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': people_builds_links.IN_PROGRESS.code}),
+                                                       'title_level': 3,
+                                                       'more_link_code': people_builds_links.IN_PROGRESS.code},
+                                                      label='',
+                                                      content_id='in_progress_builds'),
                         failed_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': people_builds_links.FAILED.code}))
+                                                 'title_level': 3,
+                                                 'more_link_code': people_builds_links.FAILED.code},
+                                                label='',
+                                                content_id='failed_builds'))
                       ),
               Category('group-2-apps',
                        successful_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': people_builds_links.SUCCESSFUL.code})
+                                                    'title_level': 3,
+                                                       'more_link_code': people_builds_links.SUCCESSFUL.code},
+                                                    label='',
+                                                    content_id='successful_builds')
                       )
              ]
 
 people_builds_overview_container = PeopleBuildsOverviewContainer('people_builds_overview')
 
-class ProfileBuildsOverviewContainer(PeopleDashboardContainer):
-
+class ProfileBuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
     layout = [Category('group-1-apps',
                         (in_progress_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': profile_builds_links.IN_PROGRESS.code}),
+                                                       'more_link_code': profile_builds_links.IN_PROGRESS.code,
+                                                       'title_level': 3},
+                                                      label='',
+                                                      content_id='in_progress_builds'),
                         failed_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': profile_builds_links.FAILED.code}))
+                                                 'more_link_code': profile_builds_links.FAILED.code,
+                                                 'title_level': 3},
+                                                label='',
+                                                content_id='failed_builds'))
                       ),
               Category('group-2-apps',
                        successful_builds_app.clone({'rows_per_page': 5,
-                                                       'more_link_code': profile_builds_links.SUCCESSFUL.code})
+                                                    'more_link_code': profile_builds_links.SUCCESSFUL.code,
+                                                    'title_level': 3},
+                                                   label='',
+                                                   content_id='successful')
                       )
              ]
 
@@ -78,20 +94,23 @@ packages_owned_app = MokshaApp('Packages Owned',
                                'fedoracommunity.packages/userpackages_table',
                                params={'filters':{'username': '',
                                                   'owner': True,
-                                                  'eol': False}})
+                                                  'eol': False},
+                                       'rows_per_page': 25})
 
 packages_maintained_app = MokshaApp('Packages Maintained',
                                'fedoracommunity.packages/userpackages_table',
                                params={'filters':{'approveacls': True,
                                                   'commit': True,
                                                   'username': '',
-                                                  'eol': False}})
+                                                  'eol': False},
+                                       'rows_per_page': 25})
 packages_watched_app = MokshaApp('Packages Watched',
                                'fedoracommunity.packages/userpackages_table',
                                params={'filters':{'watchcommits': True,
                                                   'watchbugzilla': True,
                                                   'username': '',
-                                                  'eol': False}})
+                                                  'eol': False},
+                                       'rows_per_page': 25})
 
 
 class ProfileNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer):
@@ -105,26 +124,32 @@ class ProfileNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer)
                                         'profile': True}),)
 
     tabs= (Category('Packages',
-                    (packages_owned_app.clone({'filters':{'profile': True}
+                    (packages_owned_app.clone({'filters':{'profile': True},
+                                               'title': 'Packages I Own'}),
+                     packages_maintained_app.clone({'filters':{'profile': True},
+                                                    'title': 'Packages I Maintain'
                                               }),
-                     packages_maintained_app.clone({'filters':{'profile': True}
-                                              }),
-                     packages_watched_app.clone({'filters':{'profile': True}
+                     packages_watched_app.clone({'filters':{'profile': True},
+                                                 'title': 'Packages I Watch'
                                               })
                      )
                     ),
            Category('Builds',
                     (MokshaApp('Overview', 'fedoracommunity.people/packagemaint/builds_overview', params={'profile': True}, content_id='builds_overview'),
-                     in_progress_builds_app.clone({'filters':{'profile':True}}, content_id='builds_inprogress'),
-                     failed_builds_app.clone({'filters':{'profile':True}}, content_id='builds_failed'),
-                     successful_builds_app.clone({'filters':{'profile':True}}, content_id='builds_succeeded')),
+                     in_progress_builds_app.clone({'filters':{'profile':True}, 'title_level': 3}, content_id='builds_inprogress'),
+                     failed_builds_app.clone({'filters':{'profile':True}, 'title_level': 3}, content_id='builds_failed'),
+                     successful_builds_app.clone({'filters':{'profile':True}, 'title_level': 3}, content_id='builds_succeeded')),
                     ),
 
            Category('Updates',
-                    (overview_updates_app.clone({'profile':True}),
-                     unpushed_updates_app.clone({'filters':{'profile':True}}),
-                     testing_updates_app.clone({'filters':{'profile':True}}),
-                     stable_updates_app.clone({'filters':{'profile':True}}))
+                    (overview_updates_app.clone({'profile':True,
+                                                 'title_level': 3}),
+                     unpushed_updates_app.clone({'filters':{'profile':True},
+                                                 'title_level': 3}),
+                     testing_updates_app.clone({'filters':{'profile':True},
+                                                'title_level': 3}),
+                     stable_updates_app.clone({'filters':{'profile':True},
+                                               'title_level': 3}))
                    )
           )
 
@@ -138,23 +163,27 @@ class PeopleNavContainer(ExtraContentTabbedContainer, PeopleDashboardContainer):
                                         'username': None}),)
 
     tabs= (Category('Packages',
-                    (packages_owned_app,
-                     packages_maintained_app,
-                     packages_watched_app
+                    (packages_owned_app.clone({'title': 'Packages Owned'}),
+                     packages_maintained_app.clone({'title': 'Packages Maintained'}),
+                     packages_watched_app.clone({'title': 'Packages Watched'})
                      )
                     ),
            Category('Builds',
                     (MokshaApp('Overview', 'fedoracommunity.people/packagemaint/builds_overview', params={'username': None}, content_id='builds_overview'),
-                     in_progress_builds_app.clone({'filters':{'username':None}}, content_id='builds_inprogress'),
-                     failed_builds_app.clone({'filters':{'username':None}}, content_id='builds_failed'),
-                     successful_builds_app.clone({'filters':{'username':None}}, content_id='builds_succeeded')),
+                     in_progress_builds_app.clone({'filters':{'username':None}, 'title_level': 3}, content_id='builds_inprogress'),
+                     failed_builds_app.clone({'filters':{'username':None}, 'title_level': 3}, content_id='builds_failed'),
+                     successful_builds_app.clone({'filters':{'username':None}, 'title_level': 3}, content_id='builds_succeeded')),
                     ),
 
            Category('Updates',
-                    (overview_updates_app.clone({'username':None}),
-                     unpushed_updates_app.clone({'filters':{'username':None}}),
-                     testing_updates_app.clone({'filters':{'username':None}}),
-                     stable_updates_app.clone({'filters':{'username':None}}))
+                    (overview_updates_app.clone({'username':None,
+                                                 'title_level': 3}),
+                     unpushed_updates_app.clone({'filters':{'username':None},
+                                                 'title_level': 3}),
+                     testing_updates_app.clone({'filters':{'username':None},
+                                                'title_level': 3}),
+                     stable_updates_app.clone({'filters':{'username':None},
+                                               'title_level': 3}))
                    )
           )
 

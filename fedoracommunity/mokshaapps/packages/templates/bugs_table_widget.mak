@@ -13,6 +13,19 @@
             return results.html();
         }
     </script>
+    <div id='grid-controls'>
+    <form>
+        <div id="filter" class="grid_filter" name="release_filter">
+            <label for="collection">Release:</label>
+            <select name="collection">
+                <option selected="selected" value="">All Dists</option>
+                % for (i, rel) in enumerate(release_table):
+                    <option value="${rel['value']}">${rel['label']}</option>
+                % endfor
+            </select>
+        </div>
+    </form>
+    </div>
     <table id="${id}">
         <thead>
           <th>Bug</th>
@@ -21,7 +34,7 @@
           <th>Release</th>
         </thead>
         <tbody class="rowtemplate">
-                <tr>
+                <tr class="@{bug_class}">
                     <td>
                         <a href="https://bugzilla.redhat.com/show_bug.cgi?id=@{id}" target="_blank">@{id}</a>
                     </td>
@@ -47,9 +60,9 @@
            Viewing all bugs for this package
         </div>
     </div>
-    <div id="grid-controls" if="visible_rows < total_rows">
+    <div id="grid-controls" if="visible_rows < total_rows && total_rows != 0">
         <div class="message template" id="info_display" >
-           Viewing @{visible_rows} of @{total_rows} bugs
+           Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} bugs
         </div>
         <div class="pager" id="pager" type="numeric" ></div>
     </div>

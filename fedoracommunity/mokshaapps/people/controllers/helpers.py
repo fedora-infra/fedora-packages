@@ -26,11 +26,13 @@ class PeopleDashboardContainer(DashboardContainer, ContextAwareWidget):
         # get the user details
         user = d.get('username')
         profile = d.get('profile')
+
         conn = get_connector('fas')
         person = conn.query_userinfo(filters={
                 'profile': profile,
                 'u': user
                 })[1]
+
 
         if 'error_type' in person:
             d['error'] = person['error']

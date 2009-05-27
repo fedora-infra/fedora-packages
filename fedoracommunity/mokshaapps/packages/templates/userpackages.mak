@@ -12,6 +12,9 @@
         </div>
       % endfor
      % else:
+        % if title:
+            <h3>${title}</h3>
+        % endif
         ${tmpl_context.widget(filters = filters,
                               rows_per_page = rows_per_page,
                               more_link = more_link)}

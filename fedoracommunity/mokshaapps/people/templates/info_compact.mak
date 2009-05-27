@@ -12,6 +12,7 @@
       <div class="col left_col">
         <div class="info_basic_details info_container">
             <h3>${person['username']}</h3>
+            % if not person.get('privacy'):
             <p><strong>Location:</strong> ${person['country_code']}</p>
             <div class="timezone">
                <img src="/images/16_clock.png" />
@@ -27,19 +28,17 @@
                   <span class="timezone_label">UTC</span>
                </p>
             </div>
+            % endif # privacy
         </div>
       </div>
 
       <div class="col right_col">
         <div class="info_contact info_container">
-          % if person.get('ircnick'):
+          % if person.get('ircnick') and not person.get('privacy'):
           <p><img src="/images/16_chat.png" /> ${person['ircnick']} <br /><em class="note">irc.freenode.net</em></p>
           % endif
-          % if person.get('email'):
+          % if person.get('email') and not person.get('privacy'):
               <p><img src="/images/16_mail.png" /> <a href="mailto:${person['email']}">${person['email']}</a></p>
-          % endif
-          % if person.get('telephone'):
-          <p><img src="/images/16_phone.png" />${person['telephone']}</p>
           % endif
         </div>
     </div>

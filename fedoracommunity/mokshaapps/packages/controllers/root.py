@@ -282,13 +282,14 @@ class RootController(Controller):
                    view)
 
     @expose('mako:fedoracommunity.mokshaapps.packages.templates.userpackages')
-    def userpackages_table(self, filters=None, rows_per_page=10):
+    def userpackages_table(self, filters=None, rows_per_page=10, title=''):
         if filters==None:
             filters = {}
 
         tmpl_context.widget = user_pkgs_grid
         return {'filters': filters,
-                'rows_per_page':rows_per_page}
+                'rows_per_page':rows_per_page,
+                'title': title}
 
     @expose('mako:moksha.templates.widget')
     def index(self, **kwds):

@@ -5,7 +5,7 @@
       </span>
     % elif show_version:
       <span class="version">
-        <a href="#">@{version}</a>
+        <a href="#"><strong>@{version}</strong></a>
       </span>
     % endif
             <div id="menu_panel_@{request_id}" class="menu_panel" >

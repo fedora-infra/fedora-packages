@@ -37,13 +37,22 @@ class BuildsGrid(Grid, ContextAwareWidget):
     resource_path='query_builds'
     table_class=''
 
+class InProgressBuildsGrid(BuildsGrid):
+    template='mako:fedoracommunity.mokshaapps.builds.templates.inprogress_table_widget'
+
+class FailedBuildsGrid(BuildsGrid):
+    template='mako:fedoracommunity.mokshaapps.builds.templates.failed_table_widget'
+
+class SuccessfulBuildsGrid(BuildsGrid):
+    template='mako:fedoracommunity.mokshaapps.builds.templates.successful_table_widget'
+
 class BuildsPackagesGrid(Grid, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.builds.templates.packages_table_widget'
     resource = 'koji'
     resource_path = 'query_packages'
 
 
-in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds/table',
+in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds/inprogress_table',
                                        css_class='main_table',
                                        content_id='inprogress',
                                        params={'rows_per_page': 10,
@@ -54,7 +63,7 @@ in_progress_builds_app = MokshaApp('In-progress Builds', 'fedoracommunity.builds
                                                          }
                                               })
 
-failed_builds_app = MokshaApp('Failed Builds', 'fedoracommunity.builds/table',
+failed_builds_app = MokshaApp('Failed Builds', 'fedoracommunity.builds/failed_table',
                                        css_class='secondary_table',
                                        content_id='failed',
                                        params={'rows_per_page': 10,
@@ -65,7 +74,7 @@ failed_builds_app = MokshaApp('Failed Builds', 'fedoracommunity.builds/table',
                                                          }
                                               })
 
-successful_builds_app = MokshaApp('Successful Builds', 'fedoracommunity.builds/table',
+successful_builds_app = MokshaApp('Successful Builds', 'fedoracommunity.builds/successful_table',
                                        css_class='secondary_table',
                                        content_id='successful',
                                        params={'rows_per_page': 10,
@@ -116,6 +125,10 @@ class BuildsNavContainer(SubTabbedContainer):
 builds_nav_container = BuildsNavContainer('builds_nav')
 
 builds_grid = BuildsGrid('builds_table')
+inprogress_builds_grid = InProgressBuildsGrid('inprogress_builds_table')
+failed_builds_grid = FailedBuildsGrid('failed_builds_table')
+successful_builds_grid = SuccessfulBuildsGrid('successful_builds_table')
+
 builds_packages_grid = BuildsPackagesGrid('builds_packages_table')
 
 class BuildsOverviewContainer(DashboardContainer, ContextAwareWidget):
@@ -217,7 +230,8 @@ class RootController(Controller):
               filters=None,
               more_link_code=None,
               show_owner_filter=False,
-              show_title=False):
+              show_title=False,
+              title_level=2):
         ''' table handler
 
         This handler displays the main table by itself
@@ -227,7 +241,6 @@ class RootController(Controller):
 
         if isinstance(rows_per_page, basestring):
             rows_per_page = int(rows_per_page)
-
 
         if filters == None:
             filters = {}
@@ -279,5 +292,66 @@ class RootController(Controller):
                            'numericPager': numericPager,
                            'show_owner_filter': show_owner_filter,
                            'table_class': table_class},
-                'title': title
+                'title': title,
+                'title_level': str(title_level)
                }
+
+    @expose('mako:fedoracommunity.mokshaapps.builds.templates.table_container')
+    def inprogress_table(self,
+              rows_per_page=5,
+              filters=None,
+              more_link_code=None,
+              show_owner_filter=False,
+              show_title=False,
+              title_level=2):
+
+        d = self.table(rows_per_page,
+                       filters,
+                       more_link_code,
+                       show_owner_filter,
+                       show_title,
+                       title_level)
+
+        tmpl_context.widget = inprogress_builds_grid
+
+        return d
+
+    @expose('mako:fedoracommunity.mokshaapps.builds.templates.table_container')
+    def failed_table(self,
+              rows_per_page=5,
+              filters=None,
+              more_link_code=None,
+              show_owner_filter=False,
+              show_title=False,
+              title_level=2):
+
+        d = self.table(rows_per_page,
+                       filters,
+                       more_link_code,
+                       show_owner_filter,
+                       show_title,
+                       title_level)
+
+        tmpl_context.widget = failed_builds_grid
+
+        return d
+
+    @expose('mako:fedoracommunity.mokshaapps.builds.templates.table_container')
+    def successful_table(self,
+              rows_per_page=5,
+              filters=None,
+              more_link_code=None,
+              show_owner_filter=False,
+              show_title=False,
+              title_level=2):
+
+        d = self.table(rows_per_page,
+                       filters,
+                       more_link_code,
+                       show_owner_filter,
+                       show_title,
+                       title_level)
+
+        tmpl_context.widget = successful_builds_grid
+
+        return d

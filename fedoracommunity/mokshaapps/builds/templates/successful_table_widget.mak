@@ -1,39 +1,19 @@
     <div class="list header-list">
-        <div id="grid-controls">
-          <form>
-              % if tmpl_context.auth('not_anonymous()') and show_owner_filter:
-              <div id="filter" class="grid_filter" name="owner_filter">
-                  <label for="owner">Display:</label><select name="username">
-                               <option selected="selected" value="${tmpl_context.identity['person']['username']}">Builds I Own</option>
-                               <option value="">All Builds</option>
-                           </select>
-              </div>
-              % endif
-          </form>
-        </div>
-        <script type="text/javascript">
-            function get_state_class(state) {
-                if (state == 3)
-                    return 'failed-build';
-
-                return '';
-            }
-        </script>
         <table id="${id}" class="${table_class}">
             <thead>
                 <tr>
-                    <th><a href="#state">Status</a></th>
                     <th><a href="#nvr">Package</a></th>
                     <th>Build Time</th>
                     <th>Finished</th>
-                    <th><a href="#owner_name">Built By</a></th>
+                    % if not profile:
+                        <th><a href="#owner_name">Built By</a></th>
+                    % endif
                     <th>&nbsp;</th>
                 </tr>
             </thead>
 
             <tbody class="rowtemplate">
-                    <tr class="@{state:filter(get_state_class)}">
-                        <td class="one-row state"><img src="/images/16_build_state_@{state}.png" />&nbsp;@{state_str}</td>
+                    <tr>
                         <td class="one-row">
                           <div id="menu_@{build_id}" class="menu" panel="menu_panel_@{build_id}">
                             <span class="package-name">
@@ -52,7 +32,7 @@
                             </ul>
 <h4>Changelog</h4>
 <div class="changelog">
-				<moksha_extpoint>
+				           <moksha_extpoint>
                         	    {
                         	        'type': 'make_menu',
                         	        'placeholder_id': 'menu_@{build_id}',
@@ -60,7 +40,7 @@
                         	        'show_effect': 'slideDown(\"slow\")'
                         	    }
                         	</moksha_extpoint>
-				<moksha_extpoint>
+				            <moksha_extpoint>
                                 {
                                     'type': 'build_menu',
                                     'placeholder_id': 'items_@{build_id}',
@@ -81,10 +61,12 @@
                             <br/>
                                @{completion_time_display:index("time")}
                         </td>
-
+                        % if not profile:
                         <td rowspan="2">
                             <span class="person-name"><a href="/people/?username=@{owner_name}" moksha_url="dynamic">@{owner_name}</a></span>&nbsp;
                         </td>
+                        % endif
+
                         <td rowspan="2" id="@{release_id}">
                             &nbsp;
                             <div class="update_details">
@@ -92,7 +74,7 @@
                             </div>
                         </td>
                     </tr>
-                    <tr class="@{state:filter(get_state_class)}">
+                    <tr>
                         <td colspan="6"
                             id="message_@{build_id}"
                             class="message_row">

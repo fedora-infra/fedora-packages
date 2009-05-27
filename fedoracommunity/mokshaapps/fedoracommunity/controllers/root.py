@@ -63,8 +63,23 @@ class RootController(BaseController):
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.invalid_path')
     def invalid_path(self, invalid_path):
-        return {'title': 'Invalid Path - Fedora Community',
-                'invalid_path': invalid_path}
+        title = 'Invalid Path'
+        split_path = invalid_path.split('/')
+        first_path = None
+        for path in split_path:
+            if path:
+                first_path = path
+                break
+
+        # hack for now to see if we need to show a login box
+        if first_path == 'my_profile':
+            login = True
+            title = 'Restricted Page'
+            tmpl_context.widget = login_widget
+
+        return {'title': title,
+                'invalid_path': invalid_path,
+                'login': login}
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
     def default(self, *args, **kwds):

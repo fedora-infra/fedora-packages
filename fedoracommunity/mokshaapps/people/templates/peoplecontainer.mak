@@ -5,20 +5,17 @@
                   moksha.update_title("User: ${username}", 2);
               </script>
           % endif
-          <div>
+
           <h2>${human_name}</h2>
+
           % if error:
             ${error}
+      </div>
           % else:
-          ${applist_widget(category = 'header-content-column-apps', layout = layout)}
-       </div>
-       <div class="right-content-column">
-          ${applist_widget(category = 'right-content-column-apps', layout = layout)}
-       </div>
-       <div class="left-content-column">
-          ${applist_widget(category = 'left-content-column-apps', layout = layout)}
+      </div>
+            % for c in layout:
+                ${applist_widget(category=c)}
+            % endfor
           % endif
-       </div>
-
     </div>
     <div class="clear" />

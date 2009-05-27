@@ -1,39 +1,17 @@
     <div class="list header-list">
-        <div id="grid-controls">
-          <form>
-              % if tmpl_context.auth('not_anonymous()') and show_owner_filter:
-              <div id="filter" class="grid_filter" name="owner_filter">
-                  <label for="owner">Display:</label><select name="username">
-                               <option selected="selected" value="${tmpl_context.identity['person']['username']}">Builds I Own</option>
-                               <option value="">All Builds</option>
-                           </select>
-              </div>
-              % endif
-          </form>
-        </div>
-        <script type="text/javascript">
-            function get_state_class(state) {
-                if (state == 3)
-                    return 'failed-build';
-
-                return '';
-            }
-        </script>
         <table id="${id}" class="${table_class}">
             <thead>
                 <tr>
-                    <th><a href="#state">Status</a></th>
                     <th><a href="#nvr">Package</a></th>
-                    <th>Build Time</th>
-                    <th>Finished</th>
-                    <th><a href="#owner_name">Built By</a></th>
-                    <th>&nbsp;</th>
+                    <th>Failed</th>
+                    % if not profile:
+                        <th>Built By</th>
+                    % endif
                 </tr>
             </thead>
 
             <tbody class="rowtemplate">
-                    <tr class="@{state:filter(get_state_class)}">
-                        <td class="one-row state"><img src="/images/16_build_state_@{state}.png" />&nbsp;@{state_str}</td>
+                    <tr class="failed-build">
                         <td class="one-row">
                           <div id="menu_@{build_id}" class="menu" panel="menu_panel_@{build_id}">
                             <span class="package-name">
@@ -52,15 +30,15 @@
                             </ul>
 <h4>Changelog</h4>
 <div class="changelog">
-				<moksha_extpoint>
-                        	    {
-                        	        'type': 'make_menu',
-                        	        'placeholder_id': 'menu_@{build_id}',
-                        	        'build_id': '@{build_id}',
-                        	        'show_effect': 'slideDown(\"slow\")'
-                        	    }
-                        	</moksha_extpoint>
-				<moksha_extpoint>
+                <moksha_extpoint>
+                                {
+                                    'type': 'make_menu',
+                                    'placeholder_id': 'menu_@{build_id}',
+                                    'build_id': '@{build_id}',
+                                    'show_effect': 'slideDown(\"slow\")'
+                                }
+                            </moksha_extpoint>
+                <moksha_extpoint>
                                 {
                                     'type': 'build_menu',
                                     'placeholder_id': 'items_@{build_id}',
@@ -70,29 +48,21 @@
                                     'build_state': @{state},
                                     'show_effect': 'slideDown(\"slow\")'
                                 }
-                          	</moksha_extpoint>
+                            </moksha_extpoint>
 </div>
                                                         </div>
                                                  </td>
 
-                        <td rowspan="2">@{completion_time_display:index("elapsed")}
-                        </td>
                         <td rowspan="2">@{completion_time_display:index("when")}
-                            <br/>
-                               @{completion_time_display:index("time")}
                         </td>
 
+                        % if not profile:
                         <td rowspan="2">
                             <span class="person-name"><a href="/people/?username=@{owner_name}" moksha_url="dynamic">@{owner_name}</a></span>&nbsp;
                         </td>
-                        <td rowspan="2" id="@{release_id}">
-                            &nbsp;
-                            <div class="update_details">
-                               @{update_details}
-                            </div>
-                        </td>
+                        % endif
                     </tr>
-                    <tr class="@{state:filter(get_state_class)}">
+                    <tr class="failed-build">
                         <td colspan="6"
                             id="message_@{build_id}"
                             class="message_row">
@@ -113,25 +83,25 @@
         </table>
         <div id="grid-controls" if="total_rows == 0">
             <div class="message template" id="info_display" >
-                No builds found.
+                No failed builds found.
             </div>
         </div>
         <div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
             <div class="message template" id="info_display" >
-               Viewing all builds
+               Viewing all failed builds
             </div>
 
             <div class="pager template" id="pager" type="more_link">
-               <a href="@{more_link}" moksha_url="dynamic">Goto builds &gt;</a>
+               <a href="@{more_link}" moksha_url="dynamic">Goto failed builds &gt;</a>
             </div>
         </div>
         <div id="grid-controls" if="visible_rows < total_rows">
             <div class="message template" id="info_display" >
-               Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} builds
+               Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} failed builds
             </div>
             <div class="pager" id="pager" type="numeric" ></div>
             <div class="pager template" id="pager" type="more_link">
-               <a href="@{more_link}" moksha_url="dynamic">View more builds &gt;</a>
+               <a href="@{more_link}" moksha_url="dynamic">View more failed builds &gt;</a>
             </div>
         </div>
     </div>

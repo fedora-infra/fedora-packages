@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2009  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -21,7 +21,7 @@ from pylons import config, cache
 from bugzilla import Bugzilla
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
-from moksha.connector.utils import DateTimeDisplay
+from moksha.lib.helpers import DateTimeDisplay
 
 class BugzillaConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -74,6 +74,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         f = ParamFilter()
         f.add_filter('package', [], allow_none=False)
+        f.add_filter('collection', [], allow_none=False)
         cls._query_bugs_filter = f
 
     def query_bug_stats(self, *args, **kw):
@@ -135,36 +136,79 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         return dict(results=results)
 
+    def _is_security_bug(self, bug):
+        security = False
+        if bug.assigned_to == 'security-response-team@redhat.com':
+            security = True
+        elif bug.component == 'vulnerability':
+            security = True
+        elif 'Security' in bug.keywords:
+            security = True
+        elif bug.alias:
+            for alias in bug.alias:
+                if alias.startswith('CVE'):
+                    security = True
+                    break
+        return security
+
     def query_bugs(self, start_row=None, rows_per_page=10, order=-1,
                    sort_col='number', filters=None, **params):
         if not filters:
             filters = {}
         filters = self._query_bugs_filter.filter(filters, conn=self)
         collection = filters.get('collection', 'Fedora')
+        c_parse = collection.rsplit(' ', 1)
+        release = ''
+        if len(c_parse) > 1:
+            collection = c_parse[0]
+            release = c_parse[1]
+
         package = filters['package']
         query = {
                 'product': collection,
+                'version': release,
                 'component': package,
                 'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
                 'order': 'bug_id',
                 }
+        bugzilla_cache = cache.get_cache('bugzilla')
+        bugs = bugzilla_cache.get_value(key=str(query), expiretime=900,
+                createfunc=lambda: self._query_bugs(query,
+                    filters=filters, collection=collection, **params))
+        total_count = len(bugs)
+        five_pages = rows_per_page * 5
+        if start_row <= five_pages: # Cache the first 5 pages of every bug grid
+            bugs = bugs[:five_pages]
+            bugs = bugzilla_cache.get_value(key=str(query) + '_details',
+                    expiretime=900, createfunc=lambda: self.get_bugs(
+                        bugs, collection=collection))
+        bugs = bugs[start_row:start_row+rows_per_page]
+        if start_row > five_pages:
+            bugs = self.get_bugs(bugs, collection=collection)
+        return (total_count, bugs)
+
+    def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
+                   sort_col='number', filters=None, collection='Fedora',
+                   **params):
         results = self._bugzilla.query(query)
         results.reverse()
-        total_count = len(results)
-        bugids = [bug.bug_id for bug in results][start_row:start_row+rows_per_page]
+        return [bug.bug_id for bug in results]
+
+    def get_bugs(self, bugids, collection='Fedora'):
         bugs = self._bugzilla.getbugs(bugids)
-
         bugs_list = []
-
         for bug in bugs:
-            modified = datetime(*time.strptime(str(bug.last_change_time),
-                                               '%Y%m%dT%H:%M:%S')[:-2])
+            modified = DateTimeDisplay(str(bug.last_change_time),
+                                       format='%Y%m%dT%H:%M:%S')
+            bug_class = ''
+            if self._is_security_bug(bug):
+                bug_class += 'security-bug '
             bugs_list.append({
                 'id': bug.bug_id,
                 'status': bug.bug_status.title(),
                 'description': bug.summary,
-                'last_modified': DateTimeDisplay(modified).when(0)['when'],
+                'last_modified': modified.age(),
                 'release': '%s %s' % (collection, bug.version),
+                'bug_class': bug_class.strip(),
                 })
-
-        return (total_count, bugs_list)
+        return bugs_list

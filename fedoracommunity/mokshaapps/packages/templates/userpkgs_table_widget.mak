@@ -28,7 +28,7 @@
                     <tr>
                         <td>
                             <span class="package-name">
-                                <a href="/package_maintenance/packages?package=@{name}" moksha_url="dynamic">@{name}</a>
+                                <a href="/package_maintenance?package=@{name}" moksha_url="dynamic">@{name}</a>
                             </span>
                         </td>
                         <td>
@@ -37,9 +37,19 @@
                     </tr>
                 </tbody>
         </table>
-        <div id="grid-controls">
+        <div id="grid-controls" if="total_rows == 0">
             <div class="message template" id="info_display" >
-               Viewing @{visible_rows} of @{total_rows} packages
+               This user has no packages
+            </div>
+        </div>
+        <div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
+            <div class="message template" id="info_display" >
+               Viewing all @{total_rows} packages
+            </div>
+        </div>
+        <div id="grid-controls" if="visible_rows < total_rows && total_rows != 0">
+            <div class="message template" id="info_display">
+               Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} packages
             </div>
             <div class="pager" id="pager" type="numeric" ></div>
         </div>

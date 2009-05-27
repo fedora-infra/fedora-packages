@@ -309,12 +309,14 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
             granularity = filters.get('granularity', 'day')
             ds = DateTimeDisplay(date_submitted)
-            up['date_submitted_display'] = ds.age(granularity=granularity)
+            up['date_submitted_display'] = ds.age(granularity=granularity,
+                                                  general=True) + ' ago'
 
             if date_pushed:
                 dp = DateTimeDisplay(date_pushed)
                 up['date_pushed'] = dp.datetime.strftime('%d %b %Y')
-                up['date_pushed_display'] = dp.age(granularity=granularity)
+                up['date_pushed_display'] = dp.age(granularity=granularity,
+                                                   general=True) + ' ago'
 
             # karma
             # FIXME: take into account karma from both updates
@@ -332,7 +334,28 @@ class BodhiConnector(IConnector, ICall, IQuery):
             if k < 0:
                 up['karma_level'] = 'bad'
 
+            up['details'] = self._get_update_details(up)
+
         return (total_count, updates_list)
+
+    def _get_update_details(self, update):
+        details = ''
+        if update['status'] == 'stable':
+            if update.get('updateid'):
+                details += HTML.tag('a', c=update['updateid'], href='%s/%s' % (
+                                    self._base_url, update['updateid']))
+            if update.get('date_pushed'):
+                details += HTML.tag('br') + update['date_pushed']
+            else:
+                details += 'In process...'
+        elif update['status'] == 'obsolete':
+            for comment in update['comments']:
+                if comment['author'] == 'bodhi':
+                    if comment['text'].startswith('This update has been obsoleted by '):
+                        details += 'Obsoleted by %s' % HTML.tag('a',
+                                href='%s/%s' % (self._base_url,update['title']),
+                                c=comment['text'].split()[-1])
+        return details
 
     def _get_update_actions(self, update):
         actions = []
@@ -535,6 +558,30 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
         pkgdb = get_connector('pkgdb')
         koji = get_connector('koji')._koji_client
+
+        # TODO:
+        # Multicall attempt...
+        #koji.multicall = True
+        #for release in pkgdb.get_fedora_releases():
+        #    tag = release[0]
+        #    name = release[1]
+        #    releases.append({'release': name, 'stable_version': 'None',
+        #                     'testing_version': 'None' })
+        #    if tag == 'dist-rawhide':
+        #        koji.listTagged(tag, package=package, latest=True, inherit=True)
+        #    else:
+        #        koji.listTagged(tag + '-updates', package=package,
+        #                        latest=True, inherit=True)
+        #        koji.listTagged(tag + '-updates-testing', package=package, latest=True)
+
+        #results = koji.multiCall()
+
+        # Ok, parsing this result is going to be fun...
+        #for i, release in enumerate(releases):
+        #    release = results[i][0]
+        #    if len(release):
+        #        build = release[0]
+        #        print build['nvr']
 
         for release in pkgdb.get_fedora_releases():
             tag = release[0]

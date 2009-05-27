@@ -3,7 +3,7 @@
   <body>
   <div id="container">
     % if title:
-        <h2>${title}</h2>
+        <h${title_level}>${title}</h${title_level}>
     % endif
     ${tmpl_context.widget(**options)}
   </div>
