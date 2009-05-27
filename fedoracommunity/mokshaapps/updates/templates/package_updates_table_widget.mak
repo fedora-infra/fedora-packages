@@ -1,4 +1,25 @@
 <div class="list header-list">
+    <div id="grid-controls">
+        <form>
+          <div id="filter" class="grid_filter" name="release_filter">
+            <label for="release">Release:</label>
+            <select name="release">
+                <option selected="selected" value="">All Dists</option>
+                % for (i, rel) in enumerate(release_table):
+                    <option value="${rel['value']}">${rel['label']}</option>
+                % endfor
+            </select>
+            <label for="status">Status:</label>
+            <select name="status">
+                <option selected="selected" value="">All</option>
+                <option value="stable">Stable</option>
+                <option value="testing">Testing</option>
+                <option value="pending">Pending</option>
+                <option value="obsolete">Obsolete</option>
+            </select>
+          </div>
+        </form>
+    </div>
     <table id="${id}">
         <thead>
             <tr>
