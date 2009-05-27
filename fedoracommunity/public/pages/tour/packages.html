@@ -1,0 +1,288 @@
+
+
+<html>
+    <head><link rel="stylesheet" type="text/css" href="https://fedoraproject.org/static/css/fedora.css" media="all" />
+<link rel="stylesheet" type="text/css" href="/toscawidgets/resources/fedoracommunity/public/css/myfedora-branding.css" media="all" />
+<link rel="stylesheet" type="text/css" href="/toscawidgets/resources/fedoracommunity/public/css/application-chrome.css" media="all" />
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.base/static/javascript/jquery-1.3.2.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui_core/static/javascript/ui/ui.core.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui/static/javascript/ui/minified/ui.draggable.min.js"></script>
+<script type="text/javascript" src="http://localhost:9000/static/protocols/stomp/stomp.js"></script>
+<script type="text/javascript" src="http://localhost:9000/static/Orbited.js"></script>
+
+<script type="text/javascript" src="/toscawidgets/resources/moksha.widgets.misc.ptd.ptd/static/konami.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui/static/javascript/ui/minified/ui.resizable.min.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.direction/static/javascript/jquery.direction.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui_tabs/static/javascript/ui/ui.tabs.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/jquery.json.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/jquery.template.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/moksha.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/moksha.extensions.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/ui/moksha.ui.tabs.js"></script>
+
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <title>Fedora Community</title>
+
+    <script type="text/javascript">
+        moksha.update_title("Fedora Community", 0);
+    </script>
+    <link href="/images/favicon.ico"
+      type="image/vnd.microsoft.icon" rel="shortcut icon" />
+    <link href="http://fedoraproject.org/favicon.ico"
+      type="image/x-icon" rel="shortcut icon"/>
+
+    <!--[if lt IE 7]>
+    <style type="text/css">
+        #wrapper
+        {
+            height: 100%;
+            overflow: visible!important;
+        }
+    </style>
+    <![endif]-->
+</head>
+
+<body id="chrome" class="home">
+    <div id="wrapper">
+        
+        <div id="head">
+            
+            <script type="text/javascript">
+moksha_base_url = "/";
+moksha_csrf_token = "";
+moksha_userid = "";
+moksha_debug = true;
+moksha_profile = true;
+</script>
+
+    
+            <h1><a href="/">Fedora Community</a></h1>
+            <div id="toolbar">
+                    <div id="login-toolbar">
+
+                        <form
+                            method="POST"
+                            action="/login"
+                            onSubmit="moksha.add_hidden_form_field(this, 'came_from', document.location, false)">
+                            You are not logged in yet  <input type="submit"  value="Login" class="button"></input>
+                        </form>
+                    </div>
+            	<div id="search-toolbar">
+                	<form action="/search/"
+                	      onSubmit="moksha.csrf_add_form_field(this)">
+                	    Search:
+                	    <input type="text" name="search"
+                	        onFocus="_fedora_community_on_search_focus(this)"
+                	        onBlur="_fedora_community_on_search_blur(this)"
+	               	        value="Type search terms here." ></input>
+
+	                    <input class="button"
+	                           type="submit"
+	                           value="Search"
+	                           ></input>
+	                    <script type="text/javascript">
+	                       function _fedora_community_on_search_focus(el) {
+
+	                          if (el.value === "Type search terms here.")
+	                              el.value = "";
+
+	                          $(el).addClass("search-active");
+	                       }
+
+	                       function _fedora_community_on_search_blur(el) {
+	                          $(el).removeClass("search-active");
+	                       }
+
+	                    </script>
+        	        </form>
+            	</div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            moksha.update_marked_anchors($('a'));
+        </script>
+    
+        <div id="main_app">
+
+           <div id="main_nav">
+ <div id="main_nav_tabs">
+  <div id="app-sidebar">
+    <div id="navigation_sidebar" class="nav">
+      
+<div id="main_nav_tabs_tabs">
+
+
+
+
+    
+    
+    <ul>
+        <li>
+
+          
+        <a href="/apps/fedoracommunity.overviewresource"
+           title="Overview"
+           panel="overview-uuida185ad56-f4de-4682-85c8-6afef6ba1de6">
+          Overview
+        </a>
+
+        </li>
+        <li>
+          
+        <a href="/apps/fedoracommunity.packagemaintresource"
+           title="Package Maintenance"
+           panel="package_maintenance-uuida7eb2f98-bd8c-4624-9550-64da02099a58">
+          Package Maintenance
+        </a>
+
+        </li>
+
+        <li>
+          
+        <a href="/apps/fedoracommunity.peopleresource"
+           title="People"
+           panel="people-uuid7e71fae0-170c-4d61-84f5-3bccb90e1a64">
+          People
+        </a>
+
+        </li>
+        <li>
+          
+        <a href="/apps/fedoracommunity.search"
+           title="Search"
+           panel="search-uuid4fe3d23e-504c-40d0-980c-fdff024e415a">
+          Search
+        </a>
+
+        </li>
+    </ul>
+
+</div>
+
+    </div>
+  </div>
+
+  <div id="content">
+    
+<div id="left-content-column">
+<!-- STUFF GOES HERE -->
+
+
+<div id="tour">
+
+<img src="/images/banners/banner-tour-menu.png" alt="" style="margin-top: -16px !important;" />
+
+<h2>The Fedora Community Tour</h2>
+
+
+<h3>There's a Lot of Packages in Fedora...</h3>
+
+<p>
+<img src="/images/tour/illustration_package-details.png" alt="" style="float: right;"/>
+...And Fedora users rely on package maintainers to keep the quality of 
+those packages high.Package maintenance is a tough job, though. 
+Luckily, Fedora Community provides the information and tools to 
+make package maintenance easier! 
+</p>
+
+<h3><a name="tour-table-of-contents">Package Details Tour Highlights:</a></h3>
+
+<ul>
+<li><a href="#">
+  Keep track of the packages you own and maintain</a>
+</li>
+<li><a href="#">
+  Stay on top of bugs with the package bugs dashboard</a>
+</li>
+<li><a href="#">
+  Look up package owners and maintainers</a>
+</li>
+<li><a href="#">
+  Learn about package changes through changelogs</a>
+</li>
+<li><a href="#">
+  Monitor package builds</a>
+</li>
+<li><a href="#">
+  Keep up with package updates</a>
+</li>
+<li><a href="#">
+  Access package sources and downloads</a>
+</li>
+<li><a href="#">
+  Stay straight on which package version is in what release</a>
+</li>
+</ul>
+
+<h4>Keep track of the packages you own &amp; maintain <span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4>
+
+<p>Do you know just how many packages you own, total? How about for a given Fedora release? Which of your packages are in the most need of attention, right now? Fedora Commnunity automatically tracks your inventory of packages and helps you stay on top of them!</p>
+
+<h4>Stay on top of bugs with the package bugs dashboard <span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4>
+
+<p>Fedora Community provides a bugs dashboard for each package. It is a concise display of the bug information package maintainers care about the most - open bugs, newly-opened bugs, and closed bugs. The bugs dashboard also provides a list of bugs, most recently-opened bugs first, with a simple overview of each and a link out to the full bug details in case you need to investigate a particular bug further.</p>
+
+<h4>Look up package owners and maintainers <span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4>
+
+<p>Package maintainers frequently need to interact with the owners and maintainers of other packages that are related to their own, but sometimes it can be hard to figure out who owns a particular package for the given Fedora release you're interested in. Fedora Community provides a canonical, easy-to-use list of package owners and maintainers. You can even look up which Fedora Community members are watching a given package.</p>
+
+<h4>Learn about package changes through changelogs <span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4>
+<p>Follow a package's progress through clean and simple changelog summaries. Wondering what improvements or fixes have been made to a package when trying to decide whether or not it's worth updating that package? It's all laid out in the package changelogs. If you have questions about any change that was made, the Fedora commnunity member who made each change is listed with his or her contact information.</p>
+
+<h4>Monitor package builds <span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4>
+<p>Now this is really cool. Not only can you watch live as packages are submitted and fail or succeed across all of Fedora, but you can also view the corresponding changelog for each build in-line. So, if you notice a build of a package that interests you and are curious why it's being rebuilt, you can now find out why easily.</p>
+
+<h4>Keep up with package updates <span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4>
+<p>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- STUFF STOPS HERE -->
+
+
+         
+
+  </div>
+
+ </div>
+</div>
+
+        </div>
+    </div>
+    
+        <div id="bottom">
+            <div id="footer">
+                <p class="copy">
+                    Copyright &copy; 2008-2009 Red Hat, Inc. and others.
+                </p>
+
+                <p class="disclaimer">
+                    The Fedora Project is maintained and driven by the community and sponsored by Red Hat.  This is a community maintained site.  Red Hat is not responsible for content.
+                </p>
+                <ul>
+                    <li class="first"><a href="/en/sponsors">Sponsors</a></li>
+                    <li><a href="http://fedoraproject.org/wiki/Legal">Legal</a></li>
+                    <li><a href="http://fedoraproject.org/wiki/Legal/TrademarkGuidelines">Trademark Guidelines</a></li>
+                    <li><a href="http://fedoracommunity.fedorahosted.org">Get the source for Fedora Community</a></li>
+
+                    <li><a href="http://moksha.fedorahosted.org">Get the source for Moksha</a></li>
+                </ul>
+                <br />
+                <a href="http://moksha.fedorahosted.org"><img src="/images/Powered-by-moksha_button.png"/></a>
+            </div>
+        </div>
+    
+<script type="text/javascript">
+jQuery("#main_nav_tabs").mokshatabs({"tabdefault": 0, "staticLoadOnClick": true})
+</script></body>
+</html>
+
+
