@@ -52,15 +52,12 @@ class BugsGrid(Grid):
             name = collection['name']
             ver = collection['version']
             label = "%s %s" % (name, ver)
+            value = str(ver)
             if ver == 'devel':
                 name = 'Rawhide'
                 ver = 9999999
                 label = 'Rawhide'
-
-            koji_name = collection['koji_name']
-            value = ""
-            if koji_name:
-                value = koji_name.rsplit('-', 1)[1]
+                value = 'rawhide'
 
             if name == 'Fedora' or name == 'Rawhide':
                 releases.append({'label': label, 'value': value, 'version': ver})

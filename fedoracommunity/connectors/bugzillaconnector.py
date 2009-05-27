@@ -75,6 +75,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         f = ParamFilter()
         f.add_filter('package', [], allow_none=False)
         f.add_filter('collection', [], allow_none=False)
+        f.add_filter('version', [], allow_none=False)
         cls._query_bugs_filter = f
 
     def query_bug_stats(self, *args, **kw):
@@ -157,16 +158,12 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             filters = {}
         filters = self._query_bugs_filter.filter(filters, conn=self)
         collection = filters.get('collection', 'Fedora')
-        c_parse = collection.rsplit(' ', 1)
-        release = ''
-        if len(c_parse) > 1:
-            collection = c_parse[0]
-            release = c_parse[1]
+        version = filters.get('version', '')
 
         package = filters['package']
         query = {
                 'product': collection,
-                'version': release,
+                'version': version,
                 'component': package,
                 'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
                 'order': 'bug_id',

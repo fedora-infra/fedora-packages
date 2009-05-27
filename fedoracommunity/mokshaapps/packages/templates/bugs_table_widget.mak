@@ -16,8 +16,8 @@
     <div id='grid-controls'>
     <form>
         <div id="filter" class="grid_filter" name="release_filter">
-            <label for="collection">Release:</label>
-            <select name="collection">
+            <label for="version">Release:</label>
+            <select name="version">
                 <option selected="selected" value="">All Dists</option>
                 % for (i, rel) in enumerate(release_table):
                     <option value="${rel['value']}">${rel['label']}</option>

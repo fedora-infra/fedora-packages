@@ -2,7 +2,7 @@
     <%def name="header()">
         <div id="head">
             ${tmpl_context.moksha_global_resources()}
-            <h1><a href="${tg.url('/')}">Fedora Community</a></h1>
+            <h1><a href="${tg.url('/')}" moksha_url="dynamic">Fedora Community</a></h1>
             <div id="toolbar">
                 % if tmpl_context.auth('not_anonymous()'):
                     <div id="login-toolbar">

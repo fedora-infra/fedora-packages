@@ -595,7 +595,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                     nvr = parse_build(rawhide_builds[0]['nvr'])
                     row['stable_version'] = '%(version)s-%(release)s' % nvr
                 else:
-                    row['stable_version'] = 'No builds tagged with' % tag
+                    row['stable_version'] = 'No builds tagged with %s' % tag
                 row['testing_version'] = HTML.tag('i', c='Not Applicable')
             else:
                 stable_updates = koji.listTagged(tag + '-updates',
