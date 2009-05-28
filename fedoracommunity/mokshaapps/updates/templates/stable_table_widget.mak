@@ -32,8 +32,7 @@
         <tbody class="rowtemplate">
             <tr>
                 <td>
-                    ${c.update_hover_menu()}
-                    <div>@{versions:filter(_render_br_list)}&nbsp;</div>
+                    @{title:filter(render_update_builds)}
                 </td>
                 <td><br/>@{releases:filter(_render_br_list)}</td>
                 <td>@{date_pushed}</td>

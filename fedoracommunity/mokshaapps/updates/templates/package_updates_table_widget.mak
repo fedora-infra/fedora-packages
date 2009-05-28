@@ -32,7 +32,7 @@
         <tbody class="rowtemplate">
             <tr class="@{status}-update @{type}-update">
                 <td>
-                  ${c.update_hover_menu(show_package=False, show_version=True)}
+                  @{title:filter(render_update_builds)}
                 </td>
                 <td>@{date_pushed_display}</td>
                 <td>@{status}
