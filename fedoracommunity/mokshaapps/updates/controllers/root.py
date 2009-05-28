@@ -61,6 +61,10 @@ class UpdatesGrid(Grid):
     resource_path = 'query_updates'
     children = [UpdateHoverMenu('update_hover_menu')]
 
+    def __init__(self, *args, **kw):
+        super(UpdatesGrid, self).__init__(*args, **kw)
+        self.javascript += [bodhi_js]
+
     def update_params(self, d):
         pkgdb = get_connector('pkgdb')
 
@@ -86,6 +90,7 @@ class UpdatesGrid(Grid):
         d['release_table'] = releases
 
         super(UpdatesGrid, self).update_params(d)
+
 
 class PendingUpdatesGrid(UpdatesGrid):
     template='mako:fedoracommunity.mokshaapps.updates.templates.pending_table_widget'
@@ -154,9 +159,10 @@ dashboard_updates_app = MokshaApp('Updates Dashboard',
                                       'username': '',
                                       })
 
+
 class UpdatesOverviewContainer(DashboardContainer):
     template = 'mako:fedoracommunity.mokshaapps.updates.templates.updates_overview_container'
-    javascript = [JSLink(link='/javascript/bodhi.js', modname=__name__)]
+    javascript = [bodhi_js]
     layout = (Category('group-1-apps', (
                        dashboard_updates_app.clone(),
                        unpushed_updates_app.clone({
