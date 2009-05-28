@@ -1,5 +1,9 @@
 /* image margin override to override fedora.css */
 
+a:visited, a:active {
+  color: #337ACC !important;
+}
+
 img {
   margin: auto !important;
 }
@@ -81,7 +85,7 @@ a {
   text-transform:		uppercase;
   font-size:			.9em;
   vertical-align:		middle;
-  color:			white;
+  color:			white !important;
   background-color:		#888;
   padding:			2px;
 }
@@ -155,7 +159,7 @@ a {
 #app-sidebar .nav .ui-tabs-selected a:visited,
 #app-sidebar .nav .ui-tabs-selected a:active
 {
-  color: white;
+  color: white !important;
   background-color: #6aa6e2;
   padding: 8px 2px;
   padding-left: 12px;
@@ -237,7 +241,7 @@ a {
 #content-nav li.ui-tabs-selected a:link,
 #content-nav li.ui-tabs-selected a:active,
 #content-nav li.ui-tabs-selected a:visited {
-  color: white;
+  color: white !important;
   padding: 4px 12px;
   padding-top: 6px;
   background-color: #5499dd;
@@ -263,7 +267,7 @@ a {
 
 .content-searchbox .button {
   background-color:#888888;
-  color:white;
+  color:white !important;
   padding:2px;
   text-transform:uppercase;
   vertical-align:middle;
@@ -309,7 +313,7 @@ a {
 }
 
 .content-searchbox .button {
-  color: white;
+  color: white !important;
   padding-bottom: 1px;
   padding-top: 1px;
 }
