@@ -29,7 +29,11 @@ from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 
 from fedoracommunity.widgets import SubTabbedContainer
+from fedoracommunity.widgets.expander import expander_js
 from links import updates_links
+
+bodhi_js = JSLink(link='/javascript/bodhi.js', modname=__name__,
+                  javascript=[expander_js])
 
 class UpdatesDashboardWidget(Widget):
     params = ['id', 'pending', 'testing', 'stable', 'username']
