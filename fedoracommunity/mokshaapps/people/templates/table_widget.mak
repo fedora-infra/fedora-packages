@@ -6,19 +6,19 @@
         <table id="${id}">
             <thead>
                 <tr>
-                    <th>Name</th>
                     <th>Username</th>
+                    <th>Name</th>
                 </tr>
             </thead>
             <tbody class="rowtemplate">
                     <tr>
                         <td>
+                            <span class="person-name"><a href="/people?username=@{username}" moksha_url="dynamic">@{username}</a></span>&nbsp;
+
+                        <td>
                             <span class="person-name">
                                 <a href="/people?username=@{username}" moksha_url="dynamic">@{human_name}</a>
                             </span>
-
-                        <td>
-                            <span class="person-name"><a href="/people?username=@{username}" moksha_url="dynamic">@{username}</a></span>&nbsp;
                         </td>
                 </tbody>
 
