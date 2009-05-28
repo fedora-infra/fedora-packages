@@ -145,7 +145,7 @@ class PackagesListNavContainer(ExtraContentTabbedContainer):
                                auth=not_anonymous(), css_class='app panel'),
                  )
     tabs = (MokshaApp('All Packages', 'fedoracommunity.builds/packages_table',
-                                      params={"rows_per_page": 10, "filters":{}}),
+                                      params={"rows_per_page": 15, "filters":{}}),
             MokshaApp('Packages I Own', 'fedoracommunity.packages/userpackages_table',
                                       params={"rows_per_page": 10,
                                               "filters":{'username': None,
