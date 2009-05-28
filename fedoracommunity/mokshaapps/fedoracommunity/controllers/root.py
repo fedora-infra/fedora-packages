@@ -66,6 +66,7 @@ class RootController(BaseController):
         title = 'Invalid Path'
         split_path = invalid_path.split('/')
         first_path = None
+        login = False
         for path in split_path:
             if path:
                 first_path = path
