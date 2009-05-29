@@ -1,0 +1,286 @@
+
+
+<html>
+    <head><link rel="stylesheet" type="text/css" href="https://fedoraproject.org/static/css/fedora.css" media="all" />
+<link rel="stylesheet" type="text/css" href="/toscawidgets/resources/fedoracommunity/public/css/myfedora-branding.css" media="all" />
+<link rel="stylesheet" type="text/css" href="/toscawidgets/resources/fedoracommunity/public/css/application-chrome.css" media="all" />
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.base/static/javascript/jquery-1.3.2.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui_core/static/javascript/ui/ui.core.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui/static/javascript/ui/minified/ui.draggable.min.js"></script>
+<script type="text/javascript" src="http://localhost:9000/static/protocols/stomp/stomp.js"></script>
+<script type="text/javascript" src="http://localhost:9000/static/Orbited.js"></script>
+
+<script type="text/javascript" src="/toscawidgets/resources/moksha.widgets.misc.ptd.ptd/static/konami.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui/static/javascript/ui/minified/ui.resizable.min.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.direction/static/javascript/jquery.direction.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui_tabs/static/javascript/ui/ui.tabs.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/jquery.json.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/jquery.template.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/moksha.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/moksha.extensions.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/ui/moksha.ui.tabs.js"></script>
+
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <title>Fedora Community</title>
+
+    <script type="text/javascript">
+        moksha.update_title("Fedora Community", 0);
+    </script>
+    <link href="/images/favicon.ico"
+      type="image/vnd.microsoft.icon" rel="shortcut icon" />
+    <link href="http://fedoraproject.org/favicon.ico"
+      type="image/x-icon" rel="shortcut icon"/>
+
+    <!--[if lt IE 7]>
+    <style type="text/css">
+        #wrapper
+        {
+            height: 100%;
+            overflow: visible!important;
+        }
+    </style>
+    <![endif]-->
+</head>
+
+<body id="chrome" class="home">
+    <div id="wrapper">
+        
+        <div id="head">
+            
+            <script type="text/javascript">
+moksha_base_url = "/";
+moksha_csrf_token = "";
+moksha_userid = "";
+moksha_debug = true;
+moksha_profile = true;
+</script>
+
+    
+            <h1><a href="/">Fedora Community</a></h1>
+            <div id="toolbar">
+                    <div id="login-toolbar">
+
+                        <form
+                            method="POST"
+                            action="/login"
+                            onSubmit="moksha.add_hidden_form_field(this, 'came_from', document.location, false)">
+                            You are not logged in yet  <input type="submit"  value="Login" class="button"></input>
+                        </form>
+                    </div>
+            	<div id="search-toolbar">
+                	<form action="/search/"
+                	      onSubmit="moksha.csrf_add_form_field(this)">
+                	    Search:
+                	    <input type="text" name="search"
+                	        onFocus="_fedora_community_on_search_focus(this)"
+                	        onBlur="_fedora_community_on_search_blur(this)"
+	               	        value="Type search terms here." ></input>
+
+	                    <input class="button"
+	                           type="submit"
+	                           value="Search"
+	                           ></input>
+	                    <script type="text/javascript">
+	                       function _fedora_community_on_search_focus(el) {
+
+	                          if (el.value === "Type search terms here.")
+	                              el.value = "";
+
+	                          $(el).addClass("search-active");
+	                       }
+
+	                       function _fedora_community_on_search_blur(el) {
+	                          $(el).removeClass("search-active");
+	                       }
+
+	                    </script>
+        	        </form>
+            	</div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            moksha.update_marked_anchors($('a'));
+        </script>
+    
+        <div id="main_app">
+
+           <div id="main_nav">
+ <div id="main_nav_tabs">
+  <div id="app-sidebar">
+    <div id="navigation_sidebar" class="nav">
+      
+<div id="main_nav_tabs_tabs">
+
+
+
+
+    
+    
+    <ul>
+        <li>
+
+          
+        <a href="/apps/fedoracommunity.overviewresource"
+           title="Overview"
+           panel="overview-uuida185ad56-f4de-4682-85c8-6afef6ba1de6">
+          Overview
+        </a>
+
+        </li>
+        <li>
+          
+        <a href="/apps/fedoracommunity.packagemaintresource"
+           title="Package Maintenance"
+           panel="package_maintenance-uuida7eb2f98-bd8c-4624-9550-64da02099a58">
+          Package Maintenance
+        </a>
+
+        </li>
+
+        <li>
+          
+        <a href="/apps/fedoracommunity.peopleresource"
+           title="People"
+           panel="people-uuid7e71fae0-170c-4d61-84f5-3bccb90e1a64">
+          People
+        </a>
+
+        </li>
+        <li>
+          
+        <a href="/apps/fedoracommunity.search"
+           title="Search"
+           panel="search-uuid4fe3d23e-504c-40d0-980c-fdff024e415a">
+          Search
+        </a>
+
+        </li>
+    </ul>
+
+</div>
+
+    </div>
+  </div>
+
+  <div id="content">
+    
+<div id="left-content-column">
+<!-- STUFF GOES HERE -->
+
+
+<div id="tour">
+
+<img src="/images/banners/banner-tour-menu.png" alt="" style="margin-top: -16px !important;" />
+
+<h2>The Fedora Community Tour</h2>
+
+
+<h3>People Make Fedora's Community</h3>
+
+<p>
+<img src="/images/tour/illustration_people-details.png" alt="" style="float: right;"/>
+... and there's a lot of people in Fedora's community. To make matters more complicated, the people who make Fedora happen every day live across the world, in completely different time zones, and may go by different names (for example, their IRC nickname may bear no resemblance to their real life name!) Fedora Community provides a community member directory and details on each community member to help you keep it all straight.
+</p>
+
+<h3><a name="tour-table-of-contents">People Details Tour Highlights:</a></h3>
+
+<ul>
+<li><a href="#people-directory">
+  Browse a directory of community members</a>
+</li>
+<li><a href="#person-profile">
+  Learn the basics about any commnunity member</a>
+</li>
+<li><a href="#person-groups">
+  Get a feel for what groups a community member is involved with</a>
+</li>
+<li><a href="#person-packages">
+  Learn what packages a community member is involved with</a>
+</li>
+<li><a href="#person-builds">
+  Check up on the builds for the packages a community member owns</a>
+</li>
+<li><a href="#person-updates">
+  Check up on the updates for the packages a commnunity member owns</a>
+</li>
+</ul>
+
+<h4><a name="people-directory">Browse a directory of community members </a> <span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4>
+
+<p>There are over 1,000 community members from all over the world in the Fedora account system. Can't quite put a name to an IRC nick, or vice-versa? Not exactly sure of the name of the person you are looking for, but have a rough idea and want to browse around to see if you recognize it anywhere? Check out the Fedora Community member directory. Drill down into any community member's profile by clicking on their name.</p>
+
+<img src="/images/tour/screenshots/people_directory.png" alt="" />
+
+<h4><a name="person-profile">Lean the basics about any commnunity member </a><span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4>
+
+<p>View any community member's profile overview and you'll learn the basics about that person - how to contact them via email or IRC, where in the world they are located, and what their current local time is so you'll know if now is a reasonable time to contact them or not. You'll get a preview listing of what Fedora account groups they're a part of. If the member has a blog URL configured, you'll get a preview of their latest blog posts. All-in-all, a quick glance relays a lot of information to help you learn more about the community member whose profile you're looking at.
+<img src="/images/tour/screenshots/people_overview.png" alt="" />
+
+<h4><a name="person-groups">Get a feel for what groups a commnunity member is involved with </a><span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4>
+
+<p>Maybe you simply want to get a feel for a community member's interests and involvement within Fedora, or perhaps you're trying to determine whether or not your approval to accept a member into your group went through successfully. Maybe you're browsing the profile of a really cool person and want to scope out what groups they're a part of so you can apply to those groups too and also be really cool. Either way, it can be handy to get a listing of the groups a community member is involved with.
+
+<img src="/images/tour/screenshots/people_groups.png" alt="" />
+
+<a name="person-packages"><h4>Learn what packages a community member is involved with <span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4></a>
+
+<p>Figure out a Fedora community's member's package maintenance load (and thus, potential to take on another package!) at a glance by viewing their list of owned packages. Want to help out a package maintainer friend by keeping an eye on her packages while she's away on vacation? This is a great way to do it.</p>
+<img src="/images/tour/screenshots/people_packages.png" alt="" />
+
+<a name="person-builds"><h4>Check up on the builds for the packages a community member owns <span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4></a>
+
+<p>Easily check up all of the builds of packages owned by a particular community member categorized by status.</p>
+<img src="/images/tour/screenshots/people_builds.png" alt="" />
+
+<a name="person-updates"><h4>Check up on the updates for the packages a community member owns <span><a target="#tour-table-of-contents">Back to Top <img src="/images/arrow_up.png" alt=""/></a></h4></a>
+<p>Keep up with updates of all packages owned by a particular community member in one place.</p>
+<img src="/images/tour/screenshots/people_updates.png" alt="" />
+
+<h4>Now that you've learned more about people in Fedora Community...</h4>
+<p>You can go back to the main tour page and <a href="/pages/tour">learn more about other parts of Fedora Community</a>.
+
+</div>
+
+
+
+<!-- STUFF STOPS HERE -->
+
+
+         
+
+  </div>
+
+ </div>
+</div>
+
+        </div>
+    </div>
+    
+        <div id="bottom">
+            <div id="footer">
+                <p class="copy">
+                    Copyright &copy; 2008-2009 Red Hat, Inc. and others.
+                </p>
+
+                <p class="disclaimer">
+                    The Fedora Project is maintained and driven by the community and sponsored by Red Hat.  This is a community maintained site.  Red Hat is not responsible for content.
+                </p>
+                <ul>
+                    <li class="first"><a href="/en/sponsors">Sponsors</a></li>
+                    <li><a href="http://fedoraproject.org/wiki/Legal">Legal</a></li>
+                    <li><a href="http://fedoraproject.org/wiki/Legal/TrademarkGuidelines">Trademark Guidelines</a></li>
+                    <li><a href="http://fedoracommunity.fedorahosted.org">Get the source for Fedora Community</a></li>
+
+                    <li><a href="http://moksha.fedorahosted.org">Get the source for Moksha</a></li>
+                </ul>
+                <br />
+                <a href="http://moksha.fedorahosted.org"><img src="/images/Powered-by-moksha_button.png"/></a>
+            </div>
+        </div>
+    
+<script type="text/javascript">
+jQuery("#main_nav_tabs").mokshatabs({"tabdefault": 0, "staticLoadOnClick": true})
+</script></body>
+</html>
+
+
