@@ -14,11 +14,12 @@
 
          <h2>Welcome to Fedora Community!</h2>
          <p>
-           FIXME: This is not correct wording. Fedora Community is a place where
-           Fedora package maintainers can collaborate on building and maintaining
-           their packages.  Logging into your Fedora account in Fedora Community
-           allows you to keep up with your packages and to keep track of your
-           friends&rsquo; packages as well. 
+		 Fedora Community provides a window into the Fedora distribution,
+		 leveraging the power of Fedora's Account System, Bodhi, Bugzilla,
+		 Koji, and PackageDB into a single user-friendly website. Built
+		 entirely with Free Software such as Moksha and TurboGears 2, Fedora
+		 Community is designed to simplify Fedora workflows and bring
+		 transparency to Fedora processes.
          </p>
          <p><strong><a href="https://admin.fedoraproject.org/accounts/user/new">Need an account?</a></strong></p>
          <br />
