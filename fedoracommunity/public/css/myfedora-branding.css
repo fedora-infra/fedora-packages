@@ -36,9 +36,9 @@ img#main-banner {
   min-height: 16em !important;
 }
 
-.col-spread a.button:link, 
-.col-spread a.button:visited, 
-.col-spread a.button:active {
+#tour a.button:link, 
+#tour a.button:visited, 
+#tour a.button:active {
   display: block;
   background-color: #66a2de;
   color: white !important;
@@ -58,6 +58,79 @@ img#main-banner {
   font-size: 200% !important;
 }
 
-#tour h3 {
+#left-content-column #tour h3 {
   margin-bottom: 1em;
+  font-size: 1.5em !important;
+  text-transform: capitalize;
+  color: #555 !important;
+}
+
+#tour h4 a {
+  font-size: 1.4em;
+  color: #777;
+  border-bottom: 1px solid #ddd;
+  padding-top: 3em;
+}
+
+#tour h4 span a {
+  padding-left: 1em;
+  font-size: 1em !important;
+  color: #337ACC !important;
+  text-decoration: none;
+  padding-bottom: 1px;
+}
+
+#tour h4 span a:hover {
+  background-color: #efefef;
+}
+
+#tour .tour-summary {
+  padding: 12px 16px; 
+  margin: 20px 2px;
+  background-color: #eee;
+  -moz-border-radius: 6px;
+}
+
+#tour .tour-summary h4 {
+  font-size: 1.4em;
+  color: #777;
+}
+
+
+
+#tour .check-it-out .left-col {
+  background-color: #d0e3f6;
+  float: left;
+  width: 60%;
+  padding: 12px;
+  -moz-border-radius-topleft: 6px;
+  -moz-border-radius-bottomleft: 6px;
+  margin-right: 4px;
+  min-height: 14em;
+} 
+
+#tour .check-it-out .right-col {
+  background-color: #ddd;
+  float: left;
+  width: 30%;
+  padding: 12px;  
+  -moz-border-radius-topright: 6px;
+  -moz-border-radius-bottomright: 6px;
+  min-height: 14em;
+} 
+
+#tour .check-it-out {
+  padding: 24px 12px;
+  padding-top: 12px;
+}
+
+#tour .check-it-out a.button {
+  margin-top: 3em;
+  width: 8em;
+}
+
+#tour div.check-it-out h5 {
+  font-size: 1.3em !important;
+  text-transform: uppercase;
+  color: #2b81d6;
 }
