@@ -1,7 +1,7 @@
 /* image margin override to override fedora.css */
 
 a:visited, a:active {
-  color: #337ACC !important;
+  color: #729fcf !important;
 }
 
 img {
