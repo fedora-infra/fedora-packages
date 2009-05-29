@@ -24,11 +24,10 @@ from repoze.what.predicates import not_anonymous
 from pytz import utc, timezone
 
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
+from moksha.lib.helpers import Category, MokshaApp, MokshaWidget, DateTimeDisplay
 from moksha.api.widgets.feed import Feed
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.connectors import get_connector
-from moksha.connector.utils import DateTimeDisplay
 
 from fedoracommunity.widgets.expander import expander_js
 from fedoracommunity.widgets.clock import clock_js
@@ -156,9 +155,9 @@ class PersonBlogWidget(Feed):
         super(PersonBlogWidget, self).update_params(d)
         for entry in d.entries:
             try:
-                updated = datetime(*entry['updated_parsed'][:-2])
-                entry['last_modified']= DateTimeDisplay(updated).when(0)['when']
-            except:
+                entry['last_modified'] = DateTimeDisplay(entry['updated_parsed']).age(general=True) + ' ago'
+            except Exception, e:
+                log.exception(e)
                 log.error("Unable to determine updated timestamp for entry")
                 log.error(entry)
                 entry['last_modified'] = entry.get('updated', '')
