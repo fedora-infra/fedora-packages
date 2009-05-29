@@ -17,11 +17,12 @@
 import re
 import koji
 
-from pylons import config
+from pylons import config, request
 from datetime import datetime
+
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
-from moksha.connector.utils import DateTimeDisplay
 from moksha.api.connectors import get_connector
+from moksha.lib.helpers import DateTimeDisplay
 
 class KojiConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -281,8 +282,8 @@ class KojiConnector(IConnector, ICall, IQuery):
             entry['version'] = m.group(3)
 
             # convert the date to a nicer format
-            dtd = DateTimeDisplay(entry['date'])
-            entry['display_date'] = dtd.when(0)['date']
+            entry['display_date'] = \
+                    DateTimeDisplay(entry['date']).datetime.strftime("%d %b %Y")
 
         total_count = results[0][0]
 
@@ -506,21 +507,33 @@ class KojiConnector(IConnector, ICall, IQuery):
         for b in builds_list:
             state = b['state']
             b['state_str'] = koji.BUILD_STATES[state].lower()
-            start = b['creation_time']
+            start = DateTimeDisplay(b['creation_time'])
             complete = b['completion_time']
             completion_display = None
             if not complete:
-                dtd = DateTimeDisplay(start)
-                completion_display = {'when': 'In progress...',
-                                    'should_display_time': False,
-                                    'time': ''}
-                elapsed = dtd.time_elapsed(0)
-                completion_display['elapsed'] = elapsed['display']
+                completion_display = {
+                        'when': 'In progress...',
+                        'should_display_time': False,
+                        'time': '',
+                        }
+                completion_display['elapsed'] = start.age(granularity='minute')
             else:
-                dtd = DateTimeDisplay(start, complete)
-                completion_display = dtd.when(1)
-                elapsed = dtd.time_elapsed(0,1)
-                completion_display['elapsed'] = elapsed['display']
+                completion_display = {}
+                complete = DateTimeDisplay(b['completion_time'])
+                completion_display['elapsed'] = start.age(complete,
+                        granularity='minute')
+                completion_display['when'] = complete.age(
+                        granularity='minute', general=True) + ' ago'
+
+                ident = request.environ.get('repoze.who.identity')
+                if ident:
+                    username = ident.get('repoze.who.userid')
+                    tz = ident['person']['timezone']
+                    completion_display['time'] = \
+                            complete.astimezone(tz).strftime('%I:%M %p %Z')
+                else:
+                    completion_display['time'] = \
+                            complete.datetime.strftime('%I:%M %p') + ' UTC'
 
             b['completion_time_display'] = completion_display
 
