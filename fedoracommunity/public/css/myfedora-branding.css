@@ -72,6 +72,10 @@ img#main-banner {
   padding-top: 3em;
 }
 
+#tour ul {
+  padding-bottom: 28px;
+}
+
 #tour h4 span a {
   padding-left: 1em;
   font-size: 1em !important;
