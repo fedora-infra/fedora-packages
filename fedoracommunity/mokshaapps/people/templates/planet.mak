@@ -27,5 +27,10 @@
         </tr>
       % endfor
     </table>
+    % if username:
+        <div align="right">
+          <a href="${url}">View ${username}'s blog &gt;</a>
+        </div>
+    % endif
   </div>
 % endif

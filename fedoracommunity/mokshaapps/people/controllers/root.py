@@ -147,9 +147,10 @@ class CompactPersonDetailsWidget(PersonDetailsWidget):
 class PersonBlogWidget(Feed):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.planet'
     javascript = [expander_js]
-    params = ['limit']
+    params = ['limit', 'username']
     limit = 3
     url = None
+    username = None
 
     def update_params(self, d):
         super(PersonBlogWidget, self).update_params(d)
@@ -228,6 +229,7 @@ class RootController(Controller):
 
         if info:
             options['url'] = info['feed']
+            options['username'] = username
             tmpl_context.widget = person_blog_widget
         else:
             tmpl_context.widget = lambda: ''
