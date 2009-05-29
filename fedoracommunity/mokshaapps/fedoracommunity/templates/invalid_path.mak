@@ -33,8 +33,7 @@
          </div>
          <div id="content">
            <div class="left-content-column">
-             <div>
-                <H1>${title}</H1>
+                <h1>${title}</h1>
                 % if not login:
                     Sorry! Sometimes things break. The path <strong>"${invalid_path}"</strong> does not exist.  You have somehow
                     been directed to an invalid path.  If this was a link please
@@ -45,8 +44,7 @@
                     <a href="/" moksha_url="dynamic">Click here to go back to the Fedora Community front page.</a>
 
                 % else:
-                    The page you requested <strong>"${invalid_path}"</strong> requires that you be logged in to access it.
-                    Please login to view this page.
+                    <div class="login-error-message" style="margin-left: 0em;"><img alt="" src="/images/16_failured.png"/>&nbsp; The page you requested, <em>"${invalid_path}"</em> is available only to logged-in users. Please log in to view this page.</div>
 
                     ${tmpl_context.widget(came_from=invalid_path)}
                 % endif
@@ -54,7 +52,6 @@
                     moksha.update_marked_anchors($('a'));
                 </script>
              </div>
-           </div>
          </div>
        </div>
    </div>
