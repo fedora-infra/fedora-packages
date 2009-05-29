@@ -81,7 +81,7 @@ img#main-banner {
 }
 
 #tour h4 span a:hover {
-  color: #bbb;
+  color: #bbb !important;
 }
 
 #tour .tour-summary {
