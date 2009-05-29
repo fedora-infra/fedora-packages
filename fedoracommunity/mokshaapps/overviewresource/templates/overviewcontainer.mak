@@ -8,7 +8,7 @@
          % if tmpl_context.auth('Not(not_anonymous())'):
          <div id="banner-header">
 <a href="/pages/tour">
-<img src="${tmpl_context.get_url('/images/banners/main-banner_tour-promo.png')}"/>
+<img id="main-banner" src="${tmpl_context.get_url('/images/banners/main-banner_tour-promo.png')}"/>
 </a>
          </div>
 
