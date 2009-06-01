@@ -7,7 +7,7 @@
        <div id="left-content-column">
          % if tmpl_context.auth('Not(not_anonymous())'):
          <div id="banner-header">
-<a href="/pages/tour">
+<a href="/pages/tour" moksha_url="dynamic">
 <img id="main-banner" src="${tmpl_context.get_url('/images/banners/main-banner_tour-promo.png')}"/>
 </a>
          </div>
