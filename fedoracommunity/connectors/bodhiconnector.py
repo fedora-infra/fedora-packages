@@ -590,16 +590,14 @@ class BodhiConnector(IConnector, ICall, IQuery):
             row = {'release': name, 'stable_version': 'None',
                    'testing_version': 'None' }
             if tag == 'dist-rawhide':
-                # Skip rawhide, since the widget above it displays the 'Latest rawhide build'
-                #rawhide_builds = koji.listTagged(tag, package=package,
-                #                                 latest=True, inherit=True)
-                #if rawhide_builds:
-                #    nvr = parse_build(rawhide_builds[0]['nvr'])
-                #    row['stable_version'] = '%(version)s-%(release)s' % nvr
-                #else:
-                #    row['stable_version'] = 'No builds tagged with %s' % tag
-                #row['testing_version'] = HTML.tag('i', c='Not Applicable')
-                continue
+                rawhide_builds = koji.listTagged(tag, package=package,
+                                                 latest=True, inherit=True)
+                if rawhide_builds:
+                    nvr = parse_build(rawhide_builds[0]['nvr'])
+                    row['stable_version'] = '%(version)s-%(release)s' % nvr
+                else:
+                    row['stable_version'] = 'No builds tagged with %s' % tag
+                row['testing_version'] = HTML.tag('i', c='Not Applicable')
             else:
                 stable_updates = koji.listTagged(tag + '-updates',
                                                  package=package,
