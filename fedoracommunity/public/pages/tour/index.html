@@ -5,20 +5,11 @@
 <link rel="stylesheet" type="text/css" href="/toscawidgets/resources/fedoracommunity/public/css/myfedora-branding.css" media="all" />
 <link rel="stylesheet" type="text/css" href="/toscawidgets/resources/fedoracommunity/public/css/application-chrome.css" media="all" />
 <script type="text/javascript" src="/toscawidgets/resources/tw.jquery.base/static/javascript/jquery-1.3.2.js"></script>
-<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui_core/static/javascript/ui/ui.core.js"></script>
-<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui/static/javascript/ui/minified/ui.draggable.min.js"></script>
-<script type="text/javascript" src="http://localhost:9000/static/protocols/stomp/stomp.js"></script>
-<script type="text/javascript" src="http://localhost:9000/static/Orbited.js"></script>
-
-<script type="text/javascript" src="/toscawidgets/resources/moksha.widgets.misc.ptd.ptd/static/konami.js"></script>
+<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui_core/static/javascript/ui/ui.core.js"></script
 <script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui/static/javascript/ui/minified/ui.resizable.min.js"></script>
 <script type="text/javascript" src="/toscawidgets/resources/tw.jquery.direction/static/javascript/jquery.direction.js"></script>
-<script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui_tabs/static/javascript/ui/ui.tabs.js"></script>
 <script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/jquery.json.js"></script>
-<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/jquery.template.js"></script>
 <script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/moksha.js"></script>
-<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/moksha.extensions.js"></script>
-<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/ui/moksha.ui.tabs.js"></script>
 
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title>Fedora Community</title>
@@ -44,19 +35,28 @@
 
 <body id="chrome" class="home">
     <div id="wrapper">
-        
+
         <div id="head">
-            
+
             <script type="text/javascript">
-moksha_base_url = "/";
-moksha_csrf_token = "";
+
+var purl = moksha.parseUri(window.location);
+if (purl.directory != '/pages/tour/') {
+    var olen = '/pages/tour/'.length;
+    var len = purl.directory.length - olen;
+    moksha_base_url = purl.directory.substring(0, len);
+} else {
+    moksha_base_url = "/";
+}
+
+moksha_csrf_token = purl.queryKey['_csrf_token']
 moksha_userid = "";
-moksha_debug = true;
-moksha_profile = true;
+moksha_debug = false;
+moksha_profile = false;
 </script>
 
-    
-            <h1><a href="/">Fedora Community</a></h1>
+
+            <h1><a href="/" moksha_url="static">Fedora Community</a></h1>
             <div id="toolbar">
                     <div id="login-toolbar">
 
@@ -101,56 +101,43 @@ moksha_profile = true;
         <script type="text/javascript">
             moksha.update_marked_anchors($('a'));
         </script>
-    
+
         <div id="main_app">
 
            <div id="main_nav">
  <div id="main_nav_tabs">
   <div id="app-sidebar">
     <div id="navigation_sidebar" class="nav">
-      
+
 <div id="main_nav_tabs_tabs">
-
-
-
-
-    
-    
     <ul>
         <li>
-
-          
-        <a href="/apps/fedoracommunity.overviewresource"
-           title="Overview"
-           panel="overview-uuida185ad56-f4de-4682-85c8-6afef6ba1de6">
+        <a href="/" moksha_url="static">
           Overview
         </a>
 
         </li>
         <li>
-          
-        <a href="/apps/fedoracommunity.packagemaintresource"
-           title="Package Maintenance"
-           panel="package_maintenance-uuida7eb2f98-bd8c-4624-9550-64da02099a58">
+
+        <a href="/package_maintenance"
+           moksha_url="static">
           Package Maintenance
         </a>
 
         </li>
 
         <li>
-          
-        <a href="/apps/fedoracommunity.peopleresource"
-           title="People"
-           panel="people-uuid7e71fae0-170c-4d61-84f5-3bccb90e1a64">
+
+        <a href="/people"
+           moksha_url="static">
           People
         </a>
 
         </li>
         <li>
-          
-        <a href="/apps/fedoracommunity.search"
-           title="Search"
-           panel="search-uuid4fe3d23e-504c-40d0-980c-fdff024e415a">
+
+        <a href="/search"
+           moksha_url="static">
           Search
         </a>
 
@@ -163,7 +150,7 @@ moksha_profile = true;
   </div>
 
   <div id="content">
-    
+
 <div id="left-content-column">
 <!-- STUFF GOES HERE -->
 
@@ -188,7 +175,7 @@ moksha_profile = true;
 
 <div class="col-spread">
 <div id="col-1">
-<a href="/pages/tour/packages.html">
+<a href="/pages/tour/packages.html"  moksha_url="static">
 <img src="/images/tour/illustration_package-details.png" alt="" />
 </a>
 <h4>Package Details</h4>
@@ -202,12 +189,12 @@ version overviews, build and
 update statuses, downloads,
 source, and more!
 </p>
-<a class="button" href="/pages/tour/packages.html">Learn More</a>
+<a class="button" href="/pages/tour/packages.html"  moksha_url="static">Learn More</a>
 </div>
 </div>
 
 <div id="col-2">
-<a href="/pages/tour/people.html">
+<a href="/pages/tour/people.html"  moksha_url="static">
 <img src="/images/tour/illustration_people-details.png" alt="" />
 </a>
 <h4>People Details</h4>
@@ -221,12 +208,12 @@ information to communicate
 with them about an issue
 and find out their time zone.
 </p>
-<a class="button" href="/pages/tour/people.html">Learn More</a>
+<a class="button" href="/pages/tour/people.html"  moksha_url="static">Learn More</a>
 </div>
 </div>
 
 <div id="col-3">
-<a href="/pages/tour/search.html"><img src="/images/tour/illustration_search-fedora.png" alt="" /></a>
+<a href="/pages/tour/search.html"  moksha_url="static"><img src="/images/tour/illustration_search-fedora.png" alt="" /></a>
 <h4>Search Fedora</h4>
 <div>
 <p>
@@ -234,12 +221,12 @@ Need to find a list of all the
 packages related to a
 particular application?
 Not sure what the package
-name is for a particular 
-application? Know someone's 
+name is for a particular
+application? Know someone's
 IRC nick but not their name?
 Find out!
 </p>
-<a class="button" href="/pages/tour/search.html">Learn More</a>
+<a class="button" href="/pages/tour/search.html"  moksha_url="static">Learn More</a>
 </div>
 </div>
 
@@ -257,7 +244,7 @@ Find out!
 <!-- STUFF STOPS HERE -->
 
 
-         
+
 
   </div>
 
@@ -266,7 +253,7 @@ Find out!
 
         </div>
     </div>
-    
+
         <div id="bottom">
             <div id="footer">
                 <p class="copy">
@@ -277,7 +264,7 @@ Find out!
                     The Fedora Project is maintained and driven by the community and sponsored by Red Hat.  This is a community maintained site.  Red Hat is not responsible for content.
                 </p>
                 <ul>
-                    <li class="first"><a href="/en/sponsors">Sponsors</a></li>
+                    <li class="first"><a href="http://fedoraproject.org/en/sponsors">Sponsors</a></li>
                     <li><a href="http://fedoraproject.org/wiki/Legal">Legal</a></li>
                     <li><a href="http://fedoraproject.org/wiki/Legal/TrademarkGuidelines">Trademark Guidelines</a></li>
                     <li><a href="http://fedoracommunity.fedorahosted.org">Get the source for Fedora Community</a></li>
@@ -288,10 +275,11 @@ Find out!
                 <a href="http://moksha.fedorahosted.org"><img src="/images/Powered-by-moksha_button.png"/></a>
             </div>
         </div>
-    
+
 <script type="text/javascript">
-jQuery("#main_nav_tabs").mokshatabs({"tabdefault": 0, "staticLoadOnClick": true})
-</script></body>
+moksha.update_marked_anchors($(document));
+</script>
+</body>
 </html>
 
 
