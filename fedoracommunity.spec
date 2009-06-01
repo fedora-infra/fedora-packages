@@ -1,14 +1,14 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
-Name:           myfedora 
-Version:        0.1dev
-Release:        4.git57240e6%{?dist}
+Name:           fedoracommunity
+Version:        0.2dev
+Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
-License:        GPLv2+
-URL:            https://fedorahosted.org/myfedora
-Source0:        myfedora-%{version}.tar.bz2
+License:        AGPLv3
+URL:            https://fedorahosted.org/fedoracommunity
+Source0:        fedoracommunity-%{version}.tar.bz2
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -16,26 +16,19 @@ BuildArch:      noarch
 BuildRequires: python-setuptools 
 BuildRequires: python-setuptools-devel
 BuildRequires: python-devel
-BuildRequires: TurboGears2
 BuildRequires: python-pygments
 
-Requires: TurboGears2
+Requires: moksha
 Requires: intltool
 Requires: koji
 Requires: python-fedora
-Requires: mod_wsgi
-Requires: mod_nss
-Requires: python-cjson
-Requires: python-simplejson
-Requires: python-turbojson
 Requires: python-feedparser
 Requires: python-iniparse
-Requires: python-tw-jquery
-Requires: python-tw-forms
-Requires: python-repoze-who
-Requires: python-repoze-tm2
+
+Obsoletes: myfedora
+
 %description
-MyFedora is a web application for consolidating Fedora Infrastructure
+Fedora Community is a web application for consolidating Fedora Infrastructure
 
 %prep
 %setup -q
@@ -48,16 +41,15 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 %{__python} setup.py install -O1 --skip-build \
     --install-data=%{_datadir} --root %{buildroot}
 
-%{__mkdir_p} %{buildroot}/var/lib/myfedora
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/httpd/conf.d
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/myfedora
-%{__mkdir_p} %{buildroot}%{_datadir}/%{name}
-%{__mkdir_p} -m 0755 %{buildroot}/%{_localstatedir}/log/myfedora
-%{__mkdir_p} -m 0700 %{buildroot}/%{_localstatedir}/cache/myfedora
+%{__mkdir_p} %{buildroot}/var/lib/
+%{__mkdir_p} %{buildroot}%{_datadir}/%{name}/apache
+%{__mkdir_p} -m 0755 %{buildroot}/%{_localstatedir}/log/%{name}
+%{__mkdir_p} -m 0700 %{buildroot}/%{_localstatedir}/cache/%{name}
 
-%{__install} -m 640 apache/%{name}.conf %{buildroot}%{_sysconfdir}/httpd/conf.d/%{name}.conf
-%{__install} apache/%{name}.wsgi %{buildroot}%{_datadir}/%{name}/%{name}.wsgi
-%{__install} myfedora.ini %{buildroot}%{_sysconfdir}/myfedora/myfedora.ini
+%{__install} -m 640 apache/%{name}.conf %{buildroot}%{_datadir}/%{name}/apache
+
+%{__install} apache/%{name}.wsgi %{buildroot}%{_datadir}/%{name}/apache/%{name}.wsgi
+%{__install} sample-production.ini %{buildroot}%{_sysconfdir}/%{name}/apache
 %clean
 %{__rm} -rf %{buildroot}
 
@@ -66,30 +58,12 @@ MyFedora is a web application for consolidating Fedora Infrastructure
 %defattr(-,root,root,-)
 %doc README.txt
 %{python_sitelib}/%{name}/
-%{python_sitelib}/mokshaapp
-%{_sysconfdir}/httpd/conf.d/myfedora.conf
 %attr(-,apache,root) %{_datadir}/%{name}
-%attr(-,apache,root) %config(noreplace) %{_sysconfdir}/myfedora
-%attr(-,apache,root) %{_localstatedir}/log/myfedora
+%attr(-,apache,root) %config(noreplace) %{_sysconfdir}/%{name}
+%attr(-,apache,root) %{_localstatedir}/log/%{name}
 %{python_sitelib}/%{name}-%{version}-py%{pyver}.egg-info/
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/myfedora
 
 %changelog
-* Mon Oct 27 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-4.git57240e6
-- new upstream version removes console.log calls in javascript
-
-* Mon Oct 27 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-3.gita2550e6
-- new upstream version fixes the fedora announce rss
-
-* Mon Oct 27 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-2.gite720b06f
-- new upstream release fixes a namespace error in the utils module
-
-* Sat Oct 25 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-1.git19524dc3
-- new upstream snapshot fixes python 2.4 deprecations
-
-* Fri Oct 24 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-0.git6525e42e
-- fixed the upstream setuptools
-
-* Tue Oct 21 2008 John (J5) Palmieri <johnp@redhat.com> - 0.1dev-0.git5083686a
-- first package
-
+* Mon Jun 01 2009 John (J5) Palmieri <johnp@redhat.com> - 0.2-1
+- first package after myfedora->fedoracommunity transition
