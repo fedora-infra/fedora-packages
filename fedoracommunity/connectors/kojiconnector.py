@@ -19,6 +19,7 @@ import koji
 
 from pylons import config, request
 from datetime import datetime
+from cgi import escape
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.api.connectors import get_connector
@@ -276,10 +277,12 @@ class KojiConnector(IConnector, ICall, IQuery):
         for entry in changelog_list:
             # try to extract a version and e-mail from the authors field
             m = self._changelog_version_extract_re.match(entry['author'])
-
-            entry['author'] = m.group(1)
-            entry['email'] = m.group(2)
-            entry['version'] = m.group(3)
+            if m:
+                entry['author'] = escape(m.group(1))
+                entry['email'] = m.group(2)
+                entry['version'] = m.group(3)
+            else:
+                entry['author'] = escape(entry['author'])
 
             # convert the date to a nicer format
             entry['display_date'] = \
