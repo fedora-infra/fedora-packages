@@ -1,0 +1,8 @@
+recursive-include production *
+recursive-include fedoracommunity *.mak
+
+include fedoracommunity.spec
+include orbited.cfg
+include README.txt
+include AUTHORS
+include COPYING
