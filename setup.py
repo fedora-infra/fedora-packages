@@ -48,7 +48,6 @@ setup(
     url='http://fedoracommunity.fedorahosted.org',
     install_requires=[
         "moksha",
-        "Pylons",
         "PyOpenSSL",
         "pytz",
         ],
