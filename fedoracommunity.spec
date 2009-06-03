@@ -42,27 +42,29 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
     --install-data=%{_datadir} --root %{buildroot}
 
 %{__mkdir_p} %{buildroot}/var/lib/
-%{__mkdir_p} %{buildroot}%{_datadir}/%{name}/apache
+%{__mkdir_p} %{buildroot}%{_datadir}/%{name}/production/apache
 %{__mkdir_p} -m 0755 %{buildroot}/%{_localstatedir}/log/%{name}
 %{__mkdir_p} -m 0700 %{buildroot}/%{_localstatedir}/cache/%{name}
 
-%{__install} -m 640 apache/%{name}.conf %{buildroot}%{_datadir}/%{name}/apache
+%{__install} -m 640 production/apache/%{name}.conf %{buildroot}%{_datadir}/%{name}/production/apache
+%{__install} production/apache/%{name}.wsgi %{buildroot}%{_datadir}/%{name}/production/apache/%{name}.wsgi
+%{__install} production/sample-production.ini %{buildroot}%{_datadir}/%{name}/production
 
-%{__install} apache/%{name}.wsgi %{buildroot}%{_datadir}/%{name}/apache/%{name}.wsgi
-%{__install} sample-production.ini %{buildroot}%{_sysconfdir}/%{name}/apache
 %clean
 %{__rm} -rf %{buildroot}
 
 
 %files 
 %defattr(-,root,root,-)
-%doc README.txt
+%doc README.txt COPYING AUTHORS
 %{python_sitelib}/%{name}/
-%attr(-,apache,root) %{_datadir}/%{name}
-%attr(-,apache,root) %config(noreplace) %{_sysconfdir}/%{name}
+%attr(-,apache,root) %dir %{_datadir}/%{name}
+%attr(-,apache,root) %{_datadir}/%{name}/production
+%attr(-,apache,root) %{_datadir}/%{name}/public
 %attr(-,apache,root) %{_localstatedir}/log/%{name}
 %{python_sitelib}/%{name}-%{version}-py%{pyver}.egg-info/
-%attr(-,apache,apache) %dir %{_localstatedir}/cache/myfedora
+%{python_sitelib}/%{name}-%{version}-py%{pyver}-nspkg.pth
+%attr(-,apache,apache) %dir %{_localstatedir}/cache/%{name}
 
 %changelog
 * Mon Jun 01 2009 John (J5) Palmieri <johnp@redhat.com> - 0.2-1
