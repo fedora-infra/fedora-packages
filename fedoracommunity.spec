@@ -2,7 +2,7 @@
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
 Name:           fedoracommunity
-Version:        0.2
+Version:        0.3
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
@@ -65,7 +65,11 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{python_sitelib}/%{name}-%{version}-py%{pyver}.egg-info/
 %{python_sitelib}/%{name}-%{version}-py%{pyver}-nspkg.pth
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/%{name}
+%{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Thu Jun 04 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3-1
+- add the makeyumcache script
+
 * Mon Jun 01 2009 John (J5) Palmieri <johnp@redhat.com> - 0.2-1
 - first package after myfedora->fedoracommunity transition
