@@ -1,6 +1,7 @@
 recursive-include production *
 recursive-include fedoracommunity *.mak
 
+include fedoracommunity_makeyumcache
 include fedoracommunity.spec
 include orbited.cfg
 include README.txt

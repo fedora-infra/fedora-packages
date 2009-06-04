@@ -38,7 +38,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='0.2',
+    version='0.3',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',
@@ -51,6 +51,7 @@ setup(
         "PyOpenSSL",
         "pytz",
         ],
+    scripts=['fedoracommunity_makeyumcache'],
     packages=packages,
     include_package_data=True,
     test_suite='nose.collector',
