@@ -2,8 +2,8 @@
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
 Name:           fedoracommunity
-Version:        0.4
-Release:        1%{?dist}
+Version:        0.3
+Release:        3%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
 License:        AGPLv3
@@ -72,7 +72,7 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
-* Thu Jun 04 2009 Luke Macken <lmacken@redhat.com> - 0.3-2
+* Thu Jun 04 2009 Luke Macken <lmacken@redhat.com> - 0.3-3
 - Fix namespace package issues.
 
 * Thu Jun 04 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3-1
