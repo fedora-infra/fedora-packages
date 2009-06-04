@@ -67,7 +67,7 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %attr(-,apache,root) %{_datadir}/%{name}/public
 %attr(-,apache,root) %{_localstatedir}/log/%{name}
 %{python_sitelib}/%{name}-%{version}-py%{pyver}.egg-info/
-%{python_sitelib}/%{name}-%{version}-py%{pyver}-nspkg.pth
+#%{python_sitelib}/%{name}-%{version}-py%{pyver}-nspkg.pth
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/%{name}
 %{_bindir}/fedoracommunity_makeyumcache
 
