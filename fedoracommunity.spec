@@ -2,7 +2,7 @@
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
 Name:           fedoracommunity
-Version:        0.3
+Version:        0.4
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
@@ -13,10 +13,12 @@ Source0:        fedoracommunity-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-BuildRequires: python-setuptools 
 BuildRequires: python-setuptools-devel
 BuildRequires: python-devel
 BuildRequires: python-pygments
+BuildRequires: pytz
+BuildRequires: pyOpenSSL
+BuildRequires: moksha
 
 Requires: moksha
 Requires: intltool
@@ -24,6 +26,8 @@ Requires: koji
 Requires: python-fedora
 Requires: python-feedparser
 Requires: python-iniparse
+Requires: pytz
+Requires: pyOpenSSL
 
 Obsoletes: myfedora
 
@@ -68,8 +72,14 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Thu Jun 04 2009 Luke Macken <lmacken@redhat.com> - 0.3-2
+- Fix namespace package issues.
+
 * Thu Jun 04 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3-1
 - add the makeyumcache script
+
+* Wed Jun 03 2009 Luke Macken <lmacken@redhat.com> - 0.2-2
+- Require pytz and pyOpenSSL, and Moksha
 
 * Mon Jun 01 2009 John (J5) Palmieri <johnp@redhat.com> - 0.2-1
 - first package after myfedora->fedoracommunity transition
