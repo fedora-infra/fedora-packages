@@ -6,7 +6,7 @@
         <dl>
           % for i in a['items']:
             <dd>
-              <img src="/images/${i['icon']}" />
+              <img src="${tmpl_context.get_url('/images/' + i['icon'])}" />
                 <a href="${i['url']}" moksha_url="dynamic">${i['count']} ${i['label']}</a>
             </dd>
           % endfor

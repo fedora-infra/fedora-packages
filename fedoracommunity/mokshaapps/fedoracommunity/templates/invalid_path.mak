@@ -44,7 +44,7 @@
                     <a href="/" moksha_url="dynamic">Click here to go back to the Fedora Community front page.</a>
 
                 % else:
-                    <div class="login-error-message" style="margin-left: 0em;"><img alt="" src="/images/16_failured.png"/>&nbsp; The page you requested, <em>"${invalid_path}"</em> is available only to logged-in users. Please log in to view this page.</div>
+                    <div class="login-error-message" style="margin-left: 0em;"><img alt="" src="${tg.url('/images/16_failured.png')}"/>&nbsp; The page you requested, <em>"${invalid_path}"</em> is available only to logged-in users. Please log in to view this page.</div>
 
                     ${tmpl_context.widget(came_from=invalid_path)}
                 % endif
