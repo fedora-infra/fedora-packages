@@ -117,8 +117,11 @@ setup(
     fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
     fedoracommunity.planet = fedoracommunity.widgets.planet:PlanetFedoraWidget
     fedoracommunity.quicklinks = fedoracommunity.widgets.quicklinks:QuickLinksWidget
+    placeholder = moksha.api.widgets:Placeholder
+    grid = moksha.api.widgets:Grid
 
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
+
     """
 )
