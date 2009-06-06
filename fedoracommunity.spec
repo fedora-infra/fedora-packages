@@ -3,7 +3,7 @@
 
 Name:           fedoracommunity
 Version:        0.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
 License:        AGPLv3
@@ -44,6 +44,7 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{__rm} -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build \
     --install-data=%{_datadir} --root %{buildroot}
+%{__python} setup.py archive_tw_resources -f -o %{buildroot}%{_datadir}/%{name}/public/toscawidgets
 
 %{__mkdir_p} %{buildroot}/var/lib/
 %{__mkdir_p} %{buildroot}%{_datadir}/%{name}/production/apache
@@ -72,6 +73,9 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Sat Jun 06 2009 Luke Macken <lmacken@redhat.com> - 0.3-4
+- Extract our widget resources
+
 * Thu Jun 04 2009 Luke Macken <lmacken@redhat.com> - 0.3-3
 - Fix namespace package issues.
 
