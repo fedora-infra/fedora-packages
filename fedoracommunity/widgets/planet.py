@@ -22,6 +22,7 @@
 .. moduleauthor:: Luke Macken <lmacken@redhat.com>
 """
 
+from tg import url
 from tw.api import CSSLink, JSLink
 from moksha.api.widgets.feed import Feed
 from fedoracommunity.widgets.expander import expander_js
@@ -30,6 +31,6 @@ class PlanetFedoraWidget(Feed):
     url = 'http://planet.fedoraproject.org/atom.xml'
     template = "mako:fedoracommunity.widgets.templates.planet"
     javascript = [expander_js]
-    css = [CSSLink(link='/css/planet-fedora-bubbles.css')]
+    css = [CSSLink(link=url('/css/planet-fedora-bubbles.css'))]
     params = ['limit']
     limit = 3
