@@ -24,7 +24,7 @@
        <a href="https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&product=${product}&component=${package}&bug_status=CLOSED" target="_blank"><dd class="main-count-value" id="${id}_num_closed">${num_closed}</dd></a>
         <dd class="additional-info" colspan="2" id="${id}_num_closed_this_week">${num_closed_this_week}</dd>
     </dl>
-    <div class="action-box"><a class="action-header" href="https://bugzilla.redhat.com/enter_bug.cgi?product=${product}&version=${version}&component=${package}">Open A New Bug<br /> <img src="/images/action-box_add-button.png"></a>
+    <div class="action-box"><a class="action-header" href="https://bugzilla.redhat.com/enter_bug.cgi?product=${product}&version=${version}&component=${package}">Open A New Bug<br /> <img src="${tmpl_context.get_url('/images/action-box_add-button.png')}"></a>
     </div>
 <div class="clear" />
 </div>

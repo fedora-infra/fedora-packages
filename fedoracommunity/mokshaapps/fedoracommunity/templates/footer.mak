@@ -16,7 +16,7 @@
                     <li><a href="http://moksha.fedorahosted.org">Get the source for Moksha</a></li>
                 </ul>
                 <br />
-                <a href="http://moksha.fedorahosted.org"><img src="/images/Powered-by-moksha_button.png"/></a>
+                <a href="http://moksha.fedorahosted.org"><img src="${tg.url('/images/Powered-by-moksha_button.png')}"/></a>
             </div>
         </div>
     </%def>

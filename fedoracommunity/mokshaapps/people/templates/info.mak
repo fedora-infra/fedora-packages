@@ -2,7 +2,7 @@
   <div class="info_content">
     <div class="info_details">
 
-      <div class="hackergotchi"><img src="${face}"/></div>
+      <div class="hackergotchi"><img src="${tmpl_context.get_url(face)}"/></div>
 
       <div class="col left_col">
         <div class="info_basic_details info_container">
@@ -96,8 +96,8 @@
             slicePoint: 0,
             widow: 1,
             userCollapse: true,
-            expandText: 'Show full key <img src="/images/arrow_down.png">',
-            userCollapseText: 'Hide full key <img src="/images/arrow_up.png">',
+            expandText: 'Show full key <img src="${tmpl_context.get_url(\'/images/arrow_down.png\')}">',
+            userCollapseText: 'Hide full key <img src="${tmpl_context.get_url(\'/images/arrow_up.png\')}">',
       });
      % endif
 
