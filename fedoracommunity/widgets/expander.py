@@ -23,4 +23,4 @@ http://plugins.learningjquery.com/expander
 
 from tw.api import JSLink
 
-expander_js = JSLink(link='/javascript/jquery.expander.js')
+expander_js = JSLink(link='/community/javascript/jquery.expander.js')

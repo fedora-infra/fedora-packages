@@ -16,4 +16,4 @@
 
 from tw.api import JSLink
 
-clock_js = JSLink(link='/javascript/jquery.jclock.js')
+clock_js = JSLink(link='/community/javascript/jquery.jclock.js')

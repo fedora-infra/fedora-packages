@@ -30,6 +30,6 @@ class PlanetFedoraWidget(Feed):
     url = 'http://planet.fedoraproject.org/atom.xml'
     template = "mako:fedoracommunity.widgets.templates.planet"
     javascript = [expander_js]
-    css = [CSSLink(link='/css/planet-fedora-bubbles.css')]
+    css = [CSSLink(link='/community/css/planet-fedora-bubbles.css')]
     params = ['limit']
     limit = 3
