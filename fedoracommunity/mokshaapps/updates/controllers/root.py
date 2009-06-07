@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from tg import expose, tmpl_context, validate, request
+from tg import expose, tmpl_context, validate, request, url
 from tw.api import JSLink, Widget
 from formencode import validators
 from paste.deploy.converters import asbool
@@ -32,7 +32,7 @@ from fedoracommunity.widgets import SubTabbedContainer
 from fedoracommunity.widgets.expander import expander_js
 from links import updates_links
 
-bodhi_js = JSLink(link='/javascript/bodhi.js', modname=__name__,
+bodhi_js = JSLink(link=url('/javascript/bodhi.js'), modname=__name__,
                   javascript=[expander_js])
 
 class UpdatesDashboardWidget(Widget):
