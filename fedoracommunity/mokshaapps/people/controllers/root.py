@@ -98,7 +98,7 @@ class PeopleGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.people.templates.table_widget'
 
 
-class PersonDetailsWidget(Widget):
+class PersonDetailsWidget(ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.info'
     params = ['person', 'id', 'compact', 'profile', 'face', 'utc_offset']
     javascript = [expander_js, clock_js]
