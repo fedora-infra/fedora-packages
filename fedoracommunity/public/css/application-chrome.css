@@ -1532,7 +1532,7 @@ div.description-details-columns dt {
 }
 
 div.description-details-columns dl {
-  width: 47%;
+  width: 46% !important;
   padding: 0px 8px 5px;
   -moz-border-radius: 5px;
   background-color: #dae9f8;
