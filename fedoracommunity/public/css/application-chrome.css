@@ -1129,8 +1129,8 @@ div.links-toolbar li {
   list-style-image: none;
   list-style-position: outside;
   list-style-type: none;
-  padding-right:2ex;
-  padding-left: 2ex;
+  padding-right:1.5ex !important;
+  padding-left: 1.5ex !important;
   border-right: 1px solid #ccc;
   height: 4ex !important;
   margin-top: 1ex;
