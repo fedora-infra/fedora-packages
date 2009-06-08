@@ -976,8 +976,8 @@ h1#greeter img {
 .list .pager li.current-page,
 .list .pager li.page-ellipses,
 .list .pager li.no-link {
-  padding-left: 7px;
-  padding-right: 7px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .list .pager li.page-ellipses {
