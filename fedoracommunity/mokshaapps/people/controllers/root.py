@@ -143,7 +143,7 @@ class PersonDetailsWidget(ContextAwareWidget):
 class CompactPersonDetailsWidget(PersonDetailsWidget):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.info_compact'
 
-class PersonBlogWidget(Feed):
+class PersonBlogWidget(Feed, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.planet'
     javascript = [expander_js]
     params = ['limit', 'username']
