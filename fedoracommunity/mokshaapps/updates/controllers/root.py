@@ -24,7 +24,7 @@ import simplejson as json
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, not_anonymous, MokshaWidget
 from moksha.api.connectors import get_connector
-from moksha.api.widgets import Grid
+from moksha.api.widgets import Grid, ContextAwareWidget
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 
@@ -35,7 +35,7 @@ from links import updates_links
 bodhi_js = JSLink(link='/community/javascript/bodhi.js', modname=__name__,
                   javascript=[expander_js])
 
-class UpdatesDashboardWidget(Widget):
+class UpdatesDashboardWidget(ContextAwareWidget):
     params = ['id', 'pending', 'testing', 'stable', 'username']
     template = 'mako:fedoracommunity.mokshaapps.updates.templates.dashboard_widget'
 
@@ -56,7 +56,7 @@ class UpdateHoverMenu(Widget):
     show_version = False
     strip_name = False
 
-class UpdatesGrid(Grid):
+class UpdatesGrid(Grid, ContextAwareWidget):
     resource = 'bodhi'
     resource_path = 'query_updates'
     children = [UpdateHoverMenu('update_hover_menu')]

@@ -36,7 +36,7 @@
                 </td>
                 <td>@{date_pushed_display}</td>
                 <td>@{status}
-                    <div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}" moksha_url="dynamic"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</a></div>
+                    <div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}" moksha_url="dynamic"><img src="${tmpl_context.get_url('/images/16_karma-@{karma_level}.png')}" />@{karma_str} karma</a></div>
                 </td>
                 <td>
                   @{details}

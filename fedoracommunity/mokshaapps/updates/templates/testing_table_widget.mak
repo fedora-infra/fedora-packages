@@ -41,7 +41,7 @@
                 <td><br/>@{releases:filter(_render_br_list)}</td>
                 <td>@{date_pushed_display}</td>
                 <td><span>@{status}</span>
-                <div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}"><img src="/images/16_karma-@{karma_level}.png" />@{karma_str} karma</a></div>
+                <div class="karma"><a href="https://admin.fedoraproject.org/updates/@{title}"><img src="${tmpl_context.get_url('/images/16_karma-@{karma_level}.png')}" />@{karma_str} karma</a></div>
                 </td>
                 <td>@{actions}</td>
             </tr>
