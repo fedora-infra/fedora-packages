@@ -17,7 +17,7 @@
 import logging
 
 from tw.api import Widget
-from tg import expose, tmpl_context, require, request
+from tg import expose, tmpl_context, require, request, url
 from uuid import uuid4
 from datetime import datetime
 from repoze.what.predicates import not_anonymous
@@ -222,7 +222,6 @@ class RootController(Controller):
     @expose('mako:moksha.templates.widget')
     def planet(self, username=None):
         options = {}
-
         planet = get_connector('planet')
         info = planet.get_user_details(username)
 
