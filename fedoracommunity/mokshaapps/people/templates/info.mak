@@ -108,7 +108,7 @@
       });
 
       $("#utc_clock_${id}").jclock({
-          format: '%I:%M %p',
+          format: '%I:%M',
           utc: true,
           timeout: 60000
       });
