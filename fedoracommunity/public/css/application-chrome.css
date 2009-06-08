@@ -391,7 +391,7 @@ h3 {
 .list table th,
 .list table td,
 .list table tr {
-  font-size: 9pt !important;
+  font-size: 8pt !important;
   border: none !important;
   vertical-align: top;
 }
@@ -750,7 +750,7 @@ span.panel {
   font-weight: 900;
   color: black !important;
   text-transform: uppercase;
-  font-size: 9pt !important;
+  font-size: 8pt !important;
 }
 
 /** right sidebar column styles **/
@@ -1229,7 +1229,7 @@ div.info_content table th {
   border: none !important;
   padding-top: 1px !important;
   padding-bottom: 1px !important;
-  font-size: 9pt;
+  font-size: 8pt;
 }
 
 div.compact_info_content th,
