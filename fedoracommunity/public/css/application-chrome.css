@@ -596,6 +596,11 @@ span.timestamp {
   float: left;
 }
 
+#left-content-column div.login-banner #login-box,
+.left-content-column div.login-banner #login-box {
+  width: 45%;
+}
+
 #left-content-column .panel#login_widget,
 .left-content-column .panel#login_widget {
   margin-bottom: 0ex !important;
