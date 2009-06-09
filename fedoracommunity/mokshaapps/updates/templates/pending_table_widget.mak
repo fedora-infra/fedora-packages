@@ -38,7 +38,7 @@
                     <div>@{versions:filter(_render_br_list)}&nbsp;</div>
                   % else:
                     @{title:filter(render_update_builds)}
-				  % endif
+                  % endif
                 </td>
                 <td><br/>@{releases:filter(_render_br_list)}</td>
                 <td>@{date_submitted_display}</td>
@@ -47,7 +47,7 @@
             </tr>
         </tbody>
     </table>
-    <div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
+    <div id="grid-controls" if="visible_rows >= total_rows && total_rows == 0">
         <div class="message template" id="info_display" >
            There are no pending updates
         </div>

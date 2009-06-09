@@ -52,7 +52,7 @@
             </tr>
         </tbody>
     </table>
-    <div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
+    <div id="grid-controls" if="visible_rows >= total_rows && total_rows == 0">
         <div class="message template" id="info_display" >
            There are no testing updates
         </div>
