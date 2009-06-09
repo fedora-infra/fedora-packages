@@ -118,7 +118,7 @@ unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/ta
                               'filters': {
                                   'status':'pending',
                                   'profile': False,
-                                  'username': None
+                                  'username': None,
                                   }
                               })
 testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/table',
@@ -128,7 +128,7 @@ testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/tabl
                               'filters': {
                                   'status':'testing',
                                   'profile': False,
-                                  'username': None
+                                  'username': None,
                                   }
                               })
 stable_updates_app = MokshaApp('Stable Updates', 'fedoracommunity.updates/table',
@@ -138,7 +138,7 @@ stable_updates_app = MokshaApp('Stable Updates', 'fedoracommunity.updates/table'
                               'filters': {
                                   'status':'stable',
                                   'profile': False,
-                                  'username': None
+                                  'username': None,
                                   }
                               })
 
@@ -258,7 +258,8 @@ class RootController(Controller):
 
     @expose('mako:fedoracommunity.mokshaapps.updates.templates.table_container')
     @validate(validators={'rows_per_page': validators.Int()})
-    def table(self, rows_per_page=5, filters=None, more_link_code=None, show_title = False, title_level = 2):
+    def table(self, rows_per_page=5, filters=None, more_link_code=None,
+             show_title=False, title_level=2, group_updates=False):
         ''' table handler
 
         This handler displays the main table by itself
@@ -319,7 +320,8 @@ class RootController(Controller):
                 title += 'All Packages'
 
         options = dict(filters=filters, rows_per_page=rows_per_page,
-                       more_link=more_link, numericPager=numericPager)
+                       more_link=more_link, numericPager=numericPager,
+                       group_updates=asbool(group_updates))
 
         return dict(options=options, title = title, title_level = str(title_level))
 

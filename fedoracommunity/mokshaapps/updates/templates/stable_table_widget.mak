@@ -32,7 +32,12 @@
         <tbody class="rowtemplate">
             <tr>
                 <td>
+                  % if group_updates:
+                    ${c.update_hover_menu(show_package=True, show_version=False)}
+                    <div>@{versions:filter(_render_br_list)}&nbsp;</div>
+                  % else:
                     @{title:filter(render_update_builds)}
+                  % endif
                 </td>
                 <td><br/>@{releases:filter(_render_br_list)}</td>
                 <td>@{date_pushed}</td>

@@ -238,6 +238,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 up['releases'] = releases
                 up['status'] = up['dist_updates'][0]['status']
                 up['nvr'] = up['dist_updates'][0]['title']
+                up['request_id'] = up['package_name'] + dist_update['version'].replace('.', '')
             else:
                 chunks = up['title'].split('-')
                 up['name'] = '-'.join(chunks[:-2])
@@ -245,12 +246,14 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 up['versions'] = chunks[-2]
                 up['releases'] = up['release']['long_name']
                 up['nvr'] = up['title']
+                up['request_id'] = up.get('updateid') or \
+                        up['nvr'].replace('.', '').replace(',', '')
 
             up['id'] = up['nvr'].split(',')[0]
 
             # A unique id that we can use in HTML class fields.
-            up['request_id'] = up.get('updateid') or \
-                    up['nvr'].replace('.', '').replace(',', '')
+            #up['request_id'] = up.get('updateid') or \
+            #        up['nvr'].replace('.', '').replace(',', '')
 
             actions = []
 
