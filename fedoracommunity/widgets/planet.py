@@ -23,10 +23,12 @@
 """
 
 from tw.api import CSSLink, JSLink
+from moksha.api.widgets import ContextAwareWidget
 from moksha.api.widgets.feed import Feed
 from fedoracommunity.widgets.expander import expander_js
 
-class PlanetFedoraWidget(Feed):
+
+class PlanetFedoraWidget(Feed, ContextAwareWidget):
     url = 'http://planet.fedoraproject.org/atom.xml'
     template = "mako:fedoracommunity.widgets.templates.planet"
     javascript = [expander_js]

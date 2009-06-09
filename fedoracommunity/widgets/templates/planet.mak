@@ -49,8 +49,8 @@
                 slicePoint: 300,
                 widow: 1,
                 userCollapse: true,
-                expandText: '<strong>Show more</strong> <img src="/images/arrow_down.png">',
-                userCollapseText: '<strong>Hide full post content</strong> <img src="/images/arrow_up.png">',
+                expandText: '<strong>Show more</strong> <img src="${tmpl_context.get_url('/images/arrow_down.png')}">',
+                userCollapseText: '<strong>Hide full post content</strong> <img src="${tmpl_context.get_url('/images/arrow_up.png')}">',
             });
 
         </script>
