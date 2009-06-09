@@ -49,7 +49,7 @@ class UpdatesDashboardWidget(ContextAwareWidget):
 
 updates_dashboard_widget = UpdatesDashboardWidget('updates_dashboard')
 
-class UpdateHoverMenu(Widget):
+class UpdateHoverMenu(ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.updates.templates.update_hover_menu'
     params = ['show_package', 'show_version']
     show_package = True
