@@ -7,7 +7,7 @@
                 % if tmpl_context.auth('not_anonymous()'):
                     <div id="login-toolbar">
                         <form class="login_button" action="${tg.url('/logout')}">
-                            Logged In: <span class="username"><a href="${tg.url('/my_profile')}" moksha_url="dynamic">${tmpl_context.identity['person']['human_name']}</a></span>
+                            Logged In: <span class="username"><a href="/my_profile" moksha_url="dynamic">${tmpl_context.identity['person']['human_name']}</a></span>
                             <input type="submit"  class="button" value="Log Out" > </input>
                         </form>
                     </div>
