@@ -124,6 +124,8 @@ setup(
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
     placeholder = moksha.api.widgets:Placeholder
     grid = moksha.api.widgets:Grid
+    clock = fedoracommunity.widgets.clock:clock_js
+    expander = fedoracommunity.widgets.expander:expander_js
 
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
