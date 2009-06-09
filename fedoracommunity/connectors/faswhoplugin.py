@@ -50,7 +50,7 @@ def fas_make_who_middleware(app, log_stream):
     csrf_mdprovider = CSRFMetadataProvider(
             login_handler=tg.config.get('moksha.csrf.login_handler', '/login_handler'))
 
-    form = RedirectingFormPlugin('/login', '/login_handler', '/logout',
+    form = RedirectingFormPlugin('/community/login', '/login_handler', '/logout',
                                  rememberer_name='fasident',
                                  reason_param='ec')
     form.classifications = { IIdentifier:['browser'],
@@ -211,8 +211,7 @@ class FASWhoPlugin(object):
 
             result = []
             fas_cache.remove_value(key=session_id + "_identity")
-            expired = ('%s=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT' %
-                       self.session_cookie,)
+            expired = '%s=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT' % self.session_cookie
             result.append(('Set-Cookie', expired))
             environ['FAS_LOGIN_INFO'] = None
             return result
