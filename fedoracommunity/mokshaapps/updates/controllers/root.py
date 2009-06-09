@@ -28,8 +28,7 @@ from moksha.api.widgets import Grid, ContextAwareWidget
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 
-from fedoracommunity.widgets import SubTabbedContainer
-from fedoracommunity.mokshaapps.updates.widgets import bodhi_js
+from fedoracommunity.widgets import SubTabbedContainer, bodhi_js
 from links import updates_links
 
 class UpdatesDashboardWidget(ContextAwareWidget):

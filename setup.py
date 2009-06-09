@@ -121,6 +121,7 @@ setup(
     fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
     fedoracommunity.planet = fedoracommunity.widgets.planet:PlanetFedoraWidget
     fedoracommunity.quicklinks = fedoracommunity.widgets.quicklinks:QuickLinksWidget
+    fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
     placeholder = moksha.api.widgets:Placeholder
     grid = moksha.api.widgets:Grid
 

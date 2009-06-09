@@ -17,5 +17,5 @@
 from tw.api import JSLink, Widget
 from fedoracommunity.widgets.expander import expander_js
 
-bodhi_js = JSLink(filename='javascript/bodhi.js', modname=__name__,
+bodhi_js = JSLink(filename='static/javascript/bodhi.js', modname=__name__,
                   javascript=[expander_js])
