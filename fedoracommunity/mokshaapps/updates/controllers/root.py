@@ -115,6 +115,7 @@ unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/ta
                           params={
                               'rows_per_page': 10,
                               'show_title': True,
+                              'group_updates': True,
                               'filters': {
                                   'status':'pending',
                                   'profile': False,
@@ -125,6 +126,7 @@ testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/tabl
                           params={
                               'rows_per_page': 10,
                               'show_title': True,
+                              'group_updates': True,
                               'filters': {
                                   'status':'testing',
                                   'profile': False,
@@ -135,6 +137,7 @@ stable_updates_app = MokshaApp('Stable Updates', 'fedoracommunity.updates/table'
                           params={
                               'rows_per_page': 10,
                               'show_title': True,
+                              'group_updates': True,
                               'filters': {
                                   'status':'stable',
                                   'profile': False,
