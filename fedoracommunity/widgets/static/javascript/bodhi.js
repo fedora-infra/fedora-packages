@@ -60,53 +60,53 @@ function get_menu_links(nvr) {
     return $('<ul/>').append(
        $('<li/>').append(
          $('<a/>').attr('href', 'https://admin.fedoraproject.org/updates/' + nvr.nvr).append(
-           $('<img/>').attr('src', '/images/16_bodhi.png')
+           $('<img/>').attr('src', moksha.url('/images/16_bodhi.png'))
          ).append(
            $('<span/>')
              .append('Go to this ')
              .append($('<strong/>').text('update'))
              .append(' in Bodhi')
          ).append(
-           $('<img/>').attr('src', '/images/16_offsite-link.png')
+           $('<img/>').attr('src', moksha.url('/images/16_offsite-link.png'))
          )
        )
     ).append(
        $('<li/>').append(
          $('<a/>').attr('href', 'http://koji.fedoraproject.org/koji/search?type=build&match=glob&terms=' + nvr.nvr).append(
-           $('<img/>').attr('src', '/images/16_koji.png')
+           $('<img/>').attr('src', moksha.url('/images/16_koji.png'))
          ).append(
            $('<span/>')
              .append('Go to the ')
              .append($('<strong/>').text('build'))
              .append(' in Koji')
          ).append(
-           $('<img/>').attr('src', '/images/16_offsite-link.png')
+           $('<img/>').attr('src', moksha.url('/images/16_offsite-link.png'))
          )
        )
     ).append(
        $('<li/>').append(
          $('<a/>').attr('href', 'https://admin.fedoraproject.org/pkgdb/packages/name/' + nvr.name).append(
-           $('<img/>').attr('src', '/images/16_pkgdb.png')
+           $('<img/>').attr('src', moksha.url('/images/16_pkgdb.png'))
          ).append(
            $('<span/>')
              .append('Go to ' + nvr.name + ' ')
              .append($('<strong/>').text('package info'))
              .append(' in the PackageDB')
          ).append(
-           $('<img/>').attr('src', '/images/16_offsite-link.png')
+           $('<img/>').attr('src', moksha.url('/images/16_offsite-link.png'))
          )
        )
     ).append(
        $('<li/>').append(
          $('<a/>').attr('href', 'https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&classification=Fedora&product=Fedora&bug_status=NEW&bug_status=ASSIGNED&bug_status=MODIFIED&component=' + nvr.name).append(
-           $('<img/>').attr('src', '/images/16_bugzilla.png')
+           $('<img/>').attr('src', moksha.url('/images/16_bugzilla.png'))
          ).append(
            $('<span/>')
              .append('Go to ' + nvr.name + ' ')
              .append($('<strong/>').text('bugs'))
              .append(' in Bugzilla')
          ).append(
-           $('<img/>').attr('src', '/images/16_offsite-link.png')
+           $('<img/>').attr('src', moksha.url('/images/16_offsite-link.png'))
          )
        )
     );
@@ -186,7 +186,7 @@ function render_update_builds(update) {
     html = result.html();
 
     if (partial) {
-        html += '<script>$("#' + updateid + '_hidden").expander({slicePoint: 0, expandText: "<strong>Show package list</strong> <img src=/images/arrow_down.png/>", userCollapseText: "<strong>Hide package list</strong> <img src=/images/arrow_up.png/>", expandPrefix: ""});</script>';
+        html += '<script>$("#' + updateid + '_hidden").expander({slicePoint: 0, expandText: "<strong>Show package list</strong> <img src=' + moksha.url('/images/arrow_down.png') + '/>", userCollapseText: "<strong>Hide package list</strong> <img src=' + moksha.url('/images/arrow_up.png') + '/>", expandPrefix: ""});</script>';
     }
 
     return html;
