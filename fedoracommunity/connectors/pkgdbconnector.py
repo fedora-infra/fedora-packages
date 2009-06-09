@@ -178,7 +178,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         result['name'] = p['name']
         result['description'] = p['description']
         result['summary'] = p['summary']
-        result['owner'] = d['owneruser']
+        result['owner'] = d.get('owneruser', None)
 
         return result
 
