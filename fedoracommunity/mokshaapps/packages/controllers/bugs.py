@@ -14,18 +14,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from tw.api import Widget as TWWidget
 from tg import expose, tmpl_context
 
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category
 from moksha.lib.helpers import Widget
-from moksha.api.widgets import Grid
+from moksha.api.widgets import Grid, ContextAwareWidget
 from moksha.api.connectors import get_connector
 
 from helpers import PackagesDashboardContainer
 
-class BugStatsWidget(TWWidget):
+class BugStatsWidget(ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.packages.templates.bugs_stats_widget'
     params = ['id', 'product', 'package', 'version', 'num_closed',
               'num_open', 'num_new', 'num_new_this_week', 'num_closed_this_week']
