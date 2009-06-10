@@ -20,10 +20,12 @@
           </tr><tr>
             <th>Timezone</th>
             <td>
+% if person.get('timezone'):
 <div class="timezone">
 <span id="clock_${id}" class="clock"/>
 <span class="timezone_label">${person['timezone']}</span>
 </div>
+% endif
 <div class="timezone">
 <span id="utc_clock_${id}" class="clock" />
 <span class="timezone_label">UTC</span>

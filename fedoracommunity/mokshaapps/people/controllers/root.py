@@ -127,18 +127,19 @@ class PersonDetailsWidget(ContextAwareWidget):
 
         # Determine their UTC offset
         d.utc_offset = ''
-        now = datetime.now(utc)
-        now = now.astimezone(timezone(person['timezone']))
-        offset = now.strftime('%z')
-        if offset.startswith('-'):
-            offset = offset[1:]
-            d.utc_offset += '-'
-        hours = int(offset[:2])
-        d.utc_offset += str(hours)
-        # FIXME: account for minutes?
-        #minutes = int(offset[2:])
-        #if minutes:
-        #    d.utc_offset += '.%d' % ...
+        if person.get('timezone'):
+            now = datetime.now(utc)
+            now = now.astimezone(timezone(person['timezone']))
+            offset = now.strftime('%z')
+            if offset.startswith('-'):
+                offset = offset[1:]
+                d.utc_offset += '-'
+            hours = int(offset[:2])
+            d.utc_offset += str(hours)
+            # FIXME: account for minutes?
+            #minutes = int(offset[2:])
+            #if minutes:
+            #    d.utc_offset += '.%d' % ...
 
 class CompactPersonDetailsWidget(PersonDetailsWidget):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.info_compact'
