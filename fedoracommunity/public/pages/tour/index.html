@@ -17,7 +17,7 @@
     <script type="text/javascript">
         moksha.update_title("Fedora Community", 0);
     </script>
-    <link href="/images/favicon.ico"
+    <link href="../../images/favicon.ico"
       type="image/vnd.microsoft.icon" rel="shortcut icon" />
     <link href="http://fedoraproject.org/favicon.ico"
       type="image/x-icon" rel="shortcut icon"/>
@@ -62,13 +62,13 @@ moksha_profile = false;
 
                         <form
                             method="POST"
-                            action="/login"
+                            action="../../login"
                             onSubmit="moksha.add_hidden_form_field(this, 'came_from', document.location, false)">
                             You are not logged in yet  <input type="submit"  value="Login" class="button"></input>
                         </form>
                     </div>
             	<div id="search-toolbar">
-                	<form action="/search/"
+                	<form action="../../search/"
                 	      onSubmit="moksha.csrf_add_form_field(this)">
                 	    Search:
                 	    <input type="text" name="search"
