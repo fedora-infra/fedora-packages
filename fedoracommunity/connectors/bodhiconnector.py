@@ -17,6 +17,7 @@
 import time
 import logging
 
+from tg import url
 from paste.deploy.converters import asbool
 from pylons import config, cache
 from fedora.client import ProxyClient
@@ -636,8 +637,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
                                     c=HTML.tag('a', href="%s/%s" % (
                                         self._base_url, up['title']),
                                         c=HTML.tag('img',
-                                            src='/images/16_karma-%s.png' %
-                                            up['karma_icon']) +
+                                            src=url('/images/16_karma-%s.png' %
+                                            up['karma_icon'])) +
                                         HTML.tag('span', c='%s karma' %
                                             up['karma'])),
                                         **{'class': 'karma'})
