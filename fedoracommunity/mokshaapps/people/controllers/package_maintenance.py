@@ -14,12 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from tg import expose, tmpl_context, require
+from tg import expose, tmpl_context, require, validate
+from formencode import validators
 from repoze.what.predicates import not_anonymous
-from paste.deploy.converters import asbool
 
 from moksha.lib.base import Controller
-from moksha.lib.helpers import Category, MokshaApp, MokshaWidget, Widget
+from moksha.lib.helpers import Category, MokshaApp, MokshaWidget
 from moksha.api.widgets import ContextAwareWidget
 from moksha.api.widgets.containers import DashboardContainer
 
@@ -206,8 +206,8 @@ class PackageMaintenanceController(Controller):
         return {'options': options}
 
     @expose('mako:moksha.templates.widget')
+    @validate({'profile': validators.StringBool()})
     def builds_overview(self, profile=False, username=None):
-        profile = asbool(profile)
         if profile:
             options = {'profile': True}
             tmpl_context.widget = profile_builds_overview_container
