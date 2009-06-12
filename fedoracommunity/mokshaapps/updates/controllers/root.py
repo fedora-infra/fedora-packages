@@ -120,6 +120,7 @@ unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/ta
                                   'status':'pending',
                                   'profile': False,
                                   'username': None,
+                                  'grainularity': 'minute',
                                   }
                               })
 testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/table',
@@ -168,7 +169,9 @@ class UpdatesOverviewContainer(DashboardContainer):
                            'rows_per_page': 5,
                            'show_title': False,
                            'more_link_code':updates_links.UNPUSHED_UPDATES.code,
-                           'filters': {},
+                           'filters': {
+                               'grainularity': 'minute',
+                               },
                            }),
                        testing_updates_app.clone({
                            'rows_per_page': 5,
