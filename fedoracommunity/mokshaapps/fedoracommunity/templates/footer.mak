@@ -14,6 +14,7 @@
                     <li><a href="http://fedoraproject.org/wiki/Legal/TrademarkGuidelines">Trademark Guidelines</a></li>
                     <li><a href="http://fedoracommunity.fedorahosted.org">Get the source for Fedora Community</a></li>
                     <li><a href="http://moksha.fedorahosted.org">Get the source for Moksha</a></li>
+                    <li><a href="https://fedorahosted.org/fedoracommunity/newticket">Report a bug or send a suggestion</a></li>
                 </ul>
                 <br />
                 <a href="http://moksha.fedorahosted.org"><img src="${tg.url('/images/Powered-by-moksha_button.png')}"/></a>
