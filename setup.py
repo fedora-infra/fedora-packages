@@ -116,6 +116,7 @@ setup(
     fedoracommunity.alerts = fedoracommunity.mokshaapps.alerts:RootController
     fedoracommunity.packages = fedoracommunity.mokshaapps.packages:RootController
     fedoracommunity.people = fedoracommunity.mokshaapps.people:RootController
+    fedoracommunity.statistics = fedoracommunity.mokshaapps.statistics:RootController
 
     [moksha.widget]
     fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
