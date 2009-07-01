@@ -27,10 +27,11 @@ from fedora.client import Wiki
 from datetime import datetime, timedelta
 from beaker.cache import Cache
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from moksha.lib.helpers import defaultdict
 
 wiki_cache = Cache('wiki')
 
-class WikiConnector(IConnector):
+class WikiConnector(IConnector, IQuery):
     _method_paths = {}
     _query_paths = {}
 
@@ -46,17 +47,17 @@ class WikiConnector(IConnector):
         path = cls.register_query(
             'query_most_active_pages',
             cls.query_most_active_pages,
-            primary_key_col = 'rank',
-            default_sort_col = 'rank',
+            primary_key_col = 'title',
+            default_sort_col = 'number_of_edits',
             default_sort_order = -1,
             can_paginate = True)
 
-        path.register_column('rank',
+        path.register_column('title',
                              default_visible = True,
                              can_sort = False,
                              can_filter_wildcards = False)
 
-        path.register_column('title',
+        path.register_column('number_of_edits',
                              default_visible = True,
                              can_sort = False,
                              can_filter_wildcards = False)
@@ -86,13 +87,13 @@ class WikiConnector(IConnector):
             if change['title'] not in last_edited_by.keys():
                 last_edited_by[change['title']] = change['user']
 
-        most_active_pages = sorted(pages.items(),
+        most_active_pages = sorted(edit_counts.items(),
                                    cmp=lambda x, y : cmp(x[1], y[1]),
-                                   reverse=True)[:show]
+                                   reverse=True)
 
         page_data = []
         for i, page in enumerate(most_active_pages):
-            page_data.append({'rank': i, 'title': page,
+            page_data.append({'number_of_edits': page[1], 'title': page[0],
                               'last_edited_by': last_edited_by[page[0]]})
 
-        return (len(page_data), page_data)
+        return (len(page_data), page_data[start_row:rows_per_page])

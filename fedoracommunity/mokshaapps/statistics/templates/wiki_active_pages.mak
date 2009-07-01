@@ -16,6 +16,7 @@
     <table id="${id}">
         <thead>
           <th>Page Name</th>
+	  <th>Number of edits</th>
           <th>Last edited by</th>
         </thead>
         <tbody class="rowtemplate">
@@ -23,6 +24,9 @@
                     <td>
                         <a href="https://fedoraproject.org/wiki/@{title}" target="_blank">@{title}</a>
                     </td>
+		    <td>
+		        <a href="https://fedoraproject.org/w/index.php?title=@{title}&action=history">@{number_of_edits}</a>
+		    </td>
                     <td>
                         @{last_edited_by}
                     </td>

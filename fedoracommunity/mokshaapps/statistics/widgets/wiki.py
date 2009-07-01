@@ -84,21 +84,8 @@ def get_wiki_statistics(days=7, show=10):
 
 class MostActiveWikiPages(Grid):
     template = 'mako:fedoracommunity.mokshaapps.statistics.templates.wiki_active_pages'
-
-    # TODO: Make these more configurable.  Ideally we would want them to be
-    # configurable in the Widget.params, but those don't get populated properly
-    # until Widget.update_params runs, and that happens last since we must have
-    # d.data before calling super(MostActiveWikiPages)...
-    days = 7
-    show = 5
-
-    def update_params(self, d):
-        wiki = get_connector('wiki')
-        wiki_cache = cache.get_cache('wiki')
-        d = wiki_cache.get_value(key='metrics',
-            createfunc=wiki.query_most_active_pages,
-            expiretime=3600)
-        super(MostActiveWikiPages, self).update_params(d)
+    resource = 'wiki'
+    resource_path='query_most_active_pages'
 
 
 most_active_wiki_pages = MostActiveWikiPages('most_active_wiki_pages')
@@ -110,7 +97,7 @@ class MostActiveWikiUsers(FlotWidget):
 
     def update_params(self, d):
         wiki_cache = cache.get_cache('wiki')
-        stats = wiki_cache.get_value(key='metrics',
+        stats = wiki_cache.get_value(key='most_active_wiki_users',
                 createfunc=get_wiki_statistics,
                 expiretime=3600)
         d.data = stats['most_active_users']['data']
