@@ -20,6 +20,7 @@ from datetime import datetime, timedelta
 from moksha.api.widgets import Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.lib.helpers import Category, Widget as MokshaWidget, defaultdict
+from moksha.api.connectors import get_connector
 from fedoracommunity.widgets.flot import FlotWidget
 
 def get_wiki_statistics(days=7, show=10):
@@ -92,11 +93,11 @@ class MostActiveWikiPages(Grid):
     show = 5
 
     def update_params(self, d):
+        wiki = get_connector('wiki')
         wiki_cache = cache.get_cache('wiki')
-        stats = wiki_cache.get_value(key='metrics',
-                createfunc=get_wiki_statistics,
-                expiretime=3600)
-        d.data = stats['most_active_pages']
+        d = wiki_cache.get_value(key='metrics',
+            createfunc=wiki.query_most_active_pages,
+            expiretime=3600)
         super(MostActiveWikiPages, self).update_params(d)
 
 
