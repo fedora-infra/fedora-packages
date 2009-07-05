@@ -33,4 +33,27 @@
                 </tr>
             </tbody>
     </table>
+<div id="grid-controls" if="total_rows == 0">
+    <div class="message template" id="info_display" >
+        No recently-edited wiki pages.
+    </div>
+</div>
+<div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
+    <div class="message template" id="info_display" >
+       Viewing all recently-edited wiki pages
+    </div>
+
+    <div class="pager template" id="pager" type="more_link">
+       <a href="https://fedoraproject.org/wiki/Special:RecentChanges">View recent wiki changes &gt;</a>
+    </div>
+</div>
+<div id="grid-controls" if="visible_rows < total_rows">
+    <div class="message template" id="info_display" >
+       Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} recently-edited pages
+    </div>
+    <div class="pager" id="pager" type="numeric" ></div>
+    <div class="pager template" id="pager" type="more_link">
+       <a href="@{more_link}" moksha_url="dynamic">View more in-progress builds &gt;</a>
+    </div>
+</div>
 </div>

@@ -86,6 +86,7 @@ class MostActiveWikiPages(Grid):
     template = 'mako:fedoracommunity.mokshaapps.statistics.templates.wiki_active_pages'
     resource = 'wiki'
     resource_path='query_most_active_pages'
+    numericPager = True
 
 
 most_active_wiki_pages = MostActiveWikiPages('most_active_wiki_pages')
