@@ -96,5 +96,4 @@ class WikiConnector(IConnector, IQuery):
             page_data.append({'number_of_edits': page[1], 'title': page[0],
                               'last_edited_by': last_edited_by[page[0]]})
 
-        print page_data[start_row:start_row+rows_per_page]
         return (len(page_data), page_data[start_row:start_row+rows_per_page])
