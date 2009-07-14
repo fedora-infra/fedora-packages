@@ -178,7 +178,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         result['name'] = p['name']
         result['description'] = p['description']
         result['summary'] = p['summary']
-        result['owner'] = d.get('owneruser', None)
+        result['owner'] = d.get('owner', None)
 
         return result
 
@@ -269,7 +269,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
             distname = i['collection']['name']
             distver = i['collection']['version']
-            owner = i['owneruser']
+            owner = i['owner']
 
             if distname == 'Fedora' and distver == 'devel':
                 # make sure it is first in the sort
@@ -364,7 +364,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         for i in p:
             distname = i['collection']['name']
             distver = i['collection']['version']
-            owner = i['owneruser']
+            owner = i['owner']
 
             if distname == 'Fedora' and distver == 'devel':
                 distname = 'Rawhide'
