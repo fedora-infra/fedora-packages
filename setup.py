@@ -98,6 +98,7 @@ setup(
     bugzilla = fedoracommunity.connectors:BugzillaConnector
     planet = fedoracommunity.connectors:PlanetConnector
     yum = fedoracommunity.connectors:YumConnector
+    wiki = fedoracommunity.connectors:WikiConnector
 
     [moksha.application]
     login = fedoracommunity.mokshaapps.login:RootController
