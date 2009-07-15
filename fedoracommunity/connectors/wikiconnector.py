@@ -38,6 +38,12 @@ class WikiConnector(IConnector, IQuery):
     def __init__(self, environ=None, request=None):
         super(WikiConnector, self).__init__(environ, request)
 
+    def _get_recent_changes(self):
+        now = datetime.utcnow()
+        then = now - timedelta(days=7)
+        wiki = Wiki()
+        return wiki.get_recent_changes(now=now, then=then)
+
     @classmethod
     def register(cls):
         cls.register_query_most_active_pages()
@@ -76,11 +82,9 @@ class WikiConnector(IConnector, IQuery):
         edit_counts = defaultdict(int) # {pagename: # of edits}
         last_edited_by = {} # {pagename: username}
 
-        now = datetime.utcnow()
-        then = now - timedelta(days=7)
-
-        wiki = Wiki()
-        changes = wiki.get_recent_changes(now=now, then=then)
+        changes = wiki_cache.get_value(key='recent_changes',
+                                       createfunc=self._get_recent_changes,
+                                       expiretime=3600)
 
         for change in changes:
             edit_counts[change['title']] += 1
@@ -97,3 +101,32 @@ class WikiConnector(IConnector, IQuery):
                               'last_edited_by': last_edited_by[page[0]]})
 
         return (len(page_data), page_data[start_row:start_row+rows_per_page])
+
+    def query_most_active_users(self, user_count=10, **params):
+        users = defaultdict(list)
+
+        changes = wiki_cache.get_value(key='recent_changes',
+                                       createfunc=self._get_recent_changes,
+                                       expiretime=3600)
+
+        for change in changes:
+            users[change['user']].append(change['title'])
+
+        most_active_users = sorted(users.items(),
+                cmp=lambda x, y: cmp(len(x[1]), len(y[1])),
+                reverse=True)[:user_count]
+
+        user_data = []
+        user_ticks = []
+        for i, user in enumerate(most_active_users):
+            user_data.append([i, len(user[1])])
+            user_ticks.append([i + 0.5, user[0]])
+
+        flot_data = {'data': [], 'options': {'xaxis': {}}}
+        flot_data['options']['xaxis']['ticks'] = user_ticks
+        flot_data['data'].append({
+            'data': user_data,
+            'bars': {'show': True}
+        })
+
+        return flot_data
