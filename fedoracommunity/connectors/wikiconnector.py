@@ -29,8 +29,6 @@ from pylons import cache
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import defaultdict
 
-wiki_cache = cache.get_cache('wiki')
-
 class WikiConnector(IConnector, IQuery):
     _method_paths = {}
     _query_paths = {}
@@ -82,6 +80,7 @@ class WikiConnector(IConnector, IQuery):
         edit_counts = defaultdict(int) # {pagename: # of edits}
         last_edited_by = {} # {pagename: username}
 
+        wiki_cache = cache.get_cache('wiki')
         changes = wiki_cache.get_value(key='recent_changes',
                                        createfunc=self._get_recent_changes,
                                        expiretime=3600)
@@ -105,6 +104,7 @@ class WikiConnector(IConnector, IQuery):
     def query_most_active_users(self, user_count=10, **params):
         users = defaultdict(list)
 
+        wiki_cache = cache.get_cache('wiki')
         changes = wiki_cache.get_value(key='recent_changes',
                                        createfunc=self._get_recent_changes,
                                        expiretime=3600)
