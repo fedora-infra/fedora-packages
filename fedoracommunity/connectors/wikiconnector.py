@@ -25,11 +25,11 @@ This Connector works with the MediaWiki API of the Fedora Project wiki.
 
 from fedora.client import Wiki
 from datetime import datetime, timedelta
-from beaker.cache import Cache
+from pylons import cache
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import defaultdict
 
-wiki_cache = Cache('wiki')
+wiki_cache = cache.get_cache('wiki')
 
 class WikiConnector(IConnector, IQuery):
     _method_paths = {}
