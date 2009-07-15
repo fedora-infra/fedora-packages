@@ -59,7 +59,7 @@ class RawhideBuildOwner(ContextAwareWidget):
         pkginfo = pkgdb.request_package_info(d.package)
         for pkg in pkginfo[1]['packageListings']:
             if pkg['collection']['branchname'] == 'devel':
-                d.owner = pkg['owneruser']
+                d.owner = pkg['owner']
                 break
 
 rawhide_build_and_owner = RawhideBuildOwner('rawhide_build_and_owner')
