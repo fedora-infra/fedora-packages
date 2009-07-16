@@ -30,7 +30,7 @@ class StatsNavContainer(SubTabbedContainer):
     tabs = (
         Category('Applications', (
             MokshaApp('Wiki', 'fedoracommunity.statistics/wiki', params={}),
-            MokshaApp('Updates', 'fedoracommunity.statistics/updates', params={}),
+            #MokshaApp('Updates', 'fedoracommunity.statistics/updates', params={}),
             ),
         ),
     )
