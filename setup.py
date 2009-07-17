@@ -132,7 +132,7 @@ setup(
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
 
-    [moksha.streams]
+    [moksha.stream]
     wiki_all_revisions = fedoracommunity.streams.wikistream:AllRevisionsDataStream
 
     """
