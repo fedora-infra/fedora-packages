@@ -25,12 +25,15 @@ Project wiki.
 """
 
 from fedora.client.wiki import Wiki
-from datetime import timedelta
+from datetime import timedelta, datetime
 from beaker.cache import Cache
 from moksha.api.streams import PollingDataStream
+import logging
+
+log = logging.getLogger(__name__)
 
 class AllRevisionsDataStream(PollingDataStream):
-    frequency = timedelta(minutes=30)
+    frequency = timedelta(hours=12)
 
     def poll(self):
         c = Cache('wiki')
@@ -40,6 +43,7 @@ class AllRevisionsDataStream(PollingDataStream):
         except KeyError:
             # we haven't gotten any data yet.
             data = {'revs': {}, 'last_rev_checked': 0}
+        starttime = datetime.now()
         data['revs'].update(w.fetch_all_revisions(
                 start = data['last_rev_checked']+1,
                 flags = False,
@@ -55,4 +59,6 @@ class AllRevisionsDataStream(PollingDataStream):
         revids.sort()
         data['last_rev_checked'] = revids[-1]
         c.set_value(key='all_revisions', value=data)
+        log.info("Cached wiki revisions, took %s" % \
+                 (datetime.now() - starttime))
         return True
