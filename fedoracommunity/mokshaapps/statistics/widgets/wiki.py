@@ -48,11 +48,27 @@ class MostActiveWikiUsers(FlotWidget):
 most_active_wiki_users = MostActiveWikiUsers('most_active_wiki_users')
 
 
+class WikiEditsPerDay(FlotWidget):
+    def update_params(self, d):
+        wiki_connector = get_connector('wiki')
+        wiki_cache = cache.get_cache('wiki')
+        flot = wiki_cache.get_value(key='wiki_edits_per_day',
+                createfunc=wiki_connector.flot_wiki_edits_per_day,
+                expiretime=1800)
+        d.data = flot['data']
+        d.options = flot['options']
+        super(WikiEditsPerDay, self).update_params(d)
+
+
+wiki_edits_per_day = WikiEditsPerDay('wiki_edits_per_day')
+
+
 class WikiStatisticsDashboard(DashboardContainer):
     layout = [
             Category('left-content-column-apps', [
                 MokshaWidget('Most active wiki pages', most_active_wiki_pages),
                 MokshaWidget('Most active wiki users', most_active_wiki_users),
+                MokshaWidget('Wiki edits per day', wiki_edits_per_day),
                 ]),
     ]
 
