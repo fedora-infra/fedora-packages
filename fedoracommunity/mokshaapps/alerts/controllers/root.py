@@ -41,7 +41,7 @@ class AlertsContainer(ContextAwareWidget):
         if creds and creds.get('repoze.what.userid'):
             profile_userid = creds.get('repoze.what.userid')
 
-        userid = d.get('userid')
+        userid = d.get('userid', d.get('user'))
 
         if userid or profile_userid:
             my_alerts = []
@@ -115,7 +115,12 @@ class AlertsContainer(ContextAwareWidget):
                       completeAfter=after,
                       queryOpts={'countOnly': True})
 
-        count = builds.call('listBuilds', params)
+        # check if user exists
+        if user_id and not user:
+            count = 0
+        else:
+            count = builds.call('listBuilds', params)
+            
         if state == 1:
             label = 'builds succeeded'
             icon = '16_success_build.png'
