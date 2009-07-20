@@ -116,7 +116,7 @@ class AlertsContainer(ContextAwareWidget):
                       queryOpts={'countOnly': True})
 
         # check if user exists
-        if user_id and not user:
+        if userid and not user:
             count = 0
         else:
             count = builds.call('listBuilds', params)
