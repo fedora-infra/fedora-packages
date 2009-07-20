@@ -439,7 +439,7 @@ class KojiConnector(IConnector, ICall, IQuery):
             filters = {}
         filters = self._query_builds_filter.filter(filters, conn=self)
 
-        user = filters.get('user', '')
+        username = filters.get('user', '')
         package = filters.get('package', '')
         state = filters.get('state')
 
@@ -459,7 +459,11 @@ class KojiConnector(IConnector, ICall, IQuery):
         else:
             order = sort_col
 
-        user = self._koji_client.getUser(user)
+        user = self._koji_client.getUser(username)
+        
+        # we need to check if this user exists
+        if username and not user:
+            return (0, [])
 
         id = None
         if user:
