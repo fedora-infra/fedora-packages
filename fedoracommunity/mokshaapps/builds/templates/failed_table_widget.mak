@@ -15,7 +15,7 @@
                         <td class="one-row">
                           <div id="menu_@{build_id}" class="menu" panel="menu_panel_@{build_id}">
                             <span class="package-name">
-                                <a href="/package_maintenance/tools/builds?package=@{package_name}" moksha_url="dynamic">@{package_name} <img src="${tmpl_context.get_url('/images/16_hover_bubble.png')}" alt="" /></a>
+                                <a href="/package_maintenance/tools/builds?package=@{package_name}" moksha_url="dynamic">@{package_name} </a>
                             </span>
                             <br/>@{version}-@{release}&nbsp;
                             <div id="menu_panel_@{build_id}" class="menu_panel" >
