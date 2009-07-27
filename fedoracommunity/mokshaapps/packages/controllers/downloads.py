@@ -32,10 +32,14 @@ log = logging.getLogger(__name__)
 class ReleaseDownloadsFilter(SingleSelectField):
     options = []
     attrs = {'onchange': """
-        moksha.html_load(moksha.url('/apps/fedoracommunity.packages/package/downloads/downloads_table'), {'package': package_name, 'release': $('#downloads_widget_releases').val()}, function(r) {
-                    var $stripped = moksha.filter_resources(r);
-                    $('div.package_downloads').html($stripped);
-            }, $("#" + uid + " .overlay"));"""}
+        moksha.html_load(moksha.url('/apps/fedoracommunity.packages/package/downloads/downloads_table'), {
+            'package': package_name,
+            'release': $('#downloads_widget_releases').val(),
+        }, function(r) {
+            var $stripped = moksha.filter_resources(r);
+            $('div.package_downloads').html($stripped);
+        }, $('#' + uid + ' .overlay'));
+    """}
 
 
 class DownloadsDashboard(PackagesDashboardContainer):
