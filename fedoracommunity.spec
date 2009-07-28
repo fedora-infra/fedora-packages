@@ -2,7 +2,7 @@
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
 Name:           fedoracommunity
-Version:        0.3.1
+Version:        0.3.3
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
@@ -73,6 +73,12 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Mon Jul 27 2009 Luke Macken <lmacken@redhat.com> - 0.3.3-1
+- 0.3.3, bugfix release
+
+* Mon Jul 27 2009 Luke Macken <lmacken@redhat.com> - 0.3.2-1
+- 0.3.2, bugfix release
+
 * Thu Jun 11 2009 Luke Macken <lmacken@redhat.com> - 0.3.1-1
 - New bugfix release
 
