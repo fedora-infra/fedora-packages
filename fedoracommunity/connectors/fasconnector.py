@@ -18,7 +18,9 @@
 from moksha.connector import IConnector, ICall, IQuery, ISearch, ParamFilter
 from pylons import config, cache
 from fedora.client import ProxyClient, ServerError
-from moksha.connector.utils import DateTimeDisplay
+from fedora.client.fas2 import AccountSystem
+from moksha.lib.helpers import DateTimeDisplay
+import time
 
 USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
 _fas_minimal_user = config.get('fedoracommunity.connector.fas.minimal_user_name')
@@ -82,6 +84,16 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         if not params:
             params = {}
         return self.request_data(resource_path, params, _cookies)
+
+    def create_fas_object(self):
+        identity = self._environ.get('repoze.who.identity')
+        if identity:
+            return AccountSystem(base_url=self._base_url,
+                                 session_id=identity.get('session_id'))
+        else:
+            return AccountSystem(base_url=self._base_url,
+                                 username=_fas_minimal_user,
+                                 password=_fas_minimal_pass)
 
     def request_user_view(self, user):
         try:
@@ -389,3 +401,42 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
             rows = rows[start_row:last_index]
 
         return (count, rows)
+
+    def group_membership_over_time(self, group_name="cla_done"):
+        # This is the magic time (in microseconds since the UNIX Epoch) that
+        # Toshio gave me where the end of the initial FAS2 import lies. Any
+        # timestamps prior to this can't be trusted.
+        # start_date = "2008-03-12 02:06:00"
+        start_date = 1205305560000
+
+        fas = self.create_fas_object()
+
+        group = fas.people_query(constraints={'group': group_name,
+                                              'role_status': 'approved'},
+                                 columns=['role_approval'])
+        approval = {}
+
+        for row in group:
+            if row['role_approval'] == None:
+                continue
+            thattime = int(time.mktime(
+                DateTimeDisplay(
+                    row['role_approval'].split('+')[0]
+                ).datetime.timetuple()
+            ))*1000
+            if thattime in approval.keys():
+                approval[thattime] += 1
+            else:
+                approval[thattime] = 1
+
+        approval_times = approval.keys()
+        approval_times.sort()
+
+        data = []
+        approves = 0
+        for thattime in approval_times:
+            approves += approval[thattime]
+            if thattime > start_date:
+                data.append((thattime, approves))
+
+        return data
