@@ -419,15 +419,16 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         for row in group:
             if row['role_approval'] == None:
                 continue
-            thattime = int(time.mktime(
-                DateTimeDisplay(
-                    row['role_approval'].split('+')[0]
-                ).datetime.timetuple()
-            ))*1000
-            if thattime in approval.keys():
-                approval[thattime] += 1
+            timeobject = DateTimeDisplay(row['role_approval'].split('+')[0])
+            timetuple = timeobject.datetime.timetuple()
+            timetuple_new = (timetuple.tm_year, timetuple.tm_mon,
+                             timetuple.tm_mday, 0, 0, 0, 0, 0, 0)
+            timestamp = int(time.mktime(timetuple_new))*1000
+            print timestamp
+            if timestamp in approval.keys():
+                approval[timestamp] += 1
             else:
-                approval[thattime] = 1
+                approval[timestamp] = 1
 
         approval_times = approval.keys()
         approval_times.sort()
