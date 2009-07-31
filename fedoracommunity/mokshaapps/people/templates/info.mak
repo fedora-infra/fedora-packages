@@ -105,6 +105,7 @@
 
       $("#clock_${id}").jclock({
           format: '%I:%M %p',
+          utc: true,
           utc_offset: ${utc_offset},
           timeout: 60000
       });
