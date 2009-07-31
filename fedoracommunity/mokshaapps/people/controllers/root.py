@@ -134,6 +134,8 @@ class PersonDetailsWidget(ContextAwareWidget):
             if offset.startswith('-'):
                 offset = offset[1:]
                 d.utc_offset += '-'
+            elif offset.startswith('+'):
+                offset = offset[1:]
             hours = int(offset[:2])
             d.utc_offset += str(hours)
             # FIXME: account for minutes?
