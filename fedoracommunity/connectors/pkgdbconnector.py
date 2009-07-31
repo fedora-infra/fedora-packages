@@ -376,7 +376,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
                 for person in i['people']:
                     aclorder = person['aclOrder']
-                    username = person['name']
+                    username = person['username']
                     record = entities.get(username,
                                         {'name': username,
                                          'roles': []})
