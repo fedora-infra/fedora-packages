@@ -177,14 +177,14 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                     filters=filters, collection=collection, **params))
         total_count = len(bugs)
         five_pages = rows_per_page * 5
-        if start_row <= five_pages: # Cache the first 5 pages of every bug grid
+        if start_row < five_pages: # Cache the first 5 pages of every bug grid
             bugs = bugs[:five_pages]
             now = datetime.now()
             bugs = bugzilla_cache.get_value(key=key + '_details',
                     expiretime=900, createfunc=lambda: self.get_bugs(
                         bugs, collection=collection))
         bugs = bugs[start_row:start_row+rows_per_page]
-        if start_row > five_pages:
+        if start_row >= five_pages:
             bugs = self.get_bugs(bugs, collection=collection)
         return (total_count, bugs)
 
