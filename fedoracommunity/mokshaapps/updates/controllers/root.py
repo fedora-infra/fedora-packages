@@ -206,18 +206,21 @@ class UpdatesNavContainer(SubTabbedContainer):
                          'profile': True,
                          }, content_id='my_overview_updates'),
                      unpushed_updates_app.clone({
+                         'group_updates': False,
                          'filters': {
                              'profile': True,
                              'group_updates': False
                              }
                          }, content_id='my_unpushed_updates'),
                      testing_updates_app.clone({
+                         'group_updates': False,
                          'filters': {
                              'profile': True,
                              'group_updates': False
                              }
                          }, content_id='my_testing_updates'),
                      stable_updates_app.clone({
+                         'group_updates': False,
                          'filters': {
                              'profile': True,
                              'group_updates': False
@@ -228,12 +231,15 @@ class UpdatesNavContainer(SubTabbedContainer):
             Category('All Packages', (
                 overview_updates_app,
                 unpushed_updates_app.clone({
+                    'group_updates': False,
                     'filters': {'group_updates': False}
                     }),
                 testing_updates_app.clone({
-                   'filters': {'group_updates': False}
-                    }),
+                    'group_updates': False,
+                    'filters': {'group_updates': False}
+                     }),
                 stable_updates_app.clone({
+                    'group_updates': False,
                     'filters': {'group_updates': False}
                     }),
                 )
