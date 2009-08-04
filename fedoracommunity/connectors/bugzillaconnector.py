@@ -172,7 +172,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 }
         bugzilla_cache = cache.get_cache('bugzilla')
         key = '%s_%s_%s' % (collection, version, package)
-        now = datetime.now()
         bugs = bugzilla_cache.get_value(key=key, expiretime=900,
                 createfunc=lambda: self._query_bugs(query,
                     filters=filters, collection=collection, **params))
@@ -180,7 +179,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         five_pages = rows_per_page * 5
         if start_row < five_pages: # Cache the first 5 pages of every bug grid
             bugs = bugs[:five_pages]
-            now = datetime.now()
             bugs = bugzilla_cache.get_value(key=key + '_details',
                     expiretime=900, createfunc=lambda: self.get_bugs(
                         bugs, collection=collection))
