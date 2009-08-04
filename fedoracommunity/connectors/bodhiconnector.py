@@ -364,14 +364,15 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def _get_update_actions(self, update):
         actions = []
-        if update['status'] == 'testing':
-            actions.append(('unpush', 'Unpush'))
-            actions.append(('stable', 'Push to stable'))
-        if update['status'] == 'pending':
-            actions.append(('testing', 'Push to testing'))
-            actions.append(('stable', 'Push to stable'))
         if update['request']:
             actions.append(('revoke', 'Cancel push'))
+        else:
+            if update['status'] == 'testing':
+                actions.append(('unpush', 'Unpush'))
+                actions.append(('stable', 'Push to stable'))
+            if update['status'] == 'pending':
+                actions.append(('testing', 'Push to testing'))
+                actions.append(('stable', 'Push to stable'))
         return actions
 
     def _group_updates(self, updates, num_packages=None):
