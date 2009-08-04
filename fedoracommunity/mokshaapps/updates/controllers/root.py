@@ -74,9 +74,8 @@ class UpdatesGrid(Grid, ContextAwareWidget):
             value = ""
             if koji_name:
                 value = koji_name.rsplit('-', 1)[1]
-            else:
+            if value == 'epel':
                 value = collection['branchname']
-
             if label != 'Fedora devel' and name in ('Fedora', 'Fedora EPEL'):
                 releases.append({
                     'label': label,
