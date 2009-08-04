@@ -353,6 +353,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 details += HTML.tag('br') + update['date_pushed']
             else:
                 details += 'In process...'
+        elif update['status'] == 'pending' and update.get('request'):
+            details += 'Pending push to %s' % update['request']
+            details += HTML.tag('br')
+            details += HTML.tag('a', c="View update details >",
+                                href="%s/%s" % (self._base_url,
+                                                update['title']))
         elif update['status'] == 'obsolete':
             for comment in update['comments']:
                 if comment['author'] == 'bodhi':
