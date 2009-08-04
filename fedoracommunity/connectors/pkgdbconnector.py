@@ -595,7 +595,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         collections = self.get_collection_table(active_only=True)
         for collection in collections.values():
             name = collection['name']
-            if name == 'Fedora':
+            if name in ('Fedora', 'Fedora EPEL'):
                 version = collection['version']
                 if version == 'devel':
                     # Assume there is always rawhide...

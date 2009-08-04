@@ -43,7 +43,7 @@ class AclsGrid(Grid, ContextAwareWidget):
             ver = collection['version']
             label = "%s %s" % (name, ver)
             # restrict to Fedora until we can get dists per package
-            if label != 'Fedora devel' and name == 'Fedora':
+            if label != 'Fedora devel' and name in ('Fedora', 'Fedora EPEL'):
                 releases.append({'label': label, 'value': label, 'version': ver})
 
         def _sort(a,b):
