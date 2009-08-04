@@ -27,7 +27,6 @@
                 <th><a href="#nvr">Package</a></th>
                 <th>Release(s)</th>
                 <th>Age</th>
-                <th>Request</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -43,7 +42,7 @@
                 </td>
                 <td><br/>@{releases:filter(_render_br_list)}</td>
                 <td>@{date_submitted_display}</td>
-                <td>@{request}</td>
+
                 <td>@{actions}</td>
             </tr>
         </tbody>
