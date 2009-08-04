@@ -92,7 +92,8 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         """
         results = {}
         last_week = str(datetime.utcnow() - timedelta(days=7)),
-        self._bugzilla = Bugzilla(url=self._base_url)
+        if not self._bugzilla:
+            self._bugzilla = Bugzilla(url=self._base_url)
 
         # FIXME: For some reason, doing this as multicall doesn't work properly.
         #mc = self._bugzilla._multicall()
