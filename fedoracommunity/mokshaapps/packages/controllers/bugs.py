@@ -58,7 +58,7 @@ class BugsGrid(Grid):
                 label = 'Rawhide'
                 value = 'rawhide'
 
-            if name == 'Fedora' or name == 'Rawhide':
+            if name in ('Fedora', 'Rawhide', 'Fedora EPEL'):
                 releases.append({'label': label, 'value': value, 'version': ver})
 
         def _sort(a,b):
