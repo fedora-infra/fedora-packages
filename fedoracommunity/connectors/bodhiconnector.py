@@ -603,20 +603,27 @@ class BodhiConnector(IConnector, ICall, IQuery):
                     row['stable_version'] = 'No builds tagged with %s' % tag
                 row['testing_version'] = HTML.tag('i', c='Not Applicable')
             else:
-                stable_updates = koji.listTagged(tag + '-updates',
+                # FIXME: Hack around EPEL tags
+                if tag.endswith('epel'):
+                    stable_tag = tag
+                else:
+                    stable_tag = tag + '-updates'
+
+                stable_updates = koji.listTagged(stable_tag,
                                                  package=package,
                                                  latest=True,
                                                  inherit=True)
                 if stable_updates:
                     nvr = parse_build(stable_updates[0]['nvr'])
-                    if not stable_updates[0]['tag_name'].endswith('-updates') :
-                        row['stable_version'] = '%(version)s-%(release)s' % nvr
-                    else:
+                    if stable_updates[0]['tag_name'].endswith('-updates') or \
+                       stable_updates[0]['tag_name'].endswith('-epel'):
                         row['stable_version'] = HTML.tag('a',
                                 c='%(version)s-%(release)s' % nvr,
                                 href='%s/%s' % (self._base_url, nvr['nvr']))
+                    else:
+                        row['stable_version'] = '%(version)s-%(release)s' % nvr
 
-                testing_updates = koji.listTagged(tag + '-updates-testing',
+                testing_updates = koji.listTagged(stable_tag + '-testing',
                                                   package=package, latest=True)
                 if testing_updates:
                     nvr = parse_build(testing_updates[0]['nvr'])
