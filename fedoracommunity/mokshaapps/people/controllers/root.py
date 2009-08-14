@@ -138,12 +138,10 @@ class PersonDetailsWidget(ContextAwareWidget):
                 offset = offset[1:]
             hours = int(offset[:2])
             d.utc_offset += str(hours)
-            d.utc_offset = int(d.utc_offset)
-
-            # FIXME: account for minutes?
-            #minutes = int(offset[2:])
-            #if minutes:
-            #    d.utc_offset += '.%d' % (60/minutes)
+            minutes = int(offset[2:])
+            if minutes:
+                d.utc_offset = float(d.utc_offset)
+                d.utc_offset += (minutes/60.0)
 
 class CompactPersonDetailsWidget(PersonDetailsWidget):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.info_compact'
