@@ -3,7 +3,7 @@
 
 Name:           fedoracommunity
 Version:        0.3.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
 License:        AGPLv3
@@ -28,6 +28,7 @@ Requires: python-feedparser
 Requires: python-iniparse
 Requires: pytz
 Requires: pyOpenSSL
+Requires: python-memcached
 
 Obsoletes: myfedora
 
@@ -73,6 +74,9 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Fri Sep 04 2009 Luke Macken <lmacken@redhat.com> - 0.3.6-2
+- Require python-memcached for production environments
+
 * Wed Sep 02 2009 Luke Macken <lmacken@redhat.com> - 0.3.6-1
 - 0.3.6
 
