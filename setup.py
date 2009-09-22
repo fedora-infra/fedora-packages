@@ -52,7 +52,7 @@ setup(
     url='http://fedoracommunity.fedorahosted.org',
     install_requires=[
         "moksha",
-        "PyOpenSSL",
+        #"PyOpenSSL",
         "pytz",
         ],
     scripts=['fedoracommunity_makeyumcache'],
