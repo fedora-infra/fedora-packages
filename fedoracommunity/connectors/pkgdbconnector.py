@@ -91,7 +91,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
     def request_collection_table(self):
 
         table = {}
-        co = self.call('/collections')
+        co = self.call('/collections/')
         for c in co[1]['collections']:
             d = {}
             for i in c:
@@ -133,7 +133,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         else:
             (name, version) = release.rsplit(" ", 1)
 
-        co = self.call('/packages/name', {'packageName': package,
+        co = self.call('/packages/name/', {'packageName': package,
                                           'collectionName': name,
                                           'collectionVersion': version})
 
@@ -204,7 +204,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                         can_filter_wildcards = False)
 
     def search_packages(self, search_term):
-        result = self.call('search/package',
+        result = self.call('search/package/',
                            params={'searchwords': search_term,
                                    'tg_paginate_limit':100})
         return result[1]['packages']
@@ -475,7 +475,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         params['tg_paginate_no'] = int(start_row/rows_per_page)
         params['searchwords'] = ''
 
-        results = self.call('packages', params)
+        results = self.call('packages/', params)
         total_count = results[1]['pkgCount']
         package_list = results[1]['packages']
 
@@ -564,7 +564,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         params['tg_paginate_limit'] = rows_per_page
         params['tg_paginate_no'] = int(start_row/rows_per_page) + 1
 
-        results = self.call('users/packages', params)
+        results = self.call('users/packages/', params)
         total_count = results[1]['pkgCount']
         package_list = results[1]['pkgs']
 
