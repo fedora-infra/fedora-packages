@@ -2,8 +2,8 @@
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
 Name:           fedoracommunity
-Version:        0.3.5
-Release:        1%{?dist}
+Version:        0.3.6
+Release:        2%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
 License:        AGPLv3
@@ -28,6 +28,7 @@ Requires: python-feedparser
 Requires: python-iniparse
 Requires: pytz
 Requires: pyOpenSSL
+Requires: python-memcached
 
 Obsoletes: myfedora
 
@@ -73,6 +74,15 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Fri Sep 04 2009 Luke Macken <lmacken@redhat.com> - 0.3.6-2
+- Require python-memcached for production environments
+
+* Wed Sep 02 2009 Luke Macken <lmacken@redhat.com> - 0.3.6-1
+- 0.3.6
+
+* Wed Sep 02 2009 Luke Macken <lmacken@redhat.com> - 0.3.5-1
+- 0.3.5
+
 * Mon Aug 03 2009 Luke Macken <lmacken@redhat.com> - 0.3.4-1
 - 0.3.4, bugfix release
 
