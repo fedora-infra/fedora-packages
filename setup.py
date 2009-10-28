@@ -118,6 +118,7 @@ setup(
     fedoracommunity.packages = fedoracommunity.mokshaapps.packages:RootController
     fedoracommunity.people = fedoracommunity.mokshaapps.people:RootController
     fedoracommunity.statistics = fedoracommunity.mokshaapps.statistics:RootController
+    fedoracommunity.demos = fedoracommunity.mokshaapps.demos:RootController
 
     [moksha.widget]
     fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
