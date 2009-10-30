@@ -2,7 +2,7 @@
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
 Name:           fedoracommunity
-Version:        0.3.7
+Version:        0.3.8
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
@@ -20,7 +20,7 @@ BuildRequires: pytz
 BuildRequires: pyOpenSSL
 BuildRequires: moksha
 
-Requires: moksha
+Requires: moksha >= 0.4.3
 Requires: intltool
 Requires: koji
 Requires: python-fedora
@@ -74,6 +74,9 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Thu Oct 29 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3.8-1
+- 0.3.8 - add demos tab w/ amqp demo app 
+
 * Tue Sep 22 2009 Luke Macken <lmacken@redhat.com> - 0.3.7-1
 - 0.3.7
 
