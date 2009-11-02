@@ -42,7 +42,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='0.3.8',
+    version='0.3.8.1',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',
@@ -124,6 +124,8 @@ setup(
     fedoracommunity.planet = fedoracommunity.widgets.planet:PlanetFedoraWidget
     fedoracommunity.quicklinks = fedoracommunity.widgets.quicklinks:QuickLinksWidget
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
+    fedoracommunity.demos.amqp = fedoracommunity.mokshaapps.demos.controllers:kamaloka_qpid_js
+
     placeholder = moksha.api.widgets:Placeholder
     grid = moksha.api.widgets:Grid
     clock = fedoracommunity.widgets.clock:clock_js
