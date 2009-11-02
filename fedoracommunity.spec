@@ -2,7 +2,7 @@
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
 Name:           fedoracommunity
-Version:        0.3.8
+Version:        0.3.8.2
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
@@ -74,6 +74,12 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Mon Nov 02 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3.8.2-1
+- 0.3.8.2 - make sure toscawidgets finds the js files
+
+* Thu Oct 29 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3.8.1-1
+- 0.3.8.1 - make sure js files are packaged
+
 * Thu Oct 29 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3.8-1
 - 0.3.8 - add demos tab w/ amqp demo app 
 
