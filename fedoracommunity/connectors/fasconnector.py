@@ -424,7 +424,6 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
             timetuple_new = (timetuple.tm_year, timetuple.tm_mon,
                              timetuple.tm_mday, 0, 0, 0, 0, 0, 0)
             timestamp = int(time.mktime(timetuple_new))*1000
-            print timestamp
             if timestamp in approval.keys():
                 approval[timestamp] += 1
             else:
