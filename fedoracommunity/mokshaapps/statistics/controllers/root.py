@@ -21,6 +21,7 @@ from moksha.api.widgets.containers.dashboardcontainer import applist_widget
 
 from fedoracommunity.widgets import SubTabbedContainer
 from fedoracommunity.mokshaapps.statistics.widgets import wiki_stats_dashboard
+from fedoracommunity.mokshaapps.statistics.widgets import fas_stats_dashboard
 #from fedoracommunity.mokshaapps.statistics.widgets import updates_stats_dashboard
 
 class StatsNavContainer(SubTabbedContainer):
@@ -30,6 +31,7 @@ class StatsNavContainer(SubTabbedContainer):
     tabs = (
         Category('Applications', (
             MokshaApp('Wiki', 'fedoracommunity.statistics/wiki', params={}),
+            MokshaApp('Accounts', 'fedoracommunity.statistics/fas', params={}),
             #MokshaApp('Updates', 'fedoracommunity.statistics/updates', params={}),
             ),
         ),
@@ -48,6 +50,11 @@ class RootController(Controller):
     @expose('mako:moksha.templates.widget')
     def wiki(self):
         tmpl_context.widget = wiki_stats_dashboard
+        return dict(options={})
+
+    @expose('mako:moksha.templates.widget')
+    def fas(self):
+        tmpl_context.widget = fas_stats_dashboard
         return dict(options={})
 
     #@expose('mako:moksha.templates.widget')
