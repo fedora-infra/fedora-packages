@@ -13,7 +13,16 @@ Source0:        fedoracommunity-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
+%if 0%{?rhel}
+%if "%rhel" < "6"
+BuildRequires: python-setuptools
+%else   
 BuildRequires: python-setuptools-devel
+%endif
+%else
+BuildRequires: python-setuptools-devel
+%endif
+
 BuildRequires: python-devel
 BuildRequires: python-pygments
 BuildRequires: pytz
