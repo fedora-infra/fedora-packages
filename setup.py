@@ -125,7 +125,7 @@ setup(
     fedoracommunity.planet = fedoracommunity.widgets.planet:PlanetFedoraWidget
     fedoracommunity.quicklinks = fedoracommunity.widgets.quicklinks:QuickLinksWidget
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
-    fedoracommunity.demos.amqp = fedoracommunity.mokshaapps.demos.controllers:kamaloka_qpid_js
+    fedoracommunity.demos.amqp = fedoracommunity.mokshaapps.demos.controllers.root:kamaloka_qpid_js
 
     [moksha.stream]
     stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
