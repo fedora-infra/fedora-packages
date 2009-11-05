@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from pylons import cache
+from pylons import config
 from fedora.client import Wiki
 from datetime import datetime, timedelta
 from moksha.api.widgets import Grid
@@ -22,6 +22,7 @@ from moksha.api.widgets.containers import DashboardContainer
 from moksha.lib.helpers import Category, Widget as MokshaWidget, defaultdict
 from moksha.api.connectors import get_connector
 from fedoracommunity.widgets.flot import FlotWidget
+from shove import Shove
 import simplejson
 
 class ClaDoneOverTime(FlotWidget):
@@ -37,10 +38,11 @@ class ClaDoneOverTime(FlotWidget):
 
     def update_params(self, d):
         fas_connector = get_connector('fas')
-        fas_cache = cache.get_cache('fas')
-        createfunc = fas_connector.group_membership_over_time
-        data = fas_cache.get_value(key='cla_done_over_time',
-                                   createfunc=createfunc, expiretime=1800)
+        stats_cache = Shove(config.get('stats_cache'))
+        if 'group_membership_cla_done' in stats_cache.keys():
+            data = stats_cache['group_membership_cla_done']
+        else:
+            data = fas_connector.group_membership_over_time()
         d.data = simplejson.dumps([data])
         d.options = {'xaxis': {'mode': 'time', 'min': self.start_date}}
         super(ClaDoneOverTime, self).update_params(d)

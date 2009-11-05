@@ -127,6 +127,9 @@ setup(
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
     fedoracommunity.demos.amqp = fedoracommunity.mokshaapps.demos.controllers:kamaloka_qpid_js
 
+    [moksha.stream]
+    stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
+
     placeholder = moksha.api.widgets:Placeholder
     grid = moksha.api.widgets:Grid
     clock = fedoracommunity.widgets.clock:clock_js
