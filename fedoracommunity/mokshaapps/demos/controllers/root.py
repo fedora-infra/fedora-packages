@@ -60,9 +60,11 @@ demo_container = DemoContainer('demo')
 class TimepingGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.demos.templates.timeping_grid'
     javascript=Grid.javascript + [kamaloka_qpid_js]
-    params=[]
+    params=['orbited_port', 'orbited_host']
     resource=None
     resource_path=None
+    orbited_port=9000
+    orbited_host='localhost'
     
 timeping_demo_grid = TimepingGrid('timeping_grid')    
 
