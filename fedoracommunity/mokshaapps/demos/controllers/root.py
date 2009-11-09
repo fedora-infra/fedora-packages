@@ -77,6 +77,7 @@ class RootController(Controller):
         
     @expose('mako:moksha.templates.widget')
     def timeping_demo(self, **kwds):
-        options = {}
+        options = {'orbited_port': orbited_port,
+                   'orbited_host': orbited_host}
         tmpl_context.widget = timeping_demo_grid
         return {'options':options}
