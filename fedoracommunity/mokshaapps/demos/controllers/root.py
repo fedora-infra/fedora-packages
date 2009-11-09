@@ -21,8 +21,16 @@ from tg import expose, tmpl_context
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.lib.helpers import Category, MokshaApp
-from moksha.api.widgets.orbited import orbited_js
 from tw.api import Widget, JSLink, js_function
+
+orbited_host = config.get('orbited_host', 'localhost')
+orbited_port = config.get('orbited_port', 9000)
+if orbited_port:
+    orbited_url = '%s:%s' % (orbited_host, orbited_port)
+else:
+    orbited_url = orbited_host
+
+orbited_js = JSLink(link=orbited_url + '/static/Orbited.js')
 
 kamaloka_protocol_js = JSLink(modname='fedoracommunity.mokshaapps.demos', 
                               filename='js/amqp.protocol.js', 

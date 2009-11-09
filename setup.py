@@ -124,12 +124,17 @@ setup(
     fedoracommunity.planet = fedoracommunity.widgets.planet:PlanetFedoraWidget
     fedoracommunity.quicklinks = fedoracommunity.widgets.quicklinks:QuickLinksWidget
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
+<<<<<<< HEAD:setup.py
     fedoracommunity.demos.amqp = fedoracommunity.mokshaapps.demos.controllers.root:kamaloka_qpid_js
 
+=======
+    fedoracommunity.demos.amqp = fedoracommunity.mokshaapps.demos.controllers:kamaloka_qpid_js
+>>>>>>> make orbited take a more flexable url:setup.py
     placeholder = moksha.api.widgets:Placeholder
     grid = moksha.api.widgets:Grid
     clock = fedoracommunity.widgets.clock:clock_js
     expander = fedoracommunity.widgets.expander:expander_js
+    
 
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
