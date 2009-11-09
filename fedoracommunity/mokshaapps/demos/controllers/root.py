@@ -22,6 +22,7 @@ from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.lib.helpers import Category, MokshaApp
 from tw.api import Widget, JSLink, js_function
+from tg import config
 
 orbited_host = config.get('orbited_host', 'localhost')
 orbited_port = config.get('orbited_port', 9000)
