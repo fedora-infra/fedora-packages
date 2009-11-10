@@ -25,11 +25,14 @@ from tw.api import Widget, JSLink, js_function
 from tg import config
 
 orbited_host = config.get('orbited_host', 'localhost')
+orbited_path = config.get('orbited_path','');
 orbited_port = config.get('orbited_port', 9000)
+orbited_url = orbited_host
 if orbited_port:
-    orbited_url = '%s:%s' % (orbited_host, orbited_port)
-else:
-    orbited_url = orbited_host
+    orbited_url = '%s:%s' % (orbited_url, orbited_port)
+
+if orbited_path:
+    orbited_url = '%s%s' % (orbited_url, orbited_path)
 
 orbited_js = JSLink(link=orbited_url + '/static/Orbited.js')
 
