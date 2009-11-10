@@ -86,3 +86,8 @@ class RootController(Controller):
                    'orbited_host': orbited_host}
         tmpl_context.widget = timeping_demo_grid
         return {'options':options}
+
+    @expose('mako:fedoracommunity.mokshaapps.demos.templates.test')
+    def test(self, **kwds):
+        timeping_demo_grid.register_resources()
+        return {}
