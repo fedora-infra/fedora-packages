@@ -8,6 +8,7 @@
 </ul>
 <script>
 Orbited.settings.port = 443;
+Orbited.settings.hostname = 'admin.stg.fedoraproject.org/orbited';
 settings = {};
 settings.DEBUG_LEVEL = 1;
 settings.amqp_broker_port = 5672;
