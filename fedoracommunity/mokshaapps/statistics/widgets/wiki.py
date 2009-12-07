@@ -55,8 +55,10 @@ class WikiEditsPerDay(FlotWidget):
         flot = wiki_cache.get_value(key='wiki_edits_per_day',
                 createfunc=wiki_connector.flot_wiki_edits_per_day,
                 expiretime=1800)
-        d.data = flot['data']
-        d.options = flot['options']
+        if not flot:
+            (d.data, d.options) = (False, False)
+        else:
+            (d.data, d.options) = (flot['data'], flot['options'])
         super(WikiEditsPerDay, self).update_params(d)
 
 

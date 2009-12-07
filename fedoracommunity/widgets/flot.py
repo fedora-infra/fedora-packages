@@ -28,7 +28,7 @@ class FlotWidget(Widget):
     For detailed documentation on the flot API, visit the flot project 
     homepage: http://code.google.com/p/flot
     """
-    template = """
+    template = u"""
         <div id="${id}" style="width:${width};height:${height};">
           <div id="flotLabel">
             ${label}
@@ -36,7 +36,11 @@ class FlotWidget(Widget):
         </div>
         <script>
             $(document).ready(function(){
-                $.plot($('#${id}'), ${data}, ${options});
+                if (!${data}) {
+                    $('#${id}').text('Data not ready for display \u2014 sorry!');
+                } else {
+                    $.plot($('#${id}'), ${data}, ${options});
+                }
             });
         </script>
     """
@@ -57,8 +61,6 @@ class FlotWidget(Widget):
 
     def update_params(self, d):
         super(FlotWidget, self).update_params(d)
-        if not d.get('data'):
-            raise ValueError, "FlotWidget must have data to graph"
         if not d.get('id'):
             d['id'] = 'flot_%s' % str(int(random() * 999))
         data = d.get('data') or []
