@@ -48,6 +48,7 @@ class ClaDoneDataStream(PollingDataStream):
 
 
 class WikiAllRevisionsDataStream(PollingDataStream):
+    now = True
     frequency = timedelta(hours=12)
 
     def poll(self):
@@ -55,12 +56,12 @@ class WikiAllRevisionsDataStream(PollingDataStream):
         wiki = Wiki()
         try:
             data = stats_cache['all_revisions']
-        except KeyError:
+        except TypeError:
             # we haven't gotten any data yet.
             data = {'revs': {}, 'last_rev_checked': 0}
         starttime = datetime.now()
         log.info("Caching wiki revisions now... this could take a while")
-        data['revs'].update(w.fetch_all_revisions(
+        data['revs'].update(wiki.fetch_all_revisions(
                 start = data['last_rev_checked']+1,
                 flags = False,
                 timestamp = True,
