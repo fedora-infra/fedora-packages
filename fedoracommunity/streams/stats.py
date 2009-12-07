@@ -30,7 +30,6 @@ from shove import Shove
 from pylons import config
 from datetime import timedelta, datetime
 from moksha.api.connectors import get_connector
-from beaker.cache import Cache
 
 class ClaDoneDataStream(PollingDataStream):
     frequency = timedelta(minutes=2)
