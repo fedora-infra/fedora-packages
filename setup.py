@@ -131,10 +131,9 @@ setup(
     clock = fedoracommunity.widgets.clock:clock_js
     expander = fedoracommunity.widgets.expander:expander_js
 
-
     [moksha.stream]
     stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
-    wiki_all_revisions = fedoracommunity.streams.wikistream:AllRevisionsDataStream
+    wiki_all_revisions = fedoracommunity.streams.stats:WikiAllRevisionsDataStream
 
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
