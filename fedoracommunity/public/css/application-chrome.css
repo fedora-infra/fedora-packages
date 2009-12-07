@@ -119,7 +119,10 @@ a {
 
 /* left navbar tabs styling */
 
-.ui-tabs-hide { display: none; }
+.ui-tabs-hide {
+    position: absolute;
+    top: -10000px;
+}
 
 #app-sidebar .nav {
   margin: 0px;
