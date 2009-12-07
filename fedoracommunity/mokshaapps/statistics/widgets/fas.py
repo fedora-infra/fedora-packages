@@ -43,6 +43,7 @@ class ClaDoneOverTime(FlotWidget):
             data = stats_cache['group_membership_cla_done']
         else:
             data = fas_connector.group_membership_over_time()
+            stats_cache['group_membership_cla_done'] = data
         d.data = simplejson.dumps([data])
         d.options = {'xaxis': {'mode': 'time', 'min': self.start_date}}
         super(ClaDoneOverTime, self).update_params(d)
