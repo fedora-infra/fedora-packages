@@ -30,16 +30,13 @@ from shove import Shove
 from pylons import config
 from datetime import timedelta, datetime
 from moksha.api.connectors import get_connector
-import logging
 from beaker.cache import Cache
-
-log = logging.getLogger(__name__)
 
 class ClaDoneDataStream(PollingDataStream):
     frequency = timedelta(minutes=2)
 
     def poll(self):
-        log.info("Cached cla_done graph")
+        self.log.info("Cached cla_done graph")
         stats_cache = Shove(config.get('stats_cache'))
         fas_connector = get_connector('fas')
         data = fas_connector.group_membership_over_time()
@@ -60,7 +57,7 @@ class WikiAllRevisionsDataStream(PollingDataStream):
             # we haven't gotten any data yet.
             data = {'revs': {}, 'last_rev_checked': 0}
         starttime = datetime.now()
-        log.info("Caching wiki revisions now... this could take a while")
+        self.log.info("Caching wiki revisions now... this could take a while")
         data['revs'].update(wiki.fetch_all_revisions(
                 start = data['last_rev_checked']+1,
                 flags = False,
@@ -76,6 +73,6 @@ class WikiAllRevisionsDataStream(PollingDataStream):
         revids.sort()
         data['last_rev_checked'] = revids[-1]
         stats_cache['all_revisions'] = data
-        log.info("Cached wiki revisions, took %s seconds" % \
+        self.log.info("Cached wiki revisions, took %s seconds" % \
                  (datetime.now() - starttime))
         return True
