@@ -51,10 +51,10 @@ class WikiAllRevisionsDataStream(PollingDataStream):
     frequency = timedelta(hours=12)
 
     def poll(self):
-        c = Cache('wiki')
-        w = Wiki()
+        stats_cache = Shove(config.get('stats_cache'))
+        wiki = Wiki()
         try:
-            data = c.get_value(key='all_revisions')
+            data = stats_cache['all_revisions']
         except KeyError:
             # we haven't gotten any data yet.
             data = {'revs': {}, 'last_rev_checked': 0}
@@ -74,7 +74,7 @@ class WikiAllRevisionsDataStream(PollingDataStream):
         revids = data['revs'].keys()
         revids.sort()
         data['last_rev_checked'] = revids[-1]
-        c.set_value(key='all_revisions', value=data)
+        stats_cache['all_revisions'] = data
         log.info("Cached wiki revisions, took %s seconds" % \
                  (datetime.now() - starttime))
         return True
