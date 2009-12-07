@@ -353,6 +353,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 details += HTML.tag('br') + update['date_pushed']
             else:
                 details += 'In process...'
+        elif update['status'] == 'pending' and update.get('request'):
+            details += 'Pending push to %s' % update['request']
+            details += HTML.tag('br')
+            details += HTML.tag('a', c="View update details >",
+                                href="%s/%s" % (self._base_url,
+                                                update['title']))
         elif update['status'] == 'obsolete':
             for comment in update['comments']:
                 if comment['author'] == 'bodhi':
@@ -364,14 +370,15 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def _get_update_actions(self, update):
         actions = []
-        if update['status'] == 'testing':
-            actions.append(('unpush', 'Unpush'))
-            actions.append(('stable', 'Push to stable'))
-        if update['status'] == 'pending':
-            actions.append(('testing', 'Push to testing'))
-            actions.append(('stable', 'Push to stable'))
         if update['request']:
             actions.append(('revoke', 'Cancel push'))
+        else:
+            if update['status'] == 'testing':
+                actions.append(('unpush', 'Unpush'))
+                actions.append(('stable', 'Push to stable'))
+            if update['status'] == 'pending':
+                actions.append(('testing', 'Push to testing'))
+                actions.append(('stable', 'Push to stable'))
         return actions
 
     def _group_updates(self, updates, num_packages=None):
@@ -603,20 +610,27 @@ class BodhiConnector(IConnector, ICall, IQuery):
                     row['stable_version'] = 'No builds tagged with %s' % tag
                 row['testing_version'] = HTML.tag('i', c='Not Applicable')
             else:
-                stable_updates = koji.listTagged(tag + '-updates',
+                # FIXME: Hack around EPEL tags
+                if tag.endswith('epel'):
+                    stable_tag = tag
+                else:
+                    stable_tag = tag + '-updates'
+
+                stable_updates = koji.listTagged(stable_tag,
                                                  package=package,
                                                  latest=True,
                                                  inherit=True)
                 if stable_updates:
                     nvr = parse_build(stable_updates[0]['nvr'])
-                    if not stable_updates[0]['tag_name'].endswith('-updates') :
-                        row['stable_version'] = '%(version)s-%(release)s' % nvr
-                    else:
+                    if stable_updates[0]['tag_name'].endswith('-updates') or \
+                       stable_updates[0]['tag_name'].endswith('-epel'):
                         row['stable_version'] = HTML.tag('a',
                                 c='%(version)s-%(release)s' % nvr,
                                 href='%s/%s' % (self._base_url, nvr['nvr']))
+                    else:
+                        row['stable_version'] = '%(version)s-%(release)s' % nvr
 
-                testing_updates = koji.listTagged(tag + '-updates-testing',
+                testing_updates = koji.listTagged(stable_tag + '-testing',
                                                   package=package, latest=True)
                 if testing_updates:
                     nvr = parse_build(testing_updates[0]['nvr'])

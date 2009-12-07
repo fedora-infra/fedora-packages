@@ -134,12 +134,14 @@ class PersonDetailsWidget(ContextAwareWidget):
             if offset.startswith('-'):
                 offset = offset[1:]
                 d.utc_offset += '-'
+            elif offset.startswith('+'):
+                offset = offset[1:]
             hours = int(offset[:2])
             d.utc_offset += str(hours)
-            # FIXME: account for minutes?
-            #minutes = int(offset[2:])
-            #if minutes:
-            #    d.utc_offset += '.%d' % ...
+            minutes = int(offset[2:])
+            if minutes:
+                d.utc_offset = float(d.utc_offset)
+                d.utc_offset += (minutes/60.0)
 
 class CompactPersonDetailsWidget(PersonDetailsWidget):
     template = 'mako:fedoracommunity.mokshaapps.people.templates.info_compact'
@@ -207,7 +209,7 @@ class RootController(Controller):
                             'username': username}}
 
     @expose('mako:fedoracommunity.mokshaapps.people.templates.table')
-    def table(self, rows_per_page=50, filters={}, more_link_code=None):
+    def table(self, rows_per_page=20, filters={}, more_link_code=None):
         ''' table handler
 
         This handler displays the main table by itself

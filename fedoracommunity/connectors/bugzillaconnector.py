@@ -29,7 +29,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
     def __init__(self, environ=None, request=None):
         super(BugzillaConnector, self).__init__(environ, request)
-        self._bugzilla = Bugzilla(url=self._base_url)
+        self._bugzilla = None
 
     # IConnector
     @classmethod
@@ -92,6 +92,8 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         """
         results = {}
         last_week = str(datetime.utcnow() - timedelta(days=7)),
+        if not self._bugzilla:
+            self._bugzilla = Bugzilla(url=self._base_url)
 
         # FIXME: For some reason, doing this as multicall doesn't work properly.
         #mc = self._bugzilla._multicall()
@@ -169,29 +171,34 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'order': 'bug_id',
                 }
         bugzilla_cache = cache.get_cache('bugzilla')
-        bugs = bugzilla_cache.get_value(key=str(query), expiretime=900,
+        key = '%s_%s_%s' % (collection, version, package)
+        bugs = bugzilla_cache.get_value(key=key, expiretime=900,
                 createfunc=lambda: self._query_bugs(query,
                     filters=filters, collection=collection, **params))
         total_count = len(bugs)
         five_pages = rows_per_page * 5
-        if start_row <= five_pages: # Cache the first 5 pages of every bug grid
+        if start_row < five_pages: # Cache the first 5 pages of every bug grid
             bugs = bugs[:five_pages]
-            bugs = bugzilla_cache.get_value(key=str(query) + '_details',
+            bugs = bugzilla_cache.get_value(key=key + '_details',
                     expiretime=900, createfunc=lambda: self.get_bugs(
                         bugs, collection=collection))
         bugs = bugs[start_row:start_row+rows_per_page]
-        if start_row > five_pages:
+        if start_row >= five_pages:
             bugs = self.get_bugs(bugs, collection=collection)
         return (total_count, bugs)
 
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
                    sort_col='number', filters=None, collection='Fedora',
                    **params):
+        if not self._bugzilla:
+            self._bugzilla = Bugzilla(url=self._base_url)
         results = self._bugzilla.query(query)
         results.reverse()
         return [bug.bug_id for bug in results]
 
     def get_bugs(self, bugids, collection='Fedora'):
+        if not self._bugzilla:
+            self._bugzilla = Bugzilla(url=self._base_url)
         bugs = self._bugzilla.getbugs(bugids)
         bugs_list = []
         for bug in bugs:

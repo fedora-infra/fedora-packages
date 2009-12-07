@@ -20,7 +20,7 @@
           </tr><tr>
             <th>Timezone</th>
             <td>
-% if person.get('timezone'):
+% if person.get('timezone') and person['timezone'] != 'UTC':
 <div class="timezone">
 <span id="clock_${id}" class="clock"/>
 <span class="timezone_label">${person['timezone']}</span>
@@ -105,6 +105,7 @@
 
       $("#clock_${id}").jclock({
           format: '%I:%M %p',
+          utc: true,
           utc_offset: ${utc_offset},
           timeout: 60000
       });

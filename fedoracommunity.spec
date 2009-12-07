@@ -2,7 +2,7 @@
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
 Name:           fedoracommunity
-Version:        0.3.3
+Version:        0.3.8.2
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
@@ -13,14 +13,23 @@ Source0:        fedoracommunity-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
+%if 0%{?rhel}
+%if "%rhel" < "6"
+BuildRequires: python-setuptools
+%else   
 BuildRequires: python-setuptools-devel
+%endif
+%else
+BuildRequires: python-setuptools-devel
+%endif
+
 BuildRequires: python-devel
 BuildRequires: python-pygments
 BuildRequires: pytz
 BuildRequires: pyOpenSSL
 BuildRequires: moksha
 
-Requires: moksha
+Requires: moksha >= 0.4.3
 Requires: intltool
 Requires: koji
 Requires: python-fedora
@@ -28,6 +37,7 @@ Requires: python-feedparser
 Requires: python-iniparse
 Requires: pytz
 Requires: pyOpenSSL
+Requires: python-memcached
 
 Obsoletes: myfedora
 
@@ -73,6 +83,30 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Mon Nov 02 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3.8.2-1
+- 0.3.8.2 - make sure toscawidgets finds the js files
+
+* Thu Oct 29 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3.8.1-1
+- 0.3.8.1 - make sure js files are packaged
+
+* Thu Oct 29 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3.8-1
+- 0.3.8 - add demos tab w/ amqp demo app 
+
+* Tue Sep 22 2009 Luke Macken <lmacken@redhat.com> - 0.3.7-1
+- 0.3.7
+
+* Fri Sep 04 2009 Luke Macken <lmacken@redhat.com> - 0.3.6-2
+- Require python-memcached for production environments
+
+* Wed Sep 02 2009 Luke Macken <lmacken@redhat.com> - 0.3.6-1
+- 0.3.6
+
+* Wed Sep 02 2009 Luke Macken <lmacken@redhat.com> - 0.3.5-1
+- 0.3.5
+
+* Mon Aug 03 2009 Luke Macken <lmacken@redhat.com> - 0.3.4-1
+- 0.3.4, bugfix release
+
 * Mon Jul 27 2009 Luke Macken <lmacken@redhat.com> - 0.3.3-1
 - 0.3.3, bugfix release
 

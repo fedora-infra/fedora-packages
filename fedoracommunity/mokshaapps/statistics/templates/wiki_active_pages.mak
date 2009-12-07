@@ -28,7 +28,7 @@
 		        <a href="https://fedoraproject.org/w/index.php?title=@{title}&action=history">@{number_of_edits}</a>
 		    </td>
                     <td>
-                        @{last_edited_by}
+                        <a href="/people?username=@{last_edited_by}" moksha_url="dynamic">@{last_edited_by}</a>
                     </td>
                 </tr>
             </tbody>

@@ -42,7 +42,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='0.3.3',
+    version='0.3.8.2',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',
@@ -52,7 +52,7 @@ setup(
     url='http://fedoracommunity.fedorahosted.org',
     install_requires=[
         "moksha",
-        "PyOpenSSL",
+        #"PyOpenSSL",
         "pytz",
         ],
     scripts=['fedoracommunity_makeyumcache'],
@@ -118,12 +118,18 @@ setup(
     fedoracommunity.packages = fedoracommunity.mokshaapps.packages:RootController
     fedoracommunity.people = fedoracommunity.mokshaapps.people:RootController
     fedoracommunity.statistics = fedoracommunity.mokshaapps.statistics:RootController
+    fedoracommunity.demos = fedoracommunity.mokshaapps.demos:RootController
 
     [moksha.widget]
     fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
     fedoracommunity.planet = fedoracommunity.widgets.planet:PlanetFedoraWidget
     fedoracommunity.quicklinks = fedoracommunity.widgets.quicklinks:QuickLinksWidget
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
+    fedoracommunity.demos.amqp = fedoracommunity.mokshaapps.demos.controllers.root:kamaloka_qpid_js
+
+    [moksha.stream]
+    stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
+
     placeholder = moksha.api.widgets:Placeholder
     grid = moksha.api.widgets:Grid
     clock = fedoracommunity.widgets.clock:clock_js

@@ -14,6 +14,7 @@
             <h3>${person['username']}</h3>
             % if not person.get('privacy'):
             <p><strong>Location:</strong> ${person['country_code']}</p>
+            % if person.get('timezone') and person['timezone'] != 'UTC':
             <div class="timezone">
                <img src="${tmpl_context.get_url('/images/16_clock.png')}" />
                <p>
@@ -21,6 +22,7 @@
                   <span class="timezone_label">${person['timezone']}</span>
                </p>
             </div>
+            % endif
             <div class="timezone">
                <img src="${tmpl_context.get_url('/images/16_clock.png')}" />
                <p>
@@ -49,12 +51,13 @@
     $(document).ready(function(){
       $("#clock_${id}").jclock({
           format: '%I:%M %p',
+          utc: true,
           utc_offset: ${utc_offset},
-          timeout: 60000
+          timeout: 60000,
       });
 
       $("#utc_clock_${id}").jclock({
-          format: '%I:%M %p',
+          format: '%I:%M',
           utc: true,
           timeout: 60000
       });

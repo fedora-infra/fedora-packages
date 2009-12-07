@@ -89,7 +89,7 @@ class WikiConnector(IConnector, IQuery):
         for change in changes:
             edit_counts[change['title']] += 1
             if change['title'] not in last_edited_by.keys():
-                last_edited_by[change['title']] = change['user']
+                last_edited_by[change['title']] = change['user'].lower()
 
         most_active_pages = sorted(edit_counts.items(),
                                    cmp=lambda x, y : cmp(x[1], y[1]),
@@ -111,7 +111,7 @@ class WikiConnector(IConnector, IQuery):
                                        expiretime=3600)
 
         for change in changes:
-            users[change['user']].append(change['title'])
+            users[change['user'].lower()].append(change['title'])
 
         most_active_users = sorted(users.items(),
                 cmp=lambda x, y: cmp(len(x[1]), len(y[1])),

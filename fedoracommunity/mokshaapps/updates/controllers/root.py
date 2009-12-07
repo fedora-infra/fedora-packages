@@ -74,9 +74,14 @@ class UpdatesGrid(Grid, ContextAwareWidget):
             value = ""
             if koji_name:
                 value = koji_name.rsplit('-', 1)[1]
-
-            if label != 'Fedora devel' and name =='Fedora':
-                releases.append({'label': label, 'value': value, 'version': ver})
+            if value == 'epel':
+                value = collection['branchname']
+            if label != 'Fedora devel' and name in ('Fedora', 'Fedora EPEL'):
+                releases.append({
+                    'label': label,
+                    'value': value,
+                    'version': ver,
+                    })
 
         def _sort(a,b):
             return cmp(int(b['version']), int(a['version']))
@@ -120,7 +125,7 @@ unpushed_updates_app = MokshaApp('Unpushed Updates', 'fedoracommunity.updates/ta
                                   'status':'pending',
                                   'profile': False,
                                   'username': None,
-                                  'grainularity': 'minute',
+                                  'granularity': 'minute',
                                   }
                               })
 testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/table',
@@ -132,6 +137,7 @@ testing_updates_app = MokshaApp('Testing Updates', 'fedoracommunity.updates/tabl
                                   'status':'testing',
                                   'profile': False,
                                   'username': None,
+                                  'granularity': 'minute',
                                   }
                               })
 stable_updates_app = MokshaApp('Stable Updates', 'fedoracommunity.updates/table',
@@ -169,9 +175,6 @@ class UpdatesOverviewContainer(DashboardContainer):
                            'rows_per_page': 5,
                            'show_title': False,
                            'more_link_code':updates_links.UNPUSHED_UPDATES.code,
-                           'filters': {
-                               'grainularity': 'minute',
-                               },
                            }),
                        testing_updates_app.clone({
                            'rows_per_page': 5,
@@ -203,18 +206,21 @@ class UpdatesNavContainer(SubTabbedContainer):
                          'profile': True,
                          }, content_id='my_overview_updates'),
                      unpushed_updates_app.clone({
+                         'group_updates': False,
                          'filters': {
                              'profile': True,
                              'group_updates': False
                              }
                          }, content_id='my_unpushed_updates'),
                      testing_updates_app.clone({
+                         'group_updates': False,
                          'filters': {
                              'profile': True,
                              'group_updates': False
                              }
                          }, content_id='my_testing_updates'),
                      stable_updates_app.clone({
+                         'group_updates': False,
                          'filters': {
                              'profile': True,
                              'group_updates': False
@@ -225,12 +231,15 @@ class UpdatesNavContainer(SubTabbedContainer):
             Category('All Packages', (
                 overview_updates_app,
                 unpushed_updates_app.clone({
+                    'group_updates': False,
                     'filters': {'group_updates': False}
                     }),
                 testing_updates_app.clone({
-                   'filters': {'group_updates': False}
-                    }),
+                    'group_updates': False,
+                    'filters': {'group_updates': False}
+                     }),
                 stable_updates_app.clone({
+                    'group_updates': False,
                     'filters': {'group_updates': False}
                     }),
                 )
