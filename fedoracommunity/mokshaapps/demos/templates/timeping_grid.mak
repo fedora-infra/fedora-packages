@@ -30,7 +30,7 @@
     <script type="text/javascript">
        $(document).ready(function(){
         document.domain = document.domain;
-        Orbited.settings.port = 9000;
+        Orbited.settings.port = ${orbited_port};
         settings = {};
         settings.amqp_broker_port = 5672;
         settings.amqp_broker_host = 'admin.stg.fedoraproject.org';

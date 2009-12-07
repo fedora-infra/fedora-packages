@@ -24,12 +24,14 @@ application automatic.
 .. moduleauthor:: Ian Weller <ian@ianweller.org>
 """
 
+from fedora.client.wiki import Wiki
 from moksha.api.streams import PollingDataStream
 from shove import Shove
 from pylons import config
-from datetime import timedelta
+from datetime import timedelta, datetime
 from moksha.api.connectors import get_connector
 import logging
+from beaker.cache import Cache
 
 log = logging.getLogger(__name__)
 
@@ -42,4 +44,37 @@ class ClaDoneDataStream(PollingDataStream):
         fas_connector = get_connector('fas')
         data = fas_connector.group_membership_over_time()
         stats_cache['group_membership_cla_done'] = data
+        return True
+
+
+class WikiAllRevisionsDataStream(PollingDataStream):
+    frequency = timedelta(hours=12)
+
+    def poll(self):
+        c = Cache('wiki')
+        w = Wiki()
+        try:
+            data = c.get_value(key='all_revisions')
+        except KeyError:
+            # we haven't gotten any data yet.
+            data = {'revs': {}, 'last_rev_checked': 0}
+        starttime = datetime.now()
+        log.info("Caching wiki revisions now... this could take a while")
+        data['revs'].update(w.fetch_all_revisions(
+                start = data['last_rev_checked']+1,
+                flags = False,
+                timestamp = True,
+                user = True,
+                size = False,
+                comment = False,
+                content = False,
+                title = True,
+                ignore_imported_revs = True,
+        ))
+        revids = data['revs'].keys()
+        revids.sort()
+        data['last_rev_checked'] = revids[-1]
+        c.set_value(key='all_revisions', value=data)
+        log.info("Cached wiki revisions, took %s seconds" % \
+                 (datetime.now() - starttime))
         return True

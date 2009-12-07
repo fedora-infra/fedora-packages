@@ -21,8 +21,20 @@ from tg import expose, tmpl_context
 from moksha.api.widgets import ContextAwareWidget, Grid
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.lib.helpers import Category, MokshaApp
-from moksha.api.widgets.orbited import orbited_js
 from tw.api import Widget, JSLink, js_function
+from tg import config
+
+orbited_host = config.get('orbited_host', 'localhost')
+orbited_path = config.get('orbited_path','');
+orbited_port = config.get('orbited_port', 9000)
+orbited_url = orbited_host
+if orbited_port:
+    orbited_url = '%s:%s' % (orbited_url, orbited_port)
+
+if orbited_path:
+    orbited_url = '%s%s' % (orbited_url, orbited_path)
+
+orbited_js = JSLink(link=orbited_url + '/static/Orbited.js')
 
 kamaloka_protocol_js = JSLink(modname='fedoracommunity.mokshaapps.demos', 
                               filename='js/amqp.protocol.js', 
@@ -51,9 +63,11 @@ demo_container = DemoContainer('demo')
 class TimepingGrid(Grid, ContextAwareWidget):
     template='mako:fedoracommunity.mokshaapps.demos.templates.timeping_grid'
     javascript=Grid.javascript + [kamaloka_qpid_js]
-    params=[]
+    params=['orbited_port', 'orbited_host']
     resource=None
     resource_path=None
+    orbited_port=9000
+    orbited_host='localhost'
     
 timeping_demo_grid = TimepingGrid('timeping_grid')    
 
@@ -68,6 +82,12 @@ class RootController(Controller):
         
     @expose('mako:moksha.templates.widget')
     def timeping_demo(self, **kwds):
-        options = {}
+        options = {'orbited_port': orbited_port,
+                   'orbited_host': orbited_host}
         tmpl_context.widget = timeping_demo_grid
         return {'options':options}
+
+    @expose('mako:fedoracommunity.mokshaapps.demos.templates.test')
+    def test(self, **kwds):
+        timeping_demo_grid.register_resources()
+        return {}
