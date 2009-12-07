@@ -126,15 +126,15 @@ setup(
     fedoracommunity.quicklinks = fedoracommunity.widgets.quicklinks:QuickLinksWidget
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
     fedoracommunity.demos.amqp = fedoracommunity.mokshaapps.demos.controllers.root:kamaloka_qpid_js
-
-    [moksha.stream]
-    stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
-
     placeholder = moksha.api.widgets:Placeholder
     grid = moksha.api.widgets:Grid
     clock = fedoracommunity.widgets.clock:clock_js
     expander = fedoracommunity.widgets.expander:expander_js
     
+
+    [moksha.stream]
+    stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
+    wiki_all_revisions = fedoracommunity.streams.stats:WikiAllRevisionsDataStream
 
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
