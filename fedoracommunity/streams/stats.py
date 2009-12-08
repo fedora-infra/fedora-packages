@@ -77,6 +77,7 @@ class WikiAllRevisionsDataStream(PollingDataStream):
                 revids.sort()
                 data['last_rev_checked'] = revids[-1]
                 stats_cache['all_revisions'] = data
+                stats_cache.sync()
             self.log.debug('%d/%d wiki revisions cached' % \
                     (len(all_revs), len(revs_to_get)))
         wiki.fetch_all_revisions(
