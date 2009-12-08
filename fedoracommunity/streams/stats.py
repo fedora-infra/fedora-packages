@@ -70,7 +70,16 @@ class WikiAllRevisionsDataStream(PollingDataStream):
             data = {'revs': {}, 'last_rev_checked': 0}
         starttime = datetime.now()
         self.log.info("Caching wiki revisions now... this could take a while")
-        data['revs'].update(wiki.fetch_all_revisions(
+        def callback(all_revs, revs_to_get):
+            if len(all_revs) > 0:
+                data['revs'].update(all_revs)
+                revids = data['revs'].keys()
+                revids.sort()
+                data['last_rev_checked'] = revids[-1]
+                stats_cache['all_revisions'] = data
+            self.log.debug('%d/%d wiki revisions cached' % \
+                    (len(all_revs), len(revs_to_get)))
+        wiki.fetch_all_revisions(
                 start = data['last_rev_checked']+1,
                 flags = False,
                 timestamp = True,
@@ -80,11 +89,8 @@ class WikiAllRevisionsDataStream(PollingDataStream):
                 content = False,
                 title = True,
                 ignore_imported_revs = True,
-        ))
-        revids = data['revs'].keys()
-        revids.sort()
-        data['last_rev_checked'] = revids[-1]
-        stats_cache['all_revisions'] = data
+                callback = lambda x, y: callback(x, y)
+        )
         self.log.info("Cached wiki revisions, took %s seconds" % \
                  (datetime.now() - starttime))
         return True
