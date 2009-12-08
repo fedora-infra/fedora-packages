@@ -24,6 +24,7 @@ application automatic.
 .. moduleauthor:: Ian Weller <ian@ianweller.org>
 """
 
+from fedora.client import AuthError
 from fedora.client.wiki import Wiki
 from moksha.api.streams import PollingDataStream
 from shove import Shove
@@ -50,6 +51,18 @@ class WikiAllRevisionsDataStream(PollingDataStream):
     def poll(self):
         stats_cache = Shove(config.get('stats_cache'))
         wiki = Wiki()
+        try:
+            user = config.get('fedoracommunity.connector.fas.'
+                              'minimal_user_name')
+            passwd = config.get('fedoracommunity.connector.fas.'
+                                'minimal_user_password')
+        except KeyError:
+            pass
+        try:
+            wiki.login(user, passwd)
+            self.log.info('Logging into wiki as user %s' % user)
+        except AuthError, e:
+            self.log.info('Wiki login failed: %s' % e)
         try:
             data = stats_cache['all_revisions']
         except TypeError:
