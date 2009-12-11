@@ -58,11 +58,12 @@ class WikiAllRevisionsDataStream(PollingDataStream):
                                 'minimal_user_password')
         except KeyError:
             pass
-        try:
-            wiki.login(user, passwd)
-            self.log.info('Logging into wiki as user %s' % user)
-        except AuthError, e:
-            self.log.info('Wiki login failed: %s' % e)
+        if user and passwd:
+            try:
+                wiki.login(user, passwd)
+                self.log.info('Logging into wiki as user %s' % user)
+            except AuthError, e:
+                self.log.info('Wiki login failed: %s' % e)
         try:
             data = stats_cache['all_revisions']
         except KeyError:
