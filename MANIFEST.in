@@ -1,7 +1,7 @@
 recursive-include production *
 recursive-include fedoracommunity *.mak
 recursive-include fedoracommunity *.js
-recursive-include fedoracommunity/mokshaapps/demos/js/*.js
+recursive-include fedoracommunity/mokshaapps/demos/js/ *.js
 
 include fedoracommunity_makeyumcache
 include fedoracommunity.spec
