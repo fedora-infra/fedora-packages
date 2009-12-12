@@ -33,7 +33,7 @@ from datetime import timedelta, datetime
 from moksha.api.connectors import get_connector
 
 class ClaDoneDataStream(PollingDataStream):
-    frequency = timedelta(minutes=2)
+    frequency = timedelta(minutes=15)
 
     def poll(self):
         self.log.info("Cached cla_done graph")
