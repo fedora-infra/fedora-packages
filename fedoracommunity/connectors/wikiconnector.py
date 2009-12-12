@@ -27,6 +27,7 @@ from fedora.client import Wiki
 from datetime import datetime, timedelta
 from time import mktime
 from pylons import cache
+from shove import Shove
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import defaultdict
 
@@ -133,9 +134,9 @@ class WikiConnector(IConnector, IQuery):
         return flot_data
 
     def flot_wiki_edits_per_day(self, **params):
-        wiki_cache = cache.get_cache('wiki')
+        stats_cache = Shove(config.get('stats_cache'))
         try:
-            data = wiki_cache.get_value(key='all_revisions')
+            data = stats_cache['wiki_all_revisions']
         except KeyError:
             return False
 
