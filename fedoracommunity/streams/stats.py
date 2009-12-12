@@ -45,7 +45,6 @@ class ClaDoneDataStream(PollingDataStream):
 
 
 class WikiAllRevisionsDataStream(PollingDataStream):
-    now = True
     frequency = timedelta(hours=12)
 
     def poll(self):
