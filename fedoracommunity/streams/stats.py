@@ -33,7 +33,8 @@ from datetime import timedelta, datetime
 from moksha.api.connectors import get_connector
 
 class ClaDoneDataStream(PollingDataStream):
-    frequency = timedelta(minutes=2)
+    now = True
+    frequency = timedelta(minutes=15)
 
     def poll(self):
         self.log.info("Cached cla_done graph")
@@ -65,7 +66,7 @@ class WikiAllRevisionsDataStream(PollingDataStream):
             except AuthError, e:
                 self.log.info('Wiki login failed: %s' % e)
         try:
-            data = stats_cache['all_revisions']
+            data = stats_cache['wiki_all_revisions']
         except KeyError:
             # we haven't gotten any data yet.
             data = {'revs': {}, 'last_rev_checked': 0}
@@ -77,7 +78,7 @@ class WikiAllRevisionsDataStream(PollingDataStream):
                 revids = data['revs'].keys()
                 revids.sort()
                 data['last_rev_checked'] = revids[-1]
-                stats_cache['all_revisions'] = data
+                stats_cache['wiki_all_revisions'] = data
                 stats_cache.sync()
             self.log.debug('%d/%d wiki revisions cached' % \
                     (len(all_revs), len(revs_to_get)))
