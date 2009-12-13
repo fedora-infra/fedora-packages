@@ -22,7 +22,7 @@ from moksha.api.widgets.containers import DashboardContainer
 from moksha.lib.helpers import Category, Widget as MokshaWidget, defaultdict
 from moksha.api.connectors import get_connector
 from fedoracommunity.widgets.flot import FlotWidget
-import json
+import simplejson
 
 class MostActiveWikiPages(Grid):
     template = 'mako:fedoracommunity.mokshaapps.statistics.templates.wiki_active_pages'
@@ -59,7 +59,8 @@ class WikiEditsPerDay(FlotWidget):
         if not flot:
             (d.data, d.options) = (False, False)
         else:
-            (d.data, d.options) = (json.dumps(flot['data']), flot['options'])
+            (d.data, d.options) = (simplejson.dumps(flot['data']),
+                                   flot['options'])
         super(WikiEditsPerDay, self).update_params(d)
 
 
