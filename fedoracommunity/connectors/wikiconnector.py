@@ -26,7 +26,7 @@ This Connector works with the MediaWiki API of the Fedora Project wiki.
 from fedora.client import Wiki
 from datetime import datetime, timedelta
 from time import mktime
-from pylons import cache
+from pylons import cache, config
 from shove import Shove
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import defaultdict
@@ -143,13 +143,13 @@ class WikiConnector(IConnector, IQuery):
         timestamps = defaultdict(int)
         for rev_id in data['revs']:
             timestamp = data['revs'][rev_id]['time']
-            day_timestamp = mktime((timestamp[0], timestamp[1], timestamp[2],
-                                    0, 0, 0, 0, 0, 0))
+            day_timestamp = int(mktime((timestamp[0], timestamp[1],
+                                        timestamp[2], 0, 0, 0, 0, 0, 0))*1000)
             timestamps[day_timestamp] += 1
 
         flot = {'data': [], 'options': {'xaxis': {'mode': 'time'}}}
         timestamps_sorted = timestamps.keys()
         timestamps_sorted.sort()
-        flot['data'] = [[timestamp, timestamps[timestamp]] \
-                        for timestamp in timestamps_sorted]
+        flot['data'] = [[[timestamp, timestamps[timestamp]] \
+                         for timestamp in timestamps_sorted]]
         return flot
