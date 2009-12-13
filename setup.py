@@ -99,7 +99,6 @@ setup(
     planet = fedoracommunity.connectors:PlanetConnector
     yum = fedoracommunity.connectors:YumConnector
     wiki = fedoracommunity.connectors:WikiConnector
-    torrent = fedoracommunity.connectors:TorrentConnector
 
     [moksha.application]
     login = fedoracommunity.mokshaapps.login:RootController

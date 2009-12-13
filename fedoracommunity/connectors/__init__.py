@@ -6,5 +6,3 @@ from fasconnector import FasConnector
 from bugzillaconnector import BugzillaConnector
 from planet import PlanetConnector
 from wikiconnector import WikiConnector
-from torrentconnector import TorrentConnector
-from jsonconnector import SimpleJsonConnector
