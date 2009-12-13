@@ -33,6 +33,7 @@ from datetime import timedelta, datetime
 from moksha.api.connectors import get_connector
 
 class ClaDoneDataStream(PollingDataStream):
+    now = True
     frequency = timedelta(minutes=15)
 
     def poll(self):
@@ -45,6 +46,7 @@ class ClaDoneDataStream(PollingDataStream):
 
 
 class WikiAllRevisionsDataStream(PollingDataStream):
+    now = True
     frequency = timedelta(hours=12)
 
     def poll(self):
