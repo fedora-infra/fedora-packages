@@ -151,5 +151,5 @@ class WikiConnector(IConnector, IQuery):
         timestamps_sorted = timestamps.keys()
         timestamps_sorted.sort()
         flot['data'] = [[[timestamp, timestamps[timestamp]] \
-                         for timestamp in timestamps_sorted]]
+                         for timestamp in timestamps_sorted][:-1]]
         return flot
