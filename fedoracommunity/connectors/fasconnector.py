@@ -60,8 +60,11 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         cls.register_search_people()
 
     def request_data(self, resource_path, params, _cookies):
-        identity = self._environ.get('repoze.who.identity')
-        auth_params={}
+        if self._environ:
+            identity = self._environ.get('repoze.who.identity')
+            auth_params={}
+        else:
+            identity = None
         if identity:
             session_id = identity.get('session_id')
             auth_params={'session_id': session_id}
@@ -86,7 +89,10 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         return self.request_data(resource_path, params, _cookies)
 
     def create_fas_object(self):
-        identity = self._environ.get('repoze.who.identity')
+        if self._environ:
+            identity = self._environ.get('repoze.who.identity')
+        else:
+            identity = None
         if identity:
             return AccountSystem(base_url=self._base_url,
                                  session_id=identity.get('session_id'))
