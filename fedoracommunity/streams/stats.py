@@ -34,7 +34,7 @@ from moksha.api.connectors import get_connector
 
 class ClaDoneDataStream(PollingDataStream):
     now = True
-    frequency = timedelta(minutes=15)
+    frequency = timedelta(days=1)
 
     def poll(self):
         self.log.info("Cached cla_done graph")
@@ -47,7 +47,7 @@ class ClaDoneDataStream(PollingDataStream):
 
 class WikiAllRevisionsDataStream(PollingDataStream):
     now = True
-    frequency = timedelta(hours=12)
+    frequency = timedelta(days=1)
 
     def poll(self):
         stats_cache = Shove(config.get('stats_cache'))
