@@ -3,7 +3,7 @@
 
 Name:           fedoracommunity
 Version:        0.3.8.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
 License:        AGPLv3
@@ -38,6 +38,8 @@ Requires: python-iniparse
 Requires: pytz
 Requires: pyOpenSSL
 Requires: python-memcached
+Requires: httpd
+Requires: mod_wsgi
 
 Obsoletes: myfedora
 
@@ -83,6 +85,9 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Mon Jan 04 2010 Luke Macken <lmacken@redhat.com> - 0.3.8.2-2
+- Require httpd and mod_wsgi
+
 * Mon Nov 02 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3.8.2-1
 - 0.3.8.2 - make sure toscawidgets finds the js files
 
