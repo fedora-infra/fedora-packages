@@ -27,6 +27,8 @@ and hackergochis.
 
 import re
 import urllib2
+import socket
+socket.setdefaulttimeout(10) # Prevent socket buildups when a service goes down
 
 from StringIO import StringIO
 from ConfigParser import RawConfigParser
