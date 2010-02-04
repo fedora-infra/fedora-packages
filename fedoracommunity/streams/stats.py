@@ -67,7 +67,7 @@ class WikiAllRevisionsDataStream(PollingDataStream):
                 self.log.info('Wiki login failed: %s' % e)
         try:
             data = stats_cache['wiki_all_revisions']
-        except KeyError:
+        except (KeyError, TypeError):
             # we haven't gotten any data yet.
             data = {'revs': {}, 'last_rev_checked': 0}
         starttime = datetime.now()
