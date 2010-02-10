@@ -53,6 +53,7 @@ setup(
     install_requires=[
         "moksha",
         #"PyOpenSSL",
+        "SQLAlchemy>=0.5",
         "pytz",
         ],
     scripts=['fedoracommunity_makeyumcache'],
