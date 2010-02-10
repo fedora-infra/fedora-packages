@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # This file is part of Fedora Community.
-# Copyright (C) 2008-2009  Red Hat, Inc.
+# Copyright (C) 2008-2010  Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
