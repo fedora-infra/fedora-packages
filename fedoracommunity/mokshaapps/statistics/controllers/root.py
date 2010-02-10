@@ -35,7 +35,7 @@ class StatsNavContainer(SubTabbedContainer):
             MokshaApp('Wiki', 'fedoracommunity.statistics/wiki', params={}),
             MokshaApp('Accounts', 'fedoracommunity.statistics/fas', params={}),
             MokshaApp('Torrents', 'fedoracommunity.statistics/torrents', params={}),
-            MokshaApp('Mirrors', 'fedoracommunity.statistics/mirrors', params={}),
+            MokshaApp('Users', 'fedoracommunity.statistics/mirrors', params={}),
             #MokshaApp('Updates', 'fedoracommunity.statistics/updates', params={}),
             ),
         ),
