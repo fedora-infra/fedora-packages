@@ -24,6 +24,7 @@ from fedoracommunity.mokshaapps.statistics.widgets import wiki_stats_dashboard
 from fedoracommunity.mokshaapps.statistics.widgets import fas_stats_dashboard
 from fedoracommunity.mokshaapps.statistics.widgets import torrent_stats_dashboard
 from fedoracommunity.mokshaapps.statistics.widgets import mirror_stats_dashboard
+from fedoracommunity.mokshaapps.statistics.widgets import user_stats_dashboard
 #from fedoracommunity.mokshaapps.statistics.widgets import updates_stats_dashboard
 
 class StatsNavContainer(SubTabbedContainer):
@@ -35,7 +36,8 @@ class StatsNavContainer(SubTabbedContainer):
             MokshaApp('Wiki', 'fedoracommunity.statistics/wiki', params={}),
             MokshaApp('Accounts', 'fedoracommunity.statistics/fas', params={}),
             MokshaApp('Torrents', 'fedoracommunity.statistics/torrents', params={}),
-            MokshaApp('Users', 'fedoracommunity.statistics/mirrors', params={}),
+            MokshaApp('Users', 'fedoracommunity.statistics/users', params={}),
+            MokshaApp('Mirrors', 'fedoracommunity.statistics/mirrors', params={}),
             #MokshaApp('Updates', 'fedoracommunity.statistics/updates', params={}),
             ),
         ),
@@ -69,6 +71,11 @@ class RootController(Controller):
     @expose('mako:moksha.templates.widget')
     def mirrors(self):
         tmpl_context.widget = mirror_stats_dashboard
+        return dict(options={})
+
+    @expose('mako:moksha.templates.widget')
+    def users(self):
+        tmpl_context.widget = user_stats_dashboard
         return dict(options={})
 
     #@expose('mako:moksha.templates.widget')
