@@ -32,7 +32,7 @@ class StatsNavContainer(SubTabbedContainer):
     applist_widget = applist_widget
     template='mako:fedoracommunity.mokshaapps.statistics.templates.stats_nav'
     tabs = (
-        Category('Applications', (
+        Category('', (
             MokshaApp('Wiki', 'fedoracommunity.statistics/wiki', params={}),
             MokshaApp('Accounts', 'fedoracommunity.statistics/fas', params={}),
             MokshaApp('Torrents', 'fedoracommunity.statistics/torrents', params={}),
