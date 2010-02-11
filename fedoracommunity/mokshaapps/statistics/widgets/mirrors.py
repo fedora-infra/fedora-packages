@@ -23,9 +23,16 @@ MirrorManager map viewing widget
 from tw.api import Widget
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.lib.helpers import Category, Widget as MokshaWidget
+from fedoracommunity.widgets.imagefit import jquery_imagefit_js
 
 class MirrorManagerMapsWidget(Widget):
-    template = '<img src="http://fedoraproject.org/maps/mirrors.png"/>'
+    javascript = [jquery_imagefit_js]
+    template = """
+        <img src="http://fedoraproject.org/maps/mirrors.png" id="mirror_img"/>
+        <script>
+            $(document).ready(function(){ $('#mirror_img').parent().imagefit(); });
+        </script>
+    """
 
 mirrormanager_maps_widget = MirrorManagerMapsWidget('mirror_maps')
 

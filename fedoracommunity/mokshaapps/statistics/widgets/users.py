@@ -25,6 +25,7 @@ from tw.forms import SingleSelectField
 from moksha.api.widgets.containers import DashboardContainer
 from moksha.lib.helpers import Category, Widget as MokshaWidget
 from moksha.api.connectors import get_connector
+from fedoracommunity.widgets.imagefit import jquery_imagefit_js
 
 class ReleaseDownloadsFilter(SingleSelectField):
     options = []
@@ -32,22 +33,26 @@ class ReleaseDownloadsFilter(SingleSelectField):
         var release = $('#user_maps_releases').val();
         $('#maps').empty();
         if (release == 'all') {
-            $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/all.png'));
+            $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/all.png').load(function(){ $('#maps').imagefit();}));
         } else {
             $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.i386.png'));
             $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.x86_64.png'));
-            $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.ppc.png'));
+            $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.ppc.png').load(function(){ $('#maps').imagefit();}));
         }
     """}
 
 class UserMapsWidget(Widget):
     children = [ReleaseDownloadsFilter('releases')]
+    javascript = [jquery_imagefit_js]
     template = """
         ${c.releases(options=releases, value='all')}
         <br/>
         <div id="maps">
             <img src="http://fedoraproject.org/maps/all.png"/>
         </div>
+        <script>
+            $(document).ready(function(){ $('#maps').imagefit(); });
+        </script>
     """
     engine_name = 'mako'
 
