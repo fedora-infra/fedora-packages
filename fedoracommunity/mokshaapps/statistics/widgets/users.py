@@ -33,12 +33,13 @@ class ReleaseDownloadsFilter(SingleSelectField):
         var release = $('#user_maps_releases').val();
         $('#maps').empty();
         if (release == 'all') {
-            $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/all.png').load(function(){ $('#maps').imagefit();}));
+            $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/all.png').load(function() { setTimeout(function(){ $('#maps').imagefit(); }, 100); }));
         } else {
             $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.i386.png'));
             $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.x86_64.png'));
-            $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.ppc.png').load(function(){ $('#maps').imagefit();}));
+            $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.ppc.png').load(function() { setTimeout(function(){ $('#maps').imagefit(); }, 100); }));
         }
+
     """}
 
 class UserMapsWidget(Widget):
@@ -51,7 +52,11 @@ class UserMapsWidget(Widget):
             <img src="http://fedoraproject.org/maps/all.png"/>
         </div>
         <script>
-            $(document).ready(function(){ $('#maps').imagefit(); });
+            $(document).ready(function(){
+                setTimeout(function(){ 
+                    $('#maps').imagefit();
+                }, 100);
+            });
         </script>
     """
     engine_name = 'mako'

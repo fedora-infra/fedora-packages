@@ -28,9 +28,15 @@ from fedoracommunity.widgets.imagefit import jquery_imagefit_js
 class MirrorManagerMapsWidget(Widget):
     javascript = [jquery_imagefit_js]
     template = """
-        <img src="http://fedoraproject.org/maps/mirrors.png" id="mirror_img"/>
+        <div id="map">
+            <img src="http://fedoraproject.org/maps/mirrors.png" />
+        </div>
         <script>
-            $(document).ready(function(){ $('#mirror_img').parent().imagefit(); });
+            $(document).ready(function(){
+                setTimeout(function(){
+                    $('#map').imagefit();
+                }, 100);
+            });
         </script>
     """
 
