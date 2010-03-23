@@ -16,7 +16,7 @@
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter, ISearch
 from pylons import config
-from fedora.client import ProxyClient
+from fedora.client import ProxyClient, PackageDB
 from beaker.cache import Cache
 
 COLLECTION_TABLE_CACHE_TIMEOUT= 60 * 60 * 6 # s * m * h = 6 hours
@@ -89,15 +89,16 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return self.request_data(resource_path, params, _cookies)
 
     def request_collection_table(self):
+        session_id = None
+        identity = self._environ.get('repoze.who.identity')
+        if identity:
+            session_id = identity.get('session_id')
 
         table = {}
-        co = self.call('/collections/')
-        for c in co[1]['collections']:
-            d = {}
-            for i in c:
-                d.update(i)
-
-            table[d['id']] = d
+        pkgdb = PackageDB(self._base_url, insecure=self._insecure, session_id=session_id)
+        co = pkgdb.get_collection_list(eol=False)
+        for c, num in co:
+            table[c['id']] = c
 
         return table
 
@@ -133,7 +134,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         else:
             (name, version) = release.rsplit(" ", 1)
 
-        co = self.call('/packages/name/', {'packageName': package,
+        co = self.call('/acls/name/', {'packageName': package,
                                           'collectionName': name,
                                           'collectionVersion': version})
 
