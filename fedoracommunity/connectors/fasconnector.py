@@ -352,9 +352,8 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
             return None
 
         created = DateTimeDisplay(view['creation'])
-        created_display = created.when(0)
-        if created_display:
-            view['created_display'] = created_display['date']
+        if created.datetime:
+            view['created_display'] = created.datetime.strftime("%d %b %Y")
         else:
             view['created_display'] = ''
 

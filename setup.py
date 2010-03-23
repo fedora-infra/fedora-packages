@@ -42,7 +42,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='0.3.10',
+    version='0.3.12',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',
