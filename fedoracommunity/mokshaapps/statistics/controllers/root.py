@@ -84,13 +84,13 @@ class RootController(Controller):
         tmpl_context.releases = release_downloads_filter
         tmpl_context.widget = all_updates_widget
 
+        bodhi_connector = get_connector('bodhi')
+        data = bodhi_connector.get_metrics()
+
         pkgdb_connector = get_connector('pkgdb')
         releases = pkgdb_connector.get_fedora_releases(rawhide=False)
         if not release:
             release = releases[0][0]
-
-        bodhi_connector = get_connector('bodhi')
-        data = bodhi_connector.get_metrics()
 
         collection = pkgdb_connector.get_collection_by_koji_name(release)
         if collection['branchname'] not in data:
@@ -98,11 +98,8 @@ class RootController(Controller):
             if stripped in data:
                 collection['branchname'] = stripped
             else:
-                raise Exception("Cannot find metrics for %s" % collection['branchname'])
+                raise Exception("Cannot find metrics for %(branchname)s" % collection)
 
-        release = collection['branchname']
-        release_name = '%s %s' % (collection['name'], collection['version'])
-        koji_name = collection['koji_name']
-
-        return dict(default=koji_name, release=release, release_name=release_name,
+        return dict(default=collection['koji_name'], release=collection['branchname'],
+                    release_name='%(name)s %(version)s' % collection,
                     data=data, options=releases)
