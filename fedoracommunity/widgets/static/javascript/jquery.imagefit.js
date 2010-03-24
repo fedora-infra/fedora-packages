@@ -15,7 +15,7 @@
 				},
 			one : function(img){
 				$(img)
-					.width('100%').each(function()
+					.width('100%').ready(function()
 					{
 						$(this).height(Math.round(
 							$(this).attr('startheight')*($(this).width()/$(this).attr('startwidth')))
