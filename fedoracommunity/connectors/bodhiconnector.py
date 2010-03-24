@@ -660,3 +660,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
             releases.append(row)
 
         return (len(releases), releases)
+
+    def get_metrics(self):
+        bodhi_cache = cache.get_cache('bodhi')
+        return bodhi_cache.get_value(key='bodhi_metrics',
+                createfunc=self._get_metrics,
+                expiretime=300)
+
+    def _get_metrics(self):
+        return self._bodhi_client.send_request('metrics')[1]

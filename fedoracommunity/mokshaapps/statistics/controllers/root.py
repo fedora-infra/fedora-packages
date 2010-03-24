@@ -34,7 +34,7 @@ class StatsNavContainer(SubTabbedContainer):
             MokshaApp('Users', 'fedoracommunity.statistics/users', params={}),
             MokshaApp('Mirrors', 'fedoracommunity.statistics/mirrors', params={}),
             MokshaApp('Packages', 'fedoracommunity.statistics/packages', params={}),
-            #MokshaApp('Updates', 'fedoracommunity.statistics/updates', params={}),
+            MokshaApp('Updates', 'fedoracommunity.statistics/updates', params={}),
             ),
         ),
     )
@@ -79,8 +79,30 @@ class RootController(Controller):
         tmpl_context.widget = num_pkgs_per_collection
         return dict(options={})
 
+    @expose('mako:fedoracommunity.mokshaapps.statistics.templates.updates')
+    def updates(self, release=None, *args, **kw):
+        tmpl_context.releases = release_downloads_filter
+        tmpl_context.widget = all_updates_widget
 
-    #@expose('mako:moksha.templates.widget')
-    #def updates(self):
-    #    tmpl_context.widget = updates_stats_dashboard
-    #    return dict(options={})
+        pkgdb_connector = get_connector('pkgdb')
+        releases = pkgdb_connector.get_fedora_releases(rawhide=False)
+        if not release:
+            release = releases[0][0]
+
+        bodhi_connector = get_connector('bodhi')
+        data = bodhi_connector.get_metrics()
+
+        collection = pkgdb_connector.get_collection_by_koji_name(release)
+        if collection['branchname'] not in data:
+            stripped = collection['branchname'].replace('-', '')
+            if stripped in data:
+                collection['branchname'] = stripped
+            else:
+                raise Exception("Cannot find metrics for %s" % collection['branchname'])
+
+        release = collection['branchname']
+        release_name = '%s %s' % (collection['name'], collection['version'])
+        koji_name = collection['koji_name']
+
+        return dict(default=koji_name, release=release, release_name=release_name,
+                    data=data, options=releases)
