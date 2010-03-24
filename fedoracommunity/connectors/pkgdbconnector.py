@@ -606,9 +606,14 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return PackageDB(self._base_url, insecure=self._insecure)
 
     def get_num_pkgs_per_collection(self, name='Fedora'):
+        """ Get the number of packages per collection in a flot-friendly format """
         data = []
         rawhide = None
-        options = {'xaxis': {'ticks': []}}
+        options = {'xaxis': {'ticks': []},
+                  'series': {'lines': {'show': True},
+                             'points': {'show': True}},
+                  'grid': {'hoverable': True, 'clickable': True}}
+
         collections = self.get_pkgdb().get_collection_list(eol=True)
         for collection, num_pkgs in collections:
             if collection['name'] == name:
@@ -632,4 +637,3 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         for id, collection in collections.items():
             if collection['koji_name'] == koji_name:
                 return collection
-

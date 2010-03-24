@@ -32,9 +32,11 @@ class NumPackagesPerCollection(FlotWidget):
         flot = pkgdb_cache.get_value(key='num_pkgs_per_collection',
                 createfunc=pkgdb_connector.get_num_pkgs_per_collection,
                 expiretime=1800)
-        d.data = simplejson.dumps([{'data': [(0, 0)] + flot['data'], 'lines': {'show': True}}])
+        d.data = simplejson.dumps([{'data': [(0, 0)] + flot['data'],
+                                    'lines': {'show': True}}])
         d.options = simplejson.dumps(flot['options'])
         d.label = 'The number of packages in Fedora per release'
+        d.tooltips = True
         super(NumPackagesPerCollection, self).update_params(d)
 
 

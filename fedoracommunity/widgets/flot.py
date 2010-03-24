@@ -35,6 +35,40 @@ class FlotWidget(Widget):
         <div id="${id}" style="width:${width};height:${height};">
         </div>
         <script>
+        % if tooltips:
+            function showTooltip(x, y, contents) {
+                $('<div id="tooltip">' + contents + '</div>').css( {
+                    position: 'absolute',
+                    display: 'none',
+                    top: y + 5,
+                    left: x + 5,
+                    border: '1px solid #fdd',
+                    padding: '2px',
+                    'background-color': '#fee',
+                    opacity: 0.80
+                }).appendTo("body").fadeIn(200);
+            }
+
+            var previousPoint = null;
+            $("#${id}").bind("plothover", function (event, pos, item) {
+                $("#x").text(pos.x.toFixed(2));
+                $("#y").text(pos.y.toFixed(2));
+                if (item) {
+                    if (previousPoint != item.datapoint) {
+                        previousPoint = item.datapoint;
+                        $("#tooltip").remove();
+                        var x = item.datapoint[0].toFixed(2),
+                            y = item.datapoint[1].toFixed(2);
+                        showTooltip(item.pageX, item.pageY, y);
+                    }
+                }
+                else {
+                    $("#tooltip").remove();
+                    previousPoint = null;
+                }
+            });
+        % endif
+
             $(document).ready(function(){
                 if (!${data}) {
                     $('#${id}').text('Data not ready for display \u2014 sorry!');
@@ -51,13 +85,15 @@ class FlotWidget(Widget):
             "height"  : "The height of the graph",
             "width"   : "The width of the graph",
             "label"   : "Label for the graph",
-            "id"      : "An optional ID for the graph"
+            "id"      : "An optional ID for the graph",
+            "tooltips": "Enable onhover tooltips",
     }
     javascript = [jquery_js, flot_js, excanvas_js]
     css = [flot_css]
     height = '300px'
     width = '600px'
     label = ''
+    tooltips = False
 
     def update_params(self, d):
         super(FlotWidget, self).update_params(d)
