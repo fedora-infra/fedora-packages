@@ -29,10 +29,10 @@ class FlotWidget(Widget):
     homepage: http://code.google.com/p/flot
     """
     template = u"""
+        % if label:
+          <h3>${label}</h3>
+        % endif
         <div id="${id}" style="width:${width};height:${height};">
-          <div id="flotLabel">
-            ${label}
-          </div>
         </div>
         <script>
             $(document).ready(function(){

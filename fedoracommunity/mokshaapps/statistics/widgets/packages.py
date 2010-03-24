@@ -34,6 +34,7 @@ class NumPackagesPerCollection(FlotWidget):
                 expiretime=1800)
         d.data = simplejson.dumps([{'data': [(0, 0)] + flot['data'], 'lines': {'show': True}}])
         d.options = simplejson.dumps(flot['options'])
+        d.label = 'The number of packages in Fedora per release'
         super(NumPackagesPerCollection, self).update_params(d)
 
 
