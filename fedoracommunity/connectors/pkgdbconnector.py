@@ -88,15 +88,16 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
             params = {}
         return self.request_data(resource_path, params, _cookies)
 
-    def request_collection_table(self):
+    def request_collection_table(self, eol=False):
         session_id = None
-        identity = self._environ.get('repoze.who.identity')
-        if identity:
-            session_id = identity.get('session_id')
+        if self._environ:
+            identity = self._environ.get('repoze.who.identity')
+            if identity:
+                session_id = identity.get('session_id')
 
         table = {}
         pkgdb = PackageDB(self._base_url, insecure=self._insecure, session_id=session_id)
-        co = pkgdb.get_collection_list(eol=False)
+        co = pkgdb.get_collection_list(eol=eol)
         for c, num in co:
             table[c['id']] = c
 
@@ -105,26 +106,16 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
     def get_collection_table(self, invalidate=False, active_only=False):
         # Cache for a long time or if we see a collection
         # that is not in the table
-
         if invalidate:
             try:
                 pkgdb_cache.remove_value('_pkgdb_collection_table')
             except KeyError:
                 pass
 
-        table = pkgdb_cache.get_value(key='_pkgdb_collection_table',
-                                   createfunc=self.request_collection_table,
-                                   type="memory",
-                                   expiretime=COLLECTION_TABLE_CACHE_TIMEOUT)
-        if active_only:
-            collections = {}
-            for id, collection in table.iteritems():
-                if table[id]['statuscode'] in (ACTIVE_STATUS,
-                                               UNDER_DEVELOPMENT_STATUS):
-                    collections[id] = collection
-            return collections
-        else:
-            return table
+        return pkgdb_cache.get_value(key='_pkgdb_collection_table',
+                    createfunc=lambda: self.request_collection_table(not active_only),
+                    type="memory",
+                    expiretime=COLLECTION_TABLE_CACHE_TIMEOUT)
 
     def request_package_info(self, package, release = None):
 
@@ -591,7 +582,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
         return (total_count, package_list)
 
-    def get_fedora_releases(self):
+    def get_fedora_releases(self, rawhide=True):
         releases = []
         collections = self.get_collection_table(active_only=True)
         for collection in collections.values():
@@ -607,7 +598,8 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                         name, version)))
         releases.sort(cmp=lambda x, y: cmp(int(x[1].split()[-1]),
                                            int(y[1].split()[-1])), reverse=True)
-        releases = [('dist-rawhide', 'Rawhide')] + releases
+        if rawhide:
+            releases = [('dist-rawhide', 'Rawhide')] + releases
         return releases
 
     def get_pkgdb(self):
@@ -634,3 +626,10 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         data.append((devel, rawhide['num_pkgs']))
         options['xaxis']['ticks'].append((devel, str(devel)))
         return dict(data=data, options=options)
+
+    def get_collection_by_koji_name(self, koji_name):
+        collections = self.get_collection_table(active_only=True)
+        for id, collection in collections.items():
+            if collection['koji_name'] == koji_name:
+                return collection
+
