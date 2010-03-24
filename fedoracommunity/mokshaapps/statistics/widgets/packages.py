@@ -37,6 +37,7 @@ class NumPackagesPerCollection(FlotWidget):
         d.options = simplejson.dumps(flot['options'])
         d.label = 'The number of packages in Fedora per release'
         d.tooltips = True
+        d.width = '500px'
         super(NumPackagesPerCollection, self).update_params(d)
 
 

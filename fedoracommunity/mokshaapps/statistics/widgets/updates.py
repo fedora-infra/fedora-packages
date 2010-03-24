@@ -72,6 +72,7 @@ class AllUpdatesWidget(FlotWidget):
                 'xaxis' : {'ticks': data['months']},
             }
         d.label = '%s Updates' % release_name
+        d.width = '500px'
         super(AllUpdatesWidget, self).update_params(d)
 
 
