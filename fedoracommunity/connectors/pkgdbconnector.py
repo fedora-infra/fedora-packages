@@ -609,3 +609,28 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                                            int(y[1].split()[-1])), reverse=True)
         releases = [('dist-rawhide', 'Rawhide')] + releases
         return releases
+
+    def get_pkgdb(self):
+        return PackageDB(self._base_url, insecure=self._insecure)
+
+    def get_num_pkgs_per_collection(self, name='Fedora'):
+        data = []
+        rawhide = None
+        options = {'xaxis': {'ticks': []}}
+        collections = self.get_pkgdb().get_collection_list(eol=True)
+        for collection, num_pkgs in collections:
+            if collection['name'] == name:
+                if collection['version'] == 'devel':
+                    rawhide = collection
+                    rawhide['num_pkgs'] = num_pkgs
+                    continue
+                version = int(collection['version'])
+                data.append((version, num_pkgs))
+                options['xaxis']['ticks'].append((version, str(version)))
+
+        # Append rawhide
+        data.sort(cmp=lambda x, y: cmp(x[0], y[0]))
+        devel = data[-1][0] + 1
+        data.append((devel, rawhide['num_pkgs']))
+        options['xaxis']['ticks'].append((devel, str(devel)))
+        return dict(data=data, options=options)

@@ -3,3 +3,4 @@ from torrent import *
 from fas import *
 from mirrors import *
 from users import *
+from packages import *
