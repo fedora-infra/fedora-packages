@@ -29,13 +29,13 @@ class MirrorManagerMapsWidget(Widget):
     javascript = [jquery_imagefit_js]
     template = """
         <div id="map">
-            <img src="http://fedoraproject.org/maps/mirrors.png" />
         </div>
         <script>
             $(document).ready(function(){
-                setTimeout(function(){
+                $('<img/>').load(function() {
                     $('#map').imagefit();
-                }, 100);
+                }).attr('src', 'http://fedoraproject.org/maps/mirrors.png')
+                .appendTo('#map');
             });
         </script>
     """
