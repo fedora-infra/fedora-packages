@@ -94,12 +94,10 @@ class DownloadsWidget(Widget):
         # Determine the branch name from the release.
         pkgdb = get_connector('pkgdb')
         collections = pkgdb.get_collection_table(active_only=True)
-        branch = None
-        for id, collection in collections.items():
-            if collection['koji_name'] == d.release:
-                branch = collection['branchname']
-                break
-        if not branch:
+        collection = pkgdb.get_collection_by_koji_name(d.release)
+        if collection:
+            branch = collection['branchname']
+        else:
             raise Exception("Cannot find branchname for %s" % d.release)
 
         d.latest_spec = 'http://cvs.fedoraproject.org/viewvc/rpms/%s/%s/%s.spec?view=markup' % (d.package, branch, d.package)
