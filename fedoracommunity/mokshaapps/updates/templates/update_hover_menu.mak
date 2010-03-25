@@ -13,7 +13,7 @@
             <ul>
                <li><a href="https://admin.fedoraproject.org/updates/@{title}" moksha_url="dynamic"><img src="${tmpl_context.get_url('/images/16_bodhi.png')}"/><span>Go to this <strong>update</strong> in Bodhi</span><img src="${tmpl_context.get_url('/images/16_offsite-link.png')}"/></a></li>
                <li><a href="http://koji.fedoraproject.org/koji/search?terms=@{nvr}&amp;type=build&amp;match=glob"><img src="${tmpl_context.get_url('/images/16_koji.png')}"/><span>Go to this <strong>build</strong> in Koji</span><img src="${tmpl_context.get_url('/images/16_offsite-link.png')}"/></a></li>
-               <li><a href="https://admin.fedoraproject.org/pkgdb/packages/name/@{name}" moksha_url="dynamic"><img src="${tmpl_context.get_url('/images/16_pkgdb.png')}"/><span>Go to @{name} <strong>package info</strong> in PackageDB</span><img src="${tmpl_context.get_url('/images/16_offsite-link.png')}"/></a></li>
+               <li><a href="https://admin.fedoraproject.org/pkgdb/acls/name/@{name}" moksha_url="dynamic"><img src="${tmpl_context.get_url('/images/16_pkgdb.png')}"/><span>Go to @{name} <strong>package info</strong> in PackageDB</span><img src="${tmpl_context.get_url('/images/16_offsite-link.png')}"/></a></li>
                <li><a href="https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&classification=Fedora&product=Fedora&component=@{name}&bug_status=NEW&bug_status=ASSIGNED&bug_status=MODIFIED"><img src="${tmpl_context.get_url('/images/16_bugzilla.png')}"/><span>Go to @{name} <strong>bugs</strong> in Bugzilla</span><img src="${tmpl_context.get_url('/images/16_offsite-link.png')}"/></a></li>
             </ul>
         </div>

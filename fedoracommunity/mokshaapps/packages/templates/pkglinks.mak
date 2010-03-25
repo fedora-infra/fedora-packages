@@ -22,7 +22,7 @@
               <span>Source</span>
           </a>
       </li>
-      <li><a href="https://admin.fedoraproject.org/pkgdb/packages/name/${package}" target="_blank" >
+      <li><a href="https://admin.fedoraproject.org/pkgdb/acls/name/${package}" target="_blank" >
               <img border=0 src="${tmpl_context.get_url('/images/16_pkgdb.png')}" />
               <span>Package Info</span>
           </a>
