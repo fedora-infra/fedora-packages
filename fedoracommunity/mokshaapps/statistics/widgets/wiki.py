@@ -43,6 +43,7 @@ class MostActiveWikiUsers(FlotWidget):
                 expiretime=1800)
         d.data = stats['data']
         d.options = stats['options']
+        d.width = '500px'
         super(MostActiveWikiUsers, self).update_params(d)
 
 
@@ -56,6 +57,7 @@ class WikiEditsPerDay(FlotWidget):
         flot = wiki_cache.get_value(key='wiki_edits_per_day',
                 createfunc=wiki_connector.flot_wiki_edits_per_day,
                 expiretime=1800)
+        d.width = '500px'
         if not flot:
             (d.data, d.options) = (False, False)
         else:
