@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 MirrorManager user map viewing widget
-================================
+=====================================
 
 .. moduleauthor:: Luke Macken <lmacken@redhat.com>
 """
@@ -37,7 +37,8 @@ class ReleaseDownloadsFilter(SingleSelectField):
         } else {
             $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.i386.png'));
             $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.x86_64.png'));
-            $('#maps').append($('<img/>').attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.ppc.png').load(function() { $('#maps').imagefit();  }));
+            $('#maps').append($('<img/>').load(function() { $(document).ready(function() { $('#maps').imagefit();  });  })
+                      .attr('src', 'http://fedoraproject.org/maps/' + release + '/' + release + '.ppc.png'));
         }
 
     """}
@@ -48,12 +49,13 @@ class UserMapsWidget(Widget):
     template = """
         ${c.releases(options=releases, value='all')}
         <br/>
-        <div id="maps">
-            <img src="http://fedoraproject.org/maps/all.png"/>
-        </div>
+        <div id="maps"/>
         <script>
             $(document).ready(function(){
-                $('#maps').imagefit();
+                $('<img/>').load(function() {
+                    $('#maps').imagefit();
+                }).attr('src', 'http://fedoraproject.org/maps/all.png')
+                .appendTo('#maps');
             });
         </script>
     """
