@@ -112,7 +112,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
             except KeyError:
                 pass
 
-        return pkgdb_cache.get_value(key='_pkgdb_collection_table',
+        return pkgdb_cache.get_value(key='_pkgdb_collection_table_%s' % active_only,
                     createfunc=lambda: self.request_collection_table(not active_only),
                     type="memory",
                     expiretime=COLLECTION_TABLE_CACHE_TIMEOUT)
