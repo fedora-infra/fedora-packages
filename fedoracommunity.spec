@@ -3,7 +3,7 @@
 
 Name:           fedoracommunity
 Version:        0.4.0
-Release:        0.beta.1%{?dist}
+Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
 License:        AGPLv3
@@ -85,6 +85,9 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Fri Mar 26 2010 Luke Macken <lmacken@redhat.com> - 0.4.0-1
+- 0.4.0 final release
+
 * Wed Mar 24 2010 Luke Macken <lmacken@redhat.com> - 0.4.0-0.beta.1
 - 0.4.0 beta1 release
 
