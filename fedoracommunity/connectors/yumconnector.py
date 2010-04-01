@@ -16,6 +16,7 @@
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter, ISearch
 from pylons import config
+from urllib import quote
 
 import os
 import sys
@@ -97,7 +98,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                 # and compare it to the package name to see if this is a
                 # sub package
                 parent_pkg = pkg.sourcerpm.rsplit('-', 2)[0]
-                row['parent_pkg'] = parent_pkg
+                row['parent_pkg'] = quote(parent_pkg)
                 row['is_subpkg'] = (parent_pkg != pkg.name)
 
                 results.append(row)
