@@ -32,7 +32,7 @@
            % if flash.message:
              ${flash.message}
            % endif
-           ${tmpl_context.widget(**options)}
+           ${tmpl_context.widget(**options) | n}
         </div>
     </div>
     ${footer()}

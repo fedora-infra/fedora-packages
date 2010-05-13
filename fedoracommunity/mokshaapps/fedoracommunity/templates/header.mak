@@ -1,7 +1,7 @@
 <html>
     <%def name="header()">
         <div id="head">
-            ${tmpl_context.moksha_global_resources()}
+            ${tmpl_context.moksha_global_resources() | n}
             <h1><a href="${tg.url('/')}" moksha_url="dynamic">Fedora Community</a></h1>
             <div id="toolbar">
                 % if tmpl_context.auth('not_anonymous()'):
