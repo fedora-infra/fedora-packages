@@ -19,7 +19,11 @@ import logging
 from tg import expose, tmpl_context
 from tw.api import Widget
 from tw.forms import SingleSelectField
-from webhelpers.number import format_byte_size
+
+try:
+    from webhelpers.number import format_byte_size
+except ImportError:
+    from webhelpers.rails.number import number_to_human_size as format_byte_size
 
 from moksha.lib.base import Controller
 from moksha.lib.helpers import Category, MokshaApp, defaultdict
