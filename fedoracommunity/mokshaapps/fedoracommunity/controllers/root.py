@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import pylons
+
 from tg import expose, tmpl_context, redirect, flash, url, request
 
 from moksha.lib.base import BaseController
@@ -90,4 +92,8 @@ class RootController(BaseController):
             if csrf:
                 kwds['_csrf_token'] = csrf
 
-        redirect('/', anchor='/'.join(args), params=kwds)
+        url = pylons.url('/', anchor='/'.join(args), **kwds)
+        if url.startswith('/community'):
+            url = url[10:]
+
+        redirect(url)
