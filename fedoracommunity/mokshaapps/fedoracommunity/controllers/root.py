@@ -96,4 +96,9 @@ class RootController(BaseController):
         if anchor:
             kwds['anchor'] = anchor
 
-        redirect(url, **kwds)
+        url = pylons.url('/', **kwds)
+        print url
+        if url.startswith('/community'):
+            url = url[10:]
+
+        redirect(url)
