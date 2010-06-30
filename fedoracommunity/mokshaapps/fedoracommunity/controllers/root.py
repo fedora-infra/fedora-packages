@@ -85,15 +85,15 @@ class RootController(BaseController):
                 'login': login}
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
-    def default(self, *args, **kwds):
+    def _default(self, *args, **kwds):
         identity = request.environ.get('repoze.who.identity')
         if identity:
             csrf = identity.get('_csrf_token')
             if csrf:
                 kwds['_csrf_token'] = csrf
 
-        url = pylons.url('/', anchor='/'.join(args), **kwds)
-        if url.startswith('/community'):
-            url = url[10:]
+        anchor='/'.join(args)
+        if anchor:
+            kwds['anchor'] = anchor
 
-        redirect(url)
+        redirect(url, **kwds)
