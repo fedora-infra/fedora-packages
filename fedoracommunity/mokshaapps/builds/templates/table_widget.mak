@@ -52,15 +52,15 @@
                             </ul>
 <h4>Changelog</h4>
 <div class="changelog">
-				<moksha_extpoint>
+				<div class="moksha_extpoint">
                         	    {
                         	        'type': 'make_menu',
                         	        'placeholder_id': 'menu_@{build_id}',
                         	        'build_id': '@{build_id}',
                         	        'show_effect': 'slideDown(\"slow\")'
                         	    }
-                        	</moksha_extpoint>
-				<moksha_extpoint>
+                </div>
+				<div class="moksha_extpoint">
                                 {
                                     'type': 'build_menu',
                                     'placeholder_id': 'items_@{build_id}',
@@ -70,7 +70,7 @@
                                     'build_state': @{state},
                                     'show_effect': 'slideDown(\"slow\")'
                                 }
-                          	</moksha_extpoint>
+                </div>
 </div>
                                                         </div>
                                                  </td>
@@ -96,7 +96,7 @@
                         <td colspan="6"
                             id="message_@{build_id}"
                             class="message_row">
-                            <moksha_extpoint>
+                            <div class="moksha_extpoint">
                             {
                                 'type': 'build_message',
                                 'placeholder_id': 'message_@{build_id}',
@@ -105,7 +105,7 @@
                                 'build_state': @{state},
                                 'show_effect': 'slideDown(\"slow\")'
                             }
-                            </moksha_extpoint>
+                            </div>
 
                         </td>
                     </tr>

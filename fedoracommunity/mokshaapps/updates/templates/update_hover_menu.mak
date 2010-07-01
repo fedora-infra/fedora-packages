@@ -18,11 +18,11 @@
             </ul>
         </div>
       </div>
-      <moksha_extpoint>
+      <div class="moksha_extpoint">
         {
             'type': 'make_menu',
             'placeholder_id': 'menu_@{request_id}',
             'id': '@{id}',
             'show_effect': 'slideDown(\"slow\")'
         }
-      </moksha_extpoint>
+      </div>

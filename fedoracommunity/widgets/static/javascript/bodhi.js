@@ -142,7 +142,8 @@ function generate_package_column(build) {
       .append(get_menu_links(nvr))
       .appendTo(entry);
 
-    $("<moksha_extpoint/>")
+    $("<div/>")
+      .addClass("moksha_extpoint")
       .append("{'type': 'make_menu', 'placeholder_id': 'menu_" + build_id + "', 'id': '" + build_id + "_id'}")
       .appendTo(entry);
 
