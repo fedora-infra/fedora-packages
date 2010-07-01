@@ -23,7 +23,7 @@ function get_nvr(build) {
         'name': name,
         'version': version,
         'release': release,
-        'nvr': build,
+        'nvr': build
         }
 }
 
