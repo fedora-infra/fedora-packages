@@ -7,9 +7,6 @@
 <script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui/static/javascript/ui/ui.widget.js"></script>
 <script type="text/javascript" src="/toscawidgets/resources/tw.jquery.ui/static/javascript/ui/ui.tabs.js"></script>
 
-<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/jquery.json.js"></script>
-<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/jquery.template.js"></script>
-<script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/moksha.extensions.js"></script>
 <script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/ui/moksha.ui.tabs.js"></script>
 <script type="text/javascript" src="/toscawidgets/resources/moksha/public/javascript/ui/moksha.ui.grid.js"></script>
 

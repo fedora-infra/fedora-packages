@@ -16,10 +16,7 @@
 
 from tw.api import Widget, JSLink, CSSLink
 from tw.jquery import jquery_js
-
-# FIXME: myfedora js code should go into moksha and be eliminated
-jquery_template_js = JSLink(modname='moksha', filename='public/javascript/jquery.template.js', javascript=[jquery_js])
-jquery_json_js = JSLink(modname='moksha', filename='public/javascript/jquery.json.js', javascript=[jquery_js])
+from moksha.widgets.jquery_template import jquery_template_js
 
 fedora_css = CSSLink(link='https://fedoraproject.org/static/css/fedora.css')
 fedoracommunity_appchrome_css = CSSLink(modname='fedoracommunity', filename='public/css/application-chrome.css')
