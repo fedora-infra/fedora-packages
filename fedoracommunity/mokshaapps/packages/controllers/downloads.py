@@ -159,7 +159,7 @@ class SourceDownloadsWidget(Widget):
                 'release': dist_tags[releases[i]],
                 'released_version': '%s-%s' % (build['version'],
                                                build['release']),
-                'size': number_to_human_size(build['size']),
+                'size': format_byte_size(build['size']),
                 'nvr': build['nvr'],
                 'url': 'http://kojipkgs.fedoraproject.org/packages/%s/%s/%s/%s/%s' % (build['name'], build['version'], build['release'], build['arch'], build['nvr']),
                 })
