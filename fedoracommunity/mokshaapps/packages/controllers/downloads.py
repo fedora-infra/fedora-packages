@@ -127,7 +127,7 @@ class SourceDownloadsWidget(Widget):
         pkgdb = get_connector('pkgdb')
         collections = pkgdb.get_collection_table(active_only=True)
         for id, collection in collections.items():
-            if collection['name'] == 'Fedora':
+            if collection['name'] in ('Fedora', 'Fedora EPEL'):
                 tag = collection['koji_name']
                 releases.append(tag)
                 name = collection['name']
@@ -138,7 +138,7 @@ class SourceDownloadsWidget(Widget):
 
                 dist_tags[tag] = '%s %s' % (name,
                                             version)
-                if 'rawhide' not in tag:
+                if 'rawhide' not in tag and 'epel' not in tag:
                     tag += '-updates'
                 koji.getLatestRPMS(tag, package=d.package, arch='src')
 
