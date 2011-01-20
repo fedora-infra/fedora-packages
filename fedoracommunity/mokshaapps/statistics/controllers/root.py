@@ -97,6 +97,8 @@ class RootController(Controller):
             stripped = collection['branchname'].replace('-', '')
             if stripped in data:
                 collection['branchname'] = stripped
+            elif stripped.upper() in data:
+                collection['branchname'] = stripped.upper()
             else:
                 raise Exception("Cannot find metrics for %(branchname)s" % collection)
 
