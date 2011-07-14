@@ -31,7 +31,7 @@
                 	    <input type="text" name="search"
                 	        onFocus="_fedora_community_on_search_focus(this)"
                 	        onBlur="_fedora_community_on_search_blur(this)"
-	               	        value="Type search terms here." ></input>
+	               	        value="Type search terms here." tabindex="1"></input>
 
 	                    <input class="button"
 	                           type="submit"
