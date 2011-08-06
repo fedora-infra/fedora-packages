@@ -70,12 +70,10 @@ class UpdatesGrid(Grid, ContextAwareWidget):
             name = collection['name']
             ver = collection['version']
             label = "%s %s" % (name, ver)
-            koji_name = collection['koji_name']
+            branchname = collection['branchname']
             value = ""
-            if koji_name:
-                value = koji_name.rsplit('-', 1)[1]
-            if value == 'epel':
-                value = collection['branchname']
+            if branchname:
+                value = branchname 
             if label != 'Fedora devel' and name in ('Fedora', 'Fedora EPEL'):
                 releases.append({
                     'label': label,
@@ -87,7 +85,6 @@ class UpdatesGrid(Grid, ContextAwareWidget):
             return cmp(int(b['version']), int(a['version']))
 
         releases.sort(_sort)
-
         d['release_table'] = releases
 
         super(UpdatesGrid, self).update_params(d)

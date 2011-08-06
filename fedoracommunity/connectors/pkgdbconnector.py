@@ -594,12 +594,12 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                     #version = ''
                     #name = 'Rawhide'
                     continue
-                releases.append((collection['koji_name'], '%s %s' % (
+                releases.append((collection['branchname'], '%s %s' % (
                         name, version)))
         releases.sort(cmp=lambda x, y: cmp(int(x[1].split()[-1]),
                                            int(y[1].split()[-1])), reverse=True)
         if rawhide:
-            releases = [('dist-rawhide', 'Rawhide')] + releases
+            releases = [('devel', 'Rawhide')] + releases
         return releases
 
     def get_pkgdb(self):
