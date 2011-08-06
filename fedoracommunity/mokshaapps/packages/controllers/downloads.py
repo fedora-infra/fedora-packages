@@ -106,7 +106,7 @@ class DownloadsWidget(Widget):
 
         d.latest_spec = 'http://cvs.fedoraproject.org/viewvc/rpms/%s/%s/%s.spec?view=markup' % (d.package, branch, d.package)
         d.arches = arches
-        d.releases = pkgdb.get_fedora_releases()
+        d.releases = [(fedora_release[2],fedora_release[1]) for fedora_release in pkgdb.get_fedora_releases()]
 
 downloads_widget = DownloadsWidget('downloads_widget')
 

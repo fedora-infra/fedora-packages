@@ -596,7 +596,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
         #        print build['nvr']
 
         for release in pkgdb.get_fedora_releases():
-            tag = release[0]
+            #Tag is really koji_name in this context, not disttag
+            tag = release[2]
             name = release[1]
             row = {'release': name, 'stable_version': 'None',
                    'testing_version': 'None' }
