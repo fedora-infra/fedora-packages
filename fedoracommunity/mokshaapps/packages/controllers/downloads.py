@@ -100,7 +100,7 @@ class DownloadsWidget(Widget):
         collections = pkgdb.get_collection_table(active_only=True)
         collection = pkgdb.get_collection_by_koji_name(d.release)
         if collection:
-            branch = collection['branchname']
+            branch = collection['gitbranchname']
         else:
             raise Exception("Cannot find branchname for %s" % d.release)
 

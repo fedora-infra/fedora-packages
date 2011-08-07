@@ -88,7 +88,7 @@ class RootController(Controller):
         data = bodhi_connector.get_metrics()
 
         pkgdb_connector = get_connector('pkgdb')
-        releases = pkgdb_connector.get_fedora_releases(rawhide=False)
+        releases = [(fedora_release[2],fedora_release[1]) for fedora_release in pkgdb_connector.get_fedora_releases(rawhide=False)]
         if not release:
             release = releases[0][0]
 

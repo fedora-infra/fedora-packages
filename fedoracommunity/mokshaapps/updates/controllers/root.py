@@ -70,7 +70,7 @@ class UpdatesGrid(Grid, ContextAwareWidget):
             name = collection['name']
             ver = collection['version']
             label = "%s %s" % (name, ver)
-            branchname = collection['branchname']
+            branchname = collection['gitbranchname']
             value = ""
             if branchname:
                 value = branchname 
