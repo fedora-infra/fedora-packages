@@ -104,7 +104,7 @@ class DownloadsWidget(Widget):
         else:
             raise Exception("Cannot find branchname for %s" % d.release)
 
-        d.latest_spec = 'http://cvs.fedoraproject.org/viewvc/rpms/%s/%s/%s.spec?view=markup' % (d.package, branch, d.package)
+        d.latest_spec = 'http://pkgs.fedoraproject.org/gitweb/?p=%s.git;a=blob_plain;hb=%s;f=%s.spec;hb=HEAD' % (d.package, branch, d.package)
         d.arches = arches
         d.releases = [(fedora_release[2],fedora_release[1]) for fedora_release in pkgdb.get_fedora_releases()]
 
