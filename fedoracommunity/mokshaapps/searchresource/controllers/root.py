@@ -26,7 +26,7 @@ class SearchContainer(DashboardContainer, ContextAwareWidget):
     template = 'mako:fedoracommunity.mokshaapps.searchresource.templates.searchcontainer'
     params=['search']
     layout = [Category('content-column',
-                       [MokshaApp('Package Search', 'fedoracommunity.search/yum_packages',
+                       [MokshaApp('Package Search', 'fedoracommunity.search/xapian_packages',
                                   params={'search': None},
                                   auth=(param_has_value('search'),
                                          Any(param_contains('st', 'packages'),
@@ -70,10 +70,17 @@ class PeopleSearchGrid(Grid):
     resource_path = 'search_people'
     numericPager = True
 
+class XapianSearchGrid(Grid):
+    template="mako:fedoracommunity.mokshaapps.searchresource.templates.pkgdbsearchgrid"
+    resource = 'xapian'
+    resource_path = 'search_packages'
+    numericPager = True
+
 search_container = SearchContainer('search')
 yum_search_grid = YumSearchGrid('yum_search')
 pkgdb_search_grid = PkgdbSearchGrid('pkgdb_grid')
 people_search_grid = PeopleSearchGrid('people_grid')
+xapian_search_grid = XapianSearchGrid('xapian_grid')
 
 class RootController(Controller):
 
@@ -129,6 +136,15 @@ class RootController(Controller):
 
         return {'options': options}
 
+    @expose('mako:moksha.templates.widget')
+    def xapian_packages(self, **kwds):
+
+        search = kwds.get('search',kwds.get('s'))
+        options= {'filters':{'search': search}}
+
+        tmpl_context.widget = xapian_search_grid
+
+        return {'options': options}
 
 
 

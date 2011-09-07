@@ -100,6 +100,7 @@ setup(
     bugzilla = fedoracommunity.connectors:BugzillaConnector
     planet = fedoracommunity.connectors:PlanetConnector
     yum = fedoracommunity.connectors:YumConnector
+    xapian = fedoracommunity.connectors:XapianConnector
     wiki = fedoracommunity.connectors:WikiConnector
     torrent = fedoracommunity.connectors:TorrentConnector
 
