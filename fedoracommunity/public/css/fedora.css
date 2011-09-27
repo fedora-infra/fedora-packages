@@ -1,0 +1,224 @@
+body, p, a, li, div, input, button {
+	font-family: Cantarell, sans-serif;
+}
+
+body {
+  background: white;
+  color: black;
+  font-size: 14pt;
+  height: auto;
+  padding-bottom: 20px;
+}
+
+#header {
+  color: #3c6eb4; 
+}
+
+#header h1 span#logo {
+	background:transparent url("http://fedoraproject.org/static/images/fedora-logo.png") no-repeat scroll 0px 0px;
+	height: 45px;
+	width: 155px;
+	display: block;
+	text-indent: -9999px;
+	margin-top: 1.6em;
+}
+
+#header h1 {
+  font-family: "ComfortaaRegular", "sans-serif" !important;
+	text-transform: lowercase;
+	color: #8c8c8c;
+	font-size: 25pt;
+	font-weight: normal;
+  line-height: 88%;
+	margin-bottom: 1.6em;
+}
+
+#lang-select {
+  float: right;
+}
+
+#searchbar {
+	font-size: 10pt;
+  width: 100%;
+  color: white;
+	padding-top: 1.6em;
+	padding-bottom: 1.6em;
+ background: #3c6eb4 url("http://linuxgrrl.com/fedora-ux/Projects/Fedora%20Community%20v2/HTML/img/repeater.png") repeat-x !important
+}
+
+#searchbar input[type="text"] {
+  width: 98%;
+  height: 32px !important;
+	padding-left: 5px;
+	font-size: 15pt;
+}
+
+#searchbar button {
+  height: 40px !important;
+	text-transform: uppercase;
+	font-size: 13pt;
+}
+
+#searchbar a,
+#searchbar a:link,
+#searchbar a:active,
+#searchbar a:visited {
+  text-decoration: none;
+	color: #bbb;
+	font-size: 13pt;
+	padding: 0 2px 0 2px;
+	line-height: 32px;
+  font-weight: 700;
+}
+
+#searchbar a.active {
+	color: white;
+}
+
+
+h1#logo {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.lang-dropdown {
+  padding-top: 1em;
+}
+
+#search-notes {
+	font-size: 11pt;
+	font-style: italic;
+	color: #aaa;
+  margin-top: 5px;
+}
+
+#search-results-table table {
+	margin-top: 1em;
+	border-collapse:collapse;
+	width:100%;
+	padding:3px 7px 2px 7px;
+}
+
+#search-results-table table td {
+  color: #9a9fa6;
+	font-style: italic;
+	padding: .33em .33em;
+	font-size: 11pt;
+	vertical-align: middle;
+}
+
+#search-results-table table td:first-child {
+  color: #444 !important;
+	font-style: normal !important;
+	font-size: 14pt !important;
+}
+
+#search-results-table a {
+  color: #3c6eb4;
+	text-decoration: none;
+}
+
+#search-results-table .match {
+  font-weight: 900;
+	color: #666;
+}
+
+#search-results-table a .match {
+  color: #3c6eb4;
+}
+
+#search-results-table .subpackage td {
+	padding-left: 2em;
+}
+
+#search-results-table .priority1 td {
+  background-color: #fef7bf;
+}
+
+#search-results-table .priority4 td {
+  background-color: #e8eff8;
+}
+
+
+
+/* Footer Stuff */
+
+#bottom {
+    /*border-top: 5px #4B9EDE solid; // this is an alternative */
+    padding: 30px 0px 0px 0px;
+    /* may not be needed */
+    margin:0;
+    width:100%;
+}
+
+#bottom a {
+    font-weight: normal;
+}
+
+#bottom a:hover {
+  color: black !important;
+  background-color: #fcf7d5;
+}
+
+#footer .rh-logo {
+	width: 100px;
+}
+
+#footer {
+		margin-top: 2em;
+    background-image: none;
+    color: #4d4d4d;
+    padding-bottom: 15px;
+    font-size: .65em;
+}
+
+#footer a {
+    color: #3771c8;
+}
+
+#footer .rh-logo {
+    float: left;
+    margin-right: 15px;
+}
+
+#footer p {
+    margin: 0px;
+}
+
+#footer .disclaimer {
+    font-style: italic;
+}
+
+#footer ul {
+    list-style-image:none;
+    list-style-position:outside;
+    list-style-type:none;
+    margin-bottom:0.8em;
+		margin-top: 1em;
+}
+
+#footer li.first {
+    border-left:medium none;
+    padding-left: 1px;
+}
+
+#footer li {
+    border-left:1px solid #AAAAAA;
+    display:inline;
+    margin-left:-1px;
+    padding:0 0.75ex;
+}
+
+.sitelinks {
+    line-height: 1.6;
+    color: #808080;
+}
+
+.sitelinks a {
+    color: #808080;
+    text-decoration: none;
+}
+
+.sitelinks dt {
+    font-weight: bold;
+}

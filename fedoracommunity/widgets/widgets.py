@@ -18,9 +18,13 @@ from tw.api import Widget, JSLink, CSSLink
 from tw.jquery import jquery_js
 from moksha.widgets.jquery_template import jquery_template_js
 
-fedora_css = CSSLink(link='https://fedoraproject.org/static/css/fedora.css')
+fedora_css = CSSLink(modname='fedoracommunity', filename='public/css/fedora.css')
 fedoracommunity_appchrome_css = CSSLink(modname='fedoracommunity', filename='public/css/application-chrome.css')
 fedoracommunity_branding_css = CSSLink(modname='fedoracommunity', filename='public/css/myfedora-branding.css')
+fedoracommunity_reset_css = CSSLink(modname='fedoracommunity', filename='public/css/reset.css')
+fedoracommunity_text_css = CSSLink(modname='fedoracommunity', filename='public/css/text.css')
+fedoracommunity_960_24_col_css = CSSLink(modname='fedoracommunity', filename='public/css/960_24_col.css')
+
 
 class PagerWidget(Widget):
     template = "mako:/myfedora/widgets/templates/pager.html"

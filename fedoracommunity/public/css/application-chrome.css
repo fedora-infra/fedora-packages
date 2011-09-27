@@ -10,11 +10,6 @@ img {
 
 /* overrides for footer. edit these to make footer taller */
 
-#footer {
-  height: 			120px;
-  margin: 			-130px 0 0;
-}
-
 #content {
   padding:			1.5ex 2ex 150px;
 }

@@ -27,16 +27,14 @@
 
 <body id="chrome" class="home">
     <div id="wrapper">
-        <div id="head">
-            ${tmpl_context.moksha_global_resources() | n}
-        </div>
-        <div id="main_app">
-           % if flash.message:
+        ${header()}
+        % if flash.message:
              ${flash.message}
-           % endif
-           <div class="fedora-package-logo" />
+        % endif
+        <div id="main_app">
            ${tmpl_context.widget(**options) | n}
         </div>
     </div>
+    ${footer()}
 </body>
 </html>

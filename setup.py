@@ -85,6 +85,9 @@ setup(
 
     [moksha.global]
     fedora_css = fedoracommunity.widgets:fedora_css
+    fedoracommunity_reset_css = fedoracommunity.widgets:fedoracommunity_reset_css
+    fedoracommunity_text_css = fedoracommunity.widgets:fedoracommunity_text_css
+    fedoracommunity_960_24_col_cs = fedoracommunity.widgets:fedoracommunity_960_24_col_css
     fedoracommunity_appchrome_css = fedoracommunity.widgets:fedoracommunity_appchrome_css
     fedoracommunity_branding_css = fedoracommunity.widgets:fedoracommunity_branding_css
     jquery_json_js = moksha.widgets.json:jquery_json_js

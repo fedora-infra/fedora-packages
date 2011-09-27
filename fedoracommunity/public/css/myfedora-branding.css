@@ -1,5 +1,10 @@
 div#head h1 a {
-  background: transparent url('/community/images/fedora-community-logo.png') no-repeat scroll 10px 50%;
+  background: transparent url('/community/images/fedora-packages-logo.png') no-repeat scroll 10px 50%;
+  width: 236px;
+}
+
+.fedora-package-logo div {
+  background: transparent url('/community/images/fedora-packages-logo.png') no-repeat scroll 10px 50%;
   width: 236px;
 }
 

@@ -16,13 +16,15 @@
 
 import pylons
 
-from tg import expose, tmpl_context, redirect, flash, url, request
+from tg import expose, tmpl_context, redirect, flash, url, request, override_template
 
 from moksha.lib.base import BaseController
 from moksha.api.widgets.containers import TabbedContainer
 from moksha.api.errorcodes import login_err
+from moksha.api.widgets import Grid, ContextAwareWidget
 
 from fedoracommunity.mokshaapps.login import login_widget
+from fedoracommunity.mokshaapps.packagemaintresource.controllers.root import all_packages_nav, selected_package_nav
 
 # Root for the whole fedora-community tree
 class MainNav(TabbedContainer):
@@ -30,17 +32,22 @@ class MainNav(TabbedContainer):
     config_key = 'fedoracommunity.mainnav.apps'
     staticLoadOnClick = True
 
+class XapianSearchGrid(Grid):
+    template="mako:fedoracommunity.mokshaapps.fedoracommunity.templates.search_results"
+    resource = 'xapian'
+    resource_path = 'search_packages'
+    morePager = True
+
+xapian_search_grid = XapianSearchGrid()
+
 class RootController(BaseController):
 
     def __init__(self):
-        self.mainnav_tab_widget = MainNav('main_nav_tabs', action="create")
+        self.package_widget = MainNav('main_nav_tabs', action="create")
 
-    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
+    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.search')
     def index(self, ec = None, **kwds):
-        # FIXME: we won't always display the main nav
-        tmpl_context.widget = self.mainnav_tab_widget
-
-        return {'title': 'Fedora Community', 'options':kwds}
+        return self.s(**kwds)
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.login')
     def login(self, came_from = '/', ec = None):
@@ -84,7 +91,22 @@ class RootController(BaseController):
                 'invalid_path': invalid_path,
                 'login': login}
 
-    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.index')
+
+    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.search')
+    def s(self, *args, **kwds):
+        search_str = ''
+
+        if len(args) > 0:
+            search_str = args[0]
+
+        tmpl_context.widget = xapian_search_grid
+
+        return {'title': 'Fedora Packages Search',
+                'options': {'id':'search_grid',
+                            'filters':{'search':search_str}}
+               }
+
+    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.chrome')
     def _default(self, *args, **kwds):
         identity = request.environ.get('repoze.who.identity')
         if identity:
@@ -92,13 +114,7 @@ class RootController(BaseController):
             if csrf:
                 kwds['_csrf_token'] = csrf
 
-        anchor='/'.join(args)
-        if anchor:
-            kwds['anchor'] = anchor
+        package = args[0]
+        tmpl_context.widget = selected_package_nav
 
-        url = pylons.url('/', **kwds)
-        print url
-        if url.startswith('/community'):
-            url = url[10:]
-
-        redirect(url)
+        return {'title': 'Package %s' % package, 'options':{'package': package}}

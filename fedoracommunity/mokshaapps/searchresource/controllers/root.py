@@ -27,28 +27,8 @@ class SearchContainer(DashboardContainer, ContextAwareWidget):
     params=['search']
     layout = [Category('content-column',
                        [MokshaApp('Package Search', 'fedoracommunity.search/xapian_packages',
-                                  params={'search': None},
-                                  auth=(param_has_value('search'),
-                                         Any(param_contains('st', 'packages'),
-                                             Not(param_has_value('st')))
-                                        )
-                                 ),
-                        #MokshaApp('Package Search', 'fedoracommunity.search/packages',
-                        #          params={'search': None},
-                        #          auth=(param_has_value('search'),
-                        #                Any(param_contains('st', 'packages'),
-                        #                    Not(param_has_value('st')))
-                        #               )
-                        #         ),
-                        MokshaApp('People Search','fedoracommunity.search/people',
-                                  params={'search': None,
-                                          'people_checked': None},
-                                  auth=(not_anonymous(),
-                                        param_has_value('search'),
-                                        Any(param_contains('st', 'people'),
-                                            Not(param_has_value('st')))
-                                       )
-                                  )
+                                  params={'search': ''}
+                                 )
                         ])
               ]
 
@@ -90,6 +70,7 @@ class RootController(Controller):
                    'people_checked': '',
                    'packages_checked':''
                    }
+
         tmpl_context.widget = search_container
         search = kwds.get('search')
         search_types = kwds.get('st', ['people', 'packages'])

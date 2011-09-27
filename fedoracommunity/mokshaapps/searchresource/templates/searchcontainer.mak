@@ -1,35 +1,36 @@
 <% import tg %>
 <div id="${id}">
     <div id="container">
-       <div class="content-searchbox">
-        <form action="${tg.url('/search')}"
-              onSubmit="moksha.csrf_add_form_field(this);">
-            <span class="label">Search </span>
-            <div class="content-searchinput">
-                <input class="searchinput" type="text" name="search" value="${search}" />
-                % if tmpl_context.auth('not_anonymous()'):
-                    <br />
-                    <span><input type="checkbox" name="st" value="packages"  ${packages_checked}/>Packages</span>
-                    <span><input type="checkbox" name="st" value="people"  ${people_checked}/>People</span>
-                % endif
-            </div>
-            <input class="button" type="submit" value="Search"/>
-        </form>
-
+       <div class="container_24">
+           <!-- START Logo -->
+           <div class="grid_8 prefix_9" id="header">
+               <a href="/"><h1><span id="logo">Fedora</span> Packages</h1></a>
+           </div>
+           <!-- END Logo -->
+           <div class="clear"></div>
        </div>
-
-       <div id="left-content-column">
-        % if not search:
-          % if tmpl_context.auth('not_anonymous()'):
-            <p>Search results will appear below, package results listed first and people results listed second. You may also use the search bar at top of the screen to perform similar searches at any time.</p>
-            <hr />
-            <p><strong>Hint:</strong> The people search only searches usernames right now. A full-featured search indexer is currently in the works to improve this.</p>
-            <p><strong>Hint:</strong> If you can't find a person you are looking for, try searching for a package they maintain or searching a portion of their irc nick which may be closer to their user name.</p>
-
-          % else:
-            <p>Search results will appear below, package results listed first and people results listed second. You may also use the search bar at top of the screen to perform similar searches at any time.</p>
-          % endif
-        % endif
+       <div id="searchbar">
+           <script type="text/javascript">
+               $("#toolbar").hide();
+           </script>
+           <div class="container_24">
+               <div class="grid_4">
+                   <a href="#" class="active">Search</a>
+                   <a href="#">Browse</a>
+               </div>
+               <form action="${tg.url('/s')}"
+                      onSubmit="window.history.pushState({}, '', this.action + '/' + this.search['value']); return False;">
+                   <div class="grid_18">
+                       <input type="text" name="search" value="${search}" />
+                   </div>
+                   <div class="grid_2">
+                       <input type="submit" value="Search"/>
+                   </div>
+               </form>
+               <div class="clear"></div>
+           </div>
+       </div>
+       <div id="left-content-column" class="container_24">
           ${applist_widget(category = 'content-column', layout = layout)}
        </div>
     </div>
