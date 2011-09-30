@@ -20,8 +20,12 @@ from urllib import quote
 
 import os
 import sys
-import xapian 
-import cPickle
+import xapian
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 class XapianConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -67,11 +71,16 @@ class XapianConnector(IConnector, ICall, IQuery):
                               filters = {},
                               **params):
 
-        search_term = filters.get('search');
+        search_string = filters.get('search')
+        # add exact matchs
+        search_terms = search_string.split(' ')
+        for term in search_terms:
+            search_string += " EX__%s__EX" % term
+
         enquire = xapian.Enquire(self._xapian_db)
         qp = xapian.QueryParser()
         qp.set_database(self._xapian_db)
-        query = qp.parse_query(search_term)
+        query = qp.parse_query(search_string)
 
         # FIXME: do validation
         enquire.set_query(query)
@@ -80,7 +89,7 @@ class XapianConnector(IConnector, ICall, IQuery):
         count = matches.get_matches_estimated()
         rows = []
         for m in matches:
-            result = cPickle.loads(m.document.get_data())
+            result = json.loads(m.document.get_data())
             rows.append(result)
 
         return (count, rows)
