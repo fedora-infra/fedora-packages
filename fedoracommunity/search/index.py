@@ -6,21 +6,21 @@ and then populates it with packages from yum repositories
 
 import xappy
 
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 def create_index(dbpath):
     """ Create a new index, and set up its field structure """
     iconn = xappy.IndexerConnection(dbpath)
 
     iconn.add_field_action('exact_name', xappy.FieldActions.INDEX_FREETEXT)
-    iconn.add_field_action('exact_name', xappy.FieldActions.STORE_CONTENT)
-    iconn.add_field_action('name', xappy.FieldActions.STORE_CONTENT)
     iconn.add_field_action('name', xappy.FieldActions.INDEX_FREETEXT,
                            language='en')
 
-    iconn.add_field_action('summary', xappy.FieldActions.STORE_CONTENT)
     iconn.add_field_action('summary', xappy.FieldActions.INDEX_FREETEXT,
                            language='en')
-
-    iconn.add_field_action('subpackages', xappy.FieldActions.STORE_CONTENT)
 
     iconn.add_field_action('description', xappy.FieldActions.INDEX_FREETEXT,
                            language='en')
@@ -97,8 +97,8 @@ def index_pkgs(iconn):
         i += 1
 
         doc = xappy.UnprocessedDocument()
-        doc.fields.append(xappy.Field('exact_name', pkg['name'], weight=20.0))
-        doc.fields.append(xappy.Field('name', pkg['name'], weight=20.0))
+        doc.fields.append(xappy.Field('exact_name', 'EX__' + pkg['name'] + '__EX', weight=2.0))
+        doc.fields.append(xappy.Field('name', pkg['name'], weight=2.0))
         doc.fields.append(xappy.Field('summary', pkg['summary'], weight=1.0))
         doc.fields.append(xappy.Field('description', pkg['description'], weight=0.0))
         for sub_pkg in pkg['sub_pkgs']:
@@ -121,7 +121,15 @@ def index_pkgs(iconn):
                     doc.fields.append(xappy.Field('tag', 'desktop'))
                     break
 
-        iconn.add(doc)
+        # remove anything we don't want to store and then store data in
+        # json format
+        del pkg['pkg']
+
+        processed_doc = iconn.process(doc, False)
+        processed_doc._doc.set_data(json.dumps(pkg))
+        # preempt xappy's processing of data
+        processed_doc._data = None
+        iconn.add(processed_doc)
 
     return i
 

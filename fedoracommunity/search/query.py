@@ -2,7 +2,7 @@
 
 import sys
 import xapian
-import cPickle
+import json
 
 def search(query, start=0, limit=10):
     """ A method to perform a simple query on our xapian database """
@@ -11,7 +11,6 @@ def search(query, start=0, limit=10):
     qp = xapian.QueryParser()
     qp.set_database(db)
     qp.set_default_op(xapian.Query.OP_ELITE_SET)
-    qp.add_prefix('exact_name', 'XA')
     query = qp.parse_query(query)
 
     enquire.set_query(query)
@@ -21,10 +20,13 @@ def search(query, start=0, limit=10):
     rows = []
     for m in matches:
         print m.percent, m.rank, m.weight
-        result = cPickle.loads(m.document.get_data())
-        data, assocs, groups = result
-        rows.append(data)
-        print data['exact_name']
+        result = json.loads(m.document.get_data())
+        rows.append(result)
+        print result['name']
 
 if __name__ == '__main__':
-    search(' '.join(sys.argv[1:]))
+    search_terms = ' '.join(sys.argv[1:])
+    for term in sys.argv[1:]:
+        search_terms += " EX__%s__EX" % term
+
+    search(search_terms)
