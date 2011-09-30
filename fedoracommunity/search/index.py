@@ -10,18 +10,21 @@ def create_index(dbpath):
     """ Create a new index, and set up its field structure """
     iconn = xappy.IndexerConnection(dbpath)
 
-    #iconn.add_field_action('package', xappy.FieldActions.INDEX_EXACT)
-
+    iconn.add_field_action('exact_name', xappy.FieldActions.INDEX_FREETEXT)
+    iconn.add_field_action('exact_name', xappy.FieldActions.STORE_CONTENT)
     iconn.add_field_action('name', xappy.FieldActions.STORE_CONTENT)
     iconn.add_field_action('name', xappy.FieldActions.INDEX_FREETEXT,
-                           language='en', weight=2)
+                           language='en')
 
     iconn.add_field_action('summary', xappy.FieldActions.STORE_CONTENT)
     iconn.add_field_action('summary', xappy.FieldActions.INDEX_FREETEXT,
                            language='en')
 
+    iconn.add_field_action('subpackages', xappy.FieldActions.STORE_CONTENT)
+
     iconn.add_field_action('description', xappy.FieldActions.INDEX_FREETEXT,
                            language='en')
+
 
     # FieldActions.TAG not currently supported in F15 xapian (1.2.7)
     #iconn.add_field_action('tags', xappy.FieldActions.TAG)
@@ -32,27 +35,74 @@ def create_index(dbpath):
 
     iconn.close()
 
-def index_yum_pkgs(iconn):
+"""
+index_yum_pkgs
+
+Index the packages from yum into this format:
+
+   {base_package_name: {'name': base_package_name,
+                        'summary': base_package_summary,
+                        'description': base_package_summary,
+                        'pkg': pkg,
+                        'sub_pkgs': [{'name': sub_pkg_name,
+                                      'summary': sub_pkg_summary,
+                                      'description': sub_pkg_description},
+                                     ...]},
+    ...
+   }
+"""
+def index_yum_pkgs():
     import yum
     yb = yum.YumBase()
     yb.disablePlugins()
     yb.conf.cache = 1
-    #yb.pkgSack.excludeArchs(['x86_64', 'noarch']) # skip dupes across arches
-    packages = set()
-    pkgs = sorted(yb.pkgSack.returnPackages())
-    i = 0
+
+    pkgs = yb.pkgSack.returnPackages()
+    base_pkgs = {}
+    seen_pkg_names = []
+
     for pkg in pkgs:
-        # Skip dupes for varous arches
-        if pkg.name in packages:
+        if not pkg.base_package_name in base_pkgs:
+            # we haven't seen this base package yet so add it
+            base_pkgs[pkg.base_package_name] = {'name': pkg.base_package_name,
+                                                'summary': '',
+                                                'description':'',
+                                                'pkg': None,
+                                                'sub_pkgs': []}
+
+        base_pkg = base_pkgs[pkg.base_package_name]
+        # avoid duplicates
+        if pkg.name in seen_pkg_names:
             continue
-        packages.add(pkg.name)
+
+        seen_pkg_names.append(pkg.name)
+
+        if pkg.base_package_name == pkg.name:
+            # this is the main package
+            base_pkg['summary'] = pkg.summary
+            base_pkg['description'] = pkg.description
+            base_pkg['pkg'] = pkg
+        else:
+            # this is a sub package
+            subpkgs = base_pkg['sub_pkgs']
+            subpkgs.append({'name': pkg.name, 'summary': pkg.summary, 'description': pkg.description})
+
+    return base_pkgs
+
+def index_pkgs(iconn):
+    yum_pkgs = index_yum_pkgs()
+    i = 0
+
+    for pkg in yum_pkgs.values():
         i += 1
 
         doc = xappy.UnprocessedDocument()
-        doc.fields.append(xappy.Field('name', pkg.name))
-        #doc.fields.append(xappy.Field('package', pkg.name))
-        doc.fields.append(xappy.Field('summary', pkg.summary))
-        doc.fields.append(xappy.Field('description', pkg.description))
+        doc.fields.append(xappy.Field('exact_name', pkg['name'], weight=20.0))
+        doc.fields.append(xappy.Field('name', pkg['name'], weight=20.0))
+        doc.fields.append(xappy.Field('summary', pkg['summary'], weight=1.0))
+        doc.fields.append(xappy.Field('description', pkg['description'], weight=0.0))
+        for sub_pkg in pkg['sub_pkgs']:
+            doc.fields.append(xappy.Field('subpackages', sub_pkg, weight=1.0))
 
         # @@: Right now we're only indexing the first part of the
         # provides/requires, and not boolean comparison or version
@@ -63,11 +113,13 @@ def index_yum_pkgs(iconn):
         #    doc.fields.append(xappy.Field('provides', provides[0]))
 
         # Figure out if this package is a desktop application
-        for filename in pkg.filelist:
-            if filename.endswith('.desktop'):
-                print "Desktop app found: %s" % pkg.name
-                doc.fields.append(xappy.Field('tag', 'desktop'))
-                break
+        yum_pkg = pkg['pkg']
+        if yum_pkg != None:
+            for filename in yum_pkg.filelist:
+                if filename.endswith('.desktop'):
+                    print "Desktop app found: %s" % yum_pkg.name
+                    doc.fields.append(xappy.Field('tag', 'desktop'))
+                    break
 
         iconn.add(doc)
 
@@ -82,7 +134,7 @@ def main():
     create_index(dbpath)
     iconn = open_index(dbpath)
     print "Indexing packages from Yum..."
-    count = index_yum_pkgs(iconn)
+    count = index_pkgs(iconn)
     print "Indexed %d packages." % count
 
 if __name__ == '__main__':
