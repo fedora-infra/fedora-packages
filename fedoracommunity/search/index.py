@@ -25,7 +25,8 @@ def create_index(dbpath):
     iconn.add_field_action('description', xappy.FieldActions.INDEX_FREETEXT,
                            language='en')
 
-
+    iconn.add_field_action('subpackages',xappy.FieldActions.INDEX_FREETEXT,
+                           language='en') 
     # FieldActions.TAG not currently supported in F15 xapian (1.2.7)
     #iconn.add_field_action('tags', xappy.FieldActions.TAG)
     iconn.add_field_action('tag', xappy.FieldActions.INDEX_EXACT)
@@ -100,9 +101,9 @@ def index_pkgs(iconn):
         doc.fields.append(xappy.Field('exact_name', 'EX__' + pkg['name'] + '__EX', weight=2.0))
         doc.fields.append(xappy.Field('name', pkg['name'], weight=2.0))
         doc.fields.append(xappy.Field('summary', pkg['summary'], weight=1.0))
-        doc.fields.append(xappy.Field('description', pkg['description'], weight=0.0))
+        doc.fields.append(xappy.Field('description', pkg['description'], weight=0.2))
         for sub_pkg in pkg['sub_pkgs']:
-            doc.fields.append(xappy.Field('subpackages', sub_pkg, weight=1.0))
+            doc.fields.append(xappy.Field('subpackages', sub_pkg['name'], weight=1.0))
 
         # @@: Right now we're only indexing the first part of the
         # provides/requires, and not boolean comparison or version
