@@ -35,7 +35,6 @@
    <script type="text/javascript">
        function update_search_grid(search_term) {
             var grid = $("#${id}").mokshagrid("request_update", {"filters":{"search": search_term}});
-            console.log(grid);
        }
    </script>
 </div>
