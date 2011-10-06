@@ -29,6 +29,7 @@ except ImportError:
 data_files = [
     ('fedoracommunity/public', filter(os.path.isfile, glob.glob('fedoracommunity/public/*'))),
     ('fedoracommunity/public/css', filter(os.path.isfile, glob.glob('fedoracommunity/public/css/*.css'))),
+    ('fedoracommunity/public/css/fonts', filter(os.path.isfile, glob.glob('fedoracommunity/public/css/fonts/*.ttf'))),
     ('fedoracommunity/public/images', filter(os.path.isfile, glob.glob('fedoracommunity/public/images/*'))),
     ('fedoracommunity/public/images/banners', filter(os.path.isfile, glob.glob('fedoracommunity/public/images/banners/*'))),
     ('fedoracommunity/public/images/planet-bubbles', filter(os.path.isfile, glob.glob('fedoracommunity/public/images/planet-bubbles/*'))),
