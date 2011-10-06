@@ -21,6 +21,7 @@ from urllib import quote
 import os
 import sys
 import xapian
+import cgi
 
 try:
     import json
@@ -64,6 +65,35 @@ class XapianConnector(IConnector, ICall, IQuery):
                         can_sort = False,
                         can_filter_wildcards = False)
 
+    def _highlight_str(self, string, term):
+        # we are injecting html so url escape the origional string
+        # to avoid an html injection attack from the packages themselves
+        # string = cgi.escape(string)
+        lc_string = string.lower()
+        term = term.lower()
+        term_len = len(term)
+        result = ''
+
+        i = lc_string.find(term, 0)
+        start = 0
+        while i != -1:
+            result += string[start:i] + '<span class="match">'
+            start = i + term_len
+            result += string[i:start] + '</span>'
+            i = lc_string.find(term, start)
+
+        result += string[start:]
+        return result
+
+    def _highlight_matches(self, row_data, term):
+        row_data['name'] = self._highlight_str(row_data['name'], term);
+        row_data['summary'] = self._highlight_str(row_data['summary'], term);
+        row_data['description'] = self._highlight_str(row_data['description'], term);
+        for pkg in row_data['sub_pkgs']:
+            pkg['name'] = self._highlight_str(pkg['name'], term);
+            pkg['summary'] = self._highlight_str(pkg['summary'], term);
+            pkg['description'] = self._highlight_str(pkg['description'], term);
+
     def search_packages(self, start_row=None,
                               rows_per_page=None,
                               order=-1,
@@ -90,6 +120,12 @@ class XapianConnector(IConnector, ICall, IQuery):
         rows = []
         for m in matches:
             result = json.loads(m.document.get_data())
+            # copy name so we can highlight strings that match the search
+            result['link'] = result['name']
+            # mark matches in <span class="match">
+            for term in search_terms:
+                self._highlight_matches(result, term)
+ 
             rows.append(result)
 
         return (count, rows)

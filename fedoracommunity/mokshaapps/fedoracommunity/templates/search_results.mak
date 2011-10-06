@@ -14,17 +14,17 @@
         <tr class="priority4">
             <td>
                 <span>
-                    <a href="/${'${name}'}">${'${name}'}</a>
+                    <a href="/${'${link}'}">${'{{html name}}'}</a>
                 </span>
             </td>
             <td>
-                ${'${summary}'}
+                ${'{{html summary}}'}
             </td>
         </tr>
           <!-- {{each(index, pkg) sub_pkgs}} -->
           <tr class="subpackage">
-              <td><a href="/${'${name}'}">${'${pkg["name"]}'}</a></td>
-              <td>${'${pkg["summary"]}'}</td>
+              <td><a href="/${'${link}'}">${'{{html pkg["name"]}}'}</a></td>
+              <td>${'{{html pkg["summary"]}}'}</td>
           </tr>
           <!-- {{/each}} -->
       </tbody>
