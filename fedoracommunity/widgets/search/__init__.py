@@ -1,0 +1,1 @@
+from search_grid import XapianSearchGrid

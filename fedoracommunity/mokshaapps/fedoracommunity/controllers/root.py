@@ -19,15 +19,9 @@ import pylons
 from tg import expose, tmpl_context, redirect, flash, url, request, override_template
 
 from moksha.lib.base import BaseController
-from moksha.api.widgets import Grid, ContextAwareWidget
 
+from fedoracommunity.widgets.search import XapianSearchGrid
 from fedoracommunity.mokshaapps.packagemaintresource.controllers.root import all_packages_nav, selected_package_nav
-
-class XapianSearchGrid(Grid):
-    template="mako:fedoracommunity.mokshaapps.fedoracommunity.templates.search_results"
-    resource = 'xapian'
-    resource_path = 'search_packages'
-    morePager = True
 
 xapian_search_grid = XapianSearchGrid()
 
