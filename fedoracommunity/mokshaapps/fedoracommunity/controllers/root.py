@@ -19,18 +19,9 @@ import pylons
 from tg import expose, tmpl_context, redirect, flash, url, request, override_template
 
 from moksha.lib.base import BaseController
-from moksha.api.widgets.containers import TabbedContainer
-from moksha.api.errorcodes import login_err
 from moksha.api.widgets import Grid, ContextAwareWidget
 
-from fedoracommunity.mokshaapps.login import login_widget
 from fedoracommunity.mokshaapps.packagemaintresource.controllers.root import all_packages_nav, selected_package_nav
-
-# Root for the whole fedora-community tree
-class MainNav(TabbedContainer):
-    template = 'mako:fedoracommunity.mokshaapps.fedoracommunity.templates.mainnav'
-    config_key = 'fedoracommunity.mainnav.apps'
-    staticLoadOnClick = True
 
 class XapianSearchGrid(Grid):
     template="mako:fedoracommunity.mokshaapps.fedoracommunity.templates.search_results"
@@ -42,33 +33,9 @@ xapian_search_grid = XapianSearchGrid()
 
 class RootController(BaseController):
 
-    def __init__(self):
-        self.package_widget = MainNav('main_nav_tabs', action="create")
-
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.search')
     def index(self, ec = None, **kwds):
         return self.s(**kwds)
-
-    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.login')
-    def login(self, came_from = '/', ec = None):
-        tmpl_context.widget = login_widget
-
-        if ec:
-            err = None
-            try:
-                err = login_err(ec)
-            except AttributeError, e:
-                pass
-
-            if err:
-                flash(err)
-
-        if '/logout_handler' in came_from:
-            came_from = url('/')
-
-        return {'title': 'Login - Fedora Community',
-                'came_from': came_from,
-                'options':{'came_from': came_from}}
 
     @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.invalid_path')
     def invalid_path(self, invalid_path):
