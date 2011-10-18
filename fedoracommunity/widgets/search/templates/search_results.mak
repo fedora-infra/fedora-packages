@@ -38,3 +38,5 @@
        }
    </script>
 </div>
+
+<!-- END Search Results -->

@@ -21,7 +21,7 @@ from tg import expose, tmpl_context, redirect, flash, url, request, override_tem
 from moksha.lib.base import BaseController
 
 from fedoracommunity.widgets.search import XapianSearchGrid
-from fedoracommunity.mokshaapps.packagemaintresource.controllers.root import all_packages_nav, selected_package_nav
+from fedoracommunity.widgets.package import package_widget
 
 xapian_search_grid = XapianSearchGrid()
 
@@ -76,6 +76,6 @@ class RootController(BaseController):
                 kwds['_csrf_token'] = csrf
 
         package = args[0]
-        tmpl_context.widget = selected_package_nav
+        tmpl_context.widget = package_widget
 
-        return {'title': 'Package %s' % package, 'options':{'package': package}}
+        return {'title': 'Package %s' % package, 'options':{'package_name': package}}

@@ -5,40 +5,31 @@
     <%def name="header()">
         <div id="head">
             ${resources()}
-            <div id="toolbar">
-            	<div id="search-toolbar">
-                	<form action="${tg.url('/search/')}"
-                	      onSubmit="moksha.csrf_add_form_field(this)">
-                	    Search:
-                	    <input type="text" name="search"
-                	        onFocus="_fedora_community_on_search_focus(this)"
-                	        onBlur="_fedora_community_on_search_blur(this)"
-	               	        value="Type search terms here." tabindex="1"></input>
 
-	                    <input class="button"
-	                           type="submit"
-	                           value="Search"
-	                           ></input>
-	                    <script type="text/javascript">
-	                       function _fedora_community_on_search_focus(el) {
-
-	                          if (el.value === "Type search terms here.")
-	                              el.value = "";
-
-	                          $(el).addClass("search-active");
-	                       }
-
-	                       function _fedora_community_on_search_blur(el) {
-	                          $(el).removeClass("search-active");
-	                       }
-
-	                    </script>
-        	        </form>
-            	</div>
-            </div>
-        </div>
-        <script type="text/javascript">
-            moksha.update_marked_anchors($('a'));
-        </script>
+       <div id="container">
+       <div id="searchbar">
+           <div class="container_24">
+               <script type="text/javascript">
+                   function do_search(form) {
+                       moksha.goto(form.action + '/' + form.search['value']);
+                       return False;
+                   }
+               </script>
+               <form action="${tg.url('/s')}"
+                     onSubmit="return do_search(this);">
+                   <div class="grid_5" id="header">
+                      <a href="/"><h1 style="font-size:large;"><span>Fedora</span> Packages</h1></a>
+                   </div>
+                   <div class="grid_13">
+                       <input type="text" name="search"/>
+                   </div>
+                   <div class="grid_2">
+                       <input type="submit" value="Search"/>
+                   </div>
+               </form>
+               <div class="clear"></div>
+           </div>
+       </div>
+       </div>
     </%def>
 </html>
