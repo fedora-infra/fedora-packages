@@ -17,7 +17,7 @@
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from pylons import config
 from urllib import quote
-
+from fedoracommunity.search import utils
 import os
 import sys
 import xapian
@@ -102,9 +102,16 @@ class XapianConnector(IConnector, ICall, IQuery):
                               **params):
 
         search_string = filters.get('search')
+        unfiltered_search_terms = search_string.split(' ')
+
+        search_string = utils.filter_search_string (search_string)
+        print search_string
         # add exact matchs
         search_terms = search_string.split(' ')
         for term in search_terms:
+            if term == '':
+                continue
+
             search_string += " EX__%s__EX" % term
 
         enquire = xapian.Enquire(self._xapian_db)
@@ -112,18 +119,22 @@ class XapianConnector(IConnector, ICall, IQuery):
         qp.set_database(self._xapian_db)
         query = qp.parse_query(search_string)
 
-        # FIXME: do validation
         enquire.set_query(query)
         matches = enquire.get_mset(start_row, rows_per_page);
 
         count = matches.get_matches_estimated()
         rows = []
         for m in matches:
+
             result = json.loads(m.document.get_data())
+
             # copy name so we can highlight strings that match the search
             result['link'] = result['name']
             # mark matches in <span class="match">
-            for term in search_terms:
+            for term in unfiltered_search_terms:
+                if term == '':
+                    continue
+
                 self._highlight_matches(result, term)
  
             rows.append(result)

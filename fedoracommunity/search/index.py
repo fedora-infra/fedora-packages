@@ -5,6 +5,7 @@ and then populates it with packages from yum repositories
 """
 
 import xappy
+from utils import filter_search_string
 
 try:
     import json
@@ -98,12 +99,16 @@ def index_pkgs(iconn):
         i += 1
 
         doc = xappy.UnprocessedDocument()
-        doc.fields.append(xappy.Field('exact_name', 'EX__' + pkg['name'] + '__EX', weight=2.0))
-        doc.fields.append(xappy.Field('name', pkg['name'], weight=2.0))
-        doc.fields.append(xappy.Field('summary', pkg['summary'], weight=1.0))
-        doc.fields.append(xappy.Field('description', pkg['description'], weight=0.2))
+        filtered_name = filter_search_string (pkg['name'])
+        filtered_summary = filter_search_string (pkg['summary'])
+        filtered_description = filter_search_string (pkg['description'])
+        doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_name + '__EX', weight=2.0))
+        doc.fields.append(xappy.Field('name', filtered_name, weight=2.0))
+        doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
+        doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
         for sub_pkg in pkg['sub_pkgs']:
-            doc.fields.append(xappy.Field('subpackages', sub_pkg['name'], weight=1.0))
+            filtered_sub_pkg_name = filter_search_string (sub_pkg['name'])
+            doc.fields.append(xappy.Field('subpackages', filtered_sub_pkg_name, weight=1.0))
 
         # @@: Right now we're only indexing the first part of the
         # provides/requires, and not boolean comparison or version
