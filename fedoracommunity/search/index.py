@@ -3,14 +3,44 @@
 Creates our search index and its field structure,
 and then populates it with packages from yum repositories
 """
-
+import os
+import sys
+import shutil
+import tempfile
 import xappy
+import re
+
 from utils import filter_search_string
 
 try:
     import json
 except ImportError:
     import simplejson as json
+
+cache_dir = "cache"
+
+class DesktopParser(object):
+    key_value_re = re.compile('([A-Za-z0-9-]*)[ ]*=[ ]*(.*)')
+    def __init__(self, file_name):
+        object.__init__(self)
+        self._entries = {}
+        self.parse(file_name)
+
+    def get(self, entry_key, default=''):
+        return self._entries.get(entry_key, default)
+
+    def parse(self, file_name):
+        dfile = open(file_name, 'r')
+        for line in dfile:
+            if line.startswith('#') or line.startswith(' ') or line.startswith('['):
+                continue
+            m = self.key_value_re.match(line)
+            if m:
+                key = m.group(1)
+                value = m.group(2)
+                self._entries[key] = value
+
+        dfile.close()
 
 def create_index(dbpath):
     """ Create a new index, and set up its field structure """
@@ -27,10 +57,14 @@ def create_index(dbpath):
                            language='en')
 
     iconn.add_field_action('subpackages',xappy.FieldActions.INDEX_FREETEXT,
-                           language='en') 
+                           language='en')
+
+    iconn.add_field_action('category_tags', xappy.FieldActions.INDEX_FREETEXT,
+                           language='en')
     # FieldActions.TAG not currently supported in F15 xapian (1.2.7)
     #iconn.add_field_action('tags', xappy.FieldActions.TAG)
     iconn.add_field_action('tag', xappy.FieldActions.INDEX_EXACT)
+
 
     #iconn.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
     #iconn.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
@@ -91,6 +125,48 @@ def index_yum_pkgs():
 
     return base_pkgs
 
+def index_apps(doc, yum_pkg):
+    # Figure out if this package is a desktop application
+    if yum_pkg != None:
+        for filename in yum_pkg.filelist:
+            if filename.endswith('.desktop'):
+                print "Desktop app found: %s" % yum_pkg.name
+                doc.fields.append(xappy.Field('tag', 'desktop'))
+                runtime_dir = os.getcwd()
+                full_cache_dir = os.path.join(runtime_dir, cache_dir)
+                tmp_dir = tempfile.mkdtemp()
+
+                # create cache dir if it does not exist
+                if not os.path.exists(full_cache_dir):
+                    os.mkdir(full_cache_dir)
+
+                # download the src.rpm and extract the .desktop file
+                rpm_file_name = "%s.rpm" % (yum_pkg.ui_envra)
+                rpm_path = os.path.join(full_cache_dir, rpm_file_name)
+                if not os.path.exists(rpm_path):
+                    os.system('yumdownloader --destdir %s %s' % (full_cache_dir, yum_pkg.ui_envra))
+
+                os.chdir(tmp_dir)
+                os.system('rpm2cpio %s | cpio -idm --no-absolute-filenames --quiet' % rpm_path)
+                tmp_file = tmp_dir + filename
+
+                if os.path.exists(tmp_file):
+                    dp = DesktopParser(tmp_file)
+                    category = dp.get('Categories', '')
+
+                    for c in category.split(';'):
+                        if c:
+                            doc.fields.append(xappy.Field('category_tags', c))
+                            # add exact match also
+                            doc.fields.append(xappy.Field('category_tags', "EX__%s__EX" % c))
+                else:
+                    print "Could not find %s" % tmp_file
+
+                # cleanup
+                os.chdir(runtime_dir)
+                shutil.rmtree(tmp_dir)
+                break
+
 def index_pkgs(iconn):
     yum_pkgs = index_yum_pkgs()
     i = 0
@@ -118,14 +194,7 @@ def index_pkgs(iconn):
         #for provides in pkg.provides:
         #    doc.fields.append(xappy.Field('provides', provides[0]))
 
-        # Figure out if this package is a desktop application
-        yum_pkg = pkg['pkg']
-        if yum_pkg != None:
-            for filename in yum_pkg.filelist:
-                if filename.endswith('.desktop'):
-                    print "Desktop app found: %s" % yum_pkg.name
-                    doc.fields.append(xappy.Field('tag', 'desktop'))
-                    break
+        index_apps(doc, pkg['pkg'])
 
         # remove anything we don't want to store and then store data in
         # json format
