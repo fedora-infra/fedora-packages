@@ -7,12 +7,6 @@ import moksha
 
 from fedoracommunity.connectors.xapianconnector import XapianConnector
 
-class OverviewWidget(Widget):
-    template = u"""Overview
-    dude
-    """
-    engine_name = 'mako'
-
 class BugsWidget(Widget):
     template = u"""Bugs
     dude
@@ -58,12 +52,14 @@ class TabWidget(Widget):
         d['args'] = args
         d['kwds'] = kwds
         d['_uuid'] = self._uuid
+        d['base_url'] = self.base_url
 
         super(TabWidget, self).update_params(d)
 
 class PackageNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Overview', 'package.overview'),
                                     ('Bugs', 'package.bugs')])
+    base_url = '/*/';
     default_tab = 'Overview'
 
 package_nav_widget = PackageNavWidget()

@@ -112,9 +112,14 @@ setup(
     [moksha.widget]
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
     grid = moksha.api.widgets:Grid
-    
+
     package.overview = fedoracommunity.widgets.package:overview_widget
+    package.overview.details = fedoracommunity.widgets.package.overview:details_widget
+    package.overview.updates = fedoracommunity.widgets.package.overview:updates_widget
+    package.overview.builds = fedoracommunity.widgets.package.overview:builds_widget
+
     package.bugs = fedoracommunity.widgets.package:bugs_widget
+
 
     [moksha.stream]
     stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
