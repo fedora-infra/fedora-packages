@@ -109,36 +109,9 @@ setup(
     wiki = fedoracommunity.connectors:WikiConnector
     torrent = fedoracommunity.connectors:TorrentConnector
 
-    [moksha.application]
-    login = fedoracommunity.mokshaapps.login:RootController
-    fedoracommunity.mokshatest = fedoracommunity.mokshaapps.mokshatest:RootController
-    fedoracommunity = fedoracommunity.mokshaapps.fedoracommunity:RootController
-
-    fedoracommunity.overviewresource = fedoracommunity.mokshaapps.overviewresource:RootController
-    fedoracommunity.myprofileresource = fedoracommunity.mokshaapps.myprofileresource:RootController
-    fedoracommunity.packagemaintresource = fedoracommunity.mokshaapps.packagemaintresource:RootController
-    fedoracommunity.peopleresource = fedoracommunity.mokshaapps.peopleresource:RootController
-
-    fedoracommunity.search = fedoracommunity.mokshaapps.searchresource:RootController
-
-    fedoracommunity.builds = fedoracommunity.mokshaapps.builds:RootController
-    fedoracommunity.updates = fedoracommunity.mokshaapps.updates:RootController
-    fedoracommunity.alerts = fedoracommunity.mokshaapps.alerts:RootController
-    fedoracommunity.packages = fedoracommunity.mokshaapps.packages:RootController
-    fedoracommunity.people = fedoracommunity.mokshaapps.people:RootController
-    fedoracommunity.statistics = fedoracommunity.mokshaapps.statistics:RootController
-    fedoracommunity.demos = fedoracommunity.mokshaapps.demos:RootController
-
     [moksha.widget]
-    fedoracommunity.login = fedoracommunity.widgets.login:LoginWidget
-    fedoracommunity.planet = fedoracommunity.widgets.planet:PlanetFedoraWidget
-    fedoracommunity.quicklinks = fedoracommunity.widgets.quicklinks:QuickLinksWidget
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
-    fedoracommunity.demos.amqp = fedoracommunity.mokshaapps.demos.controllers.root:kamaloka_qpid_js
-    placeholder = moksha.api.widgets:Placeholder
     grid = moksha.api.widgets:Grid
-    clock = fedoracommunity.widgets.clock:clock_js
-    expander = fedoracommunity.widgets.expander:expander_js
     
     package.overview = fedoracommunity.widgets.package:overview_widget
     package.bugs = fedoracommunity.widgets.package:bugs_widget
