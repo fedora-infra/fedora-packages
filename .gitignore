@@ -8,3 +8,7 @@ myfedora/*
 *.swp
 *.swo
 *.db
+xapian/*
+uitests/*
+profile/*
+*~
