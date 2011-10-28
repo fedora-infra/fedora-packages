@@ -31,12 +31,12 @@ xapian_search_grid = XapianSearchGrid()
 
 class RootController(BaseController):
 
-    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.search')
+    @expose('mako:fedoracommunity.templates.search')
     def index(self, ec = None, **kwds):
         '''We show search page by default'''
         return self.s(**kwds)
 
-    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.invalid_path')
+    @expose('mako:fedoracommunity.templates.invalid_path')
     def invalid_path(self, invalid_path):
         title = 'Invalid Path'
         split_path = invalid_path.split('/')
@@ -58,7 +58,7 @@ class RootController(BaseController):
                 'login': login}
 
 
-    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.search')
+    @expose('mako:fedoracommunity.templates.search')
     def s(self, *args, **kwds):
         '''Search controller'''
         search_str = ''
@@ -80,7 +80,7 @@ class RootController(BaseController):
                   'args': list(args),
                   'kwds': kwds};
 
-    @expose('mako:fedoracommunity.mokshaapps.fedoracommunity.templates.chrome')
+    @expose('mako:fedoracommunity.templates.chrome')
     def _default(self, *args, **kwds):
         '''for anything which does not hit a controller we assume is a package
            name'''
