@@ -9,15 +9,22 @@
              </div>
              <br />
              <div>
-                 <div><strong>SUB-PACKAGES</strong></div>
-                 <div>sub1</div>
-                 <div>sub2</div>
-                 <div>etc...</div>
+                 <div><strong>PACKAGE TREE</strong></div>
+                 <ul>
+                   <li><a href="/${package_name}">${package_name}</a>
+                   <ul>
+                       % for subpkg in package_info['sub_pkgs']:
+                             <li><a href="${subpkg['name']}">${subpkg['name']}</a></li>
+                       % endfor
+                   </ul>
+                 </li>
+                 </ul>
              </div>
          </div>
          <div class="grid_19">
              <h2>${package_name}</h2>
-             <div><em>Summary</em></div>
+             <div><em>${package_info['summary']}</em></div>
+             <div>${widget(args=args, kwds=kwds) | n}</div>
          </div>
     </div>
 </div>
