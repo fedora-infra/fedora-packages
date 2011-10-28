@@ -114,18 +114,15 @@ class XapianConnector(IConnector, ICall, IQuery):
 
             search_string += " EX__%s__EX" % term
 
-        enquire = xapian.Enquire(self._xapian_db)
-        qp = xapian.QueryParser()
-        qp.set_database(self._xapian_db)
-        query = qp.parse_query(search_string)
-
-        enquire.set_query(query)
-        matches = enquire.get_mset(start_row, rows_per_page);
+        matches = self.do_search(search_string,
+                                 start_row,
+                                 rows_per_page,
+                                 order,
+                                 sort_col)
 
         count = matches.get_matches_estimated()
         rows = []
         for m in matches:
-
             result = json.loads(m.document.get_data())
 
             # copy name so we can highlight strings that match the search
@@ -140,3 +137,28 @@ class XapianConnector(IConnector, ICall, IQuery):
             rows.append(result)
 
         return (count, rows)
+
+    def get_package_info(self, package_name):
+        search_string = "Ex__%s__EX" % package_name
+        matches = self.do_search(search_string, 0, 1)
+        if len(matches) < 0:
+            return None
+
+        result = json.loads(matches[0].document.get_data())
+        return result
+
+    def do_search(self,
+                  search_string,
+                  start_row=None,
+                  rows_per_page=None,
+                  order=-1,
+                  sort_col=None):
+        enquire = xapian.Enquire(self._xapian_db)
+        qp = xapian.QueryParser()
+        qp.set_database(self._xapian_db)
+        query = qp.parse_query(search_string)
+
+        enquire.set_query(query)
+        matches = enquire.get_mset(start_row, rows_per_page);
+
+        return matches
