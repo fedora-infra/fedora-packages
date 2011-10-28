@@ -140,6 +140,8 @@ setup(
     clock = fedoracommunity.widgets.clock:clock_js
     expander = fedoracommunity.widgets.expander:expander_js
     
+    package.overview = fedoracommunity.widgets.package:overview_widget
+    package.bugs = fedoracommunity.widgets.package:bugs_widget
 
     [moksha.stream]
     stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
