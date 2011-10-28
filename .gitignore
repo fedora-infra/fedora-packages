@@ -12,3 +12,4 @@ xapian/*
 uitests/*
 profile/*
 *~
+*.rpm
