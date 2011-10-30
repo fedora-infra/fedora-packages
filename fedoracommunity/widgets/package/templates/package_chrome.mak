@@ -22,7 +22,7 @@
              </div>
          </div>
          <div class="grid_19">
-             <h2>${package_name}</h2>
+             <h2>${kwds['package_name']}</h2>
              <div><em>${package_info['summary']}</em></div>
              <div>${widget(args=args, kwds=kwds) | n}</div>
          </div>

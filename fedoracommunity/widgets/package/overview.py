@@ -5,6 +5,8 @@ import mako
 from package import TabWidget
 from mako.template import Template
 
+from fedoracommunity.connectors.xapianconnector import XapianConnector
+
 class OverviewNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Details', 'package.overview.details'),
                                     ('Builds', 'package.overview.builds'),
@@ -25,11 +27,16 @@ class OverviewWidget(Widget):
             overview_component = args.pop(0)
 
 class Details(Widget):
-    template = u"""Details
-    dude
-    ${kwds['package_name']}
-    """
-    engine_name = 'mako'
+    template = 'mako:fedoracommunity/widgets/package/templates/details.mak'
+    def update_params(self, d):
+        super(Details, self).update_params(d)
+        package_name = d['kwds']['package_name']
+        print package_name
+        print d['kwds']
+
+        xapian_conn = XapianConnector(None, None)
+        result = xapian_conn.get_package_info(package_name)
+        d['package_info'] = result
 
 class Builds(Widget):
     template = u"""Builds
