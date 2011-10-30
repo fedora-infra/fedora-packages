@@ -11,7 +11,7 @@
              <div>
                  <div><strong>PACKAGE TREE</strong></div>
                  <ul>
-                   <li><a href="/${package_name}">${package_name}</a>
+                   <li><a href="/${kwds['package_name']}">${kwds['package_name']}</a>
                    <ul>
                        % for subpkg in package_info['sub_pkgs']:
                              <li><a href="${subpkg['name']}">${subpkg['name']}</a></li>

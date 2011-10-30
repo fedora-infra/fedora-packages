@@ -75,7 +75,7 @@ class PackageWidget(Widget):
         d['widget'] = package_nav_widget
         args = d.get('args')
         name = args.pop(0)
-        d['package_name'] = name
+        d['kwds']['package_name'] = name
 
         xapian_conn = XapianConnector(None, None)
         result = xapian_conn.get_package_info(name)

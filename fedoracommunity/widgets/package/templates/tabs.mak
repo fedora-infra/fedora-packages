@@ -3,7 +3,7 @@
         % for key, value in tabs.items():
           <ul>
             <li>
-            <a href="${base_url}${key}" onClick="return moksha.dynamic_goto('/_w/${value['widget_key']}', {},
+            <a href="${base_url}${key}" onClick="return moksha.dynamic_goto('/_w/${value['widget_key']}', ${kwds},
                                       '#tab_content_${_uuid}', '${base_url}${key}');">
                 ${value['display_name']}
             </a>

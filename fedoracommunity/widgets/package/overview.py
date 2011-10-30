@@ -26,6 +26,7 @@ class OverviewWidget(Widget):
 class Details(Widget):
     template = u"""Details
     dude
+    ${kwds['package_name']}
     """
     engine_name = 'mako'
 
