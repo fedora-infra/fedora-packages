@@ -1,6 +1,8 @@
 from tw.api import Widget
 import collections
+from mako.template import Template
 import mako
+
 import uuid
 
 import moksha
@@ -52,14 +54,18 @@ class TabWidget(Widget):
         d['args'] = args
         d['kwds'] = kwds
         d['_uuid'] = self._uuid
-        d['base_url'] = self.base_url
+
+        if isinstance(self.base_url, Template):
+            d['base_url'] = self.base_url.render(**d)
+        else:
+            d['base_url'] = self.base_url
 
         super(TabWidget, self).update_params(d)
 
 class PackageNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Overview', 'package.overview'),
                                     ('Bugs', 'package.bugs')])
-    base_url = '/*/';
+    base_url = Template('/${kwds["package_name"]}/');
     default_tab = 'Overview'
 
 package_nav_widget = PackageNavWidget()
