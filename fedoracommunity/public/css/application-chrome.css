@@ -1562,3 +1562,82 @@ em.note {
   color: #aaa;
   font-size: .9em;
 }
+
+/****** markup for new packager branch *********/
+
+#package-info-bar H3 {
+  text-transform: uppercase;
+  font-size: 10pt; 
+}
+
+#package-info-bar .package-name {
+  color: #3c6eb4;
+  font-weight: bold;
+  font-size: 13pt;
+  text-decoration: none;
+}
+
+#package-info-bar a:link.package-name { color: #3c6eb4; text-decoration: none; font-weight: bold;}
+#package-info-bar a:visited.package-name { color: #3c6eb4; text-decoration: none; font-weight: bold;}
+#package-info-bar a:hover.package-name { color: #db347a; text-decoration: none; background-color: #e7e8e9; font-weight: bold;}
+#package-info-bar a:active.package-name { color: #3c6eb4; text-decoration: none; font-weight: bold;}
+
+#package-info-bar ul {
+  list-style: none;
+  margin-left: 0.2em;
+}
+
+#package-info-bar ul ul { 
+  list-style: square url('/images/list_tree_marker.png');
+  margin-left: 1.3em;
+}
+
+#package-header {
+  color: #666666;
+}
+
+#package-header h2 {
+  font-size: 24pt;
+}
+
+.tab-container .tabs {
+  color: #000000;
+  background-color: #CCCCCC;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  font-size: 14pt;
+  font-weight: bold;
+  padding: 0.8em;
+}
+
+.tab-container .tabs ul {
+  list-style: none;
+  display: inline;
+}
+
+.tab-container .tabs li {
+  display: inline;
+}
+
+.tab-container .tabs a { padding-bottom: 0.8em; }
+.tab-container .tabs a:link { color: #000000; text-decoration: none; font-weight: bold; }
+.tab-container .tabs a:active { color: #000000; text-decoration: none; font-weight: bold; }
+.tab-container .tabs a:visited { color: #000000; text-decoration: none; font-weight: bold; }
+.tab-container .tabs a:hover {
+  color: #000000; text-decoration: none; font-weight: bold; 
+  background: url('/images/nav_arrow.png') no-repeat 50% 95%;
+  overflow: visible;
+}
+
+.tab-container .tab-container .tabs {
+    background-color: #FFFFFF;
+    color: #333333;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    padding: 0.5em;
+}
+
+.tab-container .tab-container .tabs a:link { color: #333333; text-decoration: underline; font-weight: bold; }
+.tab-container .tab-container .tabs a:active { color: #333333; text-decoration: underline; font-weight: bold; }
+.tab-container .tab-container .tabs a:visited { color: #333333; text-decoration: underline; font-weight: bold; }
+.tab-container .tab-container .tabs a:hover { color: #333333; text-decoration: underline; font-weight: bold; }

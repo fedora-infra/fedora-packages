@@ -1,4 +1,5 @@
 <!-- start tabs -->
+  <div class="tab-container">
     <div class="tabs">
         % for key, value in tabs.items():
           <ul>
@@ -14,4 +15,5 @@
     <div id="tab_content_${_uuid}">
         ${widget(args=args, kwds=kwds) | n }
     <div>
+  </div>
 <!-- end tabs -->
