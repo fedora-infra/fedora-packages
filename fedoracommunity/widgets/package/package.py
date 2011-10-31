@@ -88,4 +88,9 @@ class PackageWidget(Widget):
         result = xapian_conn.get_package_info(name)
         d['package_info'] = result
 
+        koji = get_connector('koji')
+        builds = koji._koji_client.getLatestBuilds('dist-rawhide',
+                                                   package=name)
+        d['latest_build'] = builds[0]['nvr']
+
         super(PackageWidget, self).update_params(d)

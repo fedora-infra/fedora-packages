@@ -3,6 +3,8 @@ import collections
 import mako
 
 from package import TabWidget
+from updates import active_releases_widget
+
 from mako.template import Template
 
 from moksha.api.connectors import get_connector
@@ -35,6 +37,7 @@ class Details(Widget):
         xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(package_name)
         d['package_info'] = result
+        d['active_releases_widget'] = active_releases_widget;
 
 class Builds(Widget):
     template = u"""Builds

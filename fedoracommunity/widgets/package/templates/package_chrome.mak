@@ -5,7 +5,7 @@
              <img src="" height="96" width="96"/>
              <div>
                  <div><strong>LATEST BUILD</strong></div>
-                 <div>latest-build-0.2.1-3</div>
+                 <div>${latest_build}</div>
              </div>
              <br />
              <div>
