@@ -6,6 +6,7 @@ import mako
 import uuid
 
 import moksha
+from moksha.api.connectors import get_connector
 
 from fedoracommunity.connectors.xapianconnector import XapianConnector
 
@@ -83,7 +84,7 @@ class PackageWidget(Widget):
         name = args.pop(0)
         d['kwds']['package_name'] = name
 
-        xapian_conn = XapianConnector(None, None)
+        xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(name)
         d['package_info'] = result
 

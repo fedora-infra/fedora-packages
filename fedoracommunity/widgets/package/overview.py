@@ -5,7 +5,7 @@ import mako
 from package import TabWidget
 from mako.template import Template
 
-from fedoracommunity.connectors.xapianconnector import XapianConnector
+from moksha.api.connectors import get_connector
 
 class OverviewNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Details', 'package.overview.details'),
@@ -31,10 +31,8 @@ class Details(Widget):
     def update_params(self, d):
         super(Details, self).update_params(d)
         package_name = d['kwds']['package_name']
-        print package_name
-        print d['kwds']
 
-        xapian_conn = XapianConnector(None, None)
+        xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(package_name)
         d['package_info'] = result
 
