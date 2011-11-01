@@ -76,7 +76,7 @@ class RootController(BaseController):
     def _w(self, widget_name, *args, **kwds):
         '''generic widget controller - loads a widget from our widget list
            for dynamic loading of sections of the current page'''
-        return {'widget': moksha.get_widget(widget_name),
+        return {'widget': moksha.utils.get_widget(widget_name),
                   'args': list(args),
                   'kwds': kwds};
 
