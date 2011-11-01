@@ -93,7 +93,13 @@ Index the packages from yum into this format:
 def index_yum_pkgs():
     import yum
     yb = yum.YumBase()
-    yb.disablePlugins()
+
+    # Doesn't work right now due to a bug in yum.
+    #yb.disablePlugins()
+
+    # Temporary work around
+    yb.preconf.disabled_plugins = '*'
+
     yb.conf.cache = 1
 
     pkgs = yb.pkgSack.returnPackages()
