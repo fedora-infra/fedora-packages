@@ -1,5 +1,5 @@
-<%namespace file="fedoracommunity.mokshaapps.fedoracommunity.templates.header" import="resources" />
-<%namespace file="fedoracommunity.mokshaapps.fedoracommunity.templates.footer" import="*" />
+<%namespace file="fedoracommunity.templates.header" import="resources" />
+<%namespace file="fedoracommunity.templates.footer" import="*" />
 <% from tg import flash %>
 <html>
     <head>
