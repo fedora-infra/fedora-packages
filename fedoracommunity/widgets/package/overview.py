@@ -25,8 +25,6 @@ class OverviewWidget(Widget):
         super(OverviewWidget, self).update_params(d)
         d['nav_widget'] = overview_nav_widget
         args = d.get('args', [])
-        if len(args) > 0:
-            overview_component = args.pop(0)
 
 class Details(Widget):
     template = 'mako:fedoracommunity/widgets/package/templates/details.mak'
