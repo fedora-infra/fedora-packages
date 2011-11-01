@@ -95,6 +95,7 @@ def index_yum_pkgs():
     yb = yum.YumBase()
 
     # Doesn't work right now due to a bug in yum.
+    # https://bugzilla.redhat.com/show_bug.cgi?id=750593
     #yb.disablePlugins()
 
     # Temporary work around
