@@ -21,10 +21,12 @@
                  </ul>
              </div>
          </div>
-         <div class="grid_19" id="package-header">
+         <div class="grid_19">
+           <div id="package-header">
              <h2>${kwds['package_name']}</h2>
              <div><em>${package_info['summary']}</em></div>
-             <div>${widget(args=args, kwds=kwds) | n}</div>
+           </div>
+           <div id="tab-content">${widget(args=args, kwds=kwds) | n}</div>
          </div>
          <div class="clear"></div>
     </div>

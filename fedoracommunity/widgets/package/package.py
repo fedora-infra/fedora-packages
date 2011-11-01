@@ -52,6 +52,7 @@ class TabWidget(Widget):
 
         d['widget'] = moksha.get_widget(self._expanded_tabs[active_tab]['widget_key'])
         d['tabs'] = self._expanded_tabs
+        d['active_tab'] = active_tab
         d['args'] = args
         d['kwds'] = kwds
         d['_uuid'] = self._uuid

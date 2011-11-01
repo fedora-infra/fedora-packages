@@ -1,9 +1,5 @@
 /* image margin override to override fedora.css */
 
-a:visited, a:active {
-  color: #729fcf !important;
-}
-
 img {
   margin: auto !important;
 }
@@ -43,10 +39,6 @@ img {
 }
 
 #content a img { margin: 0px !important; }
-
-a {
-  color: #2B80D6;
-}
 
 /* styling for login toolbar */
 
@@ -372,7 +364,7 @@ a {
 h3 {
   line-height: 100%;
   margin-top: 10px;
-  color: #666 !important;
+  color: #666;
 }
 
 /** simple list **/
@@ -1593,11 +1585,22 @@ em.note {
 }
 
 #package-header {
-  color: #666666;
+  color: #AAAAAA;
+  margin-bottom: 1em;
 }
 
 #package-header h2 {
   font-size: 24pt;
+}
+
+#tab-content h3 {
+  color: #AAAAAA;
+  margin-bottom: 1em;
+  margin-top: 1em;
+}
+
+#tab-content {
+  color: #AAAAAA;
 }
 
 .tab-container .tabs {
@@ -1619,25 +1622,49 @@ em.note {
   display: inline;
 }
 
-.tab-container .tabs a { padding-bottom: 0.8em; }
+.tab-container .tabs a { color: #000000; padding-left: 0.5em; padding-right: 0.5em; padding-top: 0.8em; padding-bottom: 0.8em; }
 .tab-container .tabs a:link { color: #000000; text-decoration: none; font-weight: bold; }
 .tab-container .tabs a:active { color: #000000; text-decoration: none; font-weight: bold; }
 .tab-container .tabs a:visited { color: #000000; text-decoration: none; font-weight: bold; }
 .tab-container .tabs a:hover {
   color: #000000; text-decoration: none; font-weight: bold; 
+  background: url('/images/nav_arrow.png') no-repeat 50% 95% !important;
+}
+
+.tab-container .tabs a.selected {
+  color: #db347a; text-decoration: none; font-weight: bold;
   background: url('/images/nav_arrow.png') no-repeat 50% 95%;
-  overflow: visible;
+}
+
+.tab-container .tabs.hover a.selected {
+  background: none;
 }
 
 .tab-container .tab-container .tabs {
     background-color: #FFFFFF;
-    color: #333333;
+    color: #CCCCCC;
     -moz-border-radius: 0px;
     border-radius: 0px;
     padding: 0.5em;
+    border-bottom: 2px solid #CCCCCC;
 }
 
-.tab-container .tab-container .tabs a:link { color: #333333; text-decoration: underline; font-weight: bold; }
-.tab-container .tab-container .tabs a:active { color: #333333; text-decoration: underline; font-weight: bold; }
-.tab-container .tab-container .tabs a:visited { color: #333333; text-decoration: underline; font-weight: bold; }
-.tab-container .tab-container .tabs a:hover { color: #333333; text-decoration: underline; font-weight: bold; }
+.tab-container .tab-container .tabs a { color: #999999; padding-top: 0.5em; padding-bottom: 0.5em; }
+.tab-container .tab-container .tabs a:link { color: #999999; text-decoration: none; font-weight: bold; }
+.tab-container .tab-container .tabs a:active { color: #999999; text-decoration: none; font-weight: bold; }
+.tab-container .tab-container .tabs a:visited { color: #999999; text-decoration: none; font-weight: bold; }
+.tab-container .tab-container .tabs a:hover {
+  color: #999999; text-decoration: none; font-weight: bold;
+  border-bottom: 3px solid #db347a !important;
+  background-image: none !important;
+}
+
+.tab-container .tab-container .tabs a.selected {
+  color: #db347a; text-decoration: none; font-weight: bold;
+  border-bottom: 3px solid #db347a;
+  background-image: none;
+}
+
+.tab-container .tab-container .tabs.hover a.selected {
+  border-bottom: none;
+}
