@@ -1,6 +1,6 @@
 <div>
     <h3>Description</h3>
-    <div class="package-description">${package_info['description']}</div>
+    <div class="package-description">${w.package_info['description']}</div>
     <h3>Active Releases Overview</h3>
-    <div>${active_releases_widget(package_name=kwds['package_name'])}</div>
+    <div>${w.children[0].display(package_name=w.kwds['package_name'])}</div>
 </div>

@@ -1,5 +1,5 @@
 <!-- START package.overview chrome -->
 <div id="container">
-    ${nav_widget(args=args, kwds=kwds) | n}
+    ${w.children[0].display(args=w.args, kwds=w.kwds) | n}
 </div>
 <!-- END package.overview chrome -->

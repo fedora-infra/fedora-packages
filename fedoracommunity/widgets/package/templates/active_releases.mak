@@ -1,5 +1,5 @@
 <div class="list header-list">
-    <table id="${id}">
+    <table id="${w.id}">
         <thead>
             <tr>
                 <th>Release</th>

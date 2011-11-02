@@ -32,7 +32,7 @@
              ${flash.message}
         % endif
         <div id="main_app">
-           ${tmpl_context.widget(**options) | n}
+           ${tmpl_context.widget.display(**options) | n}
         </div>
     </div>
     ${footer()}

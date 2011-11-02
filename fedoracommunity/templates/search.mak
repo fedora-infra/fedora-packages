@@ -68,7 +68,7 @@
            </div>
        </div>
        <div id="search_grid" class="container_24">
-           ${tmpl_context.widget(**options) | n}
+           ${tmpl_context.widget.display(**options) | n}
        </div>
 </div>
         </div>

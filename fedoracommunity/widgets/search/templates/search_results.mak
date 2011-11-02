@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <table id="${id}">
+    <table id="${w.id}">
       <tbody class="rowtemplate">
         <tr class="priority4">
             <td>
@@ -34,7 +34,7 @@
    </div>
    <script type="text/javascript">
        function update_search_grid(search_term) {
-            var grid = $("#${id}").mokshagrid("request_update", {"filters":{"search": search_term}});
+            var grid = $("#${w.id}").mokshagrid("request_update", {"filters":{"search": search_term}});
        }
    </script>
 </div>

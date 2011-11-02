@@ -4,9 +4,9 @@
           <ul>
             <%
               import json
-              json_kwds = json.dumps(kwds);
+              json_kwds = json.dumps(w.kwds);
             %>
-            % for key, value in tabs.items():
+            % for key, value in w.tabs.items():
             <li>
             <%
               selected = ''
@@ -17,10 +17,10 @@
             <script type="text/javascript">
               function ${key}_tab_selected(tab) {
                 var widget_url = "/_w/" + '${value['widget_key']}';
-                return tab_selected(tab, widget_url, "${base_url}${key}", "#tab_content_${_uuid}", ${json_kwds});
+                return tab_selected(tab, widget_url, "${w.base_url}${key}", "#tab_content_${w._uuid}", ${json_kwds});
               }
             </script>
-            <a class="${selected}" href="${base_url}${key}" onMouseOver="set_tabs_hover(this, True)" onMouseOut="set_tabs_hover(this, False)" onClick='return ${key}_tab_selected(this);'>
+            <a class="${selected}" href="${w.base_url}${key}" onMouseOver="set_tabs_hover(this, True)" onMouseOut="set_tabs_hover(this, False)" onClick='return ${key}_tab_selected(this);'>
                 ${value['display_name']}
             </a>
             </li>
@@ -51,8 +51,8 @@
           }
         </script>
     </div>
-    <div id="tab_content_${_uuid}">
-        ${widget(args=args, kwds=kwds) | n }
+    <div id="tab_content_${w._uuid}">
+        ${w.widget.display(args=w.args, kwds=w.kwds) | n }
     <div>
   </div>
 <!-- end tabs -->

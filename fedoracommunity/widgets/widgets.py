@@ -14,82 +14,77 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from tw.api import Widget, JSLink, CSSLink
-from tw.jquery import jquery_js
-from moksha.widgets.jquery_template import jquery_template_js
+import tw2.core as twc
 
-fedora_css = CSSLink(modname='fedoracommunity', link='/css/fedora.css')
-fedoracommunity_appchrome_css = CSSLink(modname='fedoracommunity', link='/css/application-chrome.css')
-fedoracommunity_branding_css = CSSLink(modname='fedoracommunity', link='/css/myfedora-branding.css')
-fedoracommunity_reset_css = CSSLink(modname='fedoracommunity', link='/css/reset.css')
-fedoracommunity_text_css = CSSLink(modname='fedoracommunity', link='/css/text.css')
-fedoracommunity_960_24_col_css = CSSLink(modname='fedoracommunity', link='/css/960_24_col.css')
+fedora_css = twc.CSSLink(modname='fedoracommunity', link='/css/fedora.css')
+fedoracommunity_appchrome_css = twc.CSSLink(modname='fedoracommunity', link='/css/application-chrome.css')
+fedoracommunity_branding_css = twc.CSSLink(modname='fedoracommunity', link='/css/myfedora-branding.css')
+fedoracommunity_reset_css = twc.CSSLink(modname='fedoracommunity', link='/css/reset.css')
+fedoracommunity_text_css = twc.CSSLink(modname='fedoracommunity', link='/css/text.css')
+fedoracommunity_960_24_col_css = twc.CSSLink(modname='fedoracommunity', link='/css/960_24_col.css')
 
 
-class PagerWidget(Widget):
+class PagerWidget(twc.Widget):
     template = "mako:/myfedora/widgets/templates/pager.html"
-    params = ['page', 'last_page', 'show', 'parent_dom_id']
-    show = 7
-    page = 1
+    page = twc.Param('The page to view', default=1)
+    last_page = twc.Param()
+    show = twc.Param('The number of items to show', default=7)
+    parent_dom_id = twc.Param()
 
-    def update_params(self, d):
-        super(PagerWidget, self).update_params(d)
+    front_set = twc.Variable()
+    back_set = twc.Variable()
+    main_set = twc.Variable()
+    prev_page = twc.Variable()
+    next_page = twc.Variable()
+    parent_id = twc.Variable()
 
-        page = int(d['page'])
-        if page < 1:
-            page = 1
+    def prepare(self):
+        super(PagerWidget, self).prepare()
 
-        last_page = int(d['last_page'])
+        self.page = int(self.page)
+        if self.page < 1:
+            self.page = 1
+
+        self.last_page = int(self.last_page)
 
         # how many of the main set do we show
-        show = int(d['show'])
+        self.show = int(self.show)
 
-        parent_id = d['parent_dom_id']
+        self.parent_id = self.parent_dom_id
 
-        front_set = []
-        back_set = []
-        main_set = []
+        self.front_set = []
+        self.back_set = []
+        self.main_set = []
 
-        max_block_num = last_page / show
+        max_block_num = self.last_page / self.show
 
         # figure out main set
-        block_num = page / show
+        block_num = self.page / self.show
 
-        start = block_num * show + 1
-        last_in_set = start + show
-        if last_in_set >= last_page:
-            start = last_page - show + 1
+        start = block_num * self.show + 1
+        last_in_set = start + self.show
+        if last_in_set >= self.last_page:
+            start = self.last_page - self.show + 1
             if start < 1:
                 start = 1
 
-            last_in_set = last_page + 1
+            last_in_set = self.last_page + 1
             block_num = max_block_num
 
-        main_set = range(start, last_in_set)
+        self.main_set = range(start, last_in_set)
 
         # do we need a front set
         if block_num > 0:
-            front_set = [1]
+            self.front_set = [1]
 
         # do we need a back set
         if block_num < max_block_num:
-            back_set = [last_page]
+            self.back_set = [self.last_page]
 
-        prev_page = None
-        if page > 1:
-            prev_page = page - 1
+        self.prev_page = None
+        if self.page > 1:
+            self.prev_page = self.page - 1
 
-        next_page = None
-        if page < last_page:
-            next_page = page + 1
-
-        d.update({'front_set': front_set,
-                  'back_set': back_set,
-                  'main_set': main_set,
-                  'prev_page': prev_page,
-                  'next_page': next_page,
-                  'parent_id': parent_id,
-                  'page': page,
-                  'last_page': page,
-                  'show': show})
-
+        self.next_page = None
+        if self.page < self.last_page:
+            self.next_page = self.page + 1

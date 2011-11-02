@@ -1,97 +1,98 @@
-from tw.api import Widget
-import collections
-from mako.template import Template
 import mako
-
 import uuid
-
 import moksha
+import collections
+import tw2.core as twc
+
+from mako.template import Template
 from moksha.api.connectors import get_connector
 
-from fedoracommunity.connectors.xapianconnector import XapianConnector
-
-class BugsWidget(Widget):
+class BugsWidget(twc.Widget):
     template = u"""Bugs
     dude
     """
     engine_name = 'mako'
 
-class TabWidget(Widget):
-    template="mako:fedoracommunity.widgets.package.templates.tabs"
-    params = ['base_url', 'args', 'kwds']
-    tabs = None
-    default_tab = None
-    base_url = '/'
-    args = []
-    kwds = {}
 
-    def __init__(self):
-        self._uuid = uuid.uuid4()
+class TabWidget(twc.Widget):
+    template="mako:fedoracommunity.widgets.package.templates.tabs"
+    base_url = twc.Param(default='/')
+    args = twc.Param(default=None)
+    kwds = twc.Param(default=None)
+    tabs = twc.Variable(default=None)
+    _uuid = twc.Param(default=None)
+    widget = twc.Variable(default=None)
+    active_tab = twc.Variable(default=None)
+    tabs = twc.Variable(default=None)
+
+    default_tab = None
+
+    def __init__(self, *args, **kw):
+        super(TabWidget, self).__init__(*args, **kw)
+        self._uuid = str(uuid.uuid4())
         self._expanded_tabs = collections.OrderedDict()
         for key, widget_key in self.tabs.items():
             display_name = key
             key = key.lower()
             self._expanded_tabs[key] =  {'display_name': display_name,
                                          'widget_key': widget_key}
-        Widget.__init__(self)
 
-    def update_params(self, d):
-        args = d.get('args', [])
-        kwds = d.get('kwds', {})
+    def prepare(self):
+        super(TabWidget, self).prepare()
+        if not self.args:
+            self.args = []
+        if not self.kwds:
+            self.kwds = {}
 
-        if isinstance(args, mako.runtime.Undefined):
-            args = []
-        if isinstance(kwds, mako.runtime.Undefined):
-            kwds = {}
+        if isinstance(self.args, mako.runtime.Undefined):
+            self.args = []
+        if isinstance(self.kwds, mako.runtime.Undefined):
+            self.kwds = {}
 
-
-        if len(args) > 0:
-            active_tab = args.pop(0).lower()
+        if len(self.args) > 0:
+            active_tab = self.args.pop(0).lower()
         else:
             active_tab = self.default_tab.lower()
 
-        d['widget'] = moksha.utils.get_widget(self._expanded_tabs[active_tab]['widget_key'])
-        d['tabs'] = self._expanded_tabs
-        d['active_tab'] = active_tab
-        d['args'] = args
-        d['kwds'] = kwds
-        d['_uuid'] = self._uuid
+        self.widget = moksha.utils.get_widget(self._expanded_tabs[active_tab]['widget_key'])
+        self.tabs = self._expanded_tabs
+        self.active_tab = active_tab
 
         if isinstance(self.base_url, Template):
-            d['base_url'] = self.base_url.render(**d)
-        else:
-            d['base_url'] = self.base_url
+            # FIXME: not sure if this is legit...
+            print "Rendering base_url template with %r" % self.__dict__
+            # Also, this baseurl is used in urls in the template... 
+            self.base_url = self.base_url.render(**self.__dict__)
 
-        super(TabWidget, self).update_params(d)
 
 class PackageNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Overview', 'package.overview'),
                                     ('Bugs', 'package.bugs')])
     base_url = Template('/${kwds["package_name"]}/');
     default_tab = 'Overview'
+    args = twc.Param(default=None)
+    kwds = twc.Param(default=None)
 
-package_nav_widget = PackageNavWidget()
 
-class PackageWidget(Widget):
+class PackageWidget(twc.Widget):
     template = "mako:fedoracommunity/widgets/package/templates/package_chrome.mak"
-    params = ['package_name', 'args', 'kwds']
-    package_name = None
-    args = []
-    kwds = {}
 
-    def update_params(self, d):
-        d['widget'] = package_nav_widget
-        args = d.get('args')
-        name = args.pop(0)
-        d['kwds']['package_name'] = name
+    package_name = twc.Param()
+    args = twc.Param(default=None)
+    kwds = twc.Param(default=None)
+    latest_build = twc.Variable()
+    navigation_widget = PackageNavWidget
 
+    def prepare(self):
+        super(PackageWidget, self).prepare()
+        name = self.args.pop(0)
+        self.kwds['package_name'] = name
         xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(name)
-        d['package_info'] = result
-
+        self.package_info = result
         koji = get_connector('koji')
-        builds = koji._koji_client.getLatestBuilds('dist-rawhide',
-                                                   package=name)
-        d['latest_build'] = builds[0]['nvr']
-
-        super(PackageWidget, self).update_params(d)
+        builds = koji._koji_client.getLatestBuilds('dist-rawhide', package=name)
+        if builds:
+            self.latest_build = builds[0]['nvr']
+        else:
+            self.latest_build = 'Not built in rawhide'

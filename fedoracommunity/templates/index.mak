@@ -35,7 +35,7 @@
              ${flash.message}
            % endif
            <div class="fedora-package-logo" />
-           ${tmpl_context.widget(**options) | n}
+           ${tmpl_context.widget(**options).display() | n}
         </div>
     </div>
 </body>

@@ -93,7 +93,7 @@ setup(
     fedoracommunity_appchrome_css = fedoracommunity.widgets:fedoracommunity_appchrome_css
     fedoracommunity_branding_css = fedoracommunity.widgets:fedoracommunity_branding_css
     jquery_json_js = moksha.widgets.json:jquery_json_js
-    jquery_ui_tabs = tw.jquery.ui_tabs:jquery_ui_tabs_js
+    #jquery_ui_tabs = tw.jquery.ui_tabs:jquery_ui_tabs_js
     moksha_js = moksha.widgets.moksha_js:moksha_js
     jquery_template_js = moksha.widgets.jquery_template:jquery_template_js
 
@@ -113,12 +113,12 @@ setup(
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
     grid = moksha.api.widgets:Grid
 
-    package.overview = fedoracommunity.widgets.package:overview_widget
-    package.overview.details = fedoracommunity.widgets.package.overview:details_widget
-    package.overview.updates = fedoracommunity.widgets.package.overview:updates_widget
-    package.overview.builds = fedoracommunity.widgets.package.overview:builds_widget
+    package.overview = fedoracommunity.widgets.package:OverviewWidget
+    package.overview.details = fedoracommunity.widgets.package.overview:Details
+    package.overview.updates = fedoracommunity.widgets.package.overview:Updates
+    package.overview.builds = fedoracommunity.widgets.package.overview:Builds
 
-    package.bugs = fedoracommunity.widgets.package:bugs_widget
+    package.bugs = fedoracommunity.widgets.package:BugsWidget
 
 
     [moksha.stream]

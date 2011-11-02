@@ -46,6 +46,9 @@ base_config = FedoraCommunityConfig()
 base_config.renderers = []
 base_config.use_dotted_templatenames = True
 
+base_config.use_toscawidgets = False
+base_config.use_toscawidgets2 = True
+
 base_config.package = fedoracommunity
 
 # Set the default renderer

@@ -20,14 +20,11 @@ import pylons
 
 from tg import expose, tmpl_context, redirect, flash, url, request, override_template
 
+import moksha
 from moksha.lib.base import BaseController
 
 from fedoracommunity.widgets.search import XapianSearchGrid
-from fedoracommunity.widgets.package import package_widget
-
-import moksha
-
-xapian_search_grid = XapianSearchGrid()
+from fedoracommunity.widgets.package import PackageWidget
 
 class RootController(BaseController):
 
@@ -39,24 +36,22 @@ class RootController(BaseController):
     @expose('mako:fedoracommunity.templates.invalid_path')
     def invalid_path(self, invalid_path):
         title = 'Invalid Path'
-        split_path = invalid_path.split('/')
-        first_path = None
+        #split_path = invalid_path.split('/')
+        #first_path = None
         login = False
-        for path in split_path:
-            if path:
-                first_path = path
-                break
-
+        #for path in split_path:
+        #    if path:
+        #        first_path = path
+        #        break
         # hack for now to see if we need to show a login box
-        if first_path == 'my_profile':
-            login = True
-            title = 'Restricted Page'
-            tmpl_context.widget = login_widget
+        #if first_path == 'my_profile':
+        #    login = True
+        #    title = 'Restricted Page'
+        #    tmpl_context.widget = login_widget
 
         return {'title': title,
                 'invalid_path': invalid_path,
                 'login': login}
-
 
     @expose('mako:fedoracommunity.templates.search')
     def s(self, *args, **kwds):
@@ -66,7 +61,7 @@ class RootController(BaseController):
         if len(args) > 0:
             search_str = args[0]
 
-        tmpl_context.widget = xapian_search_grid
+        tmpl_context.widget = XapianSearchGrid
         return {'title': 'Fedora Packages Search',
                 'options': {'id':'search_grid',
                             'filters':{'search':search_str}}
@@ -77,14 +72,12 @@ class RootController(BaseController):
         '''generic widget controller - loads a widget from our widget list
            for dynamic loading of sections of the current page'''
         return {'widget': moksha.utils.get_widget(widget_name),
-                  'args': list(args),
-                  'kwds': kwds};
+                'args': list(args), 'kwds': kwds}
 
     @expose('mako:fedoracommunity.templates.chrome')
     def _default(self, *args, **kwds):
         '''for anything which does not hit a controller we assume is a package
            name'''
         package = args[0]
-        tmpl_context.widget = package_widget
-
+        tmpl_context.widget = PackageWidget
         return {'title': 'Package %s' % package, 'options':{'args': list(args), 'kwds': kwds}}
