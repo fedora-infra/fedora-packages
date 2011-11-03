@@ -11,6 +11,15 @@ import xappy
 import re
 
 from utils import filter_search_string
+from fedora.client import ProxyClient, PackageDB
+
+# how many time to retry a downed server
+MAX_RETRY = 10
+
+_pkgdb_client = ProxyClient('https://admin.fedoraproject.org/pkgdb',
+                            session_as_cookie=False,
+                            insecure=False)
+
 
 try:
     import json
@@ -67,11 +76,36 @@ def create_index(dbpath):
     #iconn.add_field_action('tags', xappy.FieldActions.TAG)
     iconn.add_field_action('tag', xappy.FieldActions.INDEX_EXACT)
 
-
     #iconn.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
     #iconn.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
 
     iconn.close()
+
+def find_devel_owner(pkg_name, retry=0):
+    print "not cached yet"
+    return "not cached yet"
+    pkginfo = _pkgdb_client.send_request('/acls/name',
+                                         req_params = {'packageName': pkg_name,
+                                                       'collectionName': 'Fedora',
+                                                       'collectionVersion': 'devel'})
+
+    pkginfo = pkginfo[1]
+    try:
+        for pkg in pkginfo['packageListings']:
+            if pkg['collection']['branchname'] == 'devel':
+                print 'owner %s' % pkg['owner']
+                return pkg['owner']
+    except KeyError:
+        print('no owner')
+        return ''
+    except ServerError:
+        if retry <= MAX_RETRY:
+            return find_devel_owner(pkg_name, retry + 1)
+
+        print('owner: server error')
+        return None
+
+    print ''
 
 """
 index_yum_pkgs
@@ -107,7 +141,10 @@ def index_yum_pkgs():
     base_pkgs = {}
     seen_pkg_names = []
 
+    i = 0
     for pkg in pkgs:
+        i += 1
+        print "%d: pre-processing package '%s':" % (i, pkg['name']), 
         if not pkg.base_package_name in base_pkgs:
             # we haven't seen this base package yet so add it
             base_pkgs[pkg.base_package_name] = {'name': pkg.base_package_name,
@@ -128,6 +165,7 @@ def index_yum_pkgs():
             base_pkg['summary'] = pkg.summary
             base_pkg['description'] = pkg.description
             base_pkg['pkg'] = pkg
+            base_pkg['devel_owner'] = find_devel_owner(pkg.name)
         else:
             # this is a sub package
             subpkgs = base_pkg['sub_pkgs']
@@ -135,37 +173,59 @@ def index_yum_pkgs():
 
     return base_pkgs
 
-def download_rpm(cache_dir, pkg_envra):
-    os.system('yumdownloader --destdir %s %s' % (cache_dir, pkg_envra))
-
-def extract_rpm(rpm_path, dest_dir):
-    push_dir = os.getcwd()
-    os.chdir(dest_dir)
-    os.system('rpm2cpio %s | cpio -idm --no-absolute-filenames --quiet' % rpm_path)
-    os.chdir(push_dir)
-
-def index_desktop_file(doc, yum_pkg, filename):
-    doc.fields.append(xappy.Field('tag', 'desktop'))
+def cache_rpm_contents():
     full_cache_dir = os.path.join(os.getcwd(), cache_dir)
     tmp_dir = tempfile.mkdtemp()
 
-    # create cache dir if it does not exist
-    if not os.path.exists(full_cache_dir):
-        os.mkdir(full_cache_dir)
+class RPMCache(object):
+    def __init__(self, rpm_envra, cache_dir=cache_dir):
+        if ':' in rpm_envra:
+            rpm_envra = rpm_envra.split(':')[1]
 
-    # download the src.rpm and extract the .desktop file
-    rpm_file_name = "%s.rpm" % (yum_pkg.ui_envra)
-    if ':' in rpm_file_name:
-        rpm_file_name = rpm_file_name.split(':')[1]
+        self.rpm_file_name = "%s.rpm" % rpm_envra
+        self.rpm_envra = rpm_envra
+        self.cache_dir = os.path.join(os.getcwd(), cache_dir)
+        self.retry = 0
 
-    rpm_path = os.path.join(full_cache_dir, rpm_file_name)
+        # create cache dir if it does not exist
+        if not os.path.exists(self.cache_dir):
+            os.mkdir(self.cache_dir)
 
-    if not os.path.exists(rpm_path):
-        download_rpm(full_cache_dir, yum_pkg.ui_envra)
+        self.tmp_dir = None
 
-    extract_rpm(rpm_path, tmp_dir)
-    tmp_file = tmp_dir + filename
+    def open(self):
+        self.tmp_dir = tempfile.mkdtemp()
+        self._download_rpm()
+        self._extract_rpm()
 
+    def _download_rpm(self):
+        self.rpm_path = os.path.join(self.cache_dir, self.rpm_file_name)
+        os.system('yumdownloader --destdir %s %s' % (self.cache_dir, self.rpm_envra))
+
+    def _extract_rpm(self):
+        push_dir = os.getcwd()
+        os.chdir(self.tmp_dir)
+        os.system('rpm2cpio %s | cpio -idm --no-absolute-filenames --quiet' % self.rpm_path)
+        os.chdir(push_dir)
+
+    def retry(self):
+        if self.retry <= MAX_RETRY:
+            self.retry += 1
+            try:
+                os.remove(self.rpm_path)                
+            except OSError:
+                pass
+            self._download_rpm()
+            self._extract_rpm()
+            return True
+        return False
+
+    def close(self):
+        shutil.rmtree(self.tmp_dir)
+
+def index_desktop_file(doc, rpm_cache, filename):
+    doc.fields.append(xappy.Field('tag', 'desktop'))
+    
     def parse_desktop_file(file_path):
         dp = DesktopParser(file_path)
         category = dp.get('Categories', '')
@@ -177,39 +237,34 @@ def index_desktop_file(doc, yum_pkg, filename):
                 # add exact match also
                 doc.fields.append(xappy.Field('category_tags', "EX__%s__EX" % c))
 
-    if os.path.exists(tmp_file):
-        parse_desktop_file(tmp_file)
-    else:
-        print "Could not find '%s' trying to redownload" % tmp_file
-        try:
-            os.remove(rpm_path)
-        except OSError:
-            pass
+    desktop_file = rpm_cache.tmp_dir + filename
 
-        download_rpm(full_cache_dir, yum_pkg.ui_envra)
-        extract_rpm(rpm_path, tmp_dir)
-        if os.path.exists(tmp_file):
-            parse_desktop_file(tmp_file)
+    def try_parse(desktop_file):
+        if os.path.exists(desktop_file):
+            parse_desktop_file(desktop_file)
         else:
-            print "Second attempt to parse desktop file failed. Skipping."
-
-    # cleanup
-    shutil.rmtree(tmp_dir)
-
+            if rpm_cache.retry():
+                print "Could not find '%s' trying to redownload" % tmp_file
+                try_parse(desktop_file)
+            else:
+                print "Maximum retrys exceeded. Skipping desktop file parsing."
 
 def index_files(doc, yum_pkg):
     if yum_pkg != None:
+        desktop_file_cache = RPMCache(yum_pkg['ui_envra'])
+        desktop_file_cache.open()
         for filename in yum_pkg.filelist:
-
             if filename.endswith('.desktop'):
                 # index apps
                 "        indexing desktop file %s" % os.path.basename(filename)
-                index_desktop_file(doc, yum_pkg, filename)
+                index_desktop_file(doc, desktop_file_cache, filename)
             if filename.startswith('/usr/bin'):
                 # index executables
                 print ("        indexing exe file %s" % os.path.basename(filename))
                 exe_name = filter_search_string(os.path.basename(filename))
                 doc.fields.append(xappy.Field('cmd', "EX__%s__EX" % exe_name))
+
+        desktop_file_cache.close()
 
 def index_pkgs(iconn):
     yum_pkgs = index_yum_pkgs()
