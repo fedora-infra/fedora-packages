@@ -10,6 +10,7 @@ import tempfile
 import xappy
 import re
 
+from os.path import join, dirname
 from utils import filter_search_string
 from fedora.client import ProxyClient, PackageDB
 from rpmcache import RPMCache
@@ -28,6 +29,7 @@ except ImportError:
 
 cache_dir = "cache"
 YUM_CACHE_DIR = "yum-cache"
+YUM_CONF = join(dirname(__file__), 'yum.conf')
 
 class DesktopParser(object):
     key_value_re = re.compile('([A-Za-z0-9-]*)[ ]*=[ ]*(.*)')
@@ -139,7 +141,7 @@ class Indexer(object):
         if not os.path.exists(yum_cache_dir):
             os.mkdir(yum_cache_dir)
 
-        yb.doConfigSetup('yum.conf', root=os.getcwd(), init_plugins=False)
+        yb.doConfigSetup(YUM_CONF, root=os.getcwd(), init_plugins=False)
         yb._getRepos(doSetup = True)
         yb._getSacks(['x86_64', 'src'])
         yb.doRepoSetup()
