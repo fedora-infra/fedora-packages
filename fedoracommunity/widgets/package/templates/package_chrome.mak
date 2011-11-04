@@ -3,12 +3,17 @@
     <div class="container_24">
          <div class="grid_5" id="package-info-bar">
              <img src="/images/package_128x128.png" height="128" width="128"/>
-             <div>
+             <div class="build">
                  <div><h3>LATEST BUILD</h3></div>
                  <div class="package-name">${w.latest_build}</div>
              </div>
-             <br />
-             <div>
+             % if w.devel_owner:
+             <div class="owner">
+                 <div><h3>OWNER</h3></div>
+                 <div class="package-owner">${w.devel_owner}</div><div class="package-dist">(Rawhide)</div>
+             </div>
+             % endif
+             <div class="package-tree">
                  <div><h3>PACKAGE TREE</h3></div>
                  <ul>
                    <li><a class="package-name" href="/${w.kwds['package_name']}">${w.kwds['package_name']}</a>
