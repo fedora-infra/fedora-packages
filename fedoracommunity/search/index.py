@@ -11,6 +11,8 @@ import xappy
 import re
 
 from os.path import join, dirname
+import rpm
+
 from utils import filter_search_string
 from fedora.client import PackageDB, ServerError
 from rpmcache import RPMCache
@@ -53,7 +55,8 @@ class DesktopParser(object):
 class Indexer(object):
     def __init__(self, dbpath):
         self.dbpath = dbpath
-        iconn = self.create_index()
+        self.create_index()
+        self._owners_cache = None
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
@@ -86,25 +89,18 @@ class Indexer(object):
         self.iconn = iconn
 
     def find_devel_owner(self, pkg_name, retry=0):
-        pkginfo = pkgdb_client.get_package_info(pkg_name, branch='devel')
+        if self._owners_cache == None:
+            print "Caching the owners list from PackageDB"
+            pkgdb = PackageDB()
+            self._owners_cache = pkgdb.get_bugzilla_acls()
+
         try:
-            for pkg in pkginfo['packageListings']:
-                if pkg['collection']['branchname'] == 'devel':
-                    print 'owner %s' % pkg['owner']
-                    return pkg['owner']
+            mainowner = self._owners_cache['Fedora'][pkg_name]['owner']
+            print 'Owner: %s' % mainowner
+            return mainowner
         except KeyError:
-            print('no owner')
+            print 'Owner: None'
             return ''
-        except ServerError:
-            if retry <= MAX_RETRY:
-                return self.find_devel_owner(pkg_name, retry + 1)
-
-            print('owner: server error')
-            return None
-        except Exception, e:
-            print "Unknown exception while fetching owner: %s" % str(e)
-
-        print
 
     def index_yum_pkgs(self):
         """
