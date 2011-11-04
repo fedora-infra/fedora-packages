@@ -31,6 +31,7 @@ class RPMCache(object):
             repo = self.yum_base.repos.getRepo(self.pkg.repoid)
             repo.cache = 0
             self.pkg.localpath = self.rpm_path
+            print "Downloading %s" % self.rpm_path
             path = repo.getPackage(self.pkg)
 
     def _extract_file(self, file_path):
@@ -38,22 +39,26 @@ class RPMCache(object):
         os.chdir(self.tmp_dir)
 
         if self.decompress_filter == None:
-            decompress_filter = "*%s" % file_path
+            decompress_filter =  os.path.basename(file_path)
         else:
             decompress_filter = self.decompress_filter
 
-        os.system('rpm2cpio %s | cpio -idmv --no-absolute-filenames %s' % (self.rpm_path, decompress_filter))
+        cmd = 'rpm2cpio %s | cpio -idmv --no-absolute-filenames %s' % (self.rpm_path, decompress_filter)
+        print cmd
+        os.system(cmd)
         os.chdir(push_dir)
 
-    def open_file(self, file_path, access='r', decompress_filter=None):
+    def prep_file(self, file_path, decompress_filter=None):
         self._download_rpm()
         self.decompress_filter = decompress_filter
-        full_path = self.tmp_dir + file_path
+        full_path = self.tmp_dir + '/' + file_path
+
         if not os.path.exists(full_path):
             self._extract_file(file_path)
 
-        # retry if file did not
+        # retry if file did not get extracted
         if not os.path.exists(full_path):
+            print "Retrying for file %s" % full_path
             retry = True
             exists = False
             while retry and not exists:
@@ -61,11 +66,19 @@ class RPMCache(object):
                 exists = os.path.exists(full_path)
 
             if exists:
-                return open(full_path, access)
+                return full_path
             else:
                 return None
+
         else:
-            return open(full_path, access)
+            return full_path
+
+    def open_file(self, file_path, access='r', decompress_filter=None):
+        full_path = self.prep_file(file_path, decompress_filter)
+        if full_path == None:
+            return None
+
+        return open(full_path, access)
 
     def _retry(self, file_path):
         if self.retry <= self.max_retry:

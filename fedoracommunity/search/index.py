@@ -220,15 +220,28 @@ class Indexer(object):
 
             desktop_file_cache.close()
 
+    def index_spec(self, doc, pkg, src_rpm_cache):
+        for filename in pkg['src_pkg'].filelist:
+            if filename.endswith('.spec'):
+                break;
+
+        print "        Spec: %s" % filename
+        full_path = src_rpm_cache.prep_file(filename)
+        if full_path:
+            try:
+                spec = rpm.spec(full_path)
+                pkg['upstream_url'] = spec.sourceHeader['url']
+            except ValueError as e:
+                print e
+                print "    Setting upstream_url to empty string for now"
+                pkg['upstream_url'] = ''
+
     def index_pkgs(self):
         yum_pkgs = self.index_yum_pkgs()
         i = 0
 
         for pkg in yum_pkgs.values():
             i += 1
-
-            src_rpm_cache = RPMCache(pkg['src_pkg'], self.yum_base)
-            src_rpm_cache.open()
 
             doc = xappy.UnprocessedDocument()
             filtered_name = filter_search_string(pkg['name'])
@@ -245,6 +258,10 @@ class Indexer(object):
             doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
             doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
 
+            src_rpm_cache = RPMCache(pkg['src_pkg'], self.yum_base)
+            src_rpm_cache.open()
+
+            self.index_spec(doc, pkg, src_rpm_cache)
             self.index_files(doc, pkg['pkg'], src_rpm_cache)
 
             for sub_pkg in pkg['sub_pkgs']:
