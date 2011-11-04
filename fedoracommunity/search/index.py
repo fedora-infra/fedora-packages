@@ -12,15 +12,13 @@ import re
 
 from os.path import join, dirname
 from utils import filter_search_string
-from fedora.client import ProxyClient, PackageDB
+from fedora.client import PackageDB, ServerError
 from rpmcache import RPMCache
 
 # how many time to retry a downed server
 MAX_RETRY = 10
 
-_pkgdb_client = ProxyClient('https://admin.fedoraproject.org/pkgdb',
-                            session_as_cookie=False,
-                            insecure=False)
+pkgdb_client = PackageDB()
 
 try:
     import json
@@ -88,14 +86,7 @@ class Indexer(object):
         self.iconn = iconn
 
     def find_devel_owner(self, pkg_name, retry=0):
-        print "not cached yet"
-        return "not cached yet"
-        pkginfo = _pkgdb_client.send_request('/acls/name',
-                                             req_params = {'packageName': pkg_name,
-                                                           'collectionName': 'Fedora',
-                                                           'collectionVersion': 'devel'})
-
-        pkginfo = pkginfo[1]
+        pkginfo = pkgdb_client.get_package_info(pkg_name, branch='devel')
         try:
             for pkg in pkginfo['packageListings']:
                 if pkg['collection']['branchname'] == 'devel':
@@ -110,8 +101,10 @@ class Indexer(object):
 
             print('owner: server error')
             return None
+        except Exception, e:
+            print "Unknown exception while fetching owner: %s" % str(e)
 
-        print ''
+        print
 
     def index_yum_pkgs(self):
         """
