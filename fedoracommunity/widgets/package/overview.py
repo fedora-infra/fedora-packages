@@ -12,7 +12,7 @@ class OverviewNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Details', 'package.overview.details'),
                                     ('Builds', 'package.overview.builds'),
                                     ('Updates', 'package.overview.updates')])
-    base_url = Template('/${kwds["package_name"]}/overview/')
+    base_url = Template(text='/${kwds["package_name"]}/overview/')
     default_tab = 'Details'
 
 

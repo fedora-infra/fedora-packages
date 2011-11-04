@@ -59,16 +59,13 @@ class TabWidget(twc.Widget):
         self.active_tab = active_tab
 
         if isinstance(self.base_url, Template):
-            # FIXME: not sure if this is legit...
-            print "Rendering base_url template with %r" % self.__dict__
-            # Also, this baseurl is used in urls in the template... 
             self.base_url = self.base_url.render(**self.__dict__)
 
 
 class PackageNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Overview', 'package.overview'),
                                     ('Bugs', 'package.bugs')])
-    base_url = Template('/${kwds["package_name"]}/');
+    base_url = Template(text='/${kwds["package_name"]}/');
     default_tab = 'Overview'
     args = twc.Param(default=None)
     kwds = twc.Param(default=None)
