@@ -7,12 +7,15 @@
                  <div><h3>LATEST BUILD</h3></div>
                  <div class="package-name">${w.latest_build}</div>
              </div>
-             % if w.devel_owner:
+
              <div class="owner">
                  <div><h3>OWNER</h3></div>
-                 <div class="package-owner">${w.devel_owner}</div><div class="package-dist">(Rawhide)</div>
+                 % if w.package_info.get('devel_owner', None):
+                     <div class="package-owner">${w.package_info['devel_owner']}</div><div class="package-dist">(Rawhide)</div>
+                 % else:
+                     <div class="package-owner orphan">Orphaned</div><div class="package-dist">(Rawhide)</div>
+                 % endif
              </div>
-             % endif
              <div class="package-tree">
                  <div><h3>PACKAGE TREE</h3></div>
                  <ul>
