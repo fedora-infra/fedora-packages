@@ -10,7 +10,7 @@
             <li>
             <%
               selected = ''
-              if active_tab == key:
+              if w.active_tab == key:
                   selected = 'selected'
             %>
 
