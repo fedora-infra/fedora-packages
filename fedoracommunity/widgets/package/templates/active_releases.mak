@@ -1,3 +1,6 @@
+<html>
+<head></head>
+<body>
 <div class="list header-list">
     <table id="${w.id}">
         <thead>
@@ -18,3 +21,5 @@
         </tbody>
     </table>
 </div>
+</body>
+</html>
