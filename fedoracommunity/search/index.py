@@ -8,14 +8,13 @@ import sys
 import shutil
 import tempfile
 import xappy
-import re
 
 from os.path import join, dirname
-import rpm
 
 from utils import filter_search_string
 from fedora.client import PackageDB, ServerError
 from rpmcache import RPMCache
+from parsers import DesktopParser, SimpleSpecfileParser
 
 # how many time to retry a downed server
 MAX_RETRY = 10
@@ -30,27 +29,6 @@ except ImportError:
 cache_dir = "cache"
 YUM_CACHE_DIR = "yum-cache"
 YUM_CONF = join(dirname(__file__), 'yum.conf')
-
-class DesktopParser(object):
-    key_value_re = re.compile('([A-Za-z0-9-]*)[ ]*=[ ]*(.*)')
-    def __init__(self, file_obj):
-        object.__init__(self)
-        self._entries = {}
-        self.parse(file_obj)
-
-    def get(self, entry_key, default=''):
-        return self._entries.get(entry_key, default)
-
-    def parse(self, file_obj):
-        dfile = file_obj
-        for line in dfile:
-            if line.startswith('#') or line.startswith(' ') or line.startswith('['):
-                continue
-            m = self.key_value_re.match(line)
-            if m:
-                key = m.group(1)
-                value = m.group(2)
-                self._entries[key] = value
 
 class Indexer(object):
     def __init__(self, dbpath):
@@ -226,11 +204,11 @@ class Indexer(object):
                 break;
 
         print "        Spec: %s" % filename
-        full_path = src_rpm_cache.prep_file(filename)
-        if full_path:
+        f = src_rpm_cache.open_file(filename)
+        if f:
             try:
-                spec = rpm.spec(full_path)
-                pkg['upstream_url'] = spec.sourceHeader['url']
+                spec_parse = SimpleSpecfileParser(f)
+                pkg['upstream_url'] = spec_parse.get('url')
             except ValueError as e:
                 print e
                 print "    Setting upstream_url to empty string for now"
