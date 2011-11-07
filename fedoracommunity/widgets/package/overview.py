@@ -37,8 +37,5 @@ class Details(twc.Widget):
         self.package_info = result
 
 
-class Builds(twc.Widget):
-    template = 'mako:fedoracommunity/widgets/package/templates/builds.mak'
-
 class Updates(twc.Widget):
     template = 'mako:fedoracommunity/widgets/package/templates/updates.mak'
