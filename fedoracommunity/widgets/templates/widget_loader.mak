@@ -1,3 +1,3 @@
 <head></head>
-${widget(args=args, kwds=kwds) | n}
+${widget.display(args=args, kwds=kwds) | n}
 
