@@ -13,3 +13,15 @@ uitests/*
 profile/*
 *~
 *.rpm
+*.bz2
+*.xz
+*.orig
+log
+fedoracommunity/search/cache/usr
+fedoracommunity/search/yum-cache
+fedoracommunity/search/xapian
+fedoracommunity/search/var
+fedoracommunity/search/tmp
+fedoracommunity/search/icons
+fedoracommunity/public/images/icons
+fedoracommunity/search/cache
