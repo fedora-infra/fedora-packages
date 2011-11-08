@@ -26,15 +26,22 @@ try:
 except ImportError:
     import simplejson as json
 
-cache_dir = "cache"
-YUM_CACHE_DIR = "yum-cache"
+cache_dir = join(dirname(__file__), 'cache')
+YUM_CACHE_DIR = join(dirname(__file__), 'yum-cache')
 YUM_CONF = join(dirname(__file__), 'yum.conf')
+
+ICON_DIR = join(dirname(__file__), 'icons')
 
 class Indexer(object):
     def __init__(self, dbpath):
         self.dbpath = dbpath
         self.create_index()
         self._owners_cache = None
+
+        # indexer replaces these with an rpmcache
+        self.icon_theme_packages = ['gnome-icon-theme', 'oxygen-icon-theme']
+        self.found_icons = {} # {'icon-name': True}
+        self.default_icon = 'package_128x128'
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
@@ -90,11 +97,13 @@ class Indexer(object):
                                 'summary': base_package_summary,
                                 'description': base_package_summary,
                                 'devel_owner': owner,
+                                'icon': icon_name,
                                 'pkg': pkg,
                                 'src_pkg': src_pkg,
                                 'sub_pkgs': [{'name': sub_pkg_name,
                                               'summary': sub_pkg_summary,
                                               'description': sub_pkg_description,
+                                              'icon': icon_name,
                                               'pkg': pkg},
                                              ...]},
             ...
@@ -103,14 +112,17 @@ class Indexer(object):
         import yum
         yb = yum.YumBase()
         self.yum_base = yb
-        yum_cache_dir = os.path.join(os.getcwd(), YUM_CACHE_DIR)
+        yum_cache_dir = YUM_CACHE_DIR
 
         if not os.path.exists(yum_cache_dir):
             os.mkdir(yum_cache_dir)
 
+        if not os.path.exists(ICON_DIR):
+            os.mkdir(ICON_DIR)
+
         yb.doConfigSetup(YUM_CONF, root=os.getcwd(), init_plugins=False)
         yb._getRepos(doSetup = True)
-        yb._getSacks(['x86_64', 'src'])
+        yb._getSacks(['x86_64', 'noarch', 'src'])
         yb.doRepoSetup()
         yb.doSackFilelistPopulate()
 
@@ -127,6 +139,16 @@ class Indexer(object):
         for pkg in pkgs:
             i += 1
             print "%d: pre-processing package '%s':" % (i, pkg['name'])
+
+            # precache the icon themes for later extraction and matching
+            try:
+                if pkg.ui_from_repo != 'rawhide-source':
+                    i = self.icon_theme_packages.index(pkg['name'])
+                    self.icon_theme_packages[i] = RPMCache(pkg, yb)
+                    self.icon_theme_packages[i].open()
+            except ValueError:
+                pass
+
             if not pkg.base_package_name in base_pkgs:
                 # we haven't seen this base package yet so add it
                 base_pkgs[pkg.base_package_name] = {'name': pkg.base_package_name,
@@ -135,6 +157,7 @@ class Indexer(object):
                                                     'devel_owner':'',
                                                     'pkg': None,
                                                     'src_pkg': None,
+                                                    'icon': self.default_icon,
                                                     'sub_pkgs': []}
 
             base_pkg = base_pkgs[pkg.base_package_name]
@@ -158,11 +181,15 @@ class Indexer(object):
             else:
                 # this is a sub package
                 subpkgs = base_pkg['sub_pkgs']
-                subpkgs.append({'name': pkg.name, 'summary': pkg.summary, 'description': pkg.description, 'pkg': pkg})
+                subpkgs.append({'name': pkg.name,
+                                'summary': pkg.summary,
+                                'description': pkg.description,
+                                'icon': self.default_icon,
+                                'pkg': pkg})
 
         return base_pkgs
 
-    def index_desktop_file(self, doc, desktop_file):
+    def index_desktop_file(self, doc, desktop_file, pkg_dict, desktop_file_cache):
         doc.fields.append(xappy.Field('tag', 'desktop'))
 
         dp = DesktopParser(desktop_file)
@@ -175,7 +202,24 @@ class Indexer(object):
                 # add exact match also
                 doc.fields.append(xappy.Field('category_tags', "EX__%s__EX" % c))
 
-    def index_files(self, doc, yum_pkg, src_rpm_cache):
+        icon = dp.get('Icon', '')
+        if icon:
+            print "Icon %s" % icon
+            if self.found_icons.get(icon, None):
+                pkg_dict['icon'] = icon
+            else:
+                search_packages = [desktop_file_cache]
+                search_packages.extend(self.icon_theme_packages)
+                for icon_cache in search_packages:
+                    icon_path = icon_cache.find_file(icon + '.png', '*256x256*.png')
+                    if icon_path:
+                        self.found_icons[icon] = True
+                        pkg_dict['icon'] = icon
+                        shutil.copy(icon_path, ICON_DIR)
+                        break;
+
+    def index_files(self, doc, pkg_dict, src_rpm_cache):
+        yum_pkg = pkg_dict['pkg']
         if yum_pkg != None:
             desktop_file_cache = RPMCache(yum_pkg, self.yum_base)
             desktop_file_cache.open()
@@ -188,7 +232,7 @@ class Indexer(object):
                         print "could not open desktop file"
                         continue
 
-                    self.index_desktop_file(doc, f)
+                    self.index_desktop_file(doc, f, pkg_dict, desktop_file_cache)
                     f.close()
                 if filename.startswith('/usr/bin'):
                     # index executables
@@ -240,7 +284,7 @@ class Indexer(object):
             src_rpm_cache.open()
 
             self.index_spec(doc, pkg, src_rpm_cache)
-            self.index_files(doc, pkg['pkg'], src_rpm_cache)
+            self.index_files(doc, pkg, src_rpm_cache)
 
             for sub_pkg in pkg['sub_pkgs']:
                 i += 1
@@ -251,7 +295,7 @@ class Indexer(object):
                     print("%d:    indexing subpkg %s" % (i, sub_pkg['name']))
 
                 doc.fields.append(xappy.Field('subpackages', filtered_sub_pkg_name, weight=1.0))
-                self.index_files(doc, sub_pkg['pkg'], src_rpm_cache)
+                self.index_files(doc, sub_pkg, src_rpm_cache)
 
                 # remove anything we don't want to store
                 del sub_pkg['pkg']
@@ -276,6 +320,10 @@ class Indexer(object):
             processed_doc._data = None
             self.iconn.add(processed_doc)
             src_rpm_cache.close()
+
+        for theme_cache in self.icon_theme_packages:
+            if isinstance(theme_cache, RPMCache):
+                theme_cache.close()
 
         return i
 

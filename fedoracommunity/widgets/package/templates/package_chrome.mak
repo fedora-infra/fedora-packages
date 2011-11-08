@@ -2,7 +2,7 @@
 <div id="container">
     <div class="container_24">
          <div class="grid_5" id="package-info-bar">
-             <img src="/images/package_128x128.png" height="128" width="128"/>
+             <img src="/images/icons/${w.package_info['icon']}.png" height="128" width="128"/>
              <div class="build">
                  <div><h3>LATEST BUILD</h3></div>
                  <div class="package-name">${w.latest_build}</div>

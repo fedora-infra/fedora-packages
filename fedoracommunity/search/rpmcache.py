@@ -1,6 +1,7 @@
 import os
 import tempfile
 import shutil
+import fnmatch
 
 class RPMCache(object):
     def __init__(self, pkg, yum_base, cache_dir='cache', max_retry=10):
@@ -79,6 +80,20 @@ class RPMCache(object):
             return None
 
         return open(full_path, access)
+
+    def find_file(self, filename, file_glob="*"):
+        """ Finds the first file that matches the filename and
+            file_glob and extracts it
+
+            Returns the complete path to that file or None
+        """
+        for filepath in self.pkg.filelist:
+            basename = os.path.basename(filepath)
+            if basename == filename:
+                if fnmatch.fnmatch(filepath, file_glob):
+                    return self.prep_file(filepath, file_glob)
+
+        return None
 
     def _retry(self, file_path):
         if self.retry <= self.max_retry:
