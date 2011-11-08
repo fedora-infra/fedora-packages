@@ -139,6 +139,7 @@ class XapianConnector(IConnector, ICall, IQuery):
         return (count, rows)
 
     def get_package_info(self, package_name):
+        package_name = utils.filter_search_string(package_name)
         search_string = "Ex__%s__EX" % package_name
         matches = self.do_search(search_string, 0, 1)
         if len(matches) < 0:
