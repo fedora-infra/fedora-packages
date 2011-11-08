@@ -564,6 +564,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
         releases = []
         queries = []
         release_tag = {} # Mapping of tag -> release
+        testing_builds = [] # List of testing builds to query bodhi for
+        testing_builds_row = {} # nvr -> release lookup table
         if not filters: filters = {}
         filters = self._query_updates_filter.filter(filters, conn=self)
         package = filters.get('package')
@@ -598,9 +600,6 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
         results = koji.multiCall()
 
-        testing_builds = [] # List of testing builds to query bodhi for
-        testing_builds_row = {} # nvr -> release lookup table
-
         for i, result in enumerate(results):
             if isinstance(result, dict):
                 if 'faultString' in result:
@@ -620,11 +619,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         row['stable_version'] = 'No builds tagged with %s' % tag
                     row['testing_version'] = HTML.tag('i', c='Not Applicable')
                     continue
-
                 if release:
-                    assert len(release) == 1, "Release contains multiple results"
                     release = release[0]
-
                     if query.endswith('-testing'):
                         nvr = parse_build(release['nvr'])
                         row['testing_version'] = HTML.tag('a',
@@ -632,7 +628,6 @@ class BodhiConnector(IConnector, ICall, IQuery):
                                 href='%s/%s' % (self._base_url, nvr['nvr']))
                         testing_builds.append(release['nvr'])
                         testing_builds_row[release['nvr']] = row
-
                     else: # stable
                         nvr = parse_build(release['nvr'])
                         if release['tag_name'].endswith('-updates'):
