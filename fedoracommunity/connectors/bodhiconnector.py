@@ -598,6 +598,9 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
         results = koji.multiCall()
 
+        testing_builds = [] # List of testing builds to query bodhi for
+        testing_builds_row = {} # nvr -> release lookup table
+
         for i, result in enumerate(results):
             if isinstance(result, dict):
                 if 'faultString' in result:
@@ -627,24 +630,9 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         row['testing_version'] = HTML.tag('a',
                                 c='%(version)s-%(release)s' % nvr,
                                 href='%s/%s' % (self._base_url, nvr['nvr']))
-                        updates = self.call('list', {'package': nvr['nvr']})
-                        if updates[1].get('num_items') == 1:
-                            up = updates[1]['updates'][0]
-                            if up['karma'] > 1:
-                                up['karma_icon'] = 'good'
-                            elif up['karma'] < 0:
-                                up['karma_icon'] = 'bad'
-                            else:
-                                up['karma_icon'] = 'meh'
-                            row['testing_version'] += HTML.tag('div',
-                                    c=HTML.tag('a', href="%s/%s" % (
-                                        self._base_url, up['title']),
-                                        c=HTML.tag('img',
-                                            src=url('/images/16_karma-%s.png' %
-                                            up['karma_icon'])) +
-                                        HTML.tag('span', c='%s karma' %
-                                            up['karma'])),
-                                        **{'class': 'karma'})
+                        testing_builds.append(release['nvr'])
+                        testing_builds_row[release['nvr']] = row
+
                     else: # stable
                         nvr = parse_build(release['nvr'])
                         if release['tag_name'].endswith('-updates'):
@@ -653,6 +641,33 @@ class BodhiConnector(IConnector, ICall, IQuery):
                                     href='%s/%s' % (self._base_url, nvr['nvr']))
                         else:
                             row['stable_version'] = '%(version)s-%(release)s' % nvr
+
+        # If there are updates in testing, then query bodhi with a single call
+        if testing_builds:
+            updates = self.call('get_updates_from_builds', {
+                'builds': ' '.join(testing_builds)
+                })
+            if updates[1]:
+                for build in updates[1]:
+                    if build == 'tg_flash':
+                        continue
+                    up = updates[1][build]
+                    if up.karma > 1:
+                        up.karma_icon = 'good'
+                    elif up.karma < 0:
+                        up.karma_icon = 'bad'
+                    else:
+                        up.karma_icon = 'meh'
+                    row = testing_builds_row[build]
+                    row['testing_version'] += HTML.tag('div',
+                            c=HTML.tag('a', href="%s/%s" % (
+                                self._base_url, up.title),
+                                c=HTML.tag('img',
+                                    src=url('/images/16_karma-%s.png' %
+                                    up.karma_icon)) +
+                                HTML.tag('span', c='%s karma' %
+                                    up.karma)),
+                                **{'class': 'karma'})
 
         return (len(releases), releases)
 
