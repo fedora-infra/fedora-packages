@@ -6,7 +6,8 @@
             <thead>
                 <tr>
                     <th><a href="#nvr">Package</a></th>
-                    <th>Elapsed Time</th>
+                    <th>When</th>
+                    <th>Build Time</th>
                     <th>Built By</th>
                 </tr>
             </thead>
@@ -47,11 +48,14 @@
                                     'build_id': "${'${build_id}'}",
                                     'task_id': "${'${task_id}'}",
                                     'build_state': ${'${state}'},
-                                    'show_effect': 'slideDown(\"slow\")}'
+                                    'show_effect': 'slideDown(\"slow\")'
                                 }
                           	</div>
                                </div>
                              </div>
+                        </td>
+
+                        <td rowspan="2">${'${completion_time_display["when"]}'}
                         </td>
 
                         <td rowspan="2">${'${completion_time_display["elapsed"]}'}
@@ -71,7 +75,7 @@
                                 'placeholder_id': "message_${'${build_id}'}",
                                 'build_id': "${'${build_id}'}",
                                 'task_id': "${'${task_id}'}",
-                                'build_state': "${'${state}'},
+                                'build_state': "${'${state}'}",
                                 'show_effect': 'slideDown(\"slow\")'
                             }
                             </div>
@@ -87,21 +91,14 @@
         </div>
         <div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
             <div class="message template" id="info_display" >
-               Viewing all in-progress builds
-            </div>
-
-            <div class="pager template" id="pager" type="more_link">
-               <a href="@{more_link}" moksha_url="dynamic">Goto in-progress builds &gt;</a>
+               Viewing all current builds
             </div>
         </div>
         <div id="grid-controls" if="visible_rows < total_rows">
             <div class="message template" id="info_display" >
-               Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} in-progress builds
+               Viewing ${'${first_visible_row}'}-${'${last_visible_row}'} of ${'${total_rows}'} builds
             </div>
             <div class="pager" id="pager" type="numeric" ></div>
-            <div class="pager template" id="pager" type="more_link">
-               <a href="@{more_link}" moksha_url="dynamic">View more in-progress builds &gt;</a>
-            </div>
         </div>
     </div>
 </body>

@@ -13,17 +13,7 @@ class BuildsGrid(Grid):
         # Must do this last for our Grids
         super(BuildsGrid, self).prepare()
 
-class InProgressBuildsGrid(BuildsGrid):
-    template='mako:fedoracommunity.widgets.package.templates.inprogress_table_widget'
-
-'''
-class FailedBuildsGrid(BuildsGrid):
-    template='mako:fedoracommunity.widgets.package.templates.failed_table_widget'
-
-class SuccessfulBuildsGrid(BuildsGrid):
-    template='mako:fedoracommunity.widgets.package.templates.successful_table_widget'
-'''
 
 class Builds(twc.Widget):
     template = 'mako:fedoracommunity/widgets/package/templates/builds.mak'
-    in_progress_builds = InProgressBuildsGrid
+    in_progress_builds = BuildsGrid
