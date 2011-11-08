@@ -562,79 +562,68 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def query_active_releases(self, filters=None, **params):
         releases = []
-        if not filters:
-            filters = {}
-
+        queries = []
+        release_tag = {} # Mapping of tag -> release
+        if not filters: filters = {}
         filters = self._query_updates_filter.filter(filters, conn=self)
         package = filters.get('package')
-
         pkgdb = get_connector('pkgdb')
         koji = get_connector('koji')._koji_client
-
-        # TODO:
-        # Multicall attempt...
-        #koji.multicall = True
-        #for release in pkgdb.get_fedora_releases():
-        #    tag = release[0]
-        #    name = release[1]
-        #    releases.append({'release': name, 'stable_version': 'None',
-        #                     'testing_version': 'None' })
-        #    if tag == 'dist-rawhide':
-        #        koji.listTagged(tag, package=package, latest=True, inherit=True)
-        #    else:
-        #        koji.listTagged(tag + '-updates', package=package,
-        #                        latest=True, inherit=True)
-        #        koji.listTagged(tag + '-updates-testing', package=package, latest=True)
-
-        #results = koji.multiCall()
-
-        # Ok, parsing this result is going to be fun...
-        #for i, release in enumerate(releases):
-        #    release = results[i][0]
-        #    if len(release):
-        #        build = release[0]
-        #        print build['nvr']
+        koji.multicall = True
 
         for release in pkgdb.get_fedora_releases():
             tag = release[0]
             name = release[1]
-            row = {'release': name, 'stable_version': 'None',
-                   'testing_version': 'None' }
+            r = {'release': name, 'stable_version': 'None',
+                 'testing_version': 'None'}
             if tag == 'dist-rawhide':
-                rawhide_builds = koji.listTagged(tag, package=package,
-                                                 latest=True, inherit=True)
-                if rawhide_builds:
-                    nvr = parse_build(rawhide_builds[0]['nvr'])
-                    row['stable_version'] = '%(version)s-%(release)s' % nvr
-                else:
-                    row['stable_version'] = 'No builds tagged with %s' % tag
-                row['testing_version'] = HTML.tag('i', c='Not Applicable')
+                koji.listTagged(tag, package=package, latest=True, inherit=True)
+                queries.append(tag)
+                release_tag[tag] = r
             else:
-                # FIXME: Hack around EPEL tags
                 if tag.endswith('epel'):
                     stable_tag = tag
+                    testing_tag = tag + '-testing'
                 else:
                     stable_tag = tag + '-updates'
+                    testing_tag = stable_tag + '-testing'
+                koji.listTagged(stable_tag, package=package,
+                                latest=True, inherit=True)
+                queries.append(stable_tag)
+                release_tag[stable_tag] = r
+                koji.listTagged(testing_tag, package=package, latest=True)
+                queries.append(testing_tag)
+                release_tag[testing_tag] = r
+            releases.append(r)
 
-                stable_updates = koji.listTagged(stable_tag,
-                                                 package=package,
-                                                 latest=True,
-                                                 inherit=True)
-                if stable_updates:
-                    nvr = parse_build(stable_updates[0]['nvr'])
-                    if stable_updates[0]['tag_name'].endswith('-updates') or \
-                       stable_updates[0]['tag_name'].endswith('-epel'):
-                        row['stable_version'] = HTML.tag('a',
-                                c='%(version)s-%(release)s' % nvr,
-                                href='%s/%s' % (self._base_url, nvr['nvr']))
-                    else:
+        results = koji.multiCall()
+
+        for i, result in enumerate(results):
+            if isinstance(result, dict):
+                if 'faultString' in result:
+                    log.error("FAULT: %s" % result['faultString'])
+                else:
+                    log.error("Can't find fault string in result: %s" % result)
+            else:
+                query = queries[i]
+                row = release_tag[query]
+                release = result[0]
+
+                if query == 'dist-rawhide':
+                    if release:
+                        nvr = parse_build(release[0]['nvr'])
                         row['stable_version'] = '%(version)s-%(release)s' % nvr
+                    else:
+                        row['stable_version'] = 'No builds tagged with %s' % tag
+                    row['testing_version'] = HTML.tag('i', c='Not Applicable')
+                    continue
 
-                testing_updates = koji.listTagged(stable_tag + '-testing',
-                                                  package=package, latest=True)
-                if testing_updates:
-                    nvr = parse_build(testing_updates[0]['nvr'])
-                    if testing_updates[0]['tag_name'].endswith('-testing'):
+                if release:
+                    assert len(release) == 1, "Release contains multiple results"
+                    release = release[0]
+
+                    if query.endswith('-testing'):
+                        nvr = parse_build(release['nvr'])
                         row['testing_version'] = HTML.tag('a',
                                 c='%(version)s-%(release)s' % nvr,
                                 href='%s/%s' % (self._base_url, nvr['nvr']))
@@ -656,8 +645,14 @@ class BodhiConnector(IConnector, ICall, IQuery):
                                         HTML.tag('span', c='%s karma' %
                                             up['karma'])),
                                         **{'class': 'karma'})
-
-            releases.append(row)
+                    else: # stable
+                        nvr = parse_build(release['nvr'])
+                        if release['tag_name'].endswith('-updates'):
+                            row['stable_version'] = HTML.tag('a',
+                                    c='%(version)s-%(release)s' % nvr,
+                                    href='%s/%s' % (self._base_url, nvr['nvr']))
+                        else:
+                            row['stable_version'] = '%(version)s-%(release)s' % nvr
 
         return (len(releases), releases)
 
