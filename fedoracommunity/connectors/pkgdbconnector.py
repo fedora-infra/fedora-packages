@@ -583,6 +583,11 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return (total_count, package_list)
 
     def get_fedora_releases(self, rawhide=True):
+        return pkgdb_cache.get_value(key='fedora_releases_%s' % rawhide,
+                createfunc=lambda : self._get_fedora_releases(rawhide),
+                type="memory", expiretime=BASIC_PACKAGE_DATA_CACHE_TIMEOUT)
+
+    def _get_fedora_releases(self, rawhide=True):
         releases = []
         collections = self.get_collection_table(active_only=True)
         for collection in collections.values():
