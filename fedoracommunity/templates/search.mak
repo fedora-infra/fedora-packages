@@ -43,10 +43,13 @@
        </div>
        <div id="searchbar">
            <div class="container_24">
-               <div class="grid_4">
+		<div class="grid_2">
+		&nbsp;
+               <!-- 
                    <a href="#" class="active">Search</a>
                    <a href="#">Browse</a>
-               </div>
+	       -->
+               	</div>
                <script type="text/javascript">
                    function do_search(form) {
                        window.history.pushState({search:form.search['value']}, '', 
@@ -57,7 +60,7 @@
                </script>
                <form action="${tg.url('/s')}"
                       onSubmit="return do_search(this);">
-                   <div class="grid_18">
+                   <div class="grid_20">
                        <input type="text" name="search" value="${options['filters']['search']}" />
                    </div>
                    <div class="grid_2">
