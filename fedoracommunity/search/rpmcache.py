@@ -95,6 +95,23 @@ class RPMCache(object):
 
         return None
 
+    def find_files(self, filename, file_glob="*"):
+        """ Finds the all file that matches the filename and
+            file_glob and extracts them
+
+            Returns the complete path to all files as a list
+        """
+        results = []
+        for filepath in self.pkg.filelist:
+            basename = os.path.basename(filepath)
+            if basename == filename:
+                if fnmatch.fnmatch(filepath, file_glob):
+                    found_file = self.prep_file(filepath, file_glob)
+                    if found_file:
+                        results.append(found_file)
+        return results
+
+
     def _retry(self, file_path):
         if self.retry <= self.max_retry:
             self.retry += 1

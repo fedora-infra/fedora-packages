@@ -15,6 +15,7 @@ from utils import filter_search_string
 from fedora.client import PackageDB, ServerError
 from rpmcache import RPMCache
 from parsers import DesktopParser, SimpleSpecfileParser
+from iconcache import IconCache
 
 # how many time to retry a downed server
 MAX_RETRY = 10
@@ -37,10 +38,6 @@ class Indexer(object):
         self.dbpath = dbpath
         self.create_index()
         self._owners_cache = None
-
-        # indexer replaces these with an rpmcache
-        self.icon_theme_packages = ['gnome-icon-theme', 'oxygen-icon-theme']
-        self.found_icons = {} # {'icon-name': True}
         self.default_icon = 'package_128x128'
 
     def create_index(self):
@@ -131,6 +128,9 @@ class Indexer(object):
         #yb.disablePlugins()
 
         yb.conf.cache = 1
+
+        self.icon_cache = IconCache(yb, ['gnome-icon-theme', 'oxygen-icon-theme'], ICON_DIR)
+
         pkgs = yb.pkgSack.returnPackages()
         base_pkgs = {}
         seen_pkg_names = []
@@ -141,13 +141,8 @@ class Indexer(object):
             print "%d: pre-processing package '%s':" % (i, pkg['name'])
 
             # precache the icon themes for later extraction and matching
-            try:
-                if pkg.ui_from_repo != 'rawhide-source':
-                    i = self.icon_theme_packages.index(pkg['name'])
-                    self.icon_theme_packages[i] = RPMCache(pkg, yb)
-                    self.icon_theme_packages[i].open()
-            except ValueError:
-                pass
+            if pkg.ui_from_repo != 'rawhide-source':
+                self.icon_cache.check_pkg(pkg)
 
             if not pkg.base_package_name in base_pkgs:
                 # we haven't seen this base package yet so add it
@@ -205,18 +200,9 @@ class Indexer(object):
         icon = dp.get('Icon', '')
         if icon:
             print "Icon %s" % icon
-            if self.found_icons.get(icon, None):
+            generated_icon = self.icon_cache.generate_icon(icon, desktop_file_cache)
+            if generated_icon != None:
                 pkg_dict['icon'] = icon
-            else:
-                search_packages = [desktop_file_cache]
-                search_packages.extend(self.icon_theme_packages)
-                for icon_cache in search_packages:
-                    icon_path = icon_cache.find_file(icon + '.png', '*256x256*.png')
-                    if icon_path:
-                        self.found_icons[icon] = True
-                        pkg_dict['icon'] = icon
-                        shutil.copy(icon_path, ICON_DIR)
-                        break;
 
     def index_files(self, doc, pkg_dict, src_rpm_cache):
         yum_pkg = pkg_dict['pkg']
@@ -321,9 +307,7 @@ class Indexer(object):
             self.iconn.add(processed_doc)
             src_rpm_cache.close()
 
-        for theme_cache in self.icon_theme_packages:
-            if isinstance(theme_cache, RPMCache):
-                theme_cache.close()
+        self.icon_cache.close()
 
         return i
 
