@@ -1595,6 +1595,10 @@ em.note {
   color: #444;
 }
 
+#package-header em {
+  color: #666;
+}
+
 #tab-content h3 {
   color: #AAAAAA;
   margin-bottom: 1em;
