@@ -1614,8 +1614,7 @@ em.note {
   background-color: #dfe0e3;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  font-size: 14pt;
-  font-weight: bold;
+  font-size: 1em;
   padding: 0.8em;
 }
 
@@ -1629,20 +1628,22 @@ em.note {
 }
 
 .tab-container .tabs a { color: #000000; padding-left: 0.5em; padding-right: 0.5em; padding-top: 0.8em; padding-bottom: 0.8em; }
-.tab-container .tabs a:link { color: #000000; text-decoration: none; font-weight: bold; }
-.tab-container .tabs a:active { color: #000000; text-decoration: none; font-weight: bold; }
-.tab-container .tabs a:visited { color: #000000; text-decoration: none; font-weight: bold; }
+.tab-container .tabs a:link { color: #000000; text-decoration: none; }
+.tab-container .tabs a:active { color: #000000; text-decoration: none; }
+.tab-container .tabs a:visited { color: #000000; text-decoration: none; }
 .tab-container .tabs a:hover {
-  color: #000000; text-decoration: none; font-weight: bold; 
+  color: #000000; text-decoration: none; 
   background: url('/images/nav_arrow.png') no-repeat 50% 95% !important;
 }
 
 .tab-container .tabs a.selected {
-  color: #db347a; text-decoration: none; font-weight: bold;
+  font-weight: bold;
+  color: #db347a; text-decoration: none;
   background: url('/images/nav_arrow.png') no-repeat 50% 95%;
 }
 
 .tab-container .tabs.hover a.selected {
+  font-weight: bold;
   background: none;
 }
 
@@ -1656,11 +1657,11 @@ em.note {
 }
 
 .tab-container .tab-container .tabs a { color: #999999; padding-top: 0.5em; padding-bottom: 0.5em; }
-.tab-container .tab-container .tabs a:link { color: #999999; text-decoration: none; font-weight: bold; }
-.tab-container .tab-container .tabs a:active { color: #999999; text-decoration: none; font-weight: bold; }
-.tab-container .tab-container .tabs a:visited { color: #999999; text-decoration: none; font-weight: bold; }
+.tab-container .tab-container .tabs a:link { color: #999999; text-decoration: none; }
+.tab-container .tab-container .tabs a:active { color: #999999; text-decoration: none; }
+.tab-container .tab-container .tabs a:visited { color: #999999; text-decoration: none; }
 .tab-container .tab-container .tabs a:hover {
-  color: #999999; text-decoration: none; font-weight: bold;
+  color: #999999; text-decoration: none;
   border-bottom: 3px solid #db347a !important;
   background-image: none !important;
 }
@@ -1672,5 +1673,5 @@ em.note {
 }
 
 .tab-container .tab-container .tabs.hover a.selected {
-  border-bottom: none;
+  border-bottom: none; font-weight: bold;
 }
