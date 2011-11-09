@@ -36,7 +36,7 @@
        <div class="container_24">
            <!-- START Logo -->
            <div class="grid_8 prefix_9" id="header">
-               <a href="/"><h1><span id="logo">Fedora</span> Packages</h1></a>
+               <h1><a href="/"><span id="logo">Fedora</span> Packages</a></h1>
            </div>
            <!-- END Logo -->
            <div class="clear"></div>

@@ -23,7 +23,7 @@ body {
 	margin-top: 1.6em;
 }
 
-#header h1 {
+#header h1 a {
   font-family: "ComfortaaRegular", "sans-serif" !important;
 	text-transform: lowercase;
 	color: #8c8c8c;
@@ -31,6 +31,8 @@ body {
 	font-weight: normal;
   line-height: 88%;
 	margin-bottom: 1.6em;
+	text-decoration: none;
+        display: block;
 }
 
 #lang-select {
