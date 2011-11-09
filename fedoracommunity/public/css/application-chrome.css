@@ -1591,6 +1591,8 @@ em.note {
 
 #package-header h2 {
   font-size: 24pt;
+  margin-top: .6em;
+  color: #444;
 }
 
 #tab-content h3 {
@@ -1605,7 +1607,7 @@ em.note {
 
 .tab-container .tabs {
   color: #000000;
-  background-color: #CCCCCC;
+  background-color: #dfe0e3;
   -moz-border-radius: 5px;
   border-radius: 5px;
   font-size: 14pt;
