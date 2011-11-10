@@ -116,7 +116,7 @@ setup(
 
     package.overview = fedoracommunity.widgets.package:OverviewWidget
     package.overview.details = fedoracommunity.widgets.package.overview:Details
-    package.overview.updates = fedoracommunity.widgets.package.overview:Updates
+    package.overview.updates = fedoracommunity.widgets.package.updates:Updates
     package.overview.builds = fedoracommunity.widgets.package.builds:Builds
 
     package.bugs = fedoracommunity.widgets.package.bugs:BugsWidget
