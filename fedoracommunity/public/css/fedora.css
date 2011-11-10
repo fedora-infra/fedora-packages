@@ -10,29 +10,40 @@ body {
   padding-bottom: 20px;
 }
 
-#header {
+#header-main {
   color: #3c6eb4; 
 }
 
-#header h1 span#logo {
-	background:transparent url("http://fedoraproject.org/static/images/fedora-logo.png") no-repeat scroll 0px 0px;
+#header-main h1 {
+	margin-top: -14px;
+	margin-bottom: 0px !important;
+	height: 62px;
+	width: 155px;
+	display: block;
+	text-indent: -9999px;
+        background: url(/images/fedora-packges_logo-white.png) no-repeat;
+}
+
+#header-search h1 span#logo {
+	margin-top: 1.6em;
 	height: 45px;
 	width: 155px;
 	display: block;
 	text-indent: -9999px;
-	margin-top: 1.6em;
+	background:transparent url("http://fedoraproject.org/static/css/../images/fedora-logo.png") no-repeat scroll 0px 0px;
 }
-
-#header h1 a {
-  font-family: "ComfortaaRegular", "sans-serif" !important;
+#header-search h1 a {
+ 	font-family: "ComfortaaRegular", "sans-serif" !important;
 	text-transform: lowercase;
 	color: #8c8c8c;
 	font-size: 25pt;
 	font-weight: normal;
-  line-height: 88%;
-	margin-bottom: 1.6em;
+        line-height: 88%;
 	text-decoration: none;
         display: block;
+	width: 155px;
+	margin-top: 0px !important;
+	margin-bottom: 1.6em;
 }
 
 #lang-select {
@@ -44,7 +55,8 @@ body {
   width: 100%;
   color: white;
 	padding-top: 1.6em;
-	padding-bottom: 1.6em;
+	padding-bottom: 12px;
+	margin-bottom: 1em;
  background: #3c6eb4 url("http://linuxgrrl.com/fedora-ux/Projects/Fedora%20Community%20v2/HTML/img/repeater.png") repeat-x !important
 }
 
