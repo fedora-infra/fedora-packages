@@ -35,7 +35,7 @@
     <div id="container">
        <div class="container_24">
            <!-- START Logo -->
-           <div class="grid_8 prefix_9" id="header">
+           <div class="grid_8 prefix_9" id="header-search">
                <h1><a href="/"><span id="logo">Fedora</span> Packages</a></h1>
            </div>
            <!-- END Logo -->

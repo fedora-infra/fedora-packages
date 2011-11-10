@@ -17,7 +17,7 @@
                </script>
                <form action="${tg.url('/s')}"
                      onSubmit="return do_search(this);">
-                   <div class="grid_5" id="header">
+                   <div class="grid_5" id="header-main">
 		      <h1 style="font-size:large;">
                          <a href="/">
 			    <span>Fedora</span> Packages
