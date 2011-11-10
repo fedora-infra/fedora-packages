@@ -2,11 +2,9 @@ import tw2.core as twc
 import collections
 
 from package import TabWidget
-from updates import ActiveReleasesGrid
-
 from mako.template import Template
-
 from moksha.api.connectors import get_connector
+from moksha.api.widgets import Grid
 
 class OverviewNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Details', 'package.overview.details'),
@@ -23,6 +21,20 @@ class OverviewWidget(twc.Widget):
     nav_widget = OverviewNavWidget
 
 
+class ActiveReleasesGrid(Grid):
+    template = 'mako:fedoracommunity.widgets.package.templates.active_releases'
+    package_name = twc.Param('The name of the package to view')
+    resource = 'bodhi'
+    resource_path = 'query_active_releases'
+
+    def prepare(self):
+        self.filters = {'package': self.package_name}
+        self.rows_per_page = 10
+
+        # Must do this last for our Grids
+        super(ActiveReleasesGrid, self).prepare()
+
+
 class Details(twc.Widget):
     template = 'mako:fedoracommunity/widgets/package/templates/details.mak'
     kwds = twc.Param('Data passed in from the tabs')
@@ -35,7 +47,3 @@ class Details(twc.Widget):
         xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(package_name)
         self.package_info = result
-
-
-class Updates(twc.Widget):
-    template = 'mako:fedoracommunity/widgets/package/templates/updates.mak'
