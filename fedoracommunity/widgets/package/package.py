@@ -10,13 +10,6 @@ from moksha.api.connectors import get_connector
 
 log = logging.getLogger(__name__)
 
-class BugsWidget(twc.Widget):
-    template = u"""Bugs
-    dude
-    """
-    engine_name = 'mako'
-
-
 class TabWidget(twc.Widget):
     template="mako:fedoracommunity.widgets.package.templates.tabs"
     base_url = twc.Param(default='/')

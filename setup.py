@@ -119,7 +119,7 @@ setup(
     package.overview.updates = fedoracommunity.widgets.package.overview:Updates
     package.overview.builds = fedoracommunity.widgets.package.builds:Builds
 
-    package.bugs = fedoracommunity.widgets.package:BugsWidget
+    package.bugs = fedoracommunity.widgets.package.bugs:BugsWidget
 
 
     [moksha.stream]
