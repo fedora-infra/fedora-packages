@@ -12,17 +12,17 @@ img {
 
 /* positioning for header elements */
 
-#head {
+.head {
   height: 			65px;
 }
 
-#head h1 {
+.head h1 {
   width:			200px;
   float: 			left;
   margin-bottom:    0;
 }
 
-#head #toolbar {
+.head #toolbar {
   width: 			50%;
   float: 			right;
   margin-top: 			9px;

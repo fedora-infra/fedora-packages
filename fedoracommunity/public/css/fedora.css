@@ -24,6 +24,12 @@ body {
         background: url(/images/fedora-packges_logo-white.png) no-repeat;
 }
 
+#header-main h1 a {
+	height: 62px;
+	width: 155px;
+	display: block;
+}
+
 #header-search h1 span#logo {
 	margin-top: 1.6em;
 	height: 45px;
