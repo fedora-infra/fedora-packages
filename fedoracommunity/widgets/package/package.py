@@ -1,11 +1,14 @@
 import mako
 import uuid
 import moksha
+import logging
 import collections
 import tw2.core as twc
 
 from mako.template import Template
 from moksha.api.connectors import get_connector
+
+log = logging.getLogger(__name__)
 
 class BugsWidget(twc.Widget):
     template = u"""Bugs
@@ -88,8 +91,12 @@ class PackageWidget(twc.Widget):
         result = xapian_conn.get_package_info(name)
         self.package_info = result
         koji = get_connector('koji')
-        builds = koji._koji_client.getLatestBuilds('dist-rawhide', package=name)
-        if builds:
-            self.latest_build = builds[0]['nvr']
-        else:
-            self.latest_build = 'Not built in rawhide'
+        try:
+            builds = koji._koji_client.getLatestBuilds('dist-rawhide', package=name)
+            if builds:
+                self.latest_build = builds[0]['nvr']
+            else:
+                self.latest_build = 'Not built in rawhide'
+        except Exception, e:
+            log.error('Unable to query koji: %s' % str(e))
+            self.latest_build = 'Koji unavailable'
