@@ -212,7 +212,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'status': bug.bug_status.title(),
                 'description': bug.summary,
                 'last_modified': modified.age(),
-                'release': '%s %s' % (collection, bug.version),
+                'release': '%s %s' % (collection, bug.version[0]),
                 'bug_class': bug_class.strip(),
                 })
         return bugs_list
