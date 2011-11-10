@@ -94,7 +94,8 @@ class PackageWidget(twc.Widget):
         try:
             builds = koji._koji_client.getLatestBuilds('dist-rawhide', package=name)
             if builds:
-                self.latest_build = builds[0]['nvr']
+                self.latest_build = builds[0]['version'] + '-' + \
+                                    builds[0]['release']
             else:
                 self.latest_build = 'Not built in rawhide'
         except Exception, e:
