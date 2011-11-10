@@ -1,7 +1,7 @@
-<div>
+<div id="overview">
     <div class="description-block">
         <h3>Description</h3>
-        <div class="package-description">${w.package_info['description']}</div>
+        <p class="package-description">${w.package_info['description']}</div>
     </div>
     <div class="active-release-block">
         <h3>Active Releases Overview</h3>

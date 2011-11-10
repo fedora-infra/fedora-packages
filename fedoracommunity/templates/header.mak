@@ -3,7 +3,7 @@
         ${tmpl_context.moksha_global_resources() | n}
     </%def>
     <%def name="header()">
-        <div id="head">
+        <div class="head" id="head-main">
             ${resources()}
 
        <div id="container">
