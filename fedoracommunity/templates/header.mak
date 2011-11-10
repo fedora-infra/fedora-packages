@@ -18,7 +18,11 @@
                <form action="${tg.url('/s')}"
                      onSubmit="return do_search(this);">
                    <div class="grid_5" id="header">
-                      <a href="/"><h1 style="font-size:large;"><span>Fedora</span> Packages</h1></a>
+		      <h1 style="font-size:large;">
+                         <a href="/">
+			    <span>Fedora</span> Packages
+			 </a>
+		      </h1>
                    </div>
                    <div class="grid_13">
                        <input type="text" name="search"/>
