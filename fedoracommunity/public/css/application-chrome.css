@@ -1701,3 +1701,8 @@ em.note {
   margin-bottom: .5em;
   margin-top: 1.3em;
 }
+
+.package-tree a {
+  font-size:  .75em !important;
+}
+
