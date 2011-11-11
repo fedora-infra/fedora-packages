@@ -381,9 +381,27 @@ h3 {
 .list table th,
 .list table td,
 .list table tr {
-  font-size: 8pt !important;
   border: none !important;
   vertical-align: top;
+  font-size: 97%;
+}
+
+.list table th a, 
+.list table td a,
+.list table tr a,
+.header-list th {
+  font-weight: bold;
+}
+
+.list table a,
+.list table a:visited,
+.list table a:active,
+.list table a:link {
+  color:  #3C6EB4;
+}
+
+.header-list td {
+  padding-left: 7px;
 }
 
 .list table img {
@@ -1680,6 +1698,6 @@ em.note {
 
 .tab-container .tab-container h3 {
   color: #555;
-  margin-bottom: .7em;
-  margin-top: 1em;
+  margin-bottom: .5em;
+  margin-top: 1.3em;
 }
