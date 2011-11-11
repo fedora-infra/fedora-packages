@@ -1598,14 +1598,10 @@ em.note {
   color: #666;
 }
 
-#tab-content h3 {
+#tabs h3 {
   color: #AAAAAA;
   margin-bottom: 1em;
   margin-top: 1em;
-}
-
-#tab-content {
-  color: #AAAAAA;
 }
 
 .tab-container .tabs {
@@ -1679,4 +1675,11 @@ em.note {
 
 .tab-container .tab-container {
   margin-left: 7px;
+  color: #777;
+}
+
+.tab-container .tab-container h3 {
+  color: #555;
+  margin-bottom: .7em;
+  margin-top: 1em;
 }
