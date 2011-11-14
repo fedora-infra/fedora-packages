@@ -2,6 +2,10 @@ body, p, a, li, div, input, button {
 	font-family: Cantarell, sans-serif;
 }
 
+a, a:visited, a:active, a:link {
+  color: #3C6EB4;
+}
+
 body {
   background: white;
   color: black;
