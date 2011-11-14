@@ -24,7 +24,11 @@ class IconCache(object):
         best_match = None
 
         for icon_path in icon_path_list:
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file(icon_path)
+            try:
+                pixbuf = GdkPixbuf.Pixbuf.new_from_file(icon_path)
+            except Exception:
+                continue
+
             width = pixbuf.get_width()
 
 
