@@ -1575,9 +1575,11 @@ em.note {
 
 /****** markup for new packager branch *********/
 
-#package-info-bar H3 {
+#package-info-bar h3 {
   text-transform: uppercase;
   font-size: 10pt; 
+  color: #999;
+  margin-bottom: .5em;
 }
 
 #package-info-bar .package-name {
@@ -1600,6 +1602,16 @@ em.note {
 #package-info-bar ul ul { 
   list-style: square url('/images/list_tree_marker.png');
   margin-left: 1.3em;
+}
+
+#package-info-bar .package-name, 
+#package-info-bar .owner,
+#package-info-bar .package-tree {
+  margin-bottom: 1.5em;
+}
+
+#package-info-bar .build div {
+  font-size: 11pt;
 }
 
 #package-header {
