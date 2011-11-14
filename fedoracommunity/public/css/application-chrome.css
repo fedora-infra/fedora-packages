@@ -1628,6 +1628,10 @@ em.note {
   font-style: italic;
 } 
 
+#package-info-bar .package-tree {
+word-wrap: break-word;
+word-break: break-all; /* for IE and friends */
+}
 
 #package-header {
   color: #AAAAAA;
