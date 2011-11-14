@@ -1582,7 +1582,8 @@ em.note {
   margin-bottom: .5em;
 }
 
-#package-info-bar .package-name {
+#package-info-bar .package-name,
+#package-info-bar .package-owner {
   color: #3c6eb4;
   font-weight: bold;
   font-size: 13pt;
@@ -1613,6 +1614,20 @@ em.note {
 #package-info-bar .build div {
   font-size: 11pt;
 }
+
+#package-info-bar .package-owner {
+  display: inline;
+  margin-right: 4px;
+}
+
+#package-info-bar .package-dist {
+  display: inline;
+  margin-top: -.2em;
+  font-size: 9pt;
+  color: #555;
+  font-style: italic;
+} 
+
 
 #package-header {
   color: #AAAAAA;
