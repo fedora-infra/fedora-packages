@@ -60,7 +60,8 @@ class TabWidget(twc.Widget):
 
 class PackageNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Overview', 'package.overview'),
-                                    ('Bugs', 'package.bugs')])
+                                    ('Bugs', 'package.bugs'),
+                                    ('Changelog', 'package.changelog')])
     base_url = Template(text='/${kwds["package_name"]}/');
     default_tab = 'Overview'
     args = twc.Param(default=None)

@@ -51,21 +51,15 @@
            There are no updates for this package
         </div>
     </div>
-    <div id="grid-controls" if="visible_rows < total_rows && total_rows != 0">
+    <div id="grid-controls" if="visible_rows > total_rows && total_rows != 0">
         <div class="message template" id="info_display" >
            Viewing all ${'${total_rows}'} updates for this package
         </div>
-        <div class="pager template" id="pager" type="more_link">
-           <a href="${'${more_link}'}" moksha_url="dynamic">Goto updates &gt;</a>
-        </div>
     </div>
-    <div id="grid-controls" if="visible_rows < total_rows && total_rows != 0">
+    <div id="grid-controls" if="visible_rows > total_rows && total_rows != 0">
         <div class="message template" id="info_display" >
            Viewing ${'${first_visible_row}'}-${'${last_visible_row}'} of ${'${total_rows}'} updates for this packahge
         </div>
         <div class="pager" id="pager" type="numeric" ></div>
-        <div class="pager template" id="pager" type="more_link">
-           <a href="${'${more_link}'}" moksha_url="dynamic">View more updates &gt;</a>
-        </div>
     </div>
 </div>

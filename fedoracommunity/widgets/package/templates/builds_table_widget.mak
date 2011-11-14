@@ -2,10 +2,26 @@
 <head></head>
 <body>
     <div class="list header-list">
+        <div id="grid-controls">
+            <form>
+              <div id="filter" class="grid_filter" name="status_filter">
+
+                <label for="state">Status:</label>
+                <select name="state">
+                    <option selected="selected" value="">All</option>
+                    <option value="0" style="background:url(/images/16_build_state_0.png) no-repeat center left; padding-left: 18px;"></img>Building</option>
+                    <option value="1" style="background:url(/images/16_build_state_1.png) no-repeat center left; padding-left: 18px;">Success</option>
+                    <option value="3" style="background:url(/images/16_build_state_3.png) no-repeat center left; padding-left: 18px;">Failed</option>
+                    <option value="4" style="background:url(/images/16_build_state_4.png) no-repeat center left; padding-left: 18px;">Canceled</option>
+                    <option value="2" style="background:url(/images/16_build_state_2.png) no-repeat center left; padding-left: 18px;">Deleted</option>
+                </select>
+              </div>
+            </form>
+        </div>
         <table id="${w.id}" class="">
             <thead>
                 <tr>
-                    <th><a href="#nvr">Package</a></th>
+                    <th>Package</th>
                     <th>When</th>
                     <th>Build Time</th>
                     <th>Built By</th>
@@ -17,6 +33,7 @@
                         <td class="one-row">
                           <div id="menu_${'${build_id}'}" class="menu" panel="menu_panel_${'${build_id}'}">
                             <span class="package-name">
+                                <img src="/images/16_build_state_${'${state}'}.png"></img>
                                 <a href="/package_maintenance/tools/builds?package=${'${package_name}'}" moksha_url="dynamic">${'${package_name}'} </a>
                             </span>
                             <br/>${'${version}'}-${'${release}'}&nbsp;

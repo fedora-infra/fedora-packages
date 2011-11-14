@@ -196,7 +196,7 @@ class KojiConnector(IConnector, ICall, IQuery):
                         can_filter_wildcards = False)
 
         f = ParamFilter()
-        f.add_filter('package',[], allow_none = False)
+        f.add_filter('build_id',[], allow_none = False)
         cls._query_changelogs_filter = f
 
         cls._changelog_version_extract_re = re.compile('(.*)\W*<(.*)>\W*-?\W*(.*)')
@@ -208,23 +208,20 @@ class KojiConnector(IConnector, ICall, IQuery):
                            filters=None,
                            **params):
 
+
         if not filters:
             filters = {}
+
         filters = self._query_changelogs_filter.filter(filters, conn=self)
 
-        package = filters.get('package', '')
+        build_id = int(filters.get('build_id', None))
+        task_id = filters.get('task_id', None)
+        state = filters.get('state', None)
 
         if order < 0:
             order = '-' + sort_col
         else:
             order = sort_col
-
-        pkg_id = None
-        if package:
-            pkg_id = self._koji_client.getPackageID(package)
-
-        if not pkg_id:
-            return (0, [])
 
         queryOpts = None
 
@@ -243,30 +240,9 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         countQueryOpts = {'countOnly': True}
 
-        self._koji_client.multicall = False
-
-        # FIXME: Figure out how to deal with different builds
-        #tags = self._koji_client.listTags(package=pkg_id,
-        #                                  queryOpts={})
-
-        # ask pkgdb for the collections table
-        # pkgdb = get_connector('pkgdb', self._request)
-        # collections_table = pkgdb.get_collection_table()
-
-        # get latest version and use that to get the changelog
-        builds = self._koji_client.listBuilds(packageID=pkg_id,
-                                              queryOpts={'limit': 1,
-                                                         'offset': 0,
-                                                         'order': '-nvr'})
-
-        build_id = builds[0].get('build_id')
-        if not build_id:
-            return (0, [])
-
         self._koji_client.multicall = True
         self._koji_client.getChangelogEntries(buildID=build_id,
-                                                queryOpts=countQueryOpts)
-
+                                              queryOpts=countQueryOpts)
         self._koji_client.getChangelogEntries(buildID=build_id,
                                               queryOpts=queryOpts)
 
@@ -459,14 +435,15 @@ class KojiConnector(IConnector, ICall, IQuery):
         else:
             order = sort_col
 
-        user = self._koji_client.getUser(username)
-        
-        # we need to check if this user exists
-        if username and not user:
-            return (0, [])
-
+        user = None
         id = None
-        if user:
+        if username:
+            user = self._koji_client.getUser(username)
+
+            # we need to check if this user exists
+            if username and not user:
+                return (0, [])
+
             id = user['id']
 
         pkg_id = None
@@ -476,7 +453,16 @@ class KojiConnector(IConnector, ICall, IQuery):
         queryOpts = None
 
         if state:
-            state = int(state)
+            try:
+                state = int(state)
+            except ValueError:
+                state_list = []
+                for value in state.split(','):
+                    state_list.append(int(value))
+                    state = state_list
+
+        elif state == '':
+            state = None
 
         qo = {}
         if not (start_row == None):

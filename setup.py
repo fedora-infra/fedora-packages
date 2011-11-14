@@ -120,7 +120,7 @@ setup(
     package.overview.builds = fedoracommunity.widgets.package.builds:Builds
 
     package.bugs = fedoracommunity.widgets.package.bugs:BugsWidget
-
+    package.changelog = fedoracommunity.widgets.package.changelog:ChangelogWidget
 
     [moksha.stream]
     stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
