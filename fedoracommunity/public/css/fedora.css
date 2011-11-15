@@ -25,7 +25,7 @@ body {
 	width: 155px;
 	display: block;
 	text-indent: -9999px;
-        background: url(/images/fedora-packges_logo-white.png) no-repeat;
+        background: url(../images/fedora-packges_logo-white.png) no-repeat;
 }
 
 #header-main h1 a {

@@ -179,12 +179,12 @@ img {
   height: 100%;
 }
 #app-sidebar {
-  background: repeat-y right url('/community/images/vertical-gradient.png');
+  background: repeat-y right url('../images/vertical-gradient.png');
 }
 
 /** banner-header for banner images **/
 #banner-header {
-  background: url('/community/images/grad_grey_1x225.png');
+  background: url('../images/grad_grey_1x225.png');
   width: 100%;
   height: 200px;
   -moz-border-radius: 12px;
@@ -505,7 +505,7 @@ span.more-items {
 }
 
 .header-list table tbody {
-  background: repeat-x left bottom url('/community/images/c8c8c8_dot.png') !important;
+  background: repeat-x left bottom url('../images/c8c8c8_dot.png') !important;
 }
 
 .message_row {
@@ -616,7 +616,7 @@ span.timestamp {
 
 #left-content-column div.login-banner#banner-header,
 .left-content-column div.login-banner#banner-header {
-  background-image: url('/community/images/grad_grey_1x225.png') !important;
+  background-image: url('../images/grad_grey_1x225.png') !important;
   float: left;
   margin-left: 1em;
   height: auto !important;
@@ -667,7 +667,7 @@ div.login-error-message img {
 }
 
 .panel .announce li {
-  list-style: inside url('/community/images/16_announcement.png');
+  list-style: inside url('../images/16_announcement.png');
   margin-left: 2px;
   border-bottom: dotted 1px #ddd;
 }
@@ -906,7 +906,7 @@ h1#greeter img {
   margin: 0.5em auto 0.5em auto;
   padding: 15px 10px 15px 55px;
   width: 450px;
-  background: #eef url('/community/images/info.png') left center no-repeat;
+  background: #eef url('../images/info.png') left center no-repeat;
   border: 1px solid #cce;
 }
 
@@ -1410,11 +1410,11 @@ div.count-summary-dashboard div.action-box {
   padding: 10px;
   max-width: 90px;
   min-height: 110px;
-  background: white url('/community/images/count-box-gradient_light.png') repeat-x;
+  background: white url('../images/count-box-gradient_light.png') repeat-x;
 }
 
 div.count-summary-dashboard div.action-box {
-  background: white url('/community/images/count-box-gradient_dark.png') repeat-x;
+  background: white url('../images/count-box-gradient_dark.png') repeat-x;
 }
 
 div.count-summary-dashboard .action-header {
@@ -1677,13 +1677,13 @@ word-break: break-all; /* for IE and friends */
 .tab-container .tabs a:visited { color: #000000; text-decoration: none; }
 .tab-container .tabs a:hover {
   color: #000000; text-decoration: none; 
-  background: url('/images/nav_arrow.png') no-repeat 50% 101% !important;
+  background: url('../images/nav_arrow.png') no-repeat 50% 101% !important;
 }
 
 .tab-container .tabs a.selected {
   font-weight: bold;
   color: #db347a; text-decoration: none;
-  background: url('/images/nav_arrow.png') no-repeat 50% 101%;
+  background: url('../images/nav_arrow.png') no-repeat 50% 101%;
 }
 
 .tab-container .tabs.hover a.selected {
