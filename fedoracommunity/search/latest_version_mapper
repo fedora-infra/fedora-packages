@@ -68,17 +68,23 @@ class Mapper(object):
 
         return results
 
-    def update_timestamp(self):
-        time_stamp = time.time() - 60
-        print "Adding timestamp minus 1 minute to account for any skew between the servers %f" % time_stamp
-        results = self.search('_last_run_') 
+    def get_timestamp_doc(self):
+        results = self.search('_last_run_')
+        if not results:
+            return None
+        return results[0]
 
-        old_time_stamp = None
-        if results:
-            doc = results[0]
-            old_time_stamp = doc._doc.get_data()
-            print old_time_stamp
-            doc._doc.set_data(str(time_stamp))
+    def get_current_timestamp(self):
+        doc = self.get_timestamp_doc()
+        if not doc:
+            return None
+        time_stamp = doc._doc.get_data()
+        return time_stamp
+
+    def update_timestamp(self, timestamp):
+        doc = self.get_timestamp_doc()
+        if doc:
+            doc._doc.set_data(str(timestamp))
             self.iconn.replace(doc)
             self.iconn.flush()
         else:
@@ -91,15 +97,14 @@ class Mapper(object):
             self.iconn.add(processed_doc)
             self.iconn.flush()
 
-        return old_time_stamp
-
     def init_db(self):
         """
         loop through all packages and get the latest builds for koji tags
         listed in distmappings
         """
+        self.new_timestamp = time.time() - 60
+        print "Calculating timestamp minus 1 minute to account for any skew between the servers (%s)" % time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.new_timestamp))
 
-        self.update_timestamp()
         print "Initializing Index"
         package_list = self.koji_client.listPackages()
         i = 0
@@ -151,26 +156,44 @@ class Mapper(object):
             processed_doc._data = None
             self.iconn.add(processed_doc)
 
+        print "Finished updating timestamp"
+        self.update_timestamp(self.new_timestamp)
+
     def update_db(self, timestamp=None):
         """ ask koji for any changes after we last ran the mapper
             if a timestamp is provided in ISO format ('YYYY-MM-DD HH:MI:SS')
             use that instead
         """
 
+        try:
+            timestamp = float(timestamp)
+        except (ValueError, TypeError):
+            pass
+
         if not timestamp:
-            timestamp = float(self.update_timestamp())
+            timestamp = self.get_current_timestamp()
+            try:
+                timestamp = float(timestamp)
+            except (ValueError, TypeError):
+                pass
 
             if not timestamp:
                 print "Error: you need to specify a time to update from in ISO format ('YYYY-MM-DD HH:MI:SS') or run init"
                 exit(-1)
-        else:
-            self.update_timestamp()
+
+        self.new_timestamp = time.time() - 60
+        print "Calculating timestamp minus 1 minute to account for any skew between the servers (%s)" % time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(self.new_timestamp))
+
 
         opts = {'completedAfter': timestamp,
                 'method': 'tagBuild',
                 'decode': True}
 
-        print "Getting Task List"
+        if isinstance(timestamp, float):
+            display_timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
+        else:
+            display_timestamp = timestamp
+        print "Getting Task List since %s" % display_timestamp
         task_list = self.koji_client.listTasks(opts=opts)
         print "Updating Index"
         for task in task_list:
@@ -236,6 +259,7 @@ class Mapper(object):
                     data = latest_builds.get(dist_name, {'version': '0',
                                                          'release': '0',
                                                          'build_id': 0})
+                    data_epoch = None
                     do_update = False
                     if 'release' not in data:
                         # do the update because we have old data
@@ -289,6 +313,9 @@ class Mapper(object):
         print "========================="
         print "  Total: %s" % (updated_count + new_count)
 
+        self.update_timestamp(self.new_timestamp)
+
+    def cleanup(self):
         self.iconn.close()
         self.sconn.close()
 
@@ -310,7 +337,7 @@ def main(argv):
 
     mapper = Mapper('versionmap')
     action(mapper, *argv[2:])
-
+    mapper.cleanup()
 
 if __name__ == '__main__':
     main(sys.argv)
