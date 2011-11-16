@@ -141,9 +141,12 @@ class Mapper(object):
 
                         if build.get('epoch', None) != None:
                             data['epoch'] = str(build['epoch'])
+                            version_display = "%s:%s.%s" % (data['epoch'], data['version'], data['release'])
+                        else:
+                            version_display = "%s.%s" % (data['version'], data['release'])
 
                         latest_builds[t['name']] = data
-                        print "    %s: %s" % (t['name'], ver)
+                        print "    %s: %s" % (t['name'], version_display)
 
             if len(latest_builds) < 2:
                 # don't process doc if there is no real data
