@@ -52,7 +52,7 @@ class RawhideBuildOwner(ContextAwareWidget):
     def update_params(self, d):
         super(RawhideBuildOwner, self).update_params(d)
         koji = get_connector('koji')
-        builds = koji._koji_client.getLatestBuilds('dist-rawhide',
+        builds = koji._koji_client.getLatestBuilds('rawhide',
                                                    package=d.package)
         d.build = builds[0]['nvr']
         pkgdb = get_connector('pkgdb')

@@ -50,7 +50,7 @@ class DownloadsDashboard(PackagesDashboardContainer):
     layout = [Category('content-col-apps',[
                 MokshaApp(None,
                     'fedoracommunity.packages/package/downloads/downloads_table',
-                    params={'package': '', 'release': 'dist-rawhide'},
+                    params={'package': '', 'release': 'rawhide'},
                     css_class='package_downloads'),
                 ])]
 
@@ -77,8 +77,10 @@ class DownloadsWidget(Widget):
     def update_params(self, d):
         super(DownloadsWidget, self).update_params(d)
         koji = get_connector('koji')
-        rpms = koji._koji_client.getLatestRPMS(d.release, package=d.package)
-
+        if d.release == 'rawhide':
+            rpms = koji._koji_client.getLatestRPMS('dist-rawhide', package=d.package)
+        else:
+            rpms = koji._koji_client.getLatestRPMS(d.release, package=d.package)
         arches = defaultdict(list)
         for download in rpms[0]:
             download['size'] = format_byte_size(download['size'])

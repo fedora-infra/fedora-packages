@@ -601,7 +601,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
             name = release[1]
             row = {'release': name, 'stable_version': 'None',
                    'testing_version': 'None' }
-            if tag == 'dist-rawhide':
+            if tag == 'rawhide':
                 rawhide_builds = koji.listTagged(tag, package=package,
                                                  latest=True, inherit=True)
                 if rawhide_builds:
