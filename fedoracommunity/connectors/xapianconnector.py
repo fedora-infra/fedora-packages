@@ -17,7 +17,8 @@
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from pylons import config
 from urllib import quote
-from fedoracommunity.search import utils
+from fedoracommunity.search import utils, distmappings
+from collections import OrderedDict
 import os
 import sys
 import xapian
@@ -34,7 +35,8 @@ class XapianConnector(IConnector, ICall, IQuery):
 
     def __init__(self, environ=None, request=None):
         super(XapianConnector, self).__init__(environ, request)
-        self._xapian_db = xapian.Database(config.get('fedoracommunity.connector.xapian.db', 'xapian'))
+        self._search_db = xapian.Database(config.get('fedoracommunity.connector.xapian.package-search.db', 'xapian/search'))
+        self._versionmap_db = xapian.Database(config.get('fedoracommunity.connector.xapian.versionmap.db', 'xapian/versionmap'))
 
     # IConnector
     @classmethod
@@ -142,7 +144,7 @@ class XapianConnector(IConnector, ICall, IQuery):
         package_name = utils.filter_search_string(package_name)
         search_string = "Ex__%s__EX" % package_name
         matches = self.do_search(search_string, 0, 1)
-        if len(matches) < 0:
+        if len(matches) == 0:
             return None
 
         result = json.loads(matches[0].document.get_data())
@@ -154,12 +156,36 @@ class XapianConnector(IConnector, ICall, IQuery):
                   rows_per_page=None,
                   order=-1,
                   sort_col=None):
-        enquire = xapian.Enquire(self._xapian_db)
+        enquire = xapian.Enquire(self._search_db)
         qp = xapian.QueryParser()
-        qp.set_database(self._xapian_db)
+        qp.set_database(self._search_db)
         query = qp.parse_query(search_string)
 
         enquire.set_query(query)
-        matches = enquire.get_mset(start_row, rows_per_page);
+        matches = enquire.get_mset(start_row, rows_per_page)
 
         return matches
+
+    def get_latest_builds(self, package_name):
+        enquire = xapian.Enquire(self._versionmap_db)
+        qp = xapian.QueryParser()
+        qp.set_database(self._versionmap_db)
+        qp.add_boolean_prefix('key', 'XA')
+        query = qp.parse_query('key:%s' % utils.filter_search_string(package_name))
+
+        enquire.set_query(query)
+        matches = enquire.get_mset(0, 1)
+        if len(matches) == 0:
+            return None
+        results = json.loads(matches[0].document.get_data())
+
+        latest_builds = OrderedDict()
+        lastdistname = ""
+
+        for dist in distmappings.tags:
+            distname = dist['name']
+            if lastdistname != distname and distname in results:
+                latest_builds[distname] = results[distname]
+                lastdistname = distname
+
+        return latest_builds
