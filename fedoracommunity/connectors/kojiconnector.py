@@ -14,12 +14,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import re
 import koji
+import rpm
 
 from pylons import config, request
 from datetime import datetime
 from cgi import escape
+from urlgrabber import grabber
+
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.api.connectors import get_connector
@@ -42,12 +46,22 @@ class KojiConnector(IConnector, ICall, IQuery):
         cls._koji_url = config.get('fedoracommunity.connector.koji.baseurl',
                                    'http://koji.fedoraproject.org/koji')
 
+        cls._koji_pkg_url = config.get('fedoracommunity.connector.koji.pkgurl',
+                                       'http://koji.fedoraproject.org/packages')
+
+        cls._rpm_cache = config.get('fedoracommunity.rpm_cache',
+                                    None)
+        if not cls._rpm_cache:
+            print "You must specify fedoracommunity.rpm_cache in you .ini file"
+            exit(-1)
+
         cls.register_query_builds()
         cls.register_query_packages()
         cls.register_query_changelogs()
 
         cls.register_method('get_error_log', cls.call_get_error_log)
         cls.register_method('get_latest_changelog', cls.call_get_latest_changelog)
+        cls.register_method('get_file_tree', cls.call_get_file_tree)
 
     def request_data(self, resource_path, params, _cookies):
         return self._koji_client.callMethod(resource_path, **params)
@@ -121,12 +135,153 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         return changelogs[0]
 
+    def _size_to_human_format(self, size):
+        suffixes = ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
+        result = size
+        for suffix in suffixes:
+            result /= 1024.0
+            if result < 1024:
+                return '{0:.1f} {1}'.format(result, suffix)
+        return str(size)
+
+    def _add_to_path(self, path, path_cache, data):
+        if path == '':
+            path = '/'
+        if path in path_cache:
+            dir_info = path_cache[path]
+            if data:
+               dir_info.append(data)
+            return
+
+        new_data = []
+        if data:
+           new_data.append(data)
+        path_cache[path] = new_data
+        (new_path, dir_name) = os.path.split(path)
+        self._add_to_path(new_path, path_cache, {'dirname': dir_name, 'content':new_data})
+
+    def _rpm_list_files(self, file_path):
+        fd = os.open(file_path, os.O_RDONLY)
+        ts = rpm.TransactionSet()
+        h = ts.hdrFromFdno(fd)
+        os.close(fd)
+        fi = h.fiFromHeader()
+        file_list = []
+        links = {}
+        paths = {'/':[]}
+        result = {}
+        for f in fi:
+            """
+            input: (full_path, size, mode, mtime, Fflags, rdev, inode, nlink, state, Vflags, user, group, digest)
+            output: (name, path, display_size, type, modestring, linked_to, user, group)
+
+                name - name of the file, link or directory
+                path - path to file, link or directory
+                display_size - size of file in human readable terms (e.g. 15.2K, 3.4M, 6.3G)
+                type - 'F', 'L' for file and link respectively. Directory info is discarded.
+                       Links and directories are guesses based on size.
+                modestring - the mode in human readable string format (e.g. xrwxr-xr-)
+                linked_to - guess based on files with the same name
+                user - user who owns this file
+                group - group who owns this file
+            """
+            (full_path, size, mode, mtime, Fflags, rdev, inode, nlink, state,
+             Vflags, user, group, digest) = f
+            output = {'name': None,
+                      'path': None,
+                      'display_size': None,
+                      'type': 'F',
+                      'modestring': '',
+                      'linked_to': None,
+                      'user': user,
+                      'group': group}
+
+            (path, name) = os.path.split(full_path)
+            output['name'] = name
+            output['path'] = path
+            output['display_size'] = self._size_to_human_format(size)
+
+            digest = int(digest, 16)
+            if digest == 0:
+                # could be directory or link based on size
+                if size > 1024:
+                    # if we are a directory check to see if it exists
+                    self._add_to_path(path, paths, None)
+                    continue;
+                else:
+                    output['type'] = 'L'
+                    links[name] = output
+                    # check to see if the file this links to has been seen
+                    for file_info in file_list:
+                        if file_info['name'] == name:
+                            output['linked_to'] = os.path.join(file_info['path'], name)
+                            break;
+            else:
+                # check to see if we are linked to
+                link = links.get(name, None)
+                if link and not link['linked_to']:
+                    link['linked_to'] = os.path.join(path, name)
+
+                file_list.append(output)
+
+            # construct directory structure
+            self._add_to_path(path, paths, output)
+
+        return paths['/']
+
+    def _download_rpm(self, nvr, arch):
+        if nvr is None or arch is None:
+            raise ValueError("Invalid option passed to connector")
+
+        filename = '%s.%s.rpm' % (nvr, arch)
+        file_path = os.path.split(filename)
+        if file_path[0] != '':
+            raise ValueError("Nvr can not contain path elements")
+        if len(arch.split('/')) != 1 or os.path.split(arch)[0] != '':
+            raise ValueError("Arch can not contain path elements")
+
+        rpm_file_path = os.path.join(self._rpm_cache, filename)
+        if os.path.exists(rpm_file_path):
+            return rpm_file_path
+
+        info = self.call('getBuild', {'buildInfo': nvr})
+        if info is None:
+            return {'error': 'No such build (%s)' % filename}
+
+        if not os.path.exists(self._rpm_cache):
+            os.mkdir(self._rpm_cache,)
+
+        url = '%s/%s/%s/%s/%s/%s' % (self._koji_pkg_url, info['name'], info['version'], info['release'], arch, filename)
+
+        url_file = grabber.urlopen(url, text=filename)
+        out = os.open(rpm_file_path, os.O_WRONLY|os.O_CREAT|os.O_TRUNC, 0666)
+        try:
+            while 1:
+                buf = url_file.read(4096)
+                if not buf:
+                    break
+                os.write(out, buf)
+        except Exception as e:
+            raise e
+        finally:
+            os.close(out)
+            url_file.close()
+
+        return rpm_file_path
+
+    def call_get_file_tree(self, resource_path, _cookies=None, nvr=None, arch=None):
+        try:
+            rpm_file_path = self._download_rpm(nvr, arch)
+            return self._rpm_list_files(rpm_file_path)
+        except Exception as e:
+            return {'error': "Error: %s" % str(e)}
 
     def call_get_error_log(self, resource_path, _cookies=None, task_id=None):
         results = {'log_url':'', 'log_name':'', 'task_id':''}
         task_id = int(task_id);
 
-        decendents = self.call('getTaskDescendents', {'task_id': task_id})
+        decendents = self.call('getTaskDescendents', {'task_id': task_id,
+        })
         for task in decendents.keys():
             task_children = decendents[task]
             for child in task_children:
@@ -539,3 +694,24 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         return (total_count, builds_list)
 
+    def get_tasks_for_builds(self, build_ids=[]):
+        results = {}
+
+        if build_ids:
+            for id in build_ids:
+                self._koji_client.multicall = True
+                self._koji_client.getBuild(id)
+
+            builds = self._koji_client.multiCall()
+            if builds:
+                for b in builds:
+                    self._koji_client.multicall = True
+                    self._koji_client.getTaskDescendents(b[0]['task_id'])
+
+                tasks = self._koji_client.multiCall()
+                if tasks:
+                    for t, id in zip(tasks, build_ids):
+                        results[id] = t[0]
+
+        self._koji_client.multicall = False
+        return results
