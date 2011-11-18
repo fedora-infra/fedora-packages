@@ -91,7 +91,7 @@ class Mapper(object):
             doc = xappy.UnprocessedDocument()
             doc.fields.append(xappy.Field('key', '_last_run_'))
             processed_doc = self.iconn.process(doc, False)
-            processed_doc._doc.set_data(str(time_stamp))
+            processed_doc._doc.set_data(str(timestamp))
             # preempt xappy's processing of data
             processed_doc._data = None
             self.iconn.add(processed_doc)
