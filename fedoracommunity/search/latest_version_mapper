@@ -255,7 +255,6 @@ class Mapper(object):
                     processed_doc._data = None
                     self.iconn.add(processed_doc)
                     self.sconn_needs_reload = True
-                    self.found_packages[build['name']] = processed_doc
                     self.iconn.flush()
                 else:
                     latest_builds = json.loads(pkg_doc._doc.get_data())
