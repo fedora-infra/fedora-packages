@@ -27,8 +27,22 @@
                         selected = ""
                         if i == 0:
                             selected = 'selected = "selected"'
+                        build_values = w.latest_builds[build]
+
+                        display_ver = ""
+                        # support both new format and legacy (remove legacy before commit)
+                        if 'release' in build_values:
+                            # new format
+                            epoch = build_values.get('epoch', None)
+                            if epoch is not None:
+                                display_ver = "%s:%s.%s" % (epoch, build_values['version'], build_values['release'])
+                            else:
+                                display_ver = "%s.%s" % (build_values['version'], build_values['release'])
+                        else:
+                            # legacy
+                            display_ver = build_values['version']
                     %>
-                    <option ${selected} value="${str(w.latest_builds[build]['build_id'])}">${build} (${w.latest_builds[build]['nvr']})</option>
+                    <option ${selected} value="${str(build_values['build_id'])}">${build} (${display_ver})</option>
                   % endfor
                 </select>
             </div>
