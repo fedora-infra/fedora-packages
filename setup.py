@@ -123,6 +123,13 @@ setup(
     package.contents = fedoracommunity.widgets.package.contents:ContentsWidget
     package.changelog = fedoracommunity.widgets.package.changelog:ChangelogWidget
 
+    package.relationships = fedoracommunity.widgets.package.relationships:RelationshipsWidget
+    package.relationships.requires = fedoracommunity.widgets.package.relationships:RequiresWidget
+    package.relationships.depends = fedoracommunity.widgets.package.relationships:DependsWidget
+    package.relationships.provides = fedoracommunity.widgets.package.relationships:ProvidesWidget
+    package.relationships.obsoletes = fedoracommunity.widgets.package.relationships:ObsoletesWidget
+    package.relationships.conflicts = fedoracommunity.widgets.package.relationships:ConflictsWidget
+
     [moksha.stream]
     stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
     wiki_all_revisions = fedoracommunity.streams.stats:WikiAllRevisionsDataStream
