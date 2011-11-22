@@ -8,7 +8,6 @@ from moksha.api.widgets import Grid
 
 class RelationshipsNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Requires', 'package.relationships.requires'),
-                                    ('Depends', 'package.relationships.depends'),
                                     ('Provides', 'package.relationships.provides'),
                                     ('Obsoletes', 'package.relationships.obsoletes'),
                                     ('Conflicts', 'package.relationships.conflicts')])

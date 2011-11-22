@@ -58,6 +58,10 @@ class KojiConnector(IConnector, ICall, IQuery):
         cls.register_query_builds()
         cls.register_query_packages()
         cls.register_query_changelogs()
+        cls.register_query_provides()
+        cls.register_query_requires()
+        cls.register_query_conflicts()
+        cls.register_query_obsoletes()
 
         cls.register_method('get_error_log', cls.call_get_error_log)
         cls.register_method('get_latest_changelog', cls.call_get_latest_changelog)
@@ -164,6 +168,8 @@ class KojiConnector(IConnector, ICall, IQuery):
         fd = os.open(file_path, os.O_RDONLY)
         ts = rpm.TransactionSet()
         h = ts.hdrFromFdno(fd)
+        attr_names = []
+
         os.close(fd)
         fi = h.fiFromHeader()
         file_list = []
@@ -693,6 +699,342 @@ class KojiConnector(IConnector, ICall, IQuery):
         self._koji_client.multicall = False
 
         return (total_count, builds_list)
+
+    @classmethod
+    def register_query_provides(cls):
+        path = cls.register_query(
+                      'query_provides',
+                      cls.query_provides,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('flags',
+                        default_visible = False,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('version',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('ops',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('nvr',[], allow_none = False)
+        f.add_filter('arch',[], allow_none = False)
+        cls._query_provides_filter = f
+
+    def query_provides(self, start_row=None,
+                            rows_per_page=10,
+                            order=-1,
+                            sort_col=None,
+                            filters=None,
+                            **params):
+
+        if not filters:
+            filters = {}
+        filters = self._query_provides_filter.filter(filters, conn=self)
+
+        nvr = filters.get('nvr', '')
+        arch = filters.get('arch', '')
+
+        file_path = self._download_rpm(nvr, arch)
+        fd = os.open(file_path, os.O_RDONLY)
+        ts = rpm.TransactionSet()
+        h = ts.hdrFromFdno(fd)
+        os.close(fd)
+
+        provides_names = h[rpm.RPMTAG_PROVIDENAME]
+        provides_versions = h[rpm.RPMTAG_PROVIDEVERSION]
+        provides_flags = h[rpm.RPMTAG_PROVIDEFLAGS]
+        provides_ops = []
+        for flags in provides_flags:
+            op = ""
+            if flags & rpm.RPMSENSE_GREATER:
+                op = ">"
+            elif flags & rpm.RPMSENSE_LESS:
+                op = "<"
+            if flags & rpm.RPMSENSE_EQUAL:
+                if op:
+                    op += "="
+                else:
+                    op == "=="
+            ops.append(op)
+
+        total_rows = len(provides_names)
+        rows = []
+        for i in range(start_row, start_row + rows_per_page):
+            if i >= total_rows:
+                break
+            row.append({'name': provides_names[i],
+                        'version': provides_versions[i],
+                        'flags': provides_flags[i],
+                        'ops': provides_ops[i]
+                       })
+        return (total_rows, rows)
+
+    @classmethod
+    def register_query_requires(cls):
+        path = cls.register_query(
+                      'query_requires',
+                      cls.query_requires,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('flags',
+                        default_visible = False,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('version',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('ops',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('nvr',[], allow_none = False)
+        f.add_filter('arch',[], allow_none = False)
+        cls._query_requires_filter = f
+
+    def query_requires(self, start_row=None,
+                            rows_per_page=10,
+                            order=-1,
+                            sort_col=None,
+                            filters=None,
+                            **params):
+
+        if not filters:
+            filters = {}
+        filters = self._query_requires_filter.filter(filters, conn=self)
+
+        nvr = filters.get('nvr', '')
+        arch = filters.get('arch', '')
+
+        file_path = self._download_rpm(nvr, arch)
+        fd = os.open(file_path, os.O_RDONLY)
+        ts = rpm.TransactionSet()
+        h = ts.hdrFromFdno(fd)
+        os.close(fd)
+
+        requires_names = h[rpm.RPMTAG_REQUIRENAME]
+        requires_versions = h[rpm.RPMTAG_REQUIREVERSION]
+        requires_flags = h[rpm.RPMTAG_REQUIREFLAGS]
+        requires_ops = []
+        for flags in requires_flags:
+            op = ""
+            if flags & rpm.RPMSENSE_GREATER:
+                op = ">"
+            elif flags & rpm.RPMSENSE_LESS:
+                op = "<"
+            if flags & rpm.RPMSENSE_EQUAL:
+                if op:
+                    op += "="
+                else:
+                    op == "=="
+            ops.append(op)
+
+        total_rows = len(requires_names)
+        rows = []
+        for i in range(start_row, start_row + rows_per_page):
+            if i >= total_rows:
+                break
+            row.append({'name': requires_names[i],
+                        'version': requires_versions[i],
+                        'flags': requires_flags[i],
+                        'ops': requires_ops[i]
+                       })
+
+        return (total_rows, rows)
+
+    @classmethod
+    def register_query_obsoletes(cls):
+        path = cls.register_query(
+                      'query_obsoletes',
+                      cls.query_obsoletes,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('flags',
+                        default_visible = False,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('version',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('ops',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('nvr',[], allow_none = False)
+        f.add_filter('arch',[], allow_none = False)
+        cls._query_obsoletes_filter = f
+
+    def query_obsoletes(self, start_row=None,
+                            rows_per_page=10,
+                            order=-1,
+                            sort_col=None,
+                            filters=None,
+                            **params):
+
+        if not filters:
+            filters = {}
+        filters = self._query_obsoletes_filter.filter(filters, conn=self)
+
+        nvr = filters.get('nvr', '')
+        arch = filters.get('arch', '')
+
+        file_path = self._download_rpm(nvr, arch)
+        fd = os.open(file_path, os.O_RDONLY)
+        ts = rpm.TransactionSet()
+        h = ts.hdrFromFdno(fd)
+        os.close(fd)
+
+        obsoletes_names = h[rpm.RPMTAG_OBSOLETENAME]
+        obsoletes_versions = h[rpm.RPMTAG_OBSOLETEVERSION]
+        obsoletes_flags = h[rpm.RPMTAG_OBSOLETEFLAGS]
+        obsoletes_ops = []
+        for flags in obsoletes_flags:
+            op = ""
+            if flags & rpm.RPMSENSE_GREATER:
+                op = ">"
+            elif flags & rpm.RPMSENSE_LESS:
+                op = "<"
+            if flags & rpm.RPMSENSE_EQUAL:
+                if op:
+                    op += "="
+                else:
+                    op == "=="
+            ops.append(op)
+
+        total_rows = len(obsoletes_names)
+        rows = []
+        for i in range(start_row, start_row + rows_per_page):
+            if i >= total_rows:
+                break
+
+            row.append({'name': obsoletes_names[i],
+                        'version': obsoletes_versions[i],
+                        'flags': obsoletes_flags[i],
+                        'ops': obsoletes_ops[i]
+                       })
+
+        return (total_rows, rows)
+
+    @classmethod
+    def register_query_conflicts(cls):
+        path = cls.register_query(
+                      'query_conflicts',
+                      cls.query_conflicts,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('flags',
+                        default_visible = False,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('version',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('ops',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('nvr',[], allow_none = False)
+        f.add_filter('arch',[], allow_none = False)
+        cls._query_conflicts_filter = f
+
+    def query_conflicts(self, start_row=None,
+                            rows_per_page=10,
+                            order=-1,
+                            sort_col=None,
+                            filters=None,
+                            **params):
+
+        if not filters:
+            filters = {}
+        filters = self._query_conflicts_filter.filter(filters, conn=self)
+
+        nvr = filters.get('nvr', '')
+        arch = filters.get('arch', '')
+
+        file_path = self._download_rpm(nvr, arch)
+        fd = os.open(file_path, os.O_RDONLY)
+        ts = rpm.TransactionSet()
+        h = ts.hdrFromFdno(fd)
+        os.close(fd)
+
+        conflict_names = h[rpm.RPMTAG_CONFLICTNAME]
+        conflict_versions = h[rpm.RPMTAG_CONFLICTVERSION]
+        conflict_flags = h[rpm.RPMTAG_CONFLICTFLAGS]
+        conflict_ops = []
+        for flags in conficts_flags:
+            op = ""
+            if flags & rpm.RPMSENSE_GREATER:
+                op = ">"
+            elif flags & rpm.RPMSENSE_LESS:
+                op = "<"
+            if flags & rpm.RPMSENSE_EQUAL:
+                if op:
+                    op += "="
+                else:
+                    op == "=="
+            ops.append(op)
+
+        total_rows = len(conflict_names)
+        rows = []
+        for i in range(start_row, start_row + rows_per_page):
+            if i >= total_rows:
+                break
+            row.append({'name': conflicts_names[i],
+                        'version': conflicts_versions[i],
+                        'flags': conflicts_flags[i],
+                        'ops': conflicts_ops[i]
+                       })
+
+        return (total_rows, rows)
 
     def get_tasks_for_builds(self, build_ids=[]):
         results = {}
