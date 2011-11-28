@@ -63,26 +63,44 @@ class RelationshipBaseWidget(twc.Widget):
             build_info['arch_tasks'] = arch_tasks
             self.build_to_archtask_map[build_info['build_id']] = arch_tasks
 
-class RequiresWidgetGrid(Grid):
+class RequiresGridWidget(Grid):
     template = template = 'mako:fedoracommunity.widgets.package.templates.requires_table_widget'
     resource = 'koji'
     resource_path = 'query_requires'
     onReady = "update_grid()"
 
+class ProvidesGridWidget(Grid):
+    template = template = 'mako:fedoracommunity.widgets.package.templates.provides_table_widget'
+    resource = 'koji'
+    resource_path = 'query_provides'
+    onReady = "update_grid()"
+
+class ObsoletesGridWidget(Grid):
+    template = template = 'mako:fedoracommunity.widgets.package.templates.obsoletes_table_widget'
+    resource = 'koji'
+    resource_path = 'query_obsoletes'
+    onReady = "update_grid()"
+
+class ConflictsGridWidget(Grid):
+    template = template = 'mako:fedoracommunity.widgets.package.templates.conflicts_table_widget'
+    resource = 'koji'
+    resource_path = 'query_conflicts'
+    onReady = "update_grid()"
+
 class RequiresWidget(RelationshipBaseWidget):
-    grid = RequiresWidgetGrid
+    grid = RequiresGridWidget
 
 class DependsWidget(RelationshipBaseWidget):
     pass
 
 class ProvidesWidget(RelationshipBaseWidget):
-    pass
+    grid = ProvidesGridWidget
 
 class ObsoletesWidget(RelationshipBaseWidget):
-    pass
+    grid = ObsoletesGridWidget
 
 class ConflictsWidget(RelationshipBaseWidget):
-    pass
+    grid = ConflictsGridWidget
 
 
 

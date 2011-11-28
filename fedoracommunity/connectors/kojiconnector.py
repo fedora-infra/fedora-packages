@@ -1008,7 +1008,7 @@ class KojiConnector(IConnector, ICall, IQuery):
         conflict_versions = h[rpm.RPMTAG_CONFLICTVERSION]
         conflict_flags = h[rpm.RPMTAG_CONFLICTFLAGS]
         conflict_ops = []
-        for flags in conficts_flags:
+        for flags in conflict_flags:
             op = ""
             if flags & rpm.RPMSENSE_GREATER:
                 op = ">"
@@ -1019,17 +1019,17 @@ class KojiConnector(IConnector, ICall, IQuery):
                     op += "="
                 else:
                     op = "="
-            conflicts_ops.append(op)
+            conflict_ops.append(op)
 
         total_rows = len(conflict_names)
         rows = []
         for i in range(start_row, start_row + rows_per_page):
             if i >= total_rows:
                 break
-            rows.append({'name': conflicts_names[i],
-                        'version': conflicts_versions[i],
-                        'flags': conflicts_flags[i],
-                        'ops': conflicts_ops[i]
+            rows.append({'name': conflict_names[i],
+                        'version': conflict_versions[i],
+                        'flags': conflict_flags[i],
+                        'ops': conflict_ops[i]
                        })
 
         return (total_rows, rows)
