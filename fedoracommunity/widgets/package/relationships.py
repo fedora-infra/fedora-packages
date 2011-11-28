@@ -63,8 +63,14 @@ class RelationshipBaseWidget(twc.Widget):
             build_info['arch_tasks'] = arch_tasks
             self.build_to_archtask_map[build_info['build_id']] = arch_tasks
 
+class RequiresWidgetGrid(Grid):
+    template = template = 'mako:fedoracommunity.widgets.package.templates.requires_table_widget'
+    resource = 'koji'
+    resource_path = 'query_requires'
+    onReady = "update_grid()"
+
 class RequiresWidget(RelationshipBaseWidget):
-    pass
+    grid = RequiresWidgetGrid
 
 class DependsWidget(RelationshipBaseWidget):
     pass

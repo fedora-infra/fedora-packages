@@ -12,7 +12,27 @@
                     import json
                     json_build_arch_tasks = json.dumps(w.build_to_archtask_map)
                     %>
+
                     var build_arch_tasks = ${json_build_arch_tasks};
+                    var $grid = null;
+
+                    function update_grid() {
+                        if ($grid == null)
+                            throw "Grid is not registered";
+
+                        var build_id = $("#build_select").val();
+                        var arch_index = $("#arch_select").val();
+                        var task = build_arch_tasks[build_id][arch_index];
+                        var nvr = task['nvr'];
+                        var arch = task['label'];
+
+                        $grid.mokshagrid("request_update",{"filters":{"nvr": nvr,
+                                                           "arch": arch}});
+                    }
+
+                    function register_grid(grid) {
+                        $grid = grid;
+                    }
 
                     function on_build_change(self) {
                         var archs = build_arch_tasks[self.value];
@@ -25,9 +45,8 @@
                             var $option = $("<option></option>").text(arch_name).attr('value', i);
                             $arch_select.append($option);
                         }
-
+                        update_grid();
                     }
-
                 </script>
                 <select name="build_id" id="build_select" onChange="on_build_change(this)">
                   % for (i, build) in enumerate(w.latest_builds.keys()):
@@ -50,13 +69,13 @@
                   % endfor
                 </select>
                 <label for="arch_task_id">Arch:</label>
-                <select name="arch_task_id" id="arch_select" onChange="displayTree(this.value)">
+                <select name="arch_task_id" id="arch_select" onChange="update_grid()">
                   % for (i, arch_task) in enumerate(w.latest_builds.values()[0]['arch_tasks']):
                     <%
                         selected=  ""
                         if i == 0:
                             selected = 'selected'
-                        task_id = str(arch_task['id'])
+
                         arch = arch_task['label']
                     %>
                     <option ${selected} value="${str(i)}">${arch}</option>
@@ -65,7 +84,8 @@
             </div>
           </form>
         </div>
-        <div id="tree_content">
+        <div id="relationship_content">
+            ${w.children[0].display(args=w.args, kwds=w.kwds) | n}
         </div>
         </div>
     </div>
