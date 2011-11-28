@@ -765,18 +765,16 @@ class KojiConnector(IConnector, ICall, IQuery):
             elif flags & rpm.RPMSENSE_LESS:
                 op = "<"
             if flags & rpm.RPMSENSE_EQUAL:
-                if op:
-                    op += "="
-                else:
-                    op == "=="
-            ops.append(op)
+                op += "="
+
+            provides_ops.append(op)
 
         total_rows = len(provides_names)
         rows = []
         for i in range(start_row, start_row + rows_per_page):
             if i >= total_rows:
                 break
-            row.append({'name': provides_names[i],
+            rows.append({'name': provides_names[i],
                         'version': provides_versions[i],
                         'flags': provides_flags[i],
                         'ops': provides_ops[i]
@@ -851,15 +849,15 @@ class KojiConnector(IConnector, ICall, IQuery):
                 if op:
                     op += "="
                 else:
-                    op == "=="
-            ops.append(op)
+                    op = "="
+            requires_ops.append(op)
 
         total_rows = len(requires_names)
         rows = []
         for i in range(start_row, start_row + rows_per_page):
             if i >= total_rows:
                 break
-            row.append({'name': requires_names[i],
+            rows.append({'name': requires_names[i],
                         'version': requires_versions[i],
                         'flags': requires_flags[i],
                         'ops': requires_ops[i]
@@ -935,8 +933,8 @@ class KojiConnector(IConnector, ICall, IQuery):
                 if op:
                     op += "="
                 else:
-                    op == "=="
-            ops.append(op)
+                    op = "="
+            obsoletes_ops.append(op)
 
         total_rows = len(obsoletes_names)
         rows = []
@@ -944,7 +942,7 @@ class KojiConnector(IConnector, ICall, IQuery):
             if i >= total_rows:
                 break
 
-            row.append({'name': obsoletes_names[i],
+            rows.append({'name': obsoletes_names[i],
                         'version': obsoletes_versions[i],
                         'flags': obsoletes_flags[i],
                         'ops': obsoletes_ops[i]
@@ -1020,15 +1018,15 @@ class KojiConnector(IConnector, ICall, IQuery):
                 if op:
                     op += "="
                 else:
-                    op == "=="
-            ops.append(op)
+                    op = "="
+            conflicts_ops.append(op)
 
         total_rows = len(conflict_names)
         rows = []
         for i in range(start_row, start_row + rows_per_page):
             if i >= total_rows:
                 break
-            row.append({'name': conflicts_names[i],
+            rows.append({'name': conflicts_names[i],
                         'version': conflicts_versions[i],
                         'flags': conflicts_flags[i],
                         'ops': conflicts_ops[i]
