@@ -2,6 +2,7 @@
 
 import os
 import sys
+import textwrap
 import ConfigParser
 
 EXAMPLE_CTL_CONF = """
@@ -27,9 +28,25 @@ def load_config(fname="~/.moksha/ctl.conf"):
 
     fname = os.path.expanduser(fname)
     if not os.path.exists(fname):
-        print "No such file '%s'" % fname
-        print EXAMPLE_CTL_CONF
-        sys.exit(1)
+        # If moksha is already checked out alongside of us, then automatically
+        # generate the config.
+        mokshadir = os.path.abspath(os.path.join('..', 'moksha'))
+        if os.path.isdir(mokshadir):
+            mokshacfgdir = os.path.dirname(fname)
+            if not os.path.isdir(mokshacfgdir):
+                os.makedirs(mokshacfgdir)
+            cfg = file(fname, 'w')
+            cfg.write(textwrap.dedent("""\
+                [fcomm]
+                venv = fcomm
+                fcomm-src-dir = %s
+                moksha-src-dir = %s
+            """ % (os.getcwd(), mokshadir)))
+            cfg.close()
+        else:
+            print "No such file '%s'" % fname
+            print EXAMPLE_CTL_CONF
+            sys.exit(1)
 
     with open(fname) as f:
         config.readfp(f)
