@@ -2,7 +2,6 @@
 import decorator
 import os
 import sys
-import virtualenvcontext
 
 # Local imports
 import config
@@ -27,6 +26,7 @@ PRETTY_PREFIX = "[ " + c.magenta("fcomm-ctl") + " ] "
 
 @decorator.decorator
 def _with_virtualenv(func, *args, **kwargs):
+    import virtualenvcontext
     with virtualenvcontext.VirtualenvContext(ctl_config['venv']):
         return func(*args, **kwargs)
 
