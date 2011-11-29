@@ -106,8 +106,8 @@ def rebuild():
 @_reporter
 def download_db_snapshot():
     """ Download a snapshot of our xapian database """
-    os.system('wget -N http://johnp.fedorapeople.org/downloads/xapian/xapian.tar.xz')
-    os.system('tar xvf xapian.tar.xz')
+    os.system('wget -N http://johnp.fedorapeople.org/downloads/xapian/xapian-LATEST.tar.xz')
+    os.system('tar xvf xapian-LATEST.tar.xz')
     return True
 
 
