@@ -156,6 +156,8 @@ def develop():
     ret = True
     ret = ret and not os.system('%s setup.py develop' % sys.executable)
     ret = ret and not os.system('%s setup.py install' % sys.executable)
+    if not os.path.isdir('logs'):
+        os.makedirs('logs')
     return ret
 
 
