@@ -64,7 +64,7 @@ def _with_moksha_first(func, *args, **kwargs):
 
 @decorator.decorator
 def _reporter(func, *args, **kwargs):
-    PRETTY_PREFIX = "[ " + c.magenta("fcomm-ctl") + " ] "
+    PRETTY_PREFIX = "[" + c.magenta("fcomm-ctl") + "] "
     descriptor = ":".join([func.__name__] + [a for a in args if a])
     print PRETTY_PREFIX, "Running:", descriptor
     output = None
