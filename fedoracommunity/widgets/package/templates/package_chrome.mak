@@ -19,10 +19,10 @@
              <div class="package-tree">
                  <div><h3>PACKAGE TREE</h3></div>
                  <ul>
-                   <li><a class="package-name" href="/${w.kwds['package_name']}">${w.kwds['package_name']}</a>
+                   <li><a class="package-name" href="/${w.package_info['name']}/">${w.package_info['name']}</a>
                    <ul>
                        % for subpkg in w.package_info['sub_pkgs']:
-                             <li><a class="package-name" href="${subpkg['name']}">${subpkg['name']}</a></li>
+                             <li><a class="package-name" href="/${subpkg['name']}/">${subpkg['name']}</a></li>
                        % endfor
                    </ul>
                  </li>
@@ -32,7 +32,10 @@
          <div class="grid_19">
            <div id="package-header">
              <h2>${w.kwds['package_name']}</h2>
-             <div><em>${w.package_info['summary']}</em></div>
+             % if w.kwds['package_name'] != w.package_info['name']:
+                 Subpackage of <a class="subpackage_link" href="/${w.package_info['name']}/">${w.package_info['name']}</a>
+             % endif
+             <div><em>${w.summary}</em></div>
            </div>
            <div id="tab-content">
             ${w.children[0].display(args=w.args, kwds=w.kwds) | n}

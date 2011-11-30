@@ -46,4 +46,15 @@ class Details(twc.Widget):
         package_name = self.kwds['package_name']
         xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(package_name)
+
+        if result['name'] == package_name:
+            self.summary = result['summary']
+            self.description = result['description']
+        else:
+            for subpkg in result['sub_pkgs']:
+                if subpkg['name'] == package_name:
+                    self.summary = subpkg['summary']
+                    self.description = subpkg['description']
+                    break;
+
         self.package_info = result

@@ -281,6 +281,7 @@ class Indexer(object):
                     print("%d:    indexing subpkg %s" % (i, sub_pkg['name']))
 
                 doc.fields.append(xappy.Field('subpackages', filtered_sub_pkg_name, weight=1.0))
+                doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_pkg_name + '__EX', weight=10.0))
                 self.index_files(doc, sub_pkg, src_rpm_cache)
 
                 # remove anything we don't want to store

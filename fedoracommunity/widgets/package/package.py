@@ -86,9 +86,19 @@ class PackageWidget(twc.Widget):
         xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(name)
         self.package_info = result
+        if result['name'] == name:
+            self.summary = result['summary']
+            self.description = result['description']
+        else:
+            for subpkg in result['sub_pkgs']:
+                if subpkg['name'] == name:
+                    self.summary = subpkg['summary']
+                    self.description = subpkg['description']
+                    break;
+
         koji = get_connector('koji')
         try:
-            builds = koji._koji_client.getLatestBuilds('dist-rawhide', package=name)
+            builds = koji._koji_client.getLatestBuilds('dist-rawhide', package=result['name'])
             if builds:
                 self.latest_build = builds[0]['version'] + '-' + \
                                     builds[0]['release']
