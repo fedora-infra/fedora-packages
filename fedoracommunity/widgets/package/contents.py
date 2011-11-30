@@ -3,6 +3,8 @@ from moksha.api.widgets import Grid
 from moksha.api.connectors import get_connector
 from collections import OrderedDict
 
+from fedoracommunity.widgets.tree import tree_js
+
 class FilelistTree(twc.Widget):
     template='mako:fedoracommunity.widgets.package.templates.filelist_tree_widget'
 
@@ -11,6 +13,7 @@ class FilelistTree(twc.Widget):
 
 
 class ContentsWidget(twc.Widget):
+    resources = [tree_js]
     template = 'mako:fedoracommunity.widgets.package.templates.contents'
     # filelist_tree = FilelistTree
 

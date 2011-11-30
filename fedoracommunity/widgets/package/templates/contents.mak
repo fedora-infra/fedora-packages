@@ -37,17 +37,20 @@
                                 var obj = list[i];
                                 if (undefined != obj.dirname) {
                                     // we are an directory, recurse
-                                    $li.append(obj.dirname + '/');
+                                    $li.append("<a>" +obj.dirname + "</a>");
                                     $li.append(construct_ul_from_dir_list(obj.content));
+                                    $li.addClass('jstree-open')
                                 } else {
                                     var display = obj.name;
                                     if (obj.type == 'L')
                                         display += '->' + obj.linked_to;
 
-                                    $li.append(display);
+                                    var $a = $("<a>" + display + "</a>").addClass("jstree-file")
+                                    $li.append($a);
                                 }
                                 $ul.append($li);
                             }
+
                             return($ul);
                         }
                         var done_cb = function(data) {
@@ -56,6 +59,10 @@
                                 var $root = construct_ul_from_dir_list(data);
                                 $root.attr('id','file_tree');
                                 $tc.append($root);
+                                $tc.jstree({"plugins": ["html_data", "themes", "search"],
+                                            "themes":{"url":"/css/filetreetheme/style.css",
+                                                      "icons": true,
+                                                      "dots": false}});
                             } else if (undefined != data['error']) {
                                 $tc.append(data['error'].toString());
                             } else {
