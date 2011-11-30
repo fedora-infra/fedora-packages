@@ -100,7 +100,7 @@ def bootstrap():
 @_with_moksha_first
 def rebuild():
     """ Completely destroy and rebuild the virtualenv. """
-    return install_hacks() and link_external_libs() and develop() and download_db_snapshot()
+    return install_hacks() and link_external_libs() and develop() and download_db_snapshot() and download_icons()
 
 
 @_reporter
@@ -108,6 +108,15 @@ def download_db_snapshot():
     """ Download a snapshot of our xapian database """
     os.system('wget -N http://johnp.fedorapeople.org/downloads/xapian/xapian-LATEST.tar.xz')
     os.system('tar xvf xapian-LATEST.tar.xz')
+    return True
+
+
+@_reporter
+def download_icons():
+    """ Download our icons """
+    os.system('wget -N http://johnp.fedorapeople.org/downloads/xapian/icons.tar.xz')
+    os.system('tar xvf icons.tar.xz')
+    os.system('mv icons fedoracommunity/public/images/')
     return True
 
 
