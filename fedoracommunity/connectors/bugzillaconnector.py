@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import ssl
 import time
 
 from datetime import datetime, timedelta
@@ -122,11 +123,14 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 }))
 
         # Closed bugs
-        results['closed'] = len(self._bugzilla.query({
-                'product': collection,
-                'component': package,
-                'bug_status': ['CLOSED'],
-                }))
+        try:
+            results['closed'] = len(self._bugzilla.query({
+                    'product': collection,
+                    'component': package,
+                    'bug_status': ['CLOSED'],
+                    }))
+        except ssl.SSLError:
+            results['closed'] = '?'
 
         # Closed bugs this week
         results['closed_this_week'] = len(self._bugzilla.query({
