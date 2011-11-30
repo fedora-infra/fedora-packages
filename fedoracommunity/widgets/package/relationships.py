@@ -35,7 +35,9 @@ class RelationshipBaseWidget(twc.Widget):
         self.latest_builds = latest_builds
         build_ids = []
         for build_info in self.latest_builds.values():
-            build_ids.append(build_info['build_id'])
+            build_id = build_info['build_id']
+            if build_id:
+                build_ids.append(build_id)
 
         self.default_build_id = build_ids[0]
 
@@ -46,7 +48,11 @@ class RelationshipBaseWidget(twc.Widget):
         for build_info in self.latest_builds.values():
             arch_tasks = []
 
-            for subtasks in tasks[build_info['build_id']].values():
+            build_tasks = tasks.get(build_info['build_id'], None)
+            if not build_tasks:
+                continue
+
+            for subtasks in build_tasks.values():
                 for task in subtasks:
                     if task['method'] == 'buildArch':
                         arch_tasks.append(task)

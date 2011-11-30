@@ -1040,13 +1040,15 @@ class KojiConnector(IConnector, ICall, IQuery):
         if build_ids:
             for id in build_ids:
                 self._koji_client.multicall = True
-                self._koji_client.getBuild(id)
+                self._koji_client.getBuild(int(id))
 
             builds = self._koji_client.multiCall()
             if builds:
                 for b in builds:
                     self._koji_client.multicall = True
-                    self._koji_client.getTaskDescendents(b[0]['task_id'])
+                    task_id = b[0]['task_id']
+                    if task_id:
+                        self._koji_client.getTaskDescendents(b[0]['task_id'])
 
                 tasks = self._koji_client.multiCall()
                 if tasks:
