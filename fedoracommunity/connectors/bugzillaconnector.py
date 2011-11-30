@@ -180,15 +180,16 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 createfunc=lambda: self._query_bugs(query,
                     filters=filters, collection=collection, **params))
         total_count = len(bugs)
-        five_pages = rows_per_page * 5
-        if start_row < five_pages: # Cache the first 5 pages of every bug grid
-            bugs = bugs[:five_pages]
-            bugs = bugzilla_cache.get_value(key=key + '_details',
-                    expiretime=900, createfunc=lambda: self.get_bugs(
-                        bugs, collection=collection))
+        # This caching is a bit too aggressive
+        #five_pages = rows_per_page * 5
+        #if start_row < five_pages: # Cache the first 5 pages of every bug grid
+        #    bugs = bugs[:five_pages]
+        #    bugs = bugzilla_cache.get_value(key=key + '_details',
+        #            expiretime=900, createfunc=lambda: self.get_bugs(
+        #                bugs, collection=collection))
         bugs = bugs[start_row:start_row+rows_per_page]
-        if start_row >= five_pages:
-            bugs = self.get_bugs(bugs, collection=collection)
+        #if start_row >= five_pages:
+        bugs = self.get_bugs(bugs, collection=collection)
         return (total_count, bugs)
 
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
