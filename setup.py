@@ -126,6 +126,10 @@ setup(
     package.changelog = fedoracommunity.widgets.package.changelog:ChangelogWidget
     package.sources = fedoracommunity.widgets.package.sources:Sources
     package.sources.spec = fedoracommunity.widgets.package.sources:Spec
+    package.sources.patches = fedoracommunity.widgets.package.sources:Patches
+    package.sources.diffs = fedoracommunity.widgets.package.sources:Diffs
+    package.sources.tarballs = fedoracommunity.widgets.package.sources:Tarballs
+    package.sources.git = fedoracommunity.widgets.package.sources:GitRepo
 
     package.relationships = fedoracommunity.widgets.package.relationships:RelationshipsWidget
     package.relationships.requires = fedoracommunity.widgets.package.relationships:RequiresWidget

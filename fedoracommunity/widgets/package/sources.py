@@ -43,7 +43,13 @@ class FedoraGitRepo(object):
 
 
 class Sources(TabWidget):
-    tabs = OrderedDict([('Spec', 'package.sources.spec')])
+    tabs = OrderedDict([
+        ('Spec', 'package.sources.spec'),
+        ('Patches', 'package.sources.patches'),
+        ('Diffs', 'package.sources.diffs'),
+        ('Tarballs', 'package.sources.tarballs'),
+        ('Git', 'package.sources.git'),
+        ])
     base_url = Template(text='/${kwds["package_name"]}/sources/')
     default_tab = 'Spec'
 
@@ -52,6 +58,7 @@ class Spec(twc.Widget):
     kwds = twc.Param(default=None)
     text = twc.Param('The text of the specfile')
     template = 'mako:fedoracommunity/widgets/package/templates/package_spec.mak'
+
     def prepare(self):
         super(Spec, self).prepare()
         repo = FedoraGitRepo(self.kwds['package_name'])
@@ -59,25 +66,30 @@ class Spec(twc.Widget):
 
 
 class Patches(twc.Widget):
+    kwds = twc.Param(default=None)
+    template = 'mako:fedoracommunity/widgets/package/templates/patches.mak'
+
     def prepare(self):
         super(Patches, self).prepare()
 
 
 class Diffs(twc.Widget):
+    template = 'mako:fedoracommunity/widgets/package/templates/diffs.mak'
     def prepare(self):
         super(Diffs, self).prepare()
 
 
 class Tarballs(twc.Widget):
+    template = 'mako:fedoracommunity/widgets/package/templates/tarballs.mak'
+    kwds = twc.Param(default=None)
+
     def prepare(self):
         super(Tarballs, self).prepare()
 
 
 class GitRepo(twc.Widget):
+    template = 'mako:fedoracommunity/widgets/package/templates/git.mak'
+    kwds = twc.Param(default=None)
+
     def prepare(self):
         super(GitRepo, self).prepare()
-
-
-class UpstreamSources(twc.Widget):
-    def prepare(self):
-        super(UpstreamSources, self).prepare()
