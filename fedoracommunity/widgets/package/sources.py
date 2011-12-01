@@ -62,7 +62,7 @@ class FedoraGitRepo(object):
     def get_patch(self, filename):
         return self.repo.tree()[filename].data_stream.read()
 
-    def get_diffstat(self, patch):
+    def get_diffstat(self, patch='*.patch'):
         return self._run('diffstat %s' % patch)
 
     def get_creation_time(self, filename):
@@ -96,6 +96,7 @@ class Patches(twc.Widget):
     kwds = twc.Param(default=None)
     patches = twc.Param(default=None)
     package = twc.Variable()
+    diffstat = twc.Variable()
     template = 'mako:fedoracommunity/widgets/package/templates/patches.mak'
 
     def prepare(self):
@@ -103,6 +104,7 @@ class Patches(twc.Widget):
         self.package = self.kwds['package_name']
         repo = FedoraGitRepo(self.package)
         self.patches = repo.get_patches()
+        self.diffstat = repo.get_diffstat()
 
 
 class Patch(twc.Widget):
