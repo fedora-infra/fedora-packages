@@ -58,7 +58,8 @@ setup(
         #"PyOpenSSL",
         "SQLAlchemy>=0.5",
         "xappy",
-        "GitPython",
+        # For some reason this doesn't get automatically pulled in :(
+        #"GitPython",
         #"pytz",
         ],
     scripts=['fedoracommunity_makeyumcache'],

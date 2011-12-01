@@ -130,6 +130,11 @@ def install_hacks():
         os.system('svn checkout http://xappy.googlecode.com/svn/trunk/ xappy')
     with utils.DirectoryContext('xappy'):
         os.system('%s setup.py install' % sys.executable)
+
+    # For some reason listing GitPython in the install_requires in our
+    # setup.py does not automatically pull it in :(
+    os.system('easy_install GitPython')
+
     return True
 
 
