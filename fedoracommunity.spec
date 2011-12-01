@@ -40,6 +40,8 @@ Requires: pyOpenSSL
 Requires: python-memcached
 Requires: httpd
 Requires: mod_wsgi
+Requires: diffstat
+Requires: fedpkg
 
 Obsoletes: myfedora
 
