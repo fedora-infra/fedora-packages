@@ -37,15 +37,20 @@
                                 var obj = list[i];
                                 if (undefined != obj.dirname) {
                                     // we are an directory, recurse
-                                    $li.append("<a>" +obj.dirname + "</a>");
+                                    var $a = $("<a>" +obj.dirname + "</a>");
+                                    $a.addClass('jstree-directory');
+                                    $li.append($a);
                                     $li.append(construct_ul_from_dir_list(obj.content));
-                                    $li.addClass('jstree-open')
+                                    $li.addClass('jstree-open');
                                 } else {
                                     var display = obj.name;
                                     if (obj.type == 'L')
                                         display += '->' + obj.linked_to;
 
-                                    var $a = $("<a>" + display + "</a>").addClass("jstree-file")
+                                    var $a = $("<a>" + display + "</a>");
+
+                                    if (obj.type == 'L')
+                                        $a.addClass("jstree-link");
                                     $li.append($a);
                                 }
                                 $ul.append($li);
