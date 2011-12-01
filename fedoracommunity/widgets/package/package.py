@@ -63,6 +63,7 @@ class PackageNavWidget(TabWidget):
                                     ('Bugs', 'package.bugs'),
                                     ('Contents', 'package.contents'),
                                     ('Changelog', 'package.changelog'),
+                                    ('Sources', 'package.sources'),
                                     ('Relationships', 'package.relationships')])
     base_url = Template(text='/${kwds["package_name"]}/');
     default_tab = 'Overview'

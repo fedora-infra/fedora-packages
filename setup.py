@@ -58,6 +58,7 @@ setup(
         #"PyOpenSSL",
         "SQLAlchemy>=0.5",
         "xappy",
+        "GitPython",
         #"pytz",
         ],
     scripts=['fedoracommunity_makeyumcache'],
@@ -123,6 +124,8 @@ setup(
     package.bugs = fedoracommunity.widgets.package.bugs:BugsWidget
     package.contents = fedoracommunity.widgets.package.contents:ContentsWidget
     package.changelog = fedoracommunity.widgets.package.changelog:ChangelogWidget
+    package.sources = fedoracommunity.widgets.package.sources:Sources
+    package.sources.spec = fedoracommunity.widgets.package.sources:Spec
 
     package.relationships = fedoracommunity.widgets.package.relationships:RelationshipsWidget
     package.relationships.requires = fedoracommunity.widgets.package.relationships:RequiresWidget
