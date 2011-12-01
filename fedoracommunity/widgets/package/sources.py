@@ -17,10 +17,9 @@ class FedoraGitRepo(object):
 
     def __init__(self, package, branch='master'):
         self.package = package
-        self.repo_path = os.path.join(config.get('git_repo_path'),
-                                      package, branch)
+        top_repo = config.get('git_repo_path')
+        self.repo_path = os.path.join(top_repo, package, branch)
         if not os.path.isdir(self.repo_path):
-            top_repo = os.path.dirname(self.repo_path)
             if not os.path.isdir(top_repo):
                 os.makedirs(top_repo)
             self.clone_repo()
