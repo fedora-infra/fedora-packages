@@ -7,6 +7,7 @@ import logging
 from tg import config
 from mako.template import Template
 from collections import OrderedDict
+from moksha.lib.helpers import DateTimeDisplay
 
 from package import TabWidget
 
@@ -41,6 +42,21 @@ class FedoraGitRepo(object):
         spec = self.repo.tree()[self.package + '.spec']
         return spec.data_stream.read()
 
+    def get_patches(self):
+        patches = {}
+        for patch in [blob for blob in self.repo.tree().traverse()
+                      if blob.name.endswith('.patch')]:
+            created = self.get_creation_time(patch.name)
+            patches[patch.name] = [
+                DateTimeDisplay(created).age(granularity='day', general=True),
+                created.strftime('%d %b %Y'),
+                ]
+        return patches
+
+    def get_creation_time(self, filename):
+        date = ' '.join(self.repo.git.log(filename, reverse=True).split('\n')[2].split()[1:-1])
+        return DateTimeDisplay(date, format='%a %b %d %H:%M:%S %Y').datetime
+
 
 class Sources(TabWidget):
     tabs = OrderedDict([
@@ -67,10 +83,13 @@ class Spec(twc.Widget):
 
 class Patches(twc.Widget):
     kwds = twc.Param(default=None)
+    patches = twc.Param(default=None)
     template = 'mako:fedoracommunity/widgets/package/templates/patches.mak'
 
     def prepare(self):
         super(Patches, self).prepare()
+        repo = FedoraGitRepo(self.kwds['package_name'])
+        self.patches = repo.get_patches()
 
 
 class Diffs(twc.Widget):
