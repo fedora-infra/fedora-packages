@@ -20,6 +20,7 @@ class FedoraGitRepo(object):
 
     def __init__(self, package, branch='master'):
         self.package = package
+        self.branch = branch
         top_repo = config.get('git_repo_path')
         self.repo_path = os.path.join(top_repo, package, branch)
         if not os.path.isdir(self.repo_path):
@@ -29,12 +30,16 @@ class FedoraGitRepo(object):
         self.repo = git.Repo(self.repo_path)
 
     def _run(self, cmd, **kw):
+        # if no working directory is specified, default to inside the
+        # repo for this package & branch
+        if 'cwd' not in kw:
+            kw['cwd'] = self.repo_path
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, **kw)
         out, err = p.communicate()
         if out: log.debug(out)
         if err: log.error(err)
-        return p.returncode
+        return out
 
     def clone_repo(self):
         self._run('fedpkg clone --anonymous --branches ' + self.package,
@@ -56,6 +61,9 @@ class FedoraGitRepo(object):
 
     def get_patch(self, filename):
         return self.repo.tree()[filename].data_stream.read()
+
+    def get_diffstat(self, patch):
+        return self._run('diffstat %s' % patch)
 
     def get_creation_time(self, filename):
         date = ' '.join(self.repo.git.log(filename, reverse=True).split('\n')[2].split()[1:-1])
@@ -101,14 +109,18 @@ class Patch(twc.Widget):
     package = twc.Param('The name of the package')
     patch = twc.Param('The filename of the patch')
     text = twc.Variable('The text of the patch')
+    diffstat = twc.Param('The diffstat for this patch', default=True)
     template = 'mako:fedoracommunity/widgets/package/templates/patch.mak'
 
     def prepare(self):
         super(Patch, self).prepare()
         repo = FedoraGitRepo(self.package)
         diff = repo.get_patch(self.patch)
+        if self.diffstat:
+            self.diffstat = repo.get_diffstat(self.patch)
         self.text = highlight(diff, DiffLexer(),
-                HtmlFormatter(full=True, linenos=True))
+                HtmlFormatter(full=True, linenos=True, cssclass='source',
+                              nobackground=True))
 
 
 class Diffs(twc.Widget):
