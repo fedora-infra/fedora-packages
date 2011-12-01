@@ -121,8 +121,7 @@ class Patch(twc.Widget):
         if self.diffstat:
             self.diffstat = repo.get_diffstat(self.patch)
         self.text = highlight(diff, DiffLexer(),
-                HtmlFormatter(full=True, linenos=True, cssclass='source',
-                              nobackground=True))
+                HtmlFormatter(full=True, linenos=True, nobackground=True))
 
 
 class Diffs(twc.Widget):
