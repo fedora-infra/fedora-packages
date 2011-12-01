@@ -20,29 +20,30 @@ import fedoracommunity.lib
 
 from tg.configuration import AppConfig, Bunch
 
-class FedoraCommunityConfig(AppConfig):
-    def add_auth_middleware(self, app, *args):
-        """ Add our FAS authentication middleware """
-        from fedoracommunity.connectors.faswhoplugin import fas_make_who_middleware
-        #from repoze.what.plugins.pylonshq import booleanize_predicates
-        from copy import copy
-        import logging
+#class FedoraCommunityConfig(AppConfig):
+#    def add_auth_middleware(self, app, *args):
+#        """ Add our FAS authentication middleware """
+#        from fedoracommunity.connectors.faswhoplugin import fas_make_who_middleware
+#        #from repoze.what.plugins.pylonshq import booleanize_predicates
+#        from copy import copy
+#        import logging
+#
+#        # TODO: go through moksha.lib.helpers and clean up the Predicate usage.
+#        # Eventually we want to be using this, because this is how TG2/Pylons
+#        # does it, however it currently breaks things for us...
+#        #booleanize_predicates()
+#
+#        # Configuring auth logging:
+#        if 'log_stream' not in self.fas_auth:
+#            self.fas_auth['log_stream'] = logging.getLogger('auth')
+#
+#        auth_args = copy(self.fas_auth)
+#
+#        app = fas_make_who_middleware(app, **auth_args)
+#        return app
+#base_config = FedoraCommunityConfig()
 
-        # TODO: go through moksha.lib.helpers and clean up the Predicate usage.
-        # Eventually we want to be using this, because this is how TG2/Pylons
-        # does it, however it currently breaks things for us...
-        #booleanize_predicates()
-
-        # Configuring auth logging:
-        if 'log_stream' not in self.fas_auth:
-            self.fas_auth['log_stream'] = logging.getLogger('auth')
-
-        auth_args = copy(self.fas_auth)
-
-        app = fas_make_who_middleware(app, **auth_args)
-        return app
-
-base_config = FedoraCommunityConfig()
+base_config = AppConfig()
 base_config.renderers = []
 base_config.use_dotted_templatenames = True
 
@@ -68,8 +69,8 @@ base_config.use_sqlalchemy = False # fix this later
 # Setting this to 'sqlalchemy' ensures that our
 # FedoraCommunityConfig.add_auth_middleware will get called.
 # This is very broken in the code
-base_config.auth_backend = 'sqlalchemy'
-base_config.fas_auth = Bunch()
+#base_config.auth_backend = 'sqlalchemy'
+#base_config.fas_auth = Bunch()
 
 #base_config.sa_auth = Bunch()
 #base_config.sa_auth.dbsession = model.DBSession
