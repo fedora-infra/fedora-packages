@@ -8,6 +8,9 @@ from tg import config
 from mako.template import Template
 from collections import OrderedDict
 from moksha.lib.helpers import DateTimeDisplay
+from pygments import highlight
+from pygments.lexers import DiffLexer
+from pygments.formatters import HtmlFormatter
 
 from package import TabWidget
 
@@ -38,8 +41,7 @@ class FedoraGitRepo(object):
                   cwd=config.get('git_repo_path'))
 
     def get_spec(self):
-        spec = self.repo.tree()[self.package + '.spec']
-        return spec.data_stream.read()
+        return self.repo.tree()[self.package + '.spec'].data_stream.read()
 
     def get_patches(self):
         patches = {}
@@ -52,10 +54,12 @@ class FedoraGitRepo(object):
                 ]
         return patches
 
+    def get_patch(self, filename):
+        return self.repo.tree()[filename].data_stream.read()
+
     def get_creation_time(self, filename):
         date = ' '.join(self.repo.git.log(filename, reverse=True).split('\n')[2].split()[1:-1])
         return DateTimeDisplay(date, format='%a %b %d %H:%M:%S %Y').datetime
-
 
 class Sources(TabWidget):
     tabs = OrderedDict([
@@ -83,12 +87,28 @@ class Spec(twc.Widget):
 class Patches(twc.Widget):
     kwds = twc.Param(default=None)
     patches = twc.Param(default=None)
+    package = twc.Variable()
     template = 'mako:fedoracommunity/widgets/package/templates/patches.mak'
 
     def prepare(self):
         super(Patches, self).prepare()
-        repo = FedoraGitRepo(self.kwds['package_name'])
+        self.package = self.kwds['package_name']
+        repo = FedoraGitRepo(self.package)
         self.patches = repo.get_patches()
+
+
+class Patch(twc.Widget):
+    package = twc.Param('The name of the package')
+    patch = twc.Param('The filename of the patch')
+    text = twc.Variable('The text of the patch')
+    template = 'mako:fedoracommunity/widgets/package/templates/patch.mak'
+
+    def prepare(self):
+        super(Patch, self).prepare()
+        repo = FedoraGitRepo(self.package)
+        diff = repo.get_patch(self.patch)
+        self.text = highlight(diff, DiffLexer(),
+                HtmlFormatter(full=True, linenos=True))
 
 
 class Diffs(twc.Widget):
