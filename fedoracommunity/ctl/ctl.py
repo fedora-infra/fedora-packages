@@ -133,7 +133,9 @@ def install_hacks():
 
     # For some reason listing GitPython in the install_requires in our
     # setup.py does not automatically pull it in :(
-    os.system('easy_install GitPython')
+    easy_install = os.path.join(os.getenv('WORKON_HOME'),
+            ctl_config['venv'], 'bin', 'easy_install')
+    os.system(easy_install + ' GitPython')
 
     return True
 
