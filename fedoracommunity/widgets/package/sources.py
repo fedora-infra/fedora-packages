@@ -17,6 +17,7 @@ from package import TabWidget
 log = logging.getLogger(__name__)
 
 class FedoraGitRepo(object):
+    """ An abstraction for working with packages in the Fedora Git repos """
 
     def __init__(self, package, branch='master'):
         self.package = package
@@ -30,8 +31,11 @@ class FedoraGitRepo(object):
         self.repo = git.Repo(self.repo_path)
 
     def _run(self, cmd, **kw):
-        # if no working directory is specified, default to inside the
-        # repo for this package & branch
+        """ Run a shell command and return stdout.
+
+        If no `cwd` is specified, default to inside the repo for this
+        package & branch.
+        """
         if 'cwd' not in kw:
             kw['cwd'] = self.repo_path
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
@@ -42,13 +46,16 @@ class FedoraGitRepo(object):
         return out
 
     def clone_repo(self):
+        """ Create a fresh clone of this package's git repository """
         self._run('fedpkg clone --anonymous --branches ' + self.package,
                   cwd=config.get('git_repo_path'))
 
     def get_spec(self):
+        """ Return the contents of this package's RPM spec file """
         return self.repo.tree()[self.package + '.spec'].data_stream.read()
 
     def get_patches(self):
+        """ Return a dictionary of all patches for this package """
         patches = {}
         for patch in [blob for blob in self.repo.tree().traverse()
                       if blob.name.endswith('.patch')]:
@@ -59,10 +66,12 @@ class FedoraGitRepo(object):
                 ]
         return patches
 
-    def get_patch(self, filename):
-        return self.repo.tree()[filename].data_stream.read()
+    def get_patch(self, patch):
+        """ Return the contents of a specific patch """
+        return self.repo.tree()[patch].data_stream.read()
 
     def get_patch_changelog(self, patch):
+        """ Return a list of the changes made to this patch """
         commits = []
         current = {}
         in_commit = False
@@ -85,11 +94,14 @@ class FedoraGitRepo(object):
         return commits
 
     def get_diffstat(self, patch='*.patch'):
+        """ Return the output of diffstat on a given patch, or all patches """
         return self._run('diffstat %s' % patch)
 
     def get_creation_time(self, filename):
+        """ Return a datetime object for the date a given file was created """
         date = ' '.join(self.repo.git.log(filename, reverse=True).split('\n')[2].split()[1:-1])
         return DateTimeDisplay(date, format='%a %b %d %H:%M:%S %Y').datetime
+
 
 class Sources(TabWidget):
     tabs = OrderedDict([
