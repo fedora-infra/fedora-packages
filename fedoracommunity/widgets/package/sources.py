@@ -62,6 +62,28 @@ class FedoraGitRepo(object):
     def get_patch(self, filename):
         return self.repo.tree()[filename].data_stream.read()
 
+    def get_patch_changelog(self, patch):
+        commits = []
+        current = {}
+        in_commit = False
+        for commit in self.repo.git.log(patch).split('\n'):
+            chunks = commit.split()
+            if chunks:
+                if chunks[0] == 'commit':
+                    if current:
+                        commits.append(current)
+                    current = {'msg': ''}
+                elif chunks[0] == 'Author:':
+                    current['author'] = ' '.join(chunks[1:])
+                elif chunks[0] == 'Date:':
+                    current['date'] = DateTimeDisplay(
+                        ' '.join(chunks[1:-1]),
+                        format='%a %b %d %H:%M:%S %Y').datetime
+                else:
+                        current['msg'] += '%s\n' % ' '.join(chunks)
+        commits.append(current)
+        return commits
+
     def get_diffstat(self, patch='*.patch'):
         return self._run('diffstat %s' % patch)
 
@@ -110,8 +132,9 @@ class Patches(twc.Widget):
 class Patch(twc.Widget):
     package = twc.Param('The name of the package')
     patch = twc.Param('The filename of the patch')
-    text = twc.Variable('The text of the patch')
     diffstat = twc.Param('The diffstat for this patch', default=True)
+    text = twc.Variable('The text of the patch')
+    changelog = twc.Variable('The changelog of this patch')
     template = 'mako:fedoracommunity/widgets/package/templates/patch.mak'
 
     def prepare(self):
@@ -122,6 +145,7 @@ class Patch(twc.Widget):
             self.diffstat = repo.get_diffstat(self.patch)
         self.text = highlight(diff, DiffLexer(),
                 HtmlFormatter(full=True, linenos=True, nobackground=True))
+        self.changelog = repo.get_patch_changelog(self.patch)
 
 
 class Diffs(twc.Widget):
