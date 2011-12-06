@@ -11,6 +11,7 @@ from moksha.lib.helpers import DateTimeDisplay
 from pygments import highlight
 from pygments.lexers import DiffLexer
 from pygments.formatters import HtmlFormatter
+from kitchen.text.converters import to_unicode
 
 from package import TabWidget
 
@@ -52,7 +53,7 @@ class FedoraGitRepo(object):
 
     def get_spec(self):
         """ Return the contents of this package's RPM spec file """
-        return self.repo.tree()[self.package + '.spec'].data_stream.read()
+        return to_unicode(self.repo.tree()[self.package + '.spec'].data_stream.read())
 
     def get_patches(self):
         """ Return a dictionary of all patches for this package """
@@ -68,7 +69,7 @@ class FedoraGitRepo(object):
 
     def get_patch(self, patch):
         """ Return the contents of a specific patch """
-        return self.repo.tree()[patch].data_stream.read()
+        return to_unicode(self.repo.tree()[patch].data_stream.read())
 
     def get_patch_changelog(self, patch):
         """ Return a list of the changes made to this patch """
@@ -83,13 +84,13 @@ class FedoraGitRepo(object):
                         commits.append(current)
                     current = {'msg': ''}
                 elif chunks[0] == 'Author:':
-                    current['author'] = ' '.join(chunks[1:])
+                    current['author'] = to_unicode(' '.join(chunks[1:]))
                 elif chunks[0] == 'Date:':
                     current['date'] = DateTimeDisplay(
                         ' '.join(chunks[1:-1]),
                         format='%a %b %d %H:%M:%S %Y').datetime
                 else:
-                        current['msg'] += '%s\n' % ' '.join(chunks)
+                        current['msg'] += to_unicode('%s\n' %' '.join(chunks))
         commits.append(current)
         return commits
 
