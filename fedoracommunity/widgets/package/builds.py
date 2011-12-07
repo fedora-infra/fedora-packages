@@ -15,5 +15,5 @@ class BuildsGrid(Grid):
 
 
 class Builds(twc.Widget):
-    template = 'mako:fedoracommunity/widgets/package/templates/builds.mak'
+    template = 'mako:fedoracommunity.widgets.package.templates.builds'
     in_progress_builds = BuildsGrid
