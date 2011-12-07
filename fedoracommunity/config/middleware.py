@@ -22,6 +22,9 @@ make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
 def make_app(global_conf, full_stack=True, **app_conf):
     from moksha.middleware import make_moksha_middleware
+    # set the resource prefix for tw2
+    base_config.custom_tw2_config['res_prefix'] = global_conf.get('fedoracommunity.resource_path_prefix', '')
+
     app = make_base_app(global_conf, wrap_app=make_moksha_middleware,
                         full_stack=full_stack,
                         **app_conf)
