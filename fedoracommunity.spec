@@ -2,7 +2,7 @@
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
 Name:           fedoracommunity
-Version:        0.4.1
+Version:        0.5.0
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
@@ -46,7 +46,7 @@ Requires: fedpkg
 Obsoletes: myfedora
 
 %description
-Fedora Community is a web application for consolidating Fedora Infrastructure
+Fedora Community is a set of web applications for consolidating Fedora Infrastructure
 
 %prep
 %setup -q
@@ -58,7 +58,7 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{__rm} -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build \
     --install-data=%{_datadir} --root %{buildroot}
-%{__python} setup.py archive_tw_resources -f -o %{buildroot}%{_datadir}/%{name}/public/toscawidgets
+%{__python} setup.py archive_tw2_resources -f -o %{buildroot}%{_datadir}/%{name}/public/toscawidgets -d moksha -d fedoracommunity
 
 %{__mkdir_p} %{buildroot}/var/lib/
 %{__mkdir_p} %{buildroot}%{_datadir}/%{name}/production/apache
@@ -87,6 +87,9 @@ Fedora Community is a web application for consolidating Fedora Infrastructure
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Thu Dec 01 2011 John (J5) Palmieri <johnp@redhat.com> - 0.5.0-1
+- release of the development version of the packager branch
+
 * Wed Jul 21 2010 Luke Macken <lmacken@redhat.com> - 0.4.1-1
 - 0.4.1 bugfix release
 
