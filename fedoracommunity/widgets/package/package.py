@@ -72,7 +72,7 @@ class PackageNavWidget(TabWidget):
 
 
 class PackageWidget(twc.Widget):
-    template = "mako:fedoracommunity/widgets/package/templates/package_chrome.mak"
+    template = "mako:fedoracommunity.widgets.package.templates.package_chrome"
 
     package_name = twc.Param()
     args = twc.Param(default=None)

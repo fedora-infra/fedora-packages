@@ -7,7 +7,7 @@ bodhi_js = twc.JSLink(filename='static/javascript/bodhi.js',
                       modname=__name__)
 
 class Updates(Grid):
-    template = 'mako:fedoracommunity/widgets/package/templates/updates_table_widget.mak'
+    template = 'mako:fedoracommunity.widgets.package.templates.updates_table_widget'
     kwds = twc.Param()
     package_name = twc.Param('The name of the package to view')
     release_table = twc.Param()

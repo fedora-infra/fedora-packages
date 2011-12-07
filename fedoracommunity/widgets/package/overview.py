@@ -15,7 +15,7 @@ class OverviewNavWidget(TabWidget):
 
 
 class OverviewWidget(twc.Widget):
-    template = 'mako:fedoracommunity/widgets/package/templates/overview.mak'
+    template = 'mako:fedoracommunity.widgets.package.templates.overview'
     args = twc.Param()
     kwds = twc.Param()
     nav_widget = OverviewNavWidget
@@ -36,7 +36,7 @@ class ActiveReleasesGrid(Grid):
 
 
 class Details(twc.Widget):
-    template = 'mako:fedoracommunity/widgets/package/templates/details.mak'
+    template = 'mako:fedoracommunity.widgets.package.templates.details'
     kwds = twc.Param('Data passed in from the tabs')
     package_info = twc.Param('A dict containing package details from xapian')
     active_releases_widget = ActiveReleasesGrid

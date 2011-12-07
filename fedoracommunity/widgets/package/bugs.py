@@ -4,7 +4,7 @@ from moksha.api.widgets import Grid
 from moksha.api.connectors import get_connector
 
 class BugStatsWidget(twc.Widget):
-    template = "mako:fedoracommunity/widgets/package/templates/bugs_stats_widget.mak"
+    template = "mako:fedoracommunity.widgets.package.templates.bugs_stats_widget"
     id = twc.Param(default='bugs_widget')
     kwds = twc.Param(default=None)
     product = twc.Param(default='Fedora')
@@ -22,7 +22,7 @@ class BugsGrid(Grid):
     resource_path = 'query_bugs'
     release_table = twc.Param()
     package = twc.Param()
-    template = "mako:fedoracommunity/widgets/package/templates/bugs_table_widget.mak"
+    template = "mako:fedoracommunity.widgets.package.templates.bugs_table_widget"
 
     def prepare(self):
         releases = []
@@ -58,7 +58,7 @@ class BugsWidget(twc.Widget):
     bug_grid = BugsGrid
     kwds = twc.Param()
     package = twc.Param()
-    template = "mako:fedoracommunity/widgets/package/templates/bugs.mak"
+    template = "mako:fedoracommunity.widgets.package.templates.bugs"
 
     def prepare(self):
         super(BugsWidget, self).prepare()
