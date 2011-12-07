@@ -16,12 +16,12 @@
 
 import tw2.core as twc
 
-fedora_css = twc.CSSLink(modname='fedoracommunity', link='/css/fedora.css')
-fedoracommunity_appchrome_css = twc.CSSLink(modname='fedoracommunity', link='/css/application-chrome.css')
-fedoracommunity_branding_css = twc.CSSLink(modname='fedoracommunity', link='/css/myfedora-branding.css')
-fedoracommunity_reset_css = twc.CSSLink(modname='fedoracommunity', link='/css/reset.css')
-fedoracommunity_text_css = twc.CSSLink(modname='fedoracommunity', link='/css/text.css')
-fedoracommunity_960_24_col_css = twc.CSSLink(modname='fedoracommunity', link='/css/960_24_col.css')
+fedora_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/fedora.css')
+fedoracommunity_appchrome_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/application-chrome.css')
+fedoracommunity_branding_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/myfedora-branding.css')
+fedoracommunity_reset_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/reset.css')
+fedoracommunity_text_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/text.css')
+fedoracommunity_960_24_col_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/960_24_col.css')
 
 
 class PagerWidget(twc.Widget):
