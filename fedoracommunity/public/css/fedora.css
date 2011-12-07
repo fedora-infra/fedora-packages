@@ -164,6 +164,18 @@ h1#logo {
 }
 
 
+/* Grid Stuff */
+
+.grid_filter {
+  margin-top: 12px;
+}
+
+.grid_filter h4 {
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: .8em;
+  color: #777;
+}
 
 /* Footer Stuff */
 
