@@ -167,6 +167,11 @@ h1#logo {
 
 /* Footer Stuff */
 
+
+#main_app { /* compensation for footer not displaying right now */
+  padding-bottom: 75px !important;
+}
+
 #bottom {
     /*border-top: 5px #4B9EDE solid; // this is an alternative */
     padding: 30px 0px 0px 0px;
