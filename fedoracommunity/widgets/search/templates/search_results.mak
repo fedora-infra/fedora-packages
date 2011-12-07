@@ -1,5 +1,5 @@
 <!-- START Search Results -->
-
+<% from pylons import tmpl_context as c%>
 <div class="container_24">
   <div class="grid_24" id="search-results-table">
     <div class="grid_12 suffix_12" id="search-notes">
@@ -14,7 +14,7 @@
         <tr class="priority4">
             <td>
                 <span>
-                    <a href="/${'${link}'}">${'{{html name}}'}</a>
+                    <a href="${c.get_url('/${link}')}">${'{{html name}}'}</a>
                 </span>
             </td>
             <td>
@@ -23,7 +23,7 @@
         </tr>
           <!-- {{each(index, pkg) sub_pkgs}} -->
           <tr class="subpackage">
-              <td><a href="/${'${link}'}">${'{{html pkg["name"]}}'}</a></td>
+              <td><a href="${c.get_url('/') + '${pkg[\'link\']}'}">${'{{html pkg["name"]}}'}</a></td>
               <td>${'{{html pkg["summary"]}}'}</td>
           </tr>
           <!-- {{/each}} -->
