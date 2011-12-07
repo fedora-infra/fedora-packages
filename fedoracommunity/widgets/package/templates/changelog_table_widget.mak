@@ -20,7 +20,7 @@
         <div id='grid-controls'>
           <form>
             <div id="filter" class="grid_filter" name="build_filter">
-              <label for="version">Release:</label>
+              <label for="version">Build:</label>
                 <select name="build_id">
                   % for (i, build) in enumerate(w.latest_builds.keys()):
                     <%
