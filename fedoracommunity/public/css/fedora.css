@@ -170,11 +170,21 @@ h1#logo {
   margin-top: 12px;
 }
 
+#grid-controls {
+  margin-bottom: 16px;
+}
+
 .grid_filter h4 {
   text-transform: uppercase;
   font-weight: normal;
   font-size: .8em;
   color: #777;
+}
+
+/* Tree stuff */
+
+#tree_content li a {
+  height: 26px;
 }
 
 /* Footer Stuff */
