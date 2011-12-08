@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import git
 import tw2.core as twc
 
 from mako.template import Template
@@ -75,29 +76,39 @@ class Spec(twc.Widget):
     def prepare(self):
         super(Spec, self).prepare()
         self.package_name = self.kwds['package_name']
-        repo = FedoraGitRepo(self.package_name)
-        self.text = highlight(repo.get_spec(), BashLexer(),
-                HtmlFormatter(full=True, linenos=True, nobackground=True))
+        self.branch = self.kwds.get('branch', 'master')
+        try:
+            repo = FedoraGitRepo(self.package_name, branch=self.branch)
+            self.text = highlight(repo.get_spec(), BashLexer(),
+                    HtmlFormatter(full=True, linenos=True, nobackground=True))
+        except git.NoSuchPathError:
+            self.text = "No %s branch for %s" % (self.branch, self.package_name)
 
 
 class Patches(twc.Widget):
     kwds = twc.Param(default=None)
-    patches = twc.Param(default=None)
+    patches = twc.Param(default={})
     package = twc.Variable()
-    diffstat = twc.Variable()
+    diffstat = twc.Variable(default='')
+    releases = ReleaseFilter
     template = 'mako:fedoracommunity.widgets.package.templates.patches'
 
     def prepare(self):
         super(Patches, self).prepare()
         self.package = self.kwds['package_name']
-        repo = FedoraGitRepo(self.package)
-        self.patches = repo.get_patches()
-        self.diffstat = repo.get_diffstat()
+        self.branch = self.kwds.get('branch', 'master')
+        try:
+            repo = FedoraGitRepo(self.package, branch=self.branch)
+            self.patches = repo.get_patches()
+            self.diffstat = repo.get_diffstat()
+        except git.NoSuchPathError:
+            self.text = "No %s branch for %s" % (self.branch, self.package)
 
 
 class Patch(twc.Widget):
     package = twc.Param('The name of the package')
     patch = twc.Param('The filename of the patch')
+    branch = twc.Param('The git branch', default='master')
     diffstat = twc.Param('The diffstat for this patch', default=True)
     text = twc.Variable('The text of the patch')
     changelog = twc.Variable('The changelog of this patch')
@@ -105,7 +116,7 @@ class Patch(twc.Widget):
 
     def prepare(self):
         super(Patch, self).prepare()
-        repo = FedoraGitRepo(self.package)
+        repo = FedoraGitRepo(self.package, branch=self.branch)
         diff = repo.get_patch(self.patch)
         if self.diffstat:
             self.diffstat = repo.get_diffstat(self.patch)

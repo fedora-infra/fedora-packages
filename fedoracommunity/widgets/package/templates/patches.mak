@@ -1,4 +1,16 @@
-<div class="patches">
+<script type="text/javascript">
+function on_change(self) {
+	console.log('patch change');
+	$('#patches').load('/_w/package.sources.patches #patches', {
+		'package_name': '${w.package}',
+		'branch': self.value
+		});
+}
+</script>
+
+${w.children[0].display(on_change='on_change')}
+
+<div id="patches" class="patches">
 <%namespace file="diffstat.mak" import="render_diffstat"/>
 
 <a class="frame_link" href="#" onclick="return toggle_diffstat()">Show summary of all patches</a>
@@ -31,7 +43,7 @@ function toggle_patch(patch) {
 	tr.addClass('active-patch').after(
 	  $('<tr/>', {id: 'patch'}).addClass('patch-content').append(
 		  $('<td/>', {colspan: 3}).load('/widgets/package.sources.patch',
-		  	  {package: '${w.package}', patch: patch})));
+			  {package: '${w.package}', patch: patch, branch: $('#release_select').val()})));
 	return false;
 }
 
