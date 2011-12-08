@@ -38,16 +38,45 @@ class Sources(TabWidget):
     default_tab = 'Spec'
 
 
+class ReleaseFilter(twc.Widget):
+    on_change = twc.Param('The name of the javascript function to call upon change')
+    template = 'mako:fedoracommunity.widgets.package.templates.release_filter'
+
+    def prepare(self):
+        super(ReleaseFilter, self).prepare()
+        releases = []
+        pkgdb = get_connector('pkgdb')
+        collections = pkgdb.get_collection_table(active_only=True)
+        for id, collection in collections.iteritems():
+            name = collection['name']
+            ver = collection['version']
+            label = "%s %s" % (name, ver)
+            value = ""
+            branchname = collection['gitbranchname']
+            if branchname:
+                value = branchname
+            if label != 'Fedora devel' and name in ('Fedora', 'Fedora EPEL'):
+                releases.append({
+                    'label': label,
+                    'value': value,
+                    'version': ver,
+                    })
+        self.releases_table = sorted(releases,
+                cmp=lambda x, y: cmp(x['version'], y['version']))
+        self.releases_table.insert(0, {'label': 'Rawhide', 'value': 'master'})
+
+
 class Spec(twc.Widget):
     kwds = twc.Param(default=None)
     text = twc.Param('The text of the specfile')
     template = 'mako:fedoracommunity.widgets.package.templates.package_spec'
+    releases = ReleaseFilter
 
     def prepare(self):
         super(Spec, self).prepare()
-        repo = FedoraGitRepo(self.kwds['package_name'])
-        self.text = repo.get_spec()
-        self.text = highlight(self.text, BashLexer(),
+        self.package_name = self.kwds['package_name']
+        repo = FedoraGitRepo(self.package_name)
+        self.text = highlight(repo.get_spec(), BashLexer(),
                 HtmlFormatter(full=True, linenos=True, nobackground=True))
 
 
