@@ -103,6 +103,16 @@ class FedoraGitRepo(object):
         date = ' '.join(self.repo.git.log(filename, reverse=True).split('\n')[2].split()[1:-1])
         return DateTimeDisplay(date, format='%a %b %d %H:%M:%S %Y').datetime
 
+    def get_source_url(self):
+        return self._run('spectool -S *.spec').split()[1]
+
+    def get_fedora_source(self):
+        url = config.get('fedora_lookaside', 'http://pkgs.fedoraproject.org/repo/pkgs')
+        tarball = self.get_source_url().split('/')[-1]
+        md5 = self._run('grep %s sources' % tarball).split()[0]
+        url += '/%s/%s/%s/%s' % (self.package, tarball, md5, tarball)
+        return url
+
 
 class Sources(TabWidget):
     tabs = OrderedDict([
@@ -169,10 +179,16 @@ class Diffs(twc.Widget):
 
 class Tarballs(twc.Widget):
     template = 'mako:fedoracommunity/widgets/package/templates/tarballs.mak'
+    package = twc.Param('The name of the package')
+    upstream_tarball = twc.Variable()
     kwds = twc.Param(default=None)
 
     def prepare(self):
         super(Tarballs, self).prepare()
+        self.package = self.kwds['package_name']
+        repo = FedoraGitRepo(self.package)
+        self.upstream_tarball = repo.get_source_url()
+        self.fedora_tarball = repo.get_fedora_source()
 
 
 class GitRepo(twc.Widget):
