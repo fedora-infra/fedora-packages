@@ -19,8 +19,25 @@ import fedoracommunity
 import fedoracommunity.lib
 
 from tg.configuration import AppConfig, Bunch
+from paste.deploy.converters import asbool
+from pylons.i18n import ugettext
 
-#class FedoraCommunityConfig(AppConfig):
+class FedoraCommunityConfig(AppConfig):
+
+    def add_tosca2_middleware(self, app):
+        from tg import config
+        from tw2.core.middleware import Config, TwMiddleware
+        default_tw2_config = dict( default_engine=self.default_renderer,
+                                   translator=ugettext,
+                                   auto_reload_templates=asbool(self.get('templating.mako.reloadfromdisk', 'false'))
+                                   )
+        res_prefix = config.get('fedoracommunity.resource_path_prefix')
+        if res_prefix:
+            default_tw2_config['res_prefix'] = res_prefix
+        default_tw2_config.update(self.custom_tw2_config)
+        app = TwMiddleware(app, **default_tw2_config)
+        return app
+
 #    def add_auth_middleware(self, app, *args):
 #        """ Add our FAS authentication middleware """
 #        from fedoracommunity.connectors.faswhoplugin import fas_make_who_middleware
@@ -41,9 +58,10 @@ from tg.configuration import AppConfig, Bunch
 #
 #        app = fas_make_who_middleware(app, **auth_args)
 #        return app
-#base_config = FedoraCommunityConfig()
 
-base_config = AppConfig()
+
+base_config = FedoraCommunityConfig()
+#base_config = AppConfig()
 base_config.renderers = []
 base_config.use_dotted_templatenames = True
 
