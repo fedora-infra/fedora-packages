@@ -123,20 +123,3 @@ class FedoraGitRepo(object):
         md5 = self._run('grep %s sources' % tarball).split()[0]
         url += '/%s/%s/%s/%s' % (self.package, tarball, md5, tarball)
         return url
-
-
-class GitConnector(IConnector):
-    _method_paths = {}
-
-    def __init__(self, environ=None, request=None):
-        super(GitConnector, self).__init__(environ, request)
-
-    @classmethod
-    def register(cls):
-        cls.register_method('get_spec', cls.get_spec)
-
-    def get_spec(self, resource_path, _cookies=None, package=None, branch=None):
-        repo = FedoraGitRepo(package, branch=branch)
-        text = highlight(repo.get_spec(), BashLexer(),
-                HtmlFormatter(full=True, linenos=True, nobackground=True))
-        return {'text': text}
