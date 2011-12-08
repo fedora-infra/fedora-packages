@@ -24,11 +24,12 @@ function toggle_patch(patch) {
 	/* If we're already showing the patch, hide it */
 	if ( tr.next().attr('id') == 'patch' ) {
 		tr.next().remove();
+		tr.removeClass('active-patch');
 		return false;
 	}
 
-	tr.after(
-	  $('<tr/>', {id: 'patch'}).append(
+	tr.addClass('active-patch').after(
+	  $('<tr/>', {id: 'patch'}).addClass('patch-content').append(
 		  $('<td/>', {colspan: 3}).load('/widgets/package.sources.patch',
 		  	  {package: '${w.package}', patch: patch})));
 	return false;
