@@ -1,2 +1,1 @@
-<br/>
-<pre>${w.text}</pre>
+${w.text}

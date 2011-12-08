@@ -9,7 +9,7 @@ from mako.template import Template
 from collections import OrderedDict
 from moksha.lib.helpers import DateTimeDisplay
 from pygments import highlight
-from pygments.lexers import DiffLexer
+from pygments.lexers import DiffLexer, BashLexer
 from pygments.formatters import HtmlFormatter
 from kitchen.text.converters import to_unicode
 
@@ -134,6 +134,8 @@ class Spec(twc.Widget):
         super(Spec, self).prepare()
         repo = FedoraGitRepo(self.kwds['package_name'])
         self.text = repo.get_spec()
+        self.text = highlight(self.text, BashLexer(),
+                HtmlFormatter(full=True, linenos=True, nobackground=True))
 
 
 class Patches(twc.Widget):
