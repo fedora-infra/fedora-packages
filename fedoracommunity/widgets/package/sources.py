@@ -14,9 +14,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import git
+import os
 import tw2.core as twc
 
+from tg import config
 from mako.template import Template
 from collections import OrderedDict
 from pygments import highlight
@@ -41,11 +42,13 @@ class Sources(TabWidget):
 
 class ReleaseFilter(twc.Widget):
     on_change = twc.Param('The name of the javascript function to call upon change')
+    package = twc.Param('The name of the package')
     template = 'mako:fedoracommunity.widgets.package.templates.release_filter'
 
     def prepare(self):
         super(ReleaseFilter, self).prepare()
         releases = []
+        top_repo = os.path.join(config.get('git_repo_path'), self.package)
         pkgdb = get_connector('pkgdb')
         collections = pkgdb.get_collection_table(active_only=True)
         for id, collection in collections.iteritems():
@@ -55,6 +58,9 @@ class ReleaseFilter(twc.Widget):
             value = ""
             branchname = collection['gitbranchname']
             if branchname:
+                repo_path = os.path.join(top_repo, branchname)
+                if not os.path.isdir(repo_path):
+                    continue
                 value = branchname
             if label != 'Fedora devel' and name in ('Fedora', 'Fedora EPEL'):
                 releases.append({
@@ -77,12 +83,9 @@ class Spec(twc.Widget):
         super(Spec, self).prepare()
         self.package_name = self.kwds['package_name']
         self.branch = self.kwds.get('branch', 'master')
-        try:
-            repo = FedoraGitRepo(self.package_name, branch=self.branch)
-            self.text = highlight(repo.get_spec(), BashLexer(),
-                    HtmlFormatter(full=True, linenos=True, nobackground=True))
-        except git.NoSuchPathError:
-            self.text = "No %s branch for %s" % (self.branch, self.package_name)
+        repo = FedoraGitRepo(self.package_name, branch=self.branch)
+        self.text = highlight(repo.get_spec(), BashLexer(),
+                HtmlFormatter(full=True, linenos=True, nobackground=True))
 
 
 class Patches(twc.Widget):
@@ -97,12 +100,9 @@ class Patches(twc.Widget):
         super(Patches, self).prepare()
         self.package = self.kwds['package_name']
         self.branch = self.kwds.get('branch', 'master')
-        try:
-            repo = FedoraGitRepo(self.package, branch=self.branch)
-            self.patches = repo.get_patches()
-            self.diffstat = repo.get_diffstat()
-        except git.NoSuchPathError:
-            self.text = "No %s branch for %s" % (self.branch, self.package)
+        repo = FedoraGitRepo(self.package, branch=self.branch)
+        self.patches = repo.get_patches()
+        self.diffstat = repo.get_diffstat()
 
 
 class Patch(twc.Widget):
@@ -134,13 +134,15 @@ class Diffs(twc.Widget):
 class Tarballs(twc.Widget):
     template = 'mako:fedoracommunity.widgets.package.templates.tarballs'
     package = twc.Param('The name of the package')
-    upstream_tarball = twc.Variable()
+    upstream_tarball = twc.Variable(default=None)
     kwds = twc.Param(default=None)
+    releases = ReleaseFilter
 
     def prepare(self):
         super(Tarballs, self).prepare()
         self.package = self.kwds['package_name']
-        repo = FedoraGitRepo(self.package)
+        self.branch = self.kwds.get('branch', 'master')
+        repo = FedoraGitRepo(self.package, branch=self.branch)
         self.upstream_tarball = repo.get_source_url()
         self.fedora_tarball = repo.get_fedora_source()
 

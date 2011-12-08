@@ -7,7 +7,7 @@ function on_change(self) {
 }
 </script>
 
-${w.children[0].display(on_change='on_change')}
+${w.children[0].display(on_change='on_change', package=w.package_name)}
 
 <br/>
 
