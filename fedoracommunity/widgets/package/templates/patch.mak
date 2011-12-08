@@ -1,8 +1,7 @@
 <%namespace file="diffstat.mak" import="render_diffstat"/>
 
 % if w.changelog:
-<b>ChangeLog:</b>
-<table>
+<table class="changelog">
     % for change in w.changelog:
         <tr>
             <td>
@@ -19,7 +18,7 @@
 % endif
 
 % if w.diffstat:
-<b>Summary of changes in this patch:</b>
+<h4>Summary of changes in this patch:</h4>
 ${render_diffstat(w.diffstat)}
 % endif
 <br/>

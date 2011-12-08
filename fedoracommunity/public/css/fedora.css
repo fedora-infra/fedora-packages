@@ -187,6 +187,114 @@ h1#logo {
   height: 26px;
 }
 
+/* Patches stuff */
+
+
+.patches {
+  display: table;
+  width: 100%;
+  background-color: #efefef;
+  border: 1px solid #efefef;
+  margin-top: 12px;
+}
+
+.patches table {
+  background-color: white;
+  width: 100%;
+  border: 10px solid #efefef;
+  border-top: 5px solid #efefef;
+  border-collapse: collapse;
+}
+
+.patches td {
+  border-bottom: 1px solid #ededed;
+  padding: 3px 5px;
+}
+
+.patches tr#patch td {
+  padding: 3px 0px;
+}
+
+.patches table table {
+  width: 100%;
+  border: none !important;
+  background-color: none;
+}
+
+.patches table table td {
+  border: white !important;
+}
+
+.patches table tr#patch table td {
+  border: none;
+}
+
+.patches pre {
+  max-width: 500px !important;
+  word-wrap: break-word !important; /* IE */
+  white-space: pre-wrap; /* css3 */
+  white-space: -moz-pre-wrap; /* moz */
+  white-space: -pre-wrap; /* old opera */
+  white-space: -o-pre-wrap; /* new opera */
+  width: 100%;
+  
+}
+
+.patches .highlighttable .linenos {
+  padding: 1px;
+  background-color: #f8f8f8;
+  
+}
+
+.patches .patch_footer {
+  background-color:  #efefef;
+}
+
+.patches .patch_footer a {
+  text-decoration: none;
+  padding-left: 5px;
+}
+
+.patches .frame_link {
+  display: block;
+  text-align: center;
+  padding-top: 3px;
+}
+
+.patches .changelog {
+  background-color: #fcfcfc;
+  width: 100%;
+  font-size: small;
+}
+
+.patches h4 {
+  color: #666;
+  font-size: small;
+  padding-top: 5px;
+  padding-bottom: 3px;
+  background-color: #f9f9f9;
+  padding-left: 8px;
+}
+
+.patches .diffstat {
+  padding-top: 5px;
+  background-color: #f9f9f9;
+  font-size: small;
+}
+
+.patches .diffstat th {
+  font-size: x-small;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-left: 10px;
+  color: black;
+}
+
+.patches .diffstat .split {
+  font-size: x-small;
+  font-weight: bold;
+}
+
 /* Footer Stuff */
 
 

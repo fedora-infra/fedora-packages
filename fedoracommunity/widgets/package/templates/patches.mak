@@ -1,12 +1,12 @@
+<div class="patches">
 <%namespace file="diffstat.mak" import="render_diffstat"/>
 
-<center><a id="diffstat_link" href="#" onclick="return toggle_diffstat()">Show summary of all patches</a></center>
+<a class="frame_link" href="#" onclick="return toggle_diffstat()">Show summary of all patches</a>
 <div id="diffstat" style="display:none">
 % if w.diffstat:
 	${render_diffstat(w.diffstat)}
 % endif
 </div>
-<br/>
 <table>
 % for patch in sorted(w.patches):
     <tr id="${patch}">
@@ -45,4 +45,5 @@ function toggle_diffstat() {
 	}
 }
 </script>
+</div>
 

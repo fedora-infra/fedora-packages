@@ -17,10 +17,10 @@
                 return results.html();
             }
         </script>
-        <div id='grid-controls'>
+        <div id="grid-controls">
           <form>
             <div id="filter" class="grid_filter" name="build_filter">
-              <label for="version">Build:</label>
+              <label for="version"><h4>Release:</h4></label>
                 <select name="build_id">
                   % for (i, build) in enumerate(w.latest_builds.keys()):
                     <%
