@@ -128,7 +128,7 @@ class Sources(TabWidget):
 class Spec(twc.Widget):
     kwds = twc.Param(default=None)
     text = twc.Param('The text of the specfile')
-    template = 'mako:fedoracommunity/widgets/package/templates/package_spec.mak'
+    template = 'mako:fedoracommunity.widgets.package.templates.package_spec'
 
     def prepare(self):
         super(Spec, self).prepare()
@@ -143,7 +143,7 @@ class Patches(twc.Widget):
     patches = twc.Param(default=None)
     package = twc.Variable()
     diffstat = twc.Variable()
-    template = 'mako:fedoracommunity/widgets/package/templates/patches.mak'
+    template = 'mako:fedoracommunity.widgets.package.templates.patches'
 
     def prepare(self):
         super(Patches, self).prepare()
@@ -159,7 +159,7 @@ class Patch(twc.Widget):
     diffstat = twc.Param('The diffstat for this patch', default=True)
     text = twc.Variable('The text of the patch')
     changelog = twc.Variable('The changelog of this patch')
-    template = 'mako:fedoracommunity/widgets/package/templates/patch.mak'
+    template = 'mako:fedoracommunity.widgets.package.templates.patch'
 
     def prepare(self):
         super(Patch, self).prepare()
@@ -173,13 +173,13 @@ class Patch(twc.Widget):
 
 
 class Diffs(twc.Widget):
-    template = 'mako:fedoracommunity/widgets/package/templates/diffs.mak'
+    template = 'mako:fedoracommunity.widgets.package.templates.diffs'
     def prepare(self):
         super(Diffs, self).prepare()
 
 
 class Tarballs(twc.Widget):
-    template = 'mako:fedoracommunity/widgets/package/templates/tarballs.mak'
+    template = 'mako:fedoracommunity.widgets.package.templates.tarballs'
     package = twc.Param('The name of the package')
     upstream_tarball = twc.Variable()
     kwds = twc.Param(default=None)
@@ -193,7 +193,7 @@ class Tarballs(twc.Widget):
 
 
 class GitRepo(twc.Widget):
-    template = 'mako:fedoracommunity/widgets/package/templates/git.mak'
+    template = 'mako:fedoracommunity.widgets.package.templates.git'
     kwds = twc.Param(default=None)
 
     def prepare(self):
