@@ -112,6 +112,7 @@ setup(
     xapian = fedoracommunity.connectors:XapianConnector
     wiki = fedoracommunity.connectors:WikiConnector
     torrent = fedoracommunity.connectors:TorrentConnector
+    git = fedoracommunity.connectors:GitConnector
 
     [moksha.widget]
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
@@ -146,6 +147,9 @@ setup(
 
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
+
+    [distutils.commands]
+    archive_fedoracommunity_resources = fedoracommunity.distutils.command:archive_fedoracommunity_resources
 
     """
 )

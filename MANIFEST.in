@@ -1,7 +1,7 @@
 recursive-include production *
 recursive-include fedoracommunity *.mak
 recursive-include fedoracommunity *.js
-recursive-include fedoracommunity/mokshaapps/demos/js/ *.js
+recursive-include fedoracommunity/public/css *.css *.ttf *.png *.gif *.svg *.eot *.woff
 
 include fedoracommunity_makeyumcache
 include fedoracommunity.spec
@@ -9,3 +9,4 @@ include orbited.cfg
 include README.txt
 include AUTHORS
 include COPYING
+include build.ini

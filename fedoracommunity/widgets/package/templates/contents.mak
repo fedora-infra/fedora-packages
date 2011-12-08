@@ -3,7 +3,7 @@
           <form>
             <div id="filter" class="grid_filter" name="build_filter">
 
-							<!-- BEGIN Arch Dropdown Filter **/ -->
+							<!-- BEGIN Release Dropdown Filter **/ -->
 							<div class="filter grid_9 alpha">
              		<label for="build_id"><h4>Release:</h4></label>
               	  <script type="text/javascript">

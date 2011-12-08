@@ -181,6 +181,7 @@ def develop():
 @_with_moksha_faked
 def start(service='paster'):
     """ Start paster. """
+    print("serving at http://127.0.0.1:8080")
     return True
 
 

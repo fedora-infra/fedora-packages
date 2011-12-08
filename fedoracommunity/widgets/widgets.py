@@ -15,13 +15,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import tw2.core as twc
+from tw2.core.params import Param
+from tg.controllers import url
 
-fedora_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/fedora.css')
-fedoracommunity_appchrome_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/application-chrome.css')
-fedoracommunity_branding_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/myfedora-branding.css')
-fedoracommunity_reset_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/reset.css')
-fedoracommunity_text_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/text.css')
-fedoracommunity_960_24_col_css = twc.CSSLink(modname='fedoracommunity', filename='/public/css/960_24_col.css')
+class CSSLink(twc.CSSLink):
+    path = Param('Path to where you would find these files on the web server')
+    def prepare(self):
+        self.link = url(self.path)
+        super(CSSLink, self).prepare()
+
+fedora_css = CSSLink(modname='fedoracommunity', path='/css/fedora.css')
+fedoracommunity_appchrome_css = CSSLink(modname='fedoracommunity', path='/css/application-chrome.css')
+fedoracommunity_branding_css = CSSLink(modname='fedoracommunity', path='/css/myfedora-branding.css')
+fedoracommunity_reset_css = CSSLink(modname='fedoracommunity', path='/css/reset.css')
+fedoracommunity_text_css = CSSLink(modname='fedoracommunity', path='/css/text.css')
+fedoracommunity_960_24_col_css = CSSLink(modname='fedoracommunity', path='/css/960_24_col.css')
 
 
 class PagerWidget(twc.Widget):

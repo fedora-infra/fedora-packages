@@ -1,9 +1,9 @@
 import tw2.core as twc
-from moksha.api.widgets import Grid
+from moksha.api.widgets.grid import TW2Grid
 from moksha.api.connectors import get_connector
 from collections import OrderedDict
 
-class ChangelogGrid(Grid):
+class ChangelogGrid(TW2Grid):
     template='mako:fedoracommunity.widgets.package.templates.changelog_table_widget'
     resource='koji'
     resource_path='query_changelogs'

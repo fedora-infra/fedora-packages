@@ -9,3 +9,4 @@ from wikiconnector import WikiConnector
 from torrentconnector import TorrentConnector
 from jsonconnector import SimpleJsonConnector
 from xapianconnector import XapianConnector
+from gitconnector import GitConnector

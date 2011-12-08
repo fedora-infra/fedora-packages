@@ -4,7 +4,7 @@ import collections
 from package import TabWidget
 from mako.template import Template
 from moksha.api.connectors import get_connector
-from moksha.api.widgets import Grid
+from moksha.api.widgets.grid import TW2Grid
 
 class OverviewNavWidget(TabWidget):
     tabs = collections.OrderedDict([('Details', 'package.overview.details'),
@@ -21,7 +21,7 @@ class OverviewWidget(twc.Widget):
     nav_widget = OverviewNavWidget
 
 
-class ActiveReleasesGrid(Grid):
+class ActiveReleasesGrid(TW2Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.active_releases'
     package_name = twc.Param('The name of the package to view')
     resource = 'bodhi'
