@@ -112,6 +112,7 @@ setup(
     xapian = fedoracommunity.connectors:XapianConnector
     wiki = fedoracommunity.connectors:WikiConnector
     torrent = fedoracommunity.connectors:TorrentConnector
+    git = fedoracommunity.connectors:GitConnector
 
     [moksha.widget]
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
