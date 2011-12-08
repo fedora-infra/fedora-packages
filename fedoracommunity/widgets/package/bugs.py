@@ -1,6 +1,6 @@
 import tw2.core as twc
 
-from moksha.api.widgets import Grid
+from moksha.api.widgets.grid import TW2Grid
 from moksha.api.connectors import get_connector
 
 class BugStatsWidget(twc.Widget):
@@ -17,7 +17,7 @@ class BugStatsWidget(twc.Widget):
     num_closed_this_week = twc.Param(default='')
 
 
-class BugsGrid(Grid):
+class BugsGrid(TW2Grid):
     resource = 'bugzilla'
     resource_path = 'query_bugs'
     release_table = twc.Param()

@@ -1,12 +1,12 @@
 import tw2.core as twc
 
-from moksha.api.widgets import Grid
+from moksha.api.widgets.grid import TW2Grid
 from moksha.api.connectors import get_connector
 
 bodhi_js = twc.JSLink(filename='static/javascript/bodhi.js',
                       modname=__name__)
 
-class Updates(Grid):
+class Updates(TW2Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.updates_table_widget'
     kwds = twc.Param()
     package_name = twc.Param('The name of the package to view')
