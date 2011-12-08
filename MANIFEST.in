@@ -9,3 +9,4 @@ include orbited.cfg
 include README.txt
 include AUTHORS
 include COPYING
+include build.ini

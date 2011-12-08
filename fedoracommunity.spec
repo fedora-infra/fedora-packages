@@ -58,7 +58,7 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 %{__rm} -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build \
     --install-data=%{_datadir} --root %{buildroot}
-%{__python} setup.py archive_tw2_resources -f -o %{buildroot}%{_datadir}/%{name}/public/toscawidgets -d moksha -d fedoracommunity
+%{__python} setup.py archive_fedoracommunity_resources -f -o %{buildroot}%{_datadir}/%{name}/public/toscawidgets -d moksha -d fedoracommunity
 
 %{__mkdir_p} %{buildroot}/var/lib/
 %{__mkdir_p} %{buildroot}%{_datadir}/%{name}/production/apache

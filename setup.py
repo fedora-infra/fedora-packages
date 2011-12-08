@@ -147,5 +147,8 @@ setup(
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
 
+    [distutils.commands]
+    archive_fedoracommunity_resources = fedoracommunity.distutils.command:archive_fedoracommunity_resources
+
     """
 )
