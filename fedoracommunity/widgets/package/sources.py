@@ -75,7 +75,6 @@ class FedoraGitRepo(object):
         """ Return a list of the changes made to this patch """
         commits = []
         current = {}
-        in_commit = False
         for commit in self.repo.git.log(patch).split('\n'):
             chunks = commit.split()
             if chunks:
@@ -118,9 +117,9 @@ class Sources(TabWidget):
     tabs = OrderedDict([
         ('Spec', 'package.sources.spec'),
         ('Patches', 'package.sources.patches'),
-        ('Diffs', 'package.sources.diffs'),
+        #('Diffs', 'package.sources.diffs'),
         ('Tarballs', 'package.sources.tarballs'),
-        ('Git', 'package.sources.git'),
+        #('Git', 'package.sources.git'),
         ])
     base_url = Template(text='/${kwds["package_name"]}/sources/')
     default_tab = 'Spec'
