@@ -68,7 +68,7 @@ class ReleaseFilter(twc.Widget):
                     'value': value,
                     'version': ver,
                     })
-        self.releases_table = sorted(releases,
+        self.releases_table = sorted(releases, reverse=True,
                 cmp=lambda x, y: cmp(x['version'], y['version']))
         self.releases_table.insert(0, {'label': 'Rawhide', 'value': 'master'})
 
