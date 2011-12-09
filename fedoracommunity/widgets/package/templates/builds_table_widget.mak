@@ -1,3 +1,4 @@
+<% import tg %>
 <html>
 <head></head>
 <body>
@@ -9,11 +10,11 @@
                 <label for="state">Status:</label>
                 <select name="state">
                     <option selected="selected" value="">All</option>
-                    <option value="0" style="background:url(/images/16_build_state_0.png) no-repeat center left; padding-left: 18px;"></img>Building</option>
-                    <option value="1" style="background:url(/images/16_build_state_1.png) no-repeat center left; padding-left: 18px;">Success</option>
-                    <option value="3" style="background:url(/images/16_build_state_3.png) no-repeat center left; padding-left: 18px;">Failed</option>
-                    <option value="4" style="background:url(/images/16_build_state_4.png) no-repeat center left; padding-left: 18px;">Canceled</option>
-                    <option value="2" style="background:url(/images/16_build_state_2.png) no-repeat center left; padding-left: 18px;">Deleted</option>
+                    <option value="0" style="background:url(${tg.url('/images/16_build_state_0.png')}) no-repeat center left; padding-left: 18px;"></img>Building</option>
+                    <option value="1" style="background:url(${tg.url('/images/16_build_state_1.png')}) no-repeat center left; padding-left: 18px;">Success</option>
+                    <option value="3" style="background:url(${tg.url('/images/16_build_state_3.png')}) no-repeat center left; padding-left: 18px;">Failed</option>
+                    <option value="4" style="background:url(${tg.url('/images/16_build_state_4.png')}) no-repeat center left; padding-left: 18px;">Canceled</option>
+                    <option value="2" style="background:url(${tg.url('/images/16_build_state_2.png')}) no-repeat center left; padding-left: 18px;">Deleted</option>
                 </select>
               </div>
             </form>
@@ -33,7 +34,8 @@
                         <td class="one-row">
                           <div id="menu_${'${build_id}'}" class="menu" panel="menu_panel_${'${build_id}'}">
                             <span class="package-name">
-                                <img src="/images/16_build_state_${'${state}'}.png"></img>
+                                <% icon = tg.url("/images/16_build_state_${state}.png") %>
+                                <img src="${icon}"></img>
                                 <a href="/package_maintenance/tools/builds?package=${'${package_name}'}" moksha_url="dynamic">${'${package_name}'} </a>
                             </span>
                             <br/>${'${version}'}-${'${release}'}&nbsp;
@@ -41,11 +43,11 @@
 <div id="items_${'${build_id}'}">
 <h4>Quick Links for <strong>${'${package_name}'}</strong>:</h4>
                             <ul>
-                               <li><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=${'${build_id}'}"><img src="/images/16_koji.png"/><span>Go to this <strong>build</strong> in Koji</span><img src="/images/16_offsite-link.png"/></a></li>
-                               <li><a href="https://admin.fedoraproject.org/updates/${'${package_name}'}" moksha_url="dynamic"><img src="/images/16_bodhi.png"/><span>Go to ${'${package_name}'} <strong>updates</strong> in Bodhi</span><img src="/images/16_offsite-link.png"/></a></li>
-                               <li><a href="https://admin.fedoraproject.org/pkgdb/acls/name/${'${package_name}'}" moksha_url="dynamic"><img src="/images/16_pkgdb.png"/><span>Go to ${'${package_name}'} <strong>package info</strong> in PackageDB</span><img src="/images/16_offsite-link.png"/></a></li>
-                               <li><a href="https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&classification=Fedora&product=Fedora&component=${'${package_name}'}&bug_status=NEW&bug_status=ASSIGNED&bug_status=MODIFIED"><img src="/images/16_bugzilla.png"/><span>Go to ${'${package_name}'} <strong>bugs</strong> in Bugzilla</span><img src="/images/16_offsite-link.png"/></a></li>
-                               <!-- <li><a href="https://translate.fedoraproject.org/module/@{package_name}"><img src="/images/16_transifex.png"/><span>Go to ${'${package_name}'} <strong>translations</strong> in Transifex</span><img src="/images/16_offsite-link.png"/></a></li> -->
+                               <li><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=${'${build_id}'}"><img src="${tg.url('/images/16_koji.png')}"/><span>Go to this <strong>build</strong> in Koji</span><img src="${tg.url('/images/16_offsite-link.png')}"/></a></li>
+                               <li><a href="https://admin.fedoraproject.org/updates/${'${package_name}'}" moksha_url="dynamic"><img src="${tg.url('/images/16_bodhi.png')}"/><span>Go to ${'${package_name}'} <strong>updates</strong> in Bodhi</span><img src="${tg.url('/images/16_offsite-link.png')}"/></a></li>
+                               <li><a href="https://admin.fedoraproject.org/pkgdb/acls/name/${'${package_name}'}" moksha_url="dynamic"><img src="${tg.url('/images/16_pkgdb.png')}"/><span>Go to ${'${package_name}'} <strong>package info</strong> in PackageDB</span><img src="${tg.url('/images/16_offsite-link.png')}"/></a></li>
+                               <li><a href="https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&classification=Fedora&product=Fedora&component=${'${package_name}'}&bug_status=NEW&bug_status=ASSIGNED&bug_status=MODIFIED"><img src="${tg.url('/images/16_bugzilla.png')}"/><span>Go to ${'${package_name}'} <strong>bugs</strong> in Bugzilla</span><img src="${tg.url('/images/16_offsite-link.png')}"/></a></li>
+                               <!-- <li><a href="https://translate.fedoraproject.org/module/@{package_name}"><img src="${tg.url('/images/16_transifex.png')}"/><span>Go to ${'${package_name}'} <strong>translations</strong> in Transifex</span><img src="${tg.url('/images/16_offsite-link.png')}"/></a></li> -->
                             </ul>
                               <h4>Changelog</h4>
                               <div class="changelog">

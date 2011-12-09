@@ -4,6 +4,7 @@ import moksha
 import logging
 import collections
 import tw2.core as twc
+import tg
 
 from mako.template import Template
 from moksha.api.connectors import get_connector
@@ -55,7 +56,7 @@ class TabWidget(twc.Widget):
         self.active_tab = active_tab
 
         if isinstance(self.base_url, Template):
-            self.base_url = self.base_url.render(**self.__dict__)
+            self.base_url = tg.url(self.base_url.render(**self.__dict__))
 
 
 class PackageNavWidget(TabWidget):

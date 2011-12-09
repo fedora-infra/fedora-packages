@@ -1,8 +1,12 @@
 <!-- START package chrome -->
+<%
+import tg
+icon_url = tg.url("/images/icons/%s.png" % w.package_info['icon'])
+%>
 <div id="container">
     <div class="container_24">
          <div class="grid_5" id="package-info-bar">
-             <img src="/images/icons/${w.package_info['icon']}.png" height="128" width="128"/>
+             <img src="${icon_url}" height="128" width="128"/>
              <div class="build">
                  <div><h3>LATEST BUILD</h3></div>
                  <div class="package-name">${w.latest_build}</div>
@@ -19,10 +23,10 @@
              <div class="package-tree">
                  <div><h3>PACKAGE TREE</h3></div>
                  <ul>
-                   <li><a class="package-name" href="/${w.package_info['name']}/">${w.package_info['name']}</a>
+                   <li><a class="package-name" href="${tg.url(w.package_info['name'])}">${w.package_info['name']}</a>
                    <ul>
                        % for subpkg in w.package_info['sub_pkgs']:
-                             <li><a class="package-name" href="/${subpkg['name']}/">${subpkg['name']}</a></li>
+                             <li><a class="package-name" href="${tg.url(subpkg['name'])}">${subpkg['name']}</a></li>
                        % endfor
                    </ul>
                  </li>
