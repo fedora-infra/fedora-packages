@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
 import os
 import git
 import logging
@@ -103,6 +104,21 @@ class FedoraGitRepo(object):
                 else:
                         current['msg'] += to_unicode('%s\n' %' '.join(chunks))
         commits.append(current)
+
+        # Iterate over all of the commits and link up bug numbers and CVEs.
+        bug_url = '<a href="https://bugzilla.redhat.com/show_bug.cgi?id=%s" target="_blank">%s</a>'
+        cve_url = '<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=%s" target="_blank">%s</a>'
+        regexs = (r'#(\d+)', r'rhbz (\d+)', r'bz (\d+)')
+        for commit in commits:
+            for regex in regexs:
+                for bug in re.findall(regex, commit['msg']):
+                    commit['msg'] = commit['msg'].replace(bug,
+                            bug_url % (bug, bug))
+            # Link up CVE IDs
+            for cve in re.findall(r'(CVE-\d\d\d\d-\d\d\d\d)', commit['msg']):
+                commit['msg'] = commit['msg'].replace(cve,
+                        cve_url % (cve, cve))
+
         return commits
 
     def get_diffstat(self, patch='*.patch'):
