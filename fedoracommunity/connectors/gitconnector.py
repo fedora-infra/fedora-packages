@@ -108,7 +108,7 @@ class FedoraGitRepo(object):
         # Iterate over all of the commits and link up bug numbers and CVEs.
         bug_url = '<a href="https://bugzilla.redhat.com/show_bug.cgi?id=%s" target="_blank">%s</a>'
         cve_url = '<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=%s" target="_blank">%s</a>'
-        regexs = (r'#(\d+)', r'rhbz (\d+)', r'bz (\d+)')
+        regexs = (r'#(\d+)', r'rhbz (\d+)', r'[bBzZ] (\d+)')
         for commit in commits:
             for regex in regexs:
                 for bug in re.findall(regex, commit['msg']):
