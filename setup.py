@@ -89,6 +89,25 @@ setup(
 #    [fas.repoze.who.metadata_plugins]
 #    blog_info = myfedora.plugins.identity.bloginfo:add_metadata
 
+    # list all the widgets we need for deployment - this is messy but the
+    # easiest way to get things working
+    [tw2.widgets]
+    widgets = fedoracommunity.widgets
+    moksha_js = moksha.widgets.moksha_js
+    moksha_widgets = moksha.api.widgets
+
+    packages = fedoracommunity.widgets.package
+    package.overview.details = fedoracommunity.widgets.package.overview
+    package.overview.updates = fedoracommunity.widgets.package.updates
+    package.overview.builds = fedoracommunity.widgets.package.builds
+
+    package.bugs = fedoracommunity.widgets.package.bugs
+    package.contents = fedoracommunity.widgets.package.contents
+    package.changelog = fedoracommunity.widgets.package.changelog
+    package.sources = fedoracommunity.widgets.package.sources
+
+    package.relationships = fedoracommunity.widgets.package.relationships
+
     [moksha.global]
     fedora_css = fedoracommunity.widgets:fedora_css
     fedoracommunity_reset_css = fedoracommunity.widgets:fedoracommunity_reset_css
