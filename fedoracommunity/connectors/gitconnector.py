@@ -104,8 +104,13 @@ class FedoraGitRepo(object):
                 else:
                         current['msg'] += to_unicode('%s\n' %' '.join(chunks))
         commits.append(current)
+        self.inject_links(commits)
+        return commits
 
-        # Iterate over all of the commits and link up bug numbers and CVEs.
+    def inject_links(self, commits):
+        """
+        Iterate over all of the commits and link up bug numbers and CVEs.
+        """
         bug_url = '<a href="https://bugzilla.redhat.com/show_bug.cgi?id=%s" target="_blank">%s</a>'
         cve_url = '<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=%s" target="_blank">%s</a>'
         regexs = (r'#(\d+)', r'rhbz (\d+)', r'[bBzZ] (\d+)')
@@ -119,7 +124,6 @@ class FedoraGitRepo(object):
                 commit['msg'] = commit['msg'].replace(cve,
                         cve_url % (cve, cve))
 
-        return commits
 
     def get_diffstat(self, patch='*.patch'):
         """ Return the output of diffstat on a given patch, or all patches """
