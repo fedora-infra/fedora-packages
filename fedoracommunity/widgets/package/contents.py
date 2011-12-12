@@ -1,7 +1,6 @@
 import tw2.core as twc
 from moksha.api.widgets.grid import TW2Grid
 from moksha.api.connectors import get_connector
-from collections import OrderedDict
 
 from fedoracommunity.widgets.tree import tree_js
 

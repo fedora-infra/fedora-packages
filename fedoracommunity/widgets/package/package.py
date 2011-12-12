@@ -2,9 +2,10 @@ import mako
 import uuid
 import moksha
 import logging
-import collections
 import tw2.core as twc
 import tg
+
+from fedoracommunity.lib.utils import OrderedDict
 
 from mako.template import Template
 from moksha.api.connectors import get_connector
@@ -60,12 +61,12 @@ class TabWidget(twc.Widget):
 
 
 class PackageNavWidget(TabWidget):
-    tabs = collections.OrderedDict([('Overview', 'package.overview'),
-                                    ('Bugs', 'package.bugs'),
-                                    ('Contents', 'package.contents'),
-                                    ('Changelog', 'package.changelog'),
-                                    ('Sources', 'package.sources'),
-                                    ('Relationships', 'package.relationships')])
+    tabs = OrderedDict([('Overview', 'package.overview'),
+                        ('Bugs', 'package.bugs'),
+                        ('Contents', 'package.contents'),
+                        ('Changelog', 'package.changelog'),
+                        ('Sources', 'package.sources'),
+                        ('Relationships', 'package.relationships')])
     base_url = Template(text='/${kwds["package_name"]}/');
     default_tab = 'Overview'
     args = twc.Param(default=None)

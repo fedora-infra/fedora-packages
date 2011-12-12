@@ -18,7 +18,7 @@ from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from pylons import config
 from urllib import quote
 from fedoracommunity.search import utils, distmappings
-from collections import OrderedDict
+from fedoracommunity.lib.utils import OrderedDict
 import os
 import sys
 import xapian

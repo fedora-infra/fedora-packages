@@ -1,5 +1,5 @@
 import tw2.core as twc
-import collections
+from fedoracommunity.lib.utils import OrderedDict
 
 from package import TabWidget
 from mako.template import Template
@@ -7,9 +7,9 @@ from moksha.api.connectors import get_connector
 from moksha.api.widgets.grid import TW2Grid
 
 class OverviewNavWidget(TabWidget):
-    tabs = collections.OrderedDict([('Details', 'package.overview.details'),
-                                    ('Builds', 'package.overview.builds'),
-                                    ('Updates', 'package.overview.updates')])
+    tabs = OrderedDict([('Details', 'package.overview.details'),
+                        ('Builds', 'package.overview.builds'),
+                        ('Updates', 'package.overview.updates')])
     base_url = Template(text='/${kwds["package_name"]}/overview/')
     default_tab = 'Details'
 

@@ -19,7 +19,7 @@ import time
 
 from datetime import datetime, timedelta
 from pylons import config, cache
-from bugzilla import Bugzilla
+from bugzilla import RHBugzilla3 as Bugzilla
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import DateTimeDisplay
