@@ -198,7 +198,7 @@ class HRElapsedTime(object):
 
 import collections
 
-if 'OrderedDict' in collections:
+if getattr(collections, 'OrderedDict', None):
     OrderedDict = collections.OrderedDict
 else:
     ## {{{ http://code.activestate.com/recipes/576693/ (r9)
