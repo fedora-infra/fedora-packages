@@ -10,6 +10,7 @@ function on_change(self) {
 ${w.children[0].display(on_change='on_change', package=w.package)}
 
 <div id="patches" class="patches">
+% if w.patches:
 <%namespace file="diffstat.mak" import="render_diffstat"/>
 
 <a class="frame_link" href="#" onclick="return toggle_diffstat()">Show summary of all patches</a>
@@ -27,6 +28,10 @@ ${w.children[0].display(on_change='on_change', package=w.package)}
     </tr>
 % endfor
 </table>
+
+% else:
+	No patches found
+% endif # if w.patches
 
 <script type="text/javascript">
 function toggle_patch(patch) {
@@ -58,4 +63,3 @@ function toggle_diffstat() {
 }
 </script>
 </div>
-

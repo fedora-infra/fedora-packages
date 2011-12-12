@@ -66,6 +66,8 @@ class FedoraGitRepo(object):
 
     def get_spec(self):
         """ Return the contents of this package's RPM spec file """
+        if os.path.exists(os.path.join(self.repo_path, 'dead.package')):
+            return to_unicode(self.repo.tree()['dead.package'].data_stream.read())
         return to_unicode(self.repo.tree()[self.package + '.spec'].data_stream.read())
 
     def get_patches(self):
@@ -135,11 +137,15 @@ class FedoraGitRepo(object):
         return DateTimeDisplay(date, format='%a %b %d %H:%M:%S %Y').datetime
 
     def get_source_url(self):
-        return self._run('spectool -S *.spec').split()[1]
+        source = self._run('spectool -S *.spec')
+        if source:
+            return source.split()[1]
 
     def get_fedora_source(self):
         url = config.get('fedora_lookaside', 'http://pkgs.fedoraproject.org/repo/pkgs')
-        tarball = self.get_source_url().split('/')[-1]
-        md5 = self._run('grep %s sources' % tarball).split()[0]
-        url += '/%s/%s/%s/%s' % (self.package, tarball, md5, tarball)
-        return url
+        source = self.get_source_url()
+        if source:
+            tarball = source.split('/')[-1]
+            md5 = self._run('grep %s sources' % tarball).split()[0]
+            url += '/%s/%s/%s/%s' % (self.package, tarball, md5, tarball)
+            return url
