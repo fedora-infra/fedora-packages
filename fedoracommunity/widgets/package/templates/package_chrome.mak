@@ -23,10 +23,10 @@ icon_url = tg.url("/images/icons/%s.png" % w.package_info['icon'])
              <div class="package-tree">
                  <div><h3>PACKAGE TREE</h3></div>
                  <ul>
-                   <li><a class="package-name" href="${tg.url(w.package_info['name'])}">${w.package_info['name']}</a>
+                   <li><a class="package-name" href="${tg.url('/%s' % w.package_info['name'])}">${w.package_info['name']}</a>
                    <ul>
                        % for subpkg in w.package_info['sub_pkgs']:
-                             <li><a class="package-name" href="${tg.url(subpkg['name'])}">${subpkg['name']}</a></li>
+                             <li><a class="package-name" href="${tg.url('/%s' % subpkg['name'])}">${subpkg['name']}</a></li>
                        % endfor
                    </ul>
                  </li>

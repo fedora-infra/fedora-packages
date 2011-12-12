@@ -7,9 +7,10 @@
 							<div class="filter grid_9 alpha">
              		<label for="build_id"><h4>Release:</h4></label>
               	  <script type="text/javascript">
-              	  	<% 
-											import json
-											json_build_arch_tasks = json.dumps(w.build_to_archtask_map)
+              	    <%
+import json
+import tg
+json_build_arch_tasks = json.dumps(w.build_to_archtask_map)
               	    %>
               	      var build_arch_tasks = ${json_build_arch_tasks};
 
@@ -45,9 +46,9 @@
               	                      var display = obj.name;
               	                      if (obj.type == 'L')
               	                          display += '->' + obj.linked_to;
-	
+
               	                      var $a = $("<a>" + display + "</a>");
-	
+
               	                      if (obj.type == 'L')
               	                          $a.addClass("jstree-link");
               	                      $li.append($a);
@@ -64,7 +65,7 @@
                 	                $root.attr('id','file_tree');
                 	                $tc.append($root);
                 	                $tc.jstree({"plugins": ["html_data", "themes", "search"],
-                	                            "themes":{"url":"/css/filetreetheme/style.css",
+                	                            "themes":{"url":"${tg.url('/css/filetreetheme/style.css')}",
                 	                                      "icons": true,
                 	                                      "dots": false}});
                 	            } else if (undefined != data['error']) {
@@ -76,7 +77,7 @@
 
                 	        var $arch_select = $('#arch_select');
                 	        var $build_select = $('#build_select');
-	
+
                 	        var arch_index = $arch_select.val();
                 	        var build_id = $build_select.val();
                 	        var task = build_arch_tasks[build_id][arch_index];
@@ -95,7 +96,7 @@
              	           build_values = w.latest_builds[build]
 
              	           display_ver = ""
-	
+
              	           epoch = build_values.get('epoch', None)
              	           vr = "%s-%s" % (build_values['version'], build_values['release'])
              	           if epoch is not None:
