@@ -7,18 +7,17 @@
             <td>
                 &#8226; ${change['msg'].split('\n')[0]}
             </td>
-            <td>
+            <td class="author">
                 ${change['author']}
-            </td>
-            <td>
-                ${change['date'].strftime('%d %b %Y')}
+						</td>
+						<td class="age">
+								${change['date'].strftime('%d %b %Y')}</a>
             </td>
     % endfor
 </table>
 % endif
 
 % if w.diffstat:
-<h4>Summary of changes in this patch:</h4>
 ${render_diffstat(w.diffstat)}
 % endif
 <br/>

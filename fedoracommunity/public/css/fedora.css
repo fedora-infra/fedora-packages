@@ -9,7 +9,7 @@ a, a:visited, a:active, a:link {
 body {
   background: white;
   color: black;
-  font-size: 14pt;
+  font-size: 12pt;
   height: auto;
   padding-bottom: 20px;
 }
@@ -181,6 +181,10 @@ h1#logo {
   color: #777;
 }
 
+table {
+  font-size: 10pt !important;
+}
+
 /* Tree stuff */
 
 #tree_content li a {
@@ -189,13 +193,39 @@ h1#logo {
 
 /* Patches stuff */
 
+.patches .highlight {
+  width: 720px;
+}
+
+.patches pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap:
+  word-wrap: break-word;
+}
+
+.patches a {
+  text-decoration: none;
+  font-size: 11pt;
+}
+
+.patches .highlight pre {
+  margin-top: -19px;
+  padding-left: 7px;
+}
+
+.patches table tr#patch table td {
+  padding-left: 15px;
+}
+
 
 .patches {
   display: table;
-  width: 100%;
   background-color: #efefef;
   border: 1px solid #efefef;
   margin-top: 12px;
+  width: 100%;
 }
 
 .patches table {
@@ -211,10 +241,6 @@ h1#logo {
   padding: 3px 5px;
 }
 
-.patches tr#patch td {
-  padding: 3px 0px;
-}
-
 .patches table table {
   width: 100%;
   border: none !important;
@@ -227,23 +253,6 @@ h1#logo {
 
 .patches table tr#patch table td {
   border: none;
-}
-
-.patches pre {
-  max-width: 500px !important;
-  word-wrap: break-word !important; /* IE */
-  white-space: pre-wrap; /* css3 */
-  white-space: -moz-pre-wrap; /* moz */
-  white-space: -pre-wrap; /* old opera */
-  white-space: -o-pre-wrap; /* new opera */
-  width: 100%;
-  
-}
-
-.patches .highlighttable .linenos {
-  padding: 1px;
-  background-color: #f8f8f8;
-  
 }
 
 .patches .patch_footer {
@@ -277,7 +286,6 @@ h1#logo {
 }
 
 .patches .diffstat {
-  padding-top: 5px;
   background-color: #f9f9f9;
   font-size: small;
 }
@@ -293,6 +301,75 @@ h1#logo {
 .patches .diffstat .split {
   font-size: x-small;
   font-weight: bold;
+}
+
+#patches .date {
+  color: #aaa;
+}
+
+#patches table td.age {
+  text-align: right;
+}
+
+#patches .changelog .author {
+  font-weight: bold;
+}
+
+#patch > td {
+  padding-top: 0px !important;
+}
+
+#patches table {
+ border-collapse: separate;
+}
+
+#patches .active-patch td {
+  border-bottom: 0px !important; 
+  border-top: 1px solid #DB347A !important;
+  background: #FCFCFC;
+  margin-top: 0px;
+}
+
+#patches .active-patch td:first-child,
+#patches .changelog td:first-child,
+#patches .diffstat td:first-child,
+#patches .diffstat th:first-child,
+#patches div.highlight {
+  border-left: 1px solid #DB347A !important;
+}
+
+#patches .active-patch td:last-child,
+#patches .changelog td:last-child,
+#patches .diffstat td:last-child,
+#patches .diffstat th:last-child,
+#patches div.highlight {
+  border-right: 1px solid #DB347A !important;
+}
+
+#patches div.highlight {
+  border-bottom: 1px solid #DB347A !important;
+}
+
+table.changelog {
+
+}
+
+.patches td {
+  padding: 0px !important;
+}
+
+.patches td > table td {
+  padding: 3px 5px !important;
+}
+
+/* Specfile stuff */
+
+#specfile .code .highlight {
+  margin-left: 1em;
+}
+
+#specfile {
+  margin-top: 1em;
 }
 
 /* Footer Stuff */

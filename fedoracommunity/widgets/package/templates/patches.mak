@@ -23,8 +23,7 @@ ${w.children[0].display(on_change='on_change', package=w.package)}
 % for patch in sorted(w.patches):
     <tr id="${patch}">
         <td><a href="#" onclick="return toggle_patch('${patch}');">${patch}</a></td>
-        <td>Added ${w.patches[patch][0]} ago</td>
-        <td>(${w.patches[patch][1]})</td>
+        <td class="age">Added ${w.patches[patch][0]} ago <span class="date">(${w.patches[patch][1]})</span></td>
     </tr>
 % endfor
 </table>
