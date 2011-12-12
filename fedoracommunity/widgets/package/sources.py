@@ -19,7 +19,7 @@ import tw2.core as twc
 
 from tg import config
 from mako.template import Template
-from collections import OrderedDict
+from fedoracommunity.lib.utils import OrderedDict
 from pygments import highlight
 from pygments.lexers import DiffLexer, BashLexer
 from pygments.formatters import HtmlFormatter

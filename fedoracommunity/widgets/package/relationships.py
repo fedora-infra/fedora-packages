@@ -1,5 +1,5 @@
 import tw2.core as twc
-import collections
+from fedoracommunity.lib.utils import OrderedDict
 
 from package import TabWidget
 from mako.template import Template
