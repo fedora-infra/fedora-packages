@@ -22,11 +22,7 @@ import subprocess
 
 from tg import config
 from kitchen.text.converters import to_unicode
-from pygments import highlight
-from pygments.lexers import DiffLexer, BashLexer
-from pygments.formatters import HtmlFormatter
 from moksha.lib.helpers import DateTimeDisplay
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 
 log = logging.getLogger(__name__)
 
