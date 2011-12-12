@@ -2,7 +2,7 @@
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
 Name:           fedoracommunity
-Version:        0.5.0
+Version:        0.5.1
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure 
 Group:          Applications/Internet
@@ -87,6 +87,9 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 %{_bindir}/fedoracommunity_makeyumcache
 
 %changelog
+* Thu Dec 01 2011 John (J5) Palmieri <johnp@redhat.com> - 0.5.1-1
+- fixups for deployment on RHEL6
+
 * Thu Dec 01 2011 John (J5) Palmieri <johnp@redhat.com> - 0.5.0-1
 - release of the development version of the packager branch
 
