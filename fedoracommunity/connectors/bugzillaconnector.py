@@ -24,6 +24,9 @@ from bugzilla import Bugzilla
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import DateTimeDisplay
 
+# Don't query closed bugs for these packages, since the queries timeout
+BLACKLIST = ['kernel']
+
 class BugzillaConnector(IConnector, ICall, IQuery):
     _method_paths = {}
     _query_paths = {}
@@ -91,55 +94,57 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         """
         Returns (# of open bugs, # of new bugs, # of closed bugs)
         """
-        results = {}
+        queries = ['open', 'new', 'new_this_week', 'closed', 'closed_this_week']
+
         last_week = str(datetime.utcnow() - timedelta(days=7)),
         if not self._bugzilla:
             self._bugzilla = Bugzilla(url=self._base_url)
 
-        # FIXME: For some reason, doing this as multicall doesn't work properly.
-        #mc = self._bugzilla._multicall()
+        mc = self._bugzilla._multicall()
 
         # Open bugs
-        results['open'] = len(self._bugzilla.query({
-                'product': collection,
-                'component': package,
-                'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
-                }))
+        mc._query({
+            'product': collection,
+            'component': package,
+            'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
+            })
 
         # New bugs
-        results['new'] = len(self._bugzilla.query({
-                'product': collection,
-                'component': package,
-                'bug_status': ['NEW'],
-                }))
+        mc._query({
+            'product': collection,
+            'component': package,
+            'bug_status': ['NEW'],
+            })
 
         # New bugs this week
-        results['new_this_week'] = len(self._bugzilla.query({
-                'product': collection,
-                'component': package,
-                'bug_status': ['NEW'],
-                'chfieldfrom': last_week,
-                'chfieldto': 'Now',
-                }))
+        mc._query({
+            'product': collection,
+            'component': package,
+            'bug_status': ['NEW'],
+            'chfieldfrom': last_week,
+            'chfieldto': 'Now',
+            })
 
         # Closed bugs
-        try:
-            results['closed'] = len(self._bugzilla.query({
-                    'product': collection,
-                    'component': package,
-                    'bug_status': ['CLOSED'],
-                    }))
-        except ssl.SSLError:
-            results['closed'] = '?'
-
-        # Closed bugs this week
-        results['closed_this_week'] = len(self._bugzilla.query({
+        if package in BLACKLIST:
+            queries.remove('closed')
+        else:
+            mc._query({
                 'product': collection,
                 'component': package,
                 'bug_status': ['CLOSED'],
-                'chfieldfrom': last_week,
-                'chfieldto': 'Now',
-                }))
+                })
+
+        # Closed bugs this week
+        mc._query({
+            'product': collection,
+            'component': package,
+            'bug_status': ['CLOSED'],
+            'chfieldfrom': last_week,
+            'chfieldto': 'Now',
+            })
+
+        results = dict([(q, len(r['bugs'])) for q, r in zip(queries, mc.run())])
 
         return dict(results=results)
 
