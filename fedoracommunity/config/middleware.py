@@ -23,7 +23,7 @@ def make_app(global_conf, full_stack=True, **app_conf):
     from moksha.middleware import make_moksha_middleware
 
     app = make_base_app(global_conf,
-                        wrap_app=lamda app : make_moksha_middleware(base_config.add_tosca2_middleware(app)),
+                        wrap_app=lambda app : make_moksha_middleware(base_config.add_tosca2_middleware(app)),
                         full_stack=full_stack,
                         **app_conf)
 
