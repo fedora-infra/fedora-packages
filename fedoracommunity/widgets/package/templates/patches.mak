@@ -14,14 +14,14 @@ ${w.children[0].display(on_change='on_change', package=w.package)}
 <%namespace file="diffstat.mak" import="render_diffstat"/>
 
 <a class="frame_link" href="#" onclick="return toggle_diffstat()">Show summary of all patches</a>
-<div id="diffstat" style="display:none">
+<div id="diffstat" class="diffstat-all" "style="display:none">
 % if w.diffstat:
 	${render_diffstat(w.diffstat)}
 % endif
 </div>
 <table>
 % for patch in sorted(w.patches):
-    <tr id="${patch}">
+    <tr id="${patch}" class="patch-name">
         <td><a href="#" onclick="return toggle_patch('${patch}');">${patch}</a></td>
         <td class="age">Added ${w.patches[patch][0]} ago <span class="date">(${w.patches[patch][1]})</span></td>
     </tr>

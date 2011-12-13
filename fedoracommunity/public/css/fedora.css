@@ -193,10 +193,6 @@ table {
 
 /* Patches stuff */
 
-.patches .highlight {
-  width: 720px;
-}
-
 .patches pre {
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
@@ -211,7 +207,7 @@ table {
 }
 
 .patches .highlight pre {
-  margin-top: -19px;
+  margin-top: -7px;
   padding-left: 7px;
 }
 
@@ -222,8 +218,8 @@ table {
 
 .patches {
   display: table;
-  background-color: #efefef;
-  border: 1px solid #efefef;
+  background-color: #ddd;
+  border: 1px solid #ddd;
   margin-top: 12px;
   width: 100%;
 }
@@ -231,8 +227,8 @@ table {
 .patches table {
   background-color: white;
   width: 100%;
-  border: 10px solid #efefef;
-  border-top: 5px solid #efefef;
+  border: 10px solid #ddd;
+  border-top: 5px solid #ddd;
   border-collapse: collapse;
 }
 
@@ -350,16 +346,76 @@ table {
   border-bottom: 1px solid #DB347A !important;
 }
 
-table.changelog {
-
-}
-
 .patches td {
   padding: 0px !important;
 }
 
 .patches td > table td {
   padding: 3px 5px !important;
+}
+
+.changelog td {
+  padding-right: 0px;
+}
+
+.patches .patch-name td:first-child { 
+  padding-left: 7px !important; 
+  border-left: 1px solid #ccc;
+}
+
+.patches .patch-name td:last-child { 
+  padding-right: 7px !important; 
+  border-right: 1px solid #ccc;
+}
+
+#patches .diffstat-all .diffstat th:first-child,
+#patches .diffstat-all .diffstat td:first-child { border-left: 0px !important; padding-left: 7px !important;}
+#patches .diffstat-all .diffstat th:last-child,
+#patches .diffstat-all .diffstat td:last-child { border-right: 0px !important; padding-right: 7px !important;}
+#patches .diffstat-all table.diffstat {
+  padding-bottom: 15px;
+}
+
+#patches .diffstat-all table.diffstat td {
+  border-bottom: 0px;
+  padding-bottom: 3px !important;
+}
+
+#patches .diffstat-all table.diffstat .split {
+  padding-top: 5px !important;
+}
+
+.patches .patch-name td {
+  border-bottom: 1px solid #ccc;
+}
+
+.patches .patch-name:first-child td {
+  border-top: 1px solid #ccc;
+}
+
+.patches .patch-name td { padding-top: 4px !important; padding-bottom: 4px !important;}
+
+.patches .frame_link { text-decoration: underline; color: #a07cbc; }
+
+#patches .diffstat-all .diffstat th:last-child {
+  padding-left: 0px;
+}
+
+.active-patch td {
+  background-color: #eee !important;
+}
+
+.patch-content .changelog {
+  background-color: #eee !important;
+}
+
+.patch-content .changelog tr:last-child td {
+  padding-bottom: 10px !important;
+}
+
+.patch-name td:first-child a {
+  font-weight: 700;
+  font-size: 100%;
 }
 
 /* Specfile stuff */
