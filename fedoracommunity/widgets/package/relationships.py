@@ -7,10 +7,10 @@ from moksha.api.connectors import get_connector
 from moksha.api.widgets.grid import TW2Grid
 
 class RelationshipsNavWidget(TabWidget):
-    tabs = collections.OrderedDict([('Requires', 'package.relationships.requires'),
-                                    ('Provides', 'package.relationships.provides'),
-                                    ('Obsoletes', 'package.relationships.obsoletes'),
-                                    ('Conflicts', 'package.relationships.conflicts')])
+    tabs = OrderedDict([('Requires', 'package.relationships.requires'),
+                        ('Provides', 'package.relationships.provides'),
+                        ('Obsoletes', 'package.relationships.obsoletes'),
+                        ('Conflicts', 'package.relationships.conflicts')])
     base_url = Template(text='/${kwds["package_name"]}/relationships/')
     default_tab = 'Requires'
 
