@@ -29,7 +29,7 @@ from moksha.api.connectors import get_connector
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import DateTimeDisplay
 
-from fedoracommunity.lib.helpers import parse_build
+from fedoracommunity.lib.utils import parse_build
 
 log = logging.getLogger(__name__)
 
