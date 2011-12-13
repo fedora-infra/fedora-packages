@@ -42,6 +42,7 @@ Requires: httpd
 Requires: mod_wsgi
 Requires: diffstat
 Requires: fedpkg
+Requires: python-ordereddict
 
 Obsoletes: myfedora
 

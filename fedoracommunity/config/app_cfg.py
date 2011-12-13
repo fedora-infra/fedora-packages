@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from fedoracommunity.lib import app_globals, helpers
+from fedoracommunity.lib import app_globals
 import fedoracommunity
 import fedoracommunity.lib
 
@@ -23,8 +23,12 @@ from paste.deploy.converters import asbool
 from pylons.i18n import ugettext
 
 class FedoraCommunityConfig(AppConfig):
+    tw2_initialized = False
 
     def add_tosca2_middleware(self, app):
+        if self.tw2_initialized:
+            return app
+
         from tg import config
         from tw2.core.middleware import Config, TwMiddleware
         default_tw2_config = dict( default_engine=self.default_renderer,
@@ -34,8 +38,10 @@ class FedoraCommunityConfig(AppConfig):
         res_prefix = config.get('fedoracommunity.resource_path_prefix')
         if res_prefix:
             default_tw2_config['res_prefix'] = res_prefix
-        default_tw2_config.update(self.custom_tw2_config)
+        if getattr(self, 'custom_tw2_config', None):
+            default_tw2_config.update(self.custom_tw2_config)
         app = TwMiddleware(app, **default_tw2_config)
+        self.tw2_initialized = True
         return app
 
 #    def add_auth_middleware(self, app, *args):
