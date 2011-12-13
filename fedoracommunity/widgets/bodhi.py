@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from tw2.core import twc
+import tw2.core as twc
 from fedoracommunity.widgets.expander import expander_js
 
 bodhi_js = twc.JSLink(filename='static/javascript/bodhi.js', modname=__name__,
