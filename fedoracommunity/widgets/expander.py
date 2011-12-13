@@ -21,7 +21,7 @@
 http://plugins.learningjquery.com/expander
 """
 
-from tw.api import JSLink
+from tw2.core import twc
 
-expander_js = JSLink(filename='static/javascript/jquery.expander.js',
+expander_js = twc.JSLink(filename='static/javascript/jquery.expander.js',
                      modname=__name__)
