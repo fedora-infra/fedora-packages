@@ -28,7 +28,7 @@ class TabWidget(twc.Widget):
     def __init__(self, *args, **kw):
         super(TabWidget, self).__init__(*args, **kw)
         self._uuid = str(uuid.uuid4())
-        self._expanded_tabs = collections.OrderedDict()
+        self._expanded_tabs = OrderedDict()
         for key, widget_key in self.tabs.items():
             display_name = key
             key = key.lower()
