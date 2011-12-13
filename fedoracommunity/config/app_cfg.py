@@ -38,7 +38,8 @@ class FedoraCommunityConfig(AppConfig):
         res_prefix = config.get('fedoracommunity.resource_path_prefix')
         if res_prefix:
             default_tw2_config['res_prefix'] = res_prefix
-        default_tw2_config.update(self.custom_tw2_config)
+        if getattr(self, 'custon_tw2_config', None):
+            default_tw2_config.update(self.custom_tw2_config)
         app = TwMiddleware(app, **default_tw2_config)
         self.tw2_initialized = True
         return app
