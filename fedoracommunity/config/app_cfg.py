@@ -23,10 +23,10 @@ from paste.deploy.converters import asbool
 from pylons.i18n import ugettext
 
 class FedoraCommunityConfig(AppConfig):
-    tw2_initialize = False
+    tw2_initialized = False
 
     def add_tosca2_middleware(self, app):
-        if self.tw2_initialize:
+        if self.tw2_initialized:
             return app
 
         from tg import config
