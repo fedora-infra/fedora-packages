@@ -23,8 +23,12 @@ from paste.deploy.converters import asbool
 from pylons.i18n import ugettext
 
 class FedoraCommunityConfig(AppConfig):
+    tw2_initialize = False
 
     def add_tosca2_middleware(self, app):
+        if self.tw2_initialize:
+            return app
+
         from tg import config
         from tw2.core.middleware import Config, TwMiddleware
         default_tw2_config = dict( default_engine=self.default_renderer,
@@ -36,6 +40,7 @@ class FedoraCommunityConfig(AppConfig):
             default_tw2_config['res_prefix'] = res_prefix
         default_tw2_config.update(self.custom_tw2_config)
         app = TwMiddleware(app, **default_tw2_config)
+        self.tw2_initialized = True
         return app
 
 #    def add_auth_middleware(self, app, *args):
