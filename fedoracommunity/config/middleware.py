@@ -17,13 +17,21 @@
 from fedoracommunity.config.app_cfg import base_config
 from fedoracommunity.config.environment import load_environment
 
+import tg
+tg_version_tuple = tuple(map(int, tg.__version__.split('.')))
+
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
 def make_app(global_conf, full_stack=True, **app_conf):
     from moksha.middleware import make_moksha_middleware
 
+    make_middleware = make_moksha_middleware
+
+    if tg_version_tuple < (2, 1):
+        make_middleware = lambda app : make_moksha_middleware(base_config.add_tosca2_middleware(app))
+
     app = make_base_app(global_conf,
-                        wrap_app=lambda app : make_moksha_middleware(base_config.add_tosca2_middleware(app)),
+                        wrap_app=make_middleware,
                         full_stack=full_stack,
                         **app_conf)
 
