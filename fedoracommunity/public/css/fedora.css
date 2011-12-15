@@ -267,7 +267,7 @@ table {
 }
 
 .patches .changelog {
-  background-color: #fcfcfc;
+  background-color: #f3f3f3;
   width: 100%;
   font-size: small;
 }
@@ -282,7 +282,7 @@ table {
 }
 
 .patches .diffstat {
-  background-color: #f9f9f9;
+  background-color: #f3f3f3;
   font-size: small;
 }
 
@@ -290,17 +290,13 @@ table {
   font-size: x-small;
   font-weight: bold;
   text-transform: uppercase;
-  padding-left: 10px;
+  padding-left: 5px;
   color: black;
 }
 
 .patches .diffstat .split {
   font-size: x-small;
   font-weight: bold;
-}
-
-#patches .date {
-  color: #aaa;
 }
 
 #patches table td.age {
@@ -342,8 +338,15 @@ table {
   border-right: 1px solid #DB347A !important;
 }
 
-#patches div.highlight {
+#patches .highlight pre {
+  margin-top: -19px !important;
+  padding-top: 10px;
+}
+
+#patches .patch_footer {
   border-bottom: 1px solid #DB347A !important;
+  border-left: 1px solid #DB347A !important;
+  border-right: 1px solid #DB347A !important;
 }
 
 .patches td {
@@ -372,9 +375,12 @@ table {
 #patches .diffstat-all .diffstat td:first-child { border-left: 0px !important; padding-left: 7px !important;}
 #patches .diffstat-all .diffstat th:last-child,
 #patches .diffstat-all .diffstat td:last-child { border-right: 0px !important; padding-right: 7px !important;}
+
+/** TRYME
 #patches .diffstat-all table.diffstat {
   padding-bottom: 15px;
 }
+**/ 
 
 #patches .diffstat-all table.diffstat td {
   border-bottom: 0px;
@@ -401,12 +407,15 @@ table {
   padding-left: 0px;
 }
 
-.active-patch td {
-  background-color: #eee !important;
+.active-patch td,
+.patch td {
+  background-color: #888 !important;
 }
 
-.patch-content .changelog {
-  background-color: #eee !important;
+#patches .active-patch td a,
+#patches .active-patch td,
+#patches .active-patch td span {
+  color: white;
 }
 
 .patch-content .changelog tr:last-child td {
@@ -418,6 +427,10 @@ table {
   font-size: 100%;
 }
 
+#patches .active-patch td .date {
+  display: none;
+}
+
 /* Specfile stuff */
 
 #specfile .code .highlight {
@@ -426,6 +439,33 @@ table {
 
 #specfile {
   margin-top: 1em;
+}
+
+/* AGPL Stuff */
+
+
+#bottom {
+  padding-top: 8em;
+}
+
+#bottom ul {
+  list-style-type: none;
+}
+
+#bottom li {
+  float: left;
+  padding-right: 2em;
+}
+
+#bottom,
+#bottom ul li,
+#bottom ul li a {
+  color: #ccc;
+  font-size: small;
+}
+
+#bottom ul li a {
+  color: #bbb !important;
 }
 
 /* Footer Stuff */

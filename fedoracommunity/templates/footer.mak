@@ -1,6 +1,6 @@
 <html>
     <%def name="footer()">
-        <div id="bottom container_24">
+        <div id="bottom" class="container_24">
             <div class="clear"> </div>
             This Web Site is licensed under the GNU Affero General Public License.  You may get sources for the current running code from these repositories:
             <ul>
