@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+
+# use this script when running the indexer from cron
+
+import sys
+import os
+import shutil
+
+from fedoracommunity.search.latest_version_mapper import run
+from lockfile import LockFile
+from optparse import OptionParser
+
+if __name__=="__main__":
+    parser = OptionParser()
+    parser.add_option("-p", "--path", dest="cache_path",
+                      help="path to where we create or update the version map",
+                      metavar="CACHEPATH")
+
+    (options, args) = parser.parse_args()
+    lockfile = LockFile(os.path.join(options.cache_path, '.fcomm_version_mapper_lock'))
+
+    try:
+        lockfile.acquire(timeout=30)
+    except Exception as e:
+        print "Error acquiring lock file: %s" % str(e)
+        exit(-1)
+
+    try:
+        run(cache_path=options.cache_path)
+        if options.icons_dest is not None:
+            icon_dir = os.path.join(options.cache_path, 'icons')
+
+            for file_name in os.listdir(icon_dir):
+                file_path = os.path.join(icon_dir, file_name)
+                if os.path.isdir(file_path) and not os.path.islink(file_path):
+                    shutil.move(file_path, options.icon_dest)
+        if options.index_db_dest is not None:
+            index_dir = os.path.join(options.cache_path, 'search')
+
+            for file_name in os.listdir(index_dir):
+                file_path = os.path.join(index_dir, file_name)
+                if os.path.isdir(file_path) and not os.path.islink(file_path):
+                    shutil.move(file_path, options.index_db_dest)
+    finally:
+        lockfile.release()
