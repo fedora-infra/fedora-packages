@@ -43,6 +43,7 @@ Requires: mod_wsgi
 Requires: diffstat
 Requires: fedpkg
 Requires: python-ordereddict
+Requires: python-lockfile
 
 Obsoletes: myfedora
 

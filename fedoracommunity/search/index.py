@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Creates our search index and its field structure,
 and then populates it with packages from yum repositories
@@ -27,15 +26,12 @@ try:
 except ImportError:
     import simplejson as json
 
-cache_dir = join(dirname(__file__), 'cache')
-YUM_CACHE_DIR = join(dirname(__file__), 'yum-cache')
-YUM_CONF = join(dirname(__file__), 'yum.conf')
-
-ICON_DIR = join(dirname(__file__), 'icons')
-
 class Indexer(object):
-    def __init__(self, dbpath):
-        self.dbpath = dbpath
+    def __init__(self, cache_path, yum_conf):
+        self.dbpath = join(cache_path, 'search')
+        self.yum_cache_path = join(cache_path, 'yum-cache')
+        self.icons_path = join(cache_path, 'icons')
+        self.yum_conf = yum_conf
         self.create_index()
         self._owners_cache = None
         self.default_icon = 'package_128x128'
@@ -109,15 +105,14 @@ class Indexer(object):
         import yum
         yb = yum.YumBase()
         self.yum_base = yb
-        yum_cache_dir = YUM_CACHE_DIR
 
-        if not os.path.exists(yum_cache_dir):
-            os.mkdir(yum_cache_dir)
+        if not os.path.exists(self.yum_cache_path):
+            os.mkdir(self.yum_cache_path)
 
-        if not os.path.exists(ICON_DIR):
-            os.mkdir(ICON_DIR)
+        if not os.path.exists(self.icons_path):
+            os.mkdir(self.icons_path)
 
-        yb.doConfigSetup(YUM_CONF, root=os.getcwd(), init_plugins=False)
+        yb.doConfigSetup(self.yum_conf, root=os.getcwd(), init_plugins=False)
         yb._getRepos(doSetup = True)
         yb._getSacks(['x86_64', 'noarch', 'src'])
         yb.doRepoSetup()
@@ -129,7 +124,7 @@ class Indexer(object):
 
         yb.conf.cache = 1
 
-        self.icon_cache = IconCache(yb, ['gnome-icon-theme', 'oxygen-icon-theme'], ICON_DIR)
+        self.icon_cache = IconCache(yb, ['gnome-icon-theme', 'oxygen-icon-theme'], self.icons_path)
 
         pkgs = yb.pkgSack.returnPackages()
         base_pkgs = {}
@@ -312,13 +307,12 @@ class Indexer(object):
 
         return i
 
-def main():
-    dbpath = 'xapian'
-    indexer = Indexer(dbpath)
+def run(cache_path, yum_conf):
+    indexer = Indexer(cache_path, yum_conf)
 
     print "Indexing packages from Yum..."
     count = indexer.index_pkgs()
     print "Indexed %d packages." % count
 
 if __name__ == '__main__':
-    main()
+    run('index_cache', join(dirname(__file__), 'yum.conf'))
