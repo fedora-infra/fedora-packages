@@ -1,6 +1,5 @@
-#!/usr/bin/env python
-
 import sys
+import os
 
 import xappy
 import koji
@@ -97,7 +96,7 @@ class Mapper(object):
             self.iconn.add(processed_doc)
             self.iconn.flush()
 
-    def init_db(self):
+    def init_db(self, *args):
         """
         loop through all packages and get the latest builds for koji tags
         listed in distmappings
@@ -321,25 +320,24 @@ class Mapper(object):
         self.iconn.close()
         self.sconn.close()
 
-def usage():
-    print "Usage: %s init | update" % sys.argv[0]
-    exit(-1)
+def run(cache_path, action=None, timestamp=None):
 
-def main(argv):
-    action = None
-    argc = len(argv)
-    if argc < 2:
-        usage()
-    if argv[1] == 'init':
+    versionmap_path = os.path.join(cache_path, 'versionmap')
+    if action is None:
+        if os.path.isdir(versionmap_path):
+            # we assume we need to update because the path exists
+            action = Mapper.update_db
+        else:
+            # otherwise we assume we need to create the db
+            action = Mapper.init_db
+    elif action == 'init':
         action = Mapper.init_db
-    elif argv[1] == 'update':
+    elif action == 'update':
         action = Mapper.update_db
     else:
-        usage()
+        print "Unknown action %s" % action
+        exit(-1)
 
-    mapper = Mapper('versionmap')
-    action(mapper, *argv[2:])
+    mapper = Mapper(versionmap_path)
+    action(mapper, timestamp)
     mapper.cleanup()
-
-if __name__ == '__main__':
-    main(sys.argv)
