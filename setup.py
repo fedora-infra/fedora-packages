@@ -64,7 +64,7 @@ setup(
         #"GitPython",
         #"pytz",
         ],
-    scripts=['fedoracommunity_makeyumcache'],
+    scripts=['fedoracommunity_makeyumcache', 'bin/fcomm-index-packages', 'bin/fcomm-index-latest-builds'],
     packages=packages,
     include_package_data=True,
     test_suite='nose.collector',

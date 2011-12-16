@@ -87,6 +87,8 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 #%{python_sitelib}/%{name}-%{version}-py%{pyver}-nspkg.pth
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/%{name}
 %{_bindir}/fedoracommunity_makeyumcache
+%{_bindir}/fcomm-index-packages
+%{_bindir}/fcomm-index-latest-builds
 
 %changelog
 * Thu Dec 01 2011 John (J5) Palmieri <johnp@redhat.com> - 0.5.1-1
