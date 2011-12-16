@@ -23,7 +23,7 @@ from pylons import config, request
 from datetime import datetime
 from cgi import escape
 from urlgrabber import grabber
-
+from lockfile import LockFile
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.api.connectors import get_connector
@@ -250,28 +250,41 @@ class KojiConnector(IConnector, ICall, IQuery):
         if os.path.exists(rpm_file_path):
             return rpm_file_path
 
-        info = self.call('getBuild', {'buildInfo': nvr})
-        if info is None:
-            return {'error': 'No such build (%s)' % filename}
+        lockfile = LockFile(file_path)
+        if lockfile.is_locked():
+            # block until the lock is released and then assume other
+            # thread was successful
+            lockfile.acquire()
+            lockfile.release()
+            return rpm_file_path
 
-        if not os.path.exists(self._rpm_cache):
-            os.mkdir(self._rpm_cache,)
-
-        url = '%s/%s/%s/%s/%s/%s' % (self._koji_pkg_url, info['name'], info['version'], info['release'], arch, filename)
-
-        url_file = grabber.urlopen(url, text=filename)
-        out = os.open(rpm_file_path, os.O_WRONLY|os.O_CREAT|os.O_TRUNC, 0666)
+        # acquire the lock and release when done
+        lockfile.acquire()
         try:
-            while 1:
-                buf = url_file.read(4096)
-                if not buf:
-                    break
-                os.write(out, buf)
-        except Exception as e:
-            raise e
+            info = self.call('getBuild', {'buildInfo': nvr})
+            if info is None:
+                return {'error': 'No such build (%s)' % filename}
+
+            if not os.path.exists(self._rpm_cache):
+                os.mkdir(self._rpm_cache,)
+
+            url = '%s/%s/%s/%s/%s/%s' % (self._koji_pkg_url, info['name'], info['version'], info['release'], arch, filename)
+
+            url_file = grabber.urlopen(url, text=filename)
+            out = os.open(rpm_file_path, os.O_WRONLY|os.O_CREAT|os.O_TRUNC, 0666)
+            try:
+                while 1:
+                    buf = url_file.read(4096)
+                    if not buf:
+                        break
+                    os.write(out, buf)
+            except Exception as e:
+                raise e
+            finally:
+                os.close(out)
+                url_file.close()
         finally:
-            os.close(out)
-            url_file.close()
+            lockfile.release()
 
         return rpm_file_path
 
