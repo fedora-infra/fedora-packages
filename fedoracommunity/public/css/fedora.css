@@ -301,6 +301,12 @@ table {
 
 #patches table td.age {
   text-align: right;
+  font-size: 90%;
+  min-width: 30%;
+}
+
+#patches table td.age .date {
+  color: #999;
 }
 
 #patches .changelog .author {
@@ -376,11 +382,26 @@ table {
 #patches .diffstat-all .diffstat th:last-child,
 #patches .diffstat-all .diffstat td:last-child { border-right: 0px !important; padding-right: 7px !important;}
 
-/** TRYME
-#patches .diffstat-all table.diffstat {
-  padding-bottom: 15px;
+.raw-link a { 
+  margin-left: 5px; 
+  font-weight: 500 !important; 
+  display: none;
+  text-decoration: underline !important;
+  color: #A07CBC !important;
 }
-**/ 
+
+tr.patch-name:hover td {
+  background-color: #eef6ff;
+}
+
+tr.patch-name:hover .raw-link a {
+  display: inline;
+}
+
+#patches .active-patch .raw-link a {
+  display: block;
+  color: white !important;
+}
 
 #patches .diffstat-all table.diffstat td {
   border-bottom: 0px;
