@@ -7,7 +7,11 @@ import os
 import shutil
 
 from fedoracommunity.search.latest_version_mapper import run
-from lockfile import LockFile
+try:
+    from lockfile import LockFile
+except:
+    from lockfile import FileLock
+
 from optparse import OptionParser
 
 if __name__=="__main__":
