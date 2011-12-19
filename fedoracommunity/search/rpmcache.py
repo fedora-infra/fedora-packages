@@ -2,6 +2,7 @@ import os
 import tempfile
 import shutil
 import fnmatch
+import subprocess
 
 class RPMCache(object):
     def __init__(self, pkg, yum_base, cache_dir='cache', max_retry=10):
@@ -36,8 +37,6 @@ class RPMCache(object):
             path = repo.getPackage(self.pkg)
 
     def _extract_file(self, file_path):
-        os.chdir(self.tmp_dir)
-
         if self.decompress_filter == None:
             decompress_filter =  os.path.basename(file_path)
         else:
@@ -45,8 +44,7 @@ class RPMCache(object):
 
         cmd = 'rpm2cpio %s | cpio -idmv --no-absolute-filenames %s' % (self.rpm_path, decompress_filter)
         print cmd
-        os.system(cmd)
-        os.chdir(self.cache_dir)
+        subprocess.Popen(['rpm2cpio', self.rpm_path, '|', 'cpio', '-idmv', '--no-absoulte-filenames', decompress_filter], cwd=self.tmp_dir)
 
     def prep_file(self, file_path, decompress_filter=None):
         self._download_rpm()
