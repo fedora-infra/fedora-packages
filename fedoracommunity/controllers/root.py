@@ -74,6 +74,13 @@ class RootController(BaseController):
         return {'widget': moksha.utils.get_widget(widget_name),
                 'args': list(args), 'kwds': kwds}
 
+    @expose()
+    def _heartbeat(self, *args, **kwds):
+        '''Fast heartbeat monitor so proxy servers know if we are runnining'''
+        # TODO: perhaps we want to monitor our own internal functions and
+        #       send back an error if we are not completely up and running
+        return "Still running"
+
     @expose('mako:fedoracommunity.templates.chrome')
     def _default(self, *args, **kwds):
         '''for anything which does not hit a controller we assume is a package
