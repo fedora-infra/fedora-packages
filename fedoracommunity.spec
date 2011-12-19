@@ -44,6 +44,7 @@ Requires: diffstat
 Requires: fedpkg
 Requires: python-ordereddict
 Requires: python-lockfile
+Requires: python-tw2-jquery-ui
 
 Obsoletes: myfedora
 
@@ -91,6 +92,9 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Mon Dec 19 2011 Luke Macken <lmacken@redhat.com> - 0.5.1-2
+- Require python-tw2-jquery-ui
+
 * Thu Dec 01 2011 John (J5) Palmieri <johnp@redhat.com> - 0.5.1-1
 - fixups for deployment on RHEL6
 
