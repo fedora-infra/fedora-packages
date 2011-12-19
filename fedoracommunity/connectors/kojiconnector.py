@@ -23,7 +23,11 @@ from pylons import config, request
 from datetime import datetime
 from cgi import escape
 from urlgrabber import grabber
-from lockfile import LockFile
+
+try:
+    from lockfile import LockFile
+except ImportError:
+    from lockfile import FileLock as LockFile
 
 from moksha.connector import IConnector, ICall, IQuery, ParamFilter
 from moksha.api.connectors import get_connector
