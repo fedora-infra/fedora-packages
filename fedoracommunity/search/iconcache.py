@@ -53,7 +53,7 @@ class IconCache(object):
         if not best_match:
             return None
 
-        if best_match.pixbuf[0] > 128:
+        if best_match.size[0] > 128:
             # resize to 128
             best_match = best_match.resize((128, 128))
         else:
