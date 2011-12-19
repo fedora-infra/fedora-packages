@@ -4,7 +4,7 @@ from rpmcache import RPMCache
 import Image
 
 class IconCache(object):
-    def __init__(self, yum_base, icon_rpm_names, icons_dir, cache_dir):
+    def __init__(self, yum_base, icon_rpm_names, icon_dir, cache_dir):
         self.found_icons = {} # {'icon-name': True}
         self._rpm_caches = []
         self._rpm_caches.extend(icon_rpm_names)

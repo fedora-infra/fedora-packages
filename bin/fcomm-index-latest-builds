@@ -10,7 +10,7 @@ from fedoracommunity.search.latest_version_mapper import run
 try:
     from lockfile import LockFile
 except:
-    from lockfile import FileLock
+    from lockfile import FileLock as LockFile
 
 from optparse import OptionParser
 
