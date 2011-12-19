@@ -2,7 +2,8 @@ import os
 import tempfile
 import shutil
 import fnmatch
-import subprocess
+
+from subprocess import Popen, PIPE
 
 class RPMCache(object):
     def __init__(self, pkg, yum_base, cache_dir='cache', max_retry=10):
@@ -44,7 +45,15 @@ class RPMCache(object):
 
         cmd = 'rpm2cpio %s | cpio -idmv --no-absolute-filenames %s' % (self.rpm_path, decompress_filter)
         print cmd
-        subprocess.Popen(['rpm2cpio', self.rpm_path, '|', 'cpio', '-idmv', '--no-absoulte-filenames', decompress_filter], cwd=self.tmp_dir)
+        p1 = Popen(['rpm2cpio', self.rpm_path],
+                   cwd=self.tmp_dir,
+                   stdout=PIPE)
+        p2 = Popen(['cpio', '-idmv', '--no-absolute-filenames', decompress_filter],
+                   cwd=self.tmp_dir,
+                   stdin=p1.stdout,
+                   stdout=PIPE)
+        p1.stdout.close()
+        output = p2.communicate()[0]
 
     def prep_file(self, file_path, decompress_filter=None):
         self._download_rpm()
