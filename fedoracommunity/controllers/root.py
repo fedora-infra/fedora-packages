@@ -88,3 +88,6 @@ class RootController(BaseController):
         package = args[0]
         tmpl_context.widget = PackageWidget
         return {'title': 'Package %s' % package, 'options':{'args': list(args), 'kwds': kwds}}
+
+    # For older versions of TG2
+    default = _default
