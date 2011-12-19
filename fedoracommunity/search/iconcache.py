@@ -27,6 +27,7 @@ class IconCache(object):
         for icon_path in icon_path_list:
             try:
                 pixbuf = Image.open(icon_path)
+                pixbuf.load()
             except Exception:
                 continue
 
@@ -34,7 +35,8 @@ class IconCache(object):
 
             # try to find the best match to 128x128
             if width == 128:
-                return pixbuf
+                best_match = pixbuf
+                break
             elif best_match == None:
                 best_match = pixbuf
             elif width > 128:
@@ -56,17 +58,10 @@ class IconCache(object):
         if best_match.size[0] > 128:
             # resize to 128
             best_match = best_match.resize((128, 128))
-        else:
+        elif best_match.size[0] < 128:
             # smaller icons should be pasted onto a generic icon in
             # the future but for now just resize
             best_match = best_match.resize((128, 128))
-
-        try:
-            # since PIL lazy loads check to see if we can actually
-            # load this icon.  If not return None
-            best_match.load()
-        except IOError:
-            best_match = None
 
         return best_match
 
