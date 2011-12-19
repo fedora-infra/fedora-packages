@@ -28,6 +28,12 @@ BuildRequires: python-pygments
 BuildRequires: pytz
 BuildRequires: pyOpenSSL
 BuildRequires: moksha
+BuildRequires: python-tw2-jquery-ui
+
+%if 0%{?el6} || 0%{?el5}
+BuildRequires: python-ordereddict
+Requires: python-ordereddict
+%endif
 
 Requires: moksha >= 0.4.3
 Requires: intltool
@@ -45,6 +51,8 @@ Requires: fedpkg
 Requires: python-ordereddict
 Requires: python-lockfile
 Requires: python-tw2-jquery-ui
+Requires: python-bugzilla
+Requires: xapian-bindings-python
 
 Obsoletes: myfedora
 
@@ -93,7 +101,7 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 
 %changelog
 * Mon Dec 19 2011 Luke Macken <lmacken@redhat.com> - 0.5.1-2
-- Require python-tw2-jquery-ui
+- Update our requirements
 
 * Thu Dec 01 2011 John (J5) Palmieri <johnp@redhat.com> - 0.5.1-1
 - fixups for deployment on RHEL6
