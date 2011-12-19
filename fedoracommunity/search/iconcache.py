@@ -61,6 +61,13 @@ class IconCache(object):
             # the future but for now just resize
             best_match = best_match.resize((128, 128))
 
+        try:
+            # since PIL lazy loads check to see if we can actually
+            # load this icon.  If not return None
+            best_match.load()
+        except IOError:
+            best_match = None
+
         return best_match
 
     def generate_icon(self, icon_name, extra_cache):
