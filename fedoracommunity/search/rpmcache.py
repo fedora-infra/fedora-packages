@@ -36,7 +36,6 @@ class RPMCache(object):
             path = repo.getPackage(self.pkg)
 
     def _extract_file(self, file_path):
-        push_dir = os.getcwd()
         os.chdir(self.tmp_dir)
 
         if self.decompress_filter == None:
@@ -47,7 +46,7 @@ class RPMCache(object):
         cmd = 'rpm2cpio %s | cpio -idmv --no-absolute-filenames %s' % (self.rpm_path, decompress_filter)
         print cmd
         os.system(cmd)
-        os.chdir(push_dir)
+        os.chdir(self.cache_dir)
 
     def prep_file(self, file_path, decompress_filter=None):
         self._download_rpm()
