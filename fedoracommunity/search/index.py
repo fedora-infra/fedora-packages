@@ -28,6 +28,7 @@ except ImportError:
 
 class Indexer(object):
     def __init__(self, cache_path, yum_conf):
+        self.cache_path = cache_path
         self.dbpath = join(cache_path, 'search')
         self.yum_cache_path = join(cache_path, 'yum-cache')
         self.icons_path = join(cache_path, 'icons')
@@ -124,7 +125,7 @@ class Indexer(object):
 
         yb.conf.cache = 1
 
-        self.icon_cache = IconCache(yb, ['gnome-icon-theme', 'oxygen-icon-theme'], self.icons_path)
+        self.icon_cache = IconCache(yb, ['gnome-icon-theme', 'oxygen-icon-theme'], self.icons_path, self.cache_path)
 
         pkgs = yb.pkgSack.returnPackages()
         base_pkgs = {}
@@ -202,7 +203,7 @@ class Indexer(object):
     def index_files(self, doc, pkg_dict, src_rpm_cache):
         yum_pkg = pkg_dict['pkg']
         if yum_pkg != None:
-            desktop_file_cache = RPMCache(yum_pkg, self.yum_base)
+            desktop_file_cache = RPMCache(yum_pkg, self.yum_base, self.cache_path)
             desktop_file_cache.open()
             for filename in yum_pkg.filelist:
                 if filename.endswith('.desktop'):
@@ -261,7 +262,7 @@ class Indexer(object):
             doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
             doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
 
-            src_rpm_cache = RPMCache(pkg['src_pkg'], self.yum_base)
+            src_rpm_cache = RPMCache(pkg['src_pkg'], self.yum_base, self.cache_path)
             src_rpm_cache.open()
 
             self.index_spec(doc, pkg, src_rpm_cache)

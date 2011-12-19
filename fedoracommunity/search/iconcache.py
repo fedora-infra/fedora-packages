@@ -4,17 +4,18 @@ from rpmcache import RPMCache
 import Image
 
 class IconCache(object):
-    def __init__(self, yum_base, icon_rpm_names, icon_dir):
+    def __init__(self, yum_base, icon_rpm_names, icons_dir, cache_dir):
         self.found_icons = {} # {'icon-name': True}
         self._rpm_caches = []
         self._rpm_caches.extend(icon_rpm_names)
         self.yum_base = yum_base
+        self.cache_dir = cache_dir
         self.icon_dir = icon_dir
 
     def check_pkg(self, pkg):
         try:
             i = self._rpm_caches.index(pkg['name'])
-            self._rpm_caches[i] = RPMCache(pkg, self.yum_base)
+            self._rpm_caches[i] = RPMCache(pkg, self.yum_base, self.cache_dir)
             self._rpm_caches[i].open()
         except ValueError:
             pass

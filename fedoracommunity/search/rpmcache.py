@@ -11,7 +11,7 @@ class RPMCache(object):
 
         self.rpm_file_name = "%s.rpm" % rpm_envra
         self.rpm_envra = rpm_envra
-        self.cache_dir = os.path.join(os.getcwd(), cache_dir)
+        self.cache_dir = os.path.join(cache_dir, 'rpms')
         self.retry = 0
         self.pkg = pkg
         self.yum_base = yum_base
