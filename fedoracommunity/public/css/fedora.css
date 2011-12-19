@@ -382,6 +382,8 @@ table {
 #patches .diffstat-all .diffstat th:last-child,
 #patches .diffstat-all .diffstat td:last-child { border-right: 0px !important; padding-right: 7px !important;}
 
+#patches .diffstat-all { display: none; }
+
 .raw-link a { 
   margin-left: 5px; 
   font-weight: 500 !important; 
