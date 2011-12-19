@@ -1,7 +1,7 @@
 import os
 
 from rpmcache import RPMCache
-from gi.repository import GdkPixbuf
+import Image
 
 class IconCache(object):
     def __init__(self, yum_base, icon_rpm_names, icon_dir):
@@ -25,13 +25,11 @@ class IconCache(object):
 
         for icon_path in icon_path_list:
             try:
-                pixbuf = GdkPixbuf.Pixbuf.new_from_file(icon_path)
+                pixbuf = Image.open(icon_path)
             except Exception:
                 continue
 
-            width = pixbuf.get_width()
-
-
+            width = pixbuf.size[0]
 
             # try to find the best match to 128x128
             if width == 128:
@@ -39,13 +37,13 @@ class IconCache(object):
             elif best_match == None:
                 best_match = pixbuf
             elif width > 128:
-                best_match_width = best_match.get_width()
+                best_match_width = best_match.size[0]
                 if best_match_width < 128:
                     best_match = pixbuf
                 elif width < best_match_width:
                     best_match = pixbuf
             elif width < 128:
-                best_match_width = best_match.get_width()
+                best_match_width = best_match.size[0]
                 if best_match_width > 128:
                     continue
                 elif width > best_match_width:
@@ -54,15 +52,13 @@ class IconCache(object):
         if not best_match:
             return None
 
-        if best_match.get_width() > 128:
+        if best_match.pixbuf[0] > 128:
             # resize to 128
-            best_match = best_match.scale_simple(128, 128, 
-                                                 GdkPixbuf.InterpType.HYPER)
+            best_match = best_match.resize((128, 128))
         else:
             # smaller icons should be pasted onto a generic icon in
             # the future but for now just resize
-            best_match = best_match.scale_simple(128, 128, 
-                                                 GdkPixbuf.InterpType.HYPER)
+            best_match = best_match.resize((128, 128))
 
         return best_match
 
@@ -78,9 +74,9 @@ class IconCache(object):
 
                 if icon:
                     self.found_icons[icon_name] = True
-                    icon.savev(os.path.join(self.icon_dir, icon_name + '.png'),
-                               'png',
-                               [],[])
+                    icon.save(os.path.join(self.icon_dir, icon_name + '.png'),
+                              'PNG')
+
                     return icon_name
 
     def close(self):
