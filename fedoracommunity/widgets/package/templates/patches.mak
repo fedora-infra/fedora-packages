@@ -52,12 +52,12 @@ function toggle_patch(patch) {
 
 
 function toggle_diffstat() {
-	if ( $('#diffstat').is(":visible") ) {
-		$('#diffstat').hide();
-		$('#diffstat_link').text('Show summary of all patches');
+	if ( $('.diffstat-all').is(":visible") ) {
+		$('.diffstat-all').hide();
+		$('.frame_link').text('Show summary of all patches');
 	} else {
-		$('#diffstat').show();
-		$('#diffstat_link').text('Hide summary of all patches');
+		$('.diffstat-all').show();
+		$('.frame_link').text('Hide summary of all patches');
 	}
 }
 </script>
