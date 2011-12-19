@@ -1,6 +1,6 @@
 <script type="text/javascript">
 function on_change(self) {
-	$('#patches').load('/_w/package.sources.patches #patches', {
+	$('#patches_container').load('/_w/package.sources.patches #patches', {
 		'package_name': '${w.package}',
 		'branch': self.value
 		});
@@ -9,6 +9,7 @@ function on_change(self) {
 
 ${w.children[0].display(on_change='on_change', package=w.package)}
 
+<div id="patches_container">
 <div id="patches" class="patches">
 % if w.patches:
 <%namespace file="diffstat.mak" import="render_diffstat"/>
@@ -61,4 +62,5 @@ function toggle_diffstat() {
 	}
 }
 </script>
+</div>
 </div>
