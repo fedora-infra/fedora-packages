@@ -1,6 +1,5 @@
 <div>
     <div>
-        <h3>Contents</h3>
         <div>
         <div id='grid-controls'>
           <form>

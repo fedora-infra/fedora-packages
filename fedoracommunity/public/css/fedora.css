@@ -491,6 +491,18 @@ tr.patch-name:hover .raw-link a {
   color: #bbb !important;
 }
 
+/* Relationships */
+
+#grid-controls .message {
+  width: 100%;
+  font-size: small;
+  text-align: right;
+}
+
+.list table {
+  clear: both;
+}
+
 /* Footer Stuff */
 
 
