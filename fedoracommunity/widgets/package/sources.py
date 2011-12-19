@@ -37,7 +37,7 @@ class Sources(TabWidget):
         #('Git', 'package.sources.git'),
         ])
     base_url = Template(text='/${kwds["package_name"]}/sources/')
-    default_tab = 'Spec'
+    default_tab = 'Patches'
 
 
 class ReleaseFilter(twc.Widget):
