@@ -1,6 +1,6 @@
 <script type="text/javascript">
 function on_change(self) {
-	$('#tarballs').load('/_w/package.sources.tarballs #tarballs', {
+	$('#tarballs_container').load('/_w/package.sources.tarballs #tarballs', {
 		'package_name': '${w.package}',
 		'branch': self.value
 		});
@@ -9,6 +9,7 @@ function on_change(self) {
 
 ${w.children[0].display(on_change='on_change', package=w.package)}
 
+<div id="tarballs_container">
 <div id="tarballs">
 % if w.upstream_tarball:
 <h2>Upstream Tarball</h2>
@@ -24,4 +25,5 @@ ${w.children[0].display(on_change='on_change', package=w.package)}
 % else:
 	No Fedora tarball found
 % endif
+</div>
 </div>
