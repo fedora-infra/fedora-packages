@@ -59,7 +59,7 @@ setup(
         "moksha",
         #"PyOpenSSL",
         "SQLAlchemy>=0.5",
-        "xappy",
+        #"xappy",
         # For some reason this doesn't get automatically pulled in :(
         #"GitPython",
         #"pytz",
