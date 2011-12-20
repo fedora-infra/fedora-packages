@@ -1,6 +1,6 @@
 <script type="text/javascript">
 function on_change(self) {
-	$('#patches_container').load('/_w/package.sources.patches #patches', {
+	$('#patches_container').load(moksha.url('/_w/package.sources.patches #patches'), {
 		'package_name': '${w.package}',
 		'branch': self.value
 		});
