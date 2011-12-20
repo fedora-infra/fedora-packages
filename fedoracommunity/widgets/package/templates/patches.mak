@@ -46,7 +46,7 @@ function toggle_patch(patch) {
 
 	tr.addClass('active-patch').after(
 	  $('<tr/>', {id: 'patch'}).addClass('patch-content').append(
-		  $('<td/>', {colspan: 3}).load('/widgets/package.sources.patch',
+		  $('<td/>', {colspan: 3}).load(moksha.url('/widgets/package.sources.patch'),
 			  {package: '${w.package}', patch: patch, branch: $('#release_select').val()})));
 	return false;
 }
