@@ -93,6 +93,7 @@ class Indexer(object):
                                 'devel_owner': owner,
                                 'icon': icon_name,
                                 'pkg': pkg,
+                                'upstream_url': url,
                                 'src_pkg': src_pkg,
                                 'sub_pkgs': [{'name': sub_pkg_name,
                                               'summary': sub_pkg_summary,
@@ -149,12 +150,14 @@ class Indexer(object):
                                                     'pkg': None,
                                                     'src_pkg': None,
                                                     'icon': self.default_icon,
+                                                    'upstream_url': None,
                                                     'sub_pkgs': []}
 
             base_pkg = base_pkgs[pkg.base_package_name]
 
             if pkg.ui_from_repo == 'rawhide-source':
                base_pkg['src_pkg'] = pkg
+               base_pkg['upstream_url'] = pkg.URL
                continue
 
             # avoid duplicates
@@ -200,7 +203,7 @@ class Indexer(object):
             if generated_icon != None:
                 pkg_dict['icon'] = icon
 
-    def index_files(self, doc, pkg_dict, src_rpm_cache):
+    def index_files(self, doc, pkg_dict):
         yum_pkg = pkg_dict['pkg']
         if yum_pkg != None:
             desktop_file_cache = RPMCache(yum_pkg, self.yum_base, self.cache_path)
@@ -225,6 +228,8 @@ class Indexer(object):
             desktop_file_cache.close()
 
     def index_spec(self, doc, pkg, src_rpm_cache):
+        # don't use this but keep it here if we need to index spec files
+        # again
         for filename in pkg['src_pkg'].filelist:
             if filename.endswith('.spec'):
                 break;
@@ -262,11 +267,7 @@ class Indexer(object):
             doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
             doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
 
-            src_rpm_cache = RPMCache(pkg['src_pkg'], self.yum_base, self.cache_path)
-            src_rpm_cache.open()
-
-            self.index_spec(doc, pkg, src_rpm_cache)
-            self.index_files(doc, pkg, src_rpm_cache)
+            self.index_files(doc, pkg)
 
             for sub_pkg in pkg['sub_pkgs']:
                 i += 1
@@ -278,7 +279,7 @@ class Indexer(object):
 
                 doc.fields.append(xappy.Field('subpackages', filtered_sub_pkg_name, weight=1.0))
                 doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_pkg_name + '__EX', weight=10.0))
-                self.index_files(doc, sub_pkg, src_rpm_cache)
+                self.index_files(doc, sub_pkg)
 
                 # remove anything we don't want to store
                 del sub_pkg['pkg']
@@ -302,7 +303,6 @@ class Indexer(object):
             # preempt xappy's processing of data
             processed_doc._data = None
             self.iconn.add(processed_doc)
-            src_rpm_cache.close()
 
         self.icon_cache.close()
 
