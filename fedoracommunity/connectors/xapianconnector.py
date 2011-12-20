@@ -110,7 +110,7 @@ class XapianConnector(IConnector, ICall, IQuery):
         unfiltered_search_terms = search_string.split(' ')
 
         search_string = utils.filter_search_string (search_string)
-        print search_string
+
         # add exact matchs
         search_terms = search_string.split(' ')
         for term in search_terms:
