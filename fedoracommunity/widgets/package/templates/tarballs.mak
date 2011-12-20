@@ -1,6 +1,6 @@
 <script type="text/javascript">
 function on_change(self) {
-	$('#tarballs_container').load('/_w/package.sources.tarballs #tarballs', {
+	$('#tarballs_container').load(moksha.url('/_w/package.sources.tarballs #tarballs'), {
 		'package_name': '${w.package}',
 		'branch': self.value
 		});
