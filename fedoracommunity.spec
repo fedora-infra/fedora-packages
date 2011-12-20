@@ -53,6 +53,10 @@ Requires: python-lockfile
 Requires: python-tw2-jquery-ui
 Requires: python-bugzilla
 Requires: xapian-bindings-python
+Requires: python-xappy
+# For spectool
+Requires: rpmdevtools
+
 
 Obsoletes: myfedora
 
