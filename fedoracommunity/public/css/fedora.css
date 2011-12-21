@@ -349,10 +349,11 @@ table {
   padding-top: 10px;
 }
 
-#patches .patch_footer {
-  border-bottom: 1px solid #DB347A !important;
+#patches .patch_raw {
   border-left: 1px solid #DB347A !important;
   border-right: 1px solid #DB347A !important;
+  background-color: #F3F3F3;
+  padding-left: 4px;
 }
 
 .patches td {
@@ -384,23 +385,15 @@ table {
 
 #patches .diffstat-all { display: none; }
 
-.raw-link a { 
-  margin-left: 5px; 
-  font-weight: 500 !important; 
-  display: none;
-  text-decoration: underline !important;
-  color: #A07CBC !important;
-}
-
 tr.patch-name:hover td {
   background-color: #eef6ff;
 }
 
-tr.patch-name:hover .raw-link a {
+tr.patch-name:hover a {
   display: inline;
 }
 
-#patches .active-patch .raw-link a {
+#patches .active-patch a {
   display: block;
   color: white !important;
 }

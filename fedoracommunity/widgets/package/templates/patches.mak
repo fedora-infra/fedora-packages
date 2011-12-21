@@ -22,9 +22,9 @@ ${w.children[0].display(on_change='on_change', package=w.package)}
 </div>
 <table>
 % for patch in w.patches:
-	<% name = patch['name'] %>
-    <tr id="${name}" class="patch-name">
-        <td><a href="#" onclick="return toggle_patch('${name}');">${name}</a> <span class="raw-link"><a href="http://pkgs.fedoraproject.org/gitweb/?p=${w.package}.git;a=blob_plain;hb=HEAD;f=${name}" target="_blank">Link to raw patch</a></span></td>
+    <% name = patch['name'] %>
+    <tr id="${name}" class="patch-name" onclick="return toggle_patch('${name}');">
+        <td><a href="#">${name}</a></td>
         <td class="age">Added ${patch['age']} ago <span class="date">(${patch['date']})</span></td>
     </tr>
 % endfor
