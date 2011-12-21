@@ -1,0 +1,19 @@
+#!/bin/bash -x
+# Update fedoracommunity dev instance
+
+RELEASE=$1
+REVISION=$2
+DIST=el6
+REPO=/mnt/fedora/app/fi-repo/testing/6/
+MINION=community01.dev.phx2.fedoraproject.org
+
+rpmsign --resign ~/fcomm/fedoracommunity-$RELEASE-$REVISION.$DIST.{src,noarch}.rpm
+sudo cp ~/fcomm/fedoracommunity-$RELEASE-$REVISION.$DIST.src.rpm $REPO/SRPMS/
+sudo cp ~/fcomm/fedoracommunity-$RELEASE-$REVISION.$DIST.noarch.rpm $REPO/x86_64/
+sudo createrepo --update $REPO/x86_64/
+sudo createrepo --update $REPO/SRPMS
+sudo func-command --host=$MINION "yum clean metadata"
+sudo func-command --host=$MINION "yum update -y fedoracommunity moksha"
+sudo func-command --host=$MINION "puppetd -t"
+sudo func-command --host=$MINION "service httpd restart"
+curl http://$MINION/community/
