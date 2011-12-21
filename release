@@ -1,0 +1,13 @@
+#!/bin/bash -x
+# Build a new version of fedoracommunity and push it to our puppet server.
+# Usage ./release <version> <release>
+
+VERSION=$1
+RELEASE=$2
+
+python setup.py sdist --format=bztar
+mv dist/* ~/rpmbuild/SOURCES/
+cp *.spec ~/rpmbuild/SPECS/
+rpmbuild -bs ~/rpmbuild/SPECS/fedoracommunity.spec
+mock -v -r epel-6-x86_64 ~/rpmbuild/SRPMS/fedoracommunity-$1-$2.*src.rpm
+scp /var/lib/mock/epel-6-x86_64/result/*.rpm puppet1:~/fcomm/
