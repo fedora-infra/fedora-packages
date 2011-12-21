@@ -44,10 +44,10 @@ if __name__=="__main__":
 
             for file_name in os.listdir(icon_dir):
                 new_file_path = os.path.join(icon_dir, file_name)
-                old_file_path = os.path.join(options.index_db_dest, file_name)
+                old_file_path = os.path.join(options.icons_dest, file_name)
                 if os.path.isfile(old_file_path):
                     os.remove(old_file_path)
-                shutil.move(new_file_path, options.icon_dest)
+                shutil.move(new_file_path, old_file_path)
 
         if options.index_db_dest is not None:
             index_dir = os.path.join(options.cache_path, 'search')
@@ -55,7 +55,7 @@ if __name__=="__main__":
             new_files = {}
             for file_name in os.listdir(index_dir):
                 new_file_path = os.path.join(index_dir, file_name)
-                old_file_path = os.path.join(options.index_db_dest, file_name)
+                old_file_path = os.path.join(options.index_db_dest, 'search', file_name)
                 new_files[file_name] = True
                 if os.path.isfile(old_file_path):
                     os.remove(old_file_path)
@@ -64,7 +64,7 @@ if __name__=="__main__":
             # remove any other files in the dest dir
             for file_name in os.listdir(options.index_db_dest):
                 if not new_files.get(file_name, False):
-                    old_file_path = os.path.join(options.index_db_dest, file_name)
+                    old_file_path = os.path.join(options.index_db_dest, 'search', file_name)
                     if os.path.isfile(old_file_path):
                         os.remove(old_file_path)
     finally:
