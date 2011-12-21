@@ -19,7 +19,7 @@
                      onSubmit="return do_search(this);">
                    <div class="grid_5" id="header-main">
 		      <h1 style="font-size:large;">
-                         <a href="/">
+                         <a href="${tg.url('/')}">
 			    <span>Fedora</span> Packages
 			 </a>
 		      </h1>
