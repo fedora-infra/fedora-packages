@@ -1601,7 +1601,7 @@ em.note {
 }
 
 #package-info-bar ul ul { 
-  list-style: square url('/images/list_tree_marker.png');
+  list-style: square url('../images/list_tree_marker.png');
   margin-left: 1.3em;
 }
 
