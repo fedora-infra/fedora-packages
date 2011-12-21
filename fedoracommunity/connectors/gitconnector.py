@@ -68,15 +68,19 @@ class FedoraGitRepo(object):
 
     def get_patches(self):
         """ Return a dictionary of all patches for this package """
-        patches = {}
+        patches = []
         for patch in [blob for blob in self.repo.tree().traverse()
                       if blob.name.endswith('.patch')]:
             created = self.get_creation_time(patch.name)
-            patches[patch.name] = [
-                DateTimeDisplay(created).age(granularity='day', general=True),
-                created.strftime('%d %b %Y'),
-                ]
-        return patches
+            patches.append({
+                'name': patch.name,
+                'date': created.strftime('%d %b %Y'),
+                'datetime': created,
+                'age': DateTimeDisplay(created).age(granularity='day',
+                                                    general=True),
+                })
+        return sorted(patches,
+                cmp=lambda x, y: cmp(x['datetime'], y['datetime']))
 
     def get_patch(self, patch):
         """ Return the contents of a specific patch """
