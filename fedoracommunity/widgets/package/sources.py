@@ -106,9 +106,7 @@ class Patches(twc.Widget):
 
 
 class Patch(twc.Widget):
-    package = twc.Param('The name of the package')
-    patch = twc.Param('The filename of the patch')
-    branch = twc.Param('The git branch', default='master')
+    kwds = twc.Param()
     diffstat = twc.Param('The diffstat for this patch', default=True)
     text = twc.Variable('The text of the patch')
     changelog = twc.Variable('The changelog of this patch')
@@ -116,6 +114,9 @@ class Patch(twc.Widget):
 
     def prepare(self):
         super(Patch, self).prepare()
+        self.package = self.kwds['package']
+        self.patch = self.kwds['patch']
+        self.branch = self.kwds['branch']
         repo = FedoraGitRepo(self.package, branch=self.branch)
         diff = repo.get_patch(self.patch)
         if self.diffstat:
