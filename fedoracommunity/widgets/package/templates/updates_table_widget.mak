@@ -1,4 +1,7 @@
 <% import tg %>
+<html>
+<head></head>
+<body>
 <div class="list header-list">
     <div id="grid-controls">
         <form>
@@ -63,3 +66,5 @@
         <div class="pager" id="pager" type="numeric" ></div>
     </div>
 </div>
+</body>
+</html>
