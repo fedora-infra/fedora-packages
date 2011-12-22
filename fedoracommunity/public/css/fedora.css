@@ -209,6 +209,7 @@ table {
 .patches .highlight pre {
   margin-top: -7px;
   padding-left: 7px;
+  border-bottom: 1px solid #DB347A !important;
 }
 
 .patches table tr#patch table td {
