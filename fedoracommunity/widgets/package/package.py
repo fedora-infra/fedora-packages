@@ -62,6 +62,8 @@ class TabWidget(twc.Widget):
 
 class PackageNavWidget(TabWidget):
     tabs = OrderedDict([('Overview', 'package.overview'),
+                        ('Builds', 'package.builds'),
+                        ('Updates', 'package.updates'),
                         ('Bugs', 'package.bugs'),
                         ('Contents', 'package.contents'),
                         ('Changelog', 'package.changelog'),

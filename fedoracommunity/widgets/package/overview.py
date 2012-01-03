@@ -6,21 +6,6 @@ from mako.template import Template
 from moksha.api.connectors import get_connector
 from moksha.api.widgets.grid import TW2Grid
 
-class OverviewNavWidget(TabWidget):
-    tabs = OrderedDict([('Details', 'package.overview.details'),
-                        ('Builds', 'package.overview.builds'),
-                        ('Updates', 'package.overview.updates')])
-    base_url = Template(text='/${kwds["package_name"]}/overview/')
-    default_tab = 'Details'
-
-
-class OverviewWidget(twc.Widget):
-    template = 'mako:fedoracommunity.widgets.package.templates.overview'
-    args = twc.Param()
-    kwds = twc.Param()
-    nav_widget = OverviewNavWidget
-
-
 class ActiveReleasesGrid(TW2Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.active_releases'
     package_name = twc.Param('The name of the package to view')

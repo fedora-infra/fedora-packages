@@ -99,9 +99,10 @@ setup(
     moksha_widgets = moksha.api.widgets
 
     packages = fedoracommunity.widgets.package
-    package.overview.details = fedoracommunity.widgets.package.overview
-    package.overview.updates = fedoracommunity.widgets.package.updates
-    package.overview.builds = fedoracommunity.widgets.package.builds
+
+    package.overview = fedoracommunity.widgets.package.overview
+    package.updates = fedoracommunity.widgets.package.updates
+    package.builds = fedoracommunity.widgets.package.builds
 
     package.bugs = fedoracommunity.widgets.package.bugs
     package.contents = fedoracommunity.widgets.package.contents
@@ -138,10 +139,10 @@ setup(
     fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
     grid = moksha.api.widgets:Grid
 
-    package.overview = fedoracommunity.widgets.package:OverviewWidget
-    package.overview.details = fedoracommunity.widgets.package.overview:Details
-    package.overview.updates = fedoracommunity.widgets.package.updates:Updates
-    package.overview.builds = fedoracommunity.widgets.package.builds:Builds
+    package.overview = fedoracommunity.widgets.package.overview:Details
+
+    package.updates = fedoracommunity.widgets.package.updates:Updates
+    package.builds = fedoracommunity.widgets.package.builds:Builds
 
     package.bugs = fedoracommunity.widgets.package.bugs:BugsWidget
     package.contents = fedoracommunity.widgets.package.contents:ContentsWidget
