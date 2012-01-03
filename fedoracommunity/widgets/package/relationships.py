@@ -31,7 +31,7 @@ class RelationshipBaseWidget(twc.Widget):
         xapian = get_connector('xapian')
         koji = get_connector('koji')
         latest_builds = xapian.get_latest_builds(self.package_name)
-        self.default_build_id = latest_builds['Rawhide']['build_id']
+        self.default_build_repo = 'rawhide'
         self.latest_builds = latest_builds
         build_ids = []
         for build_info in self.latest_builds.values():
@@ -43,9 +43,9 @@ class RelationshipBaseWidget(twc.Widget):
 
         tasks = koji.get_tasks_for_builds(build_ids)
 
-        self.build_to_archtask_map = {}
+        self.repo_to_archtask_map = {}
         # filter tasks to only contain buildArch tasks
-        for build_info in self.latest_builds.values():
+        for (repo_name, build_info) in self.latest_builds.items():
             arch_tasks = []
 
             build_tasks = tasks.get(build_info['build_id'], None)
@@ -60,36 +60,36 @@ class RelationshipBaseWidget(twc.Widget):
                         version = build_info['version']
                         release = build_info['release']
                         arch = task['label']
-                        nvr = "%s-%s-%s" % (name, version, release)
-                        filename = "%s.%s.rpm" % (nvr, arch)
-                        task['nvr'] = nvr
-                        task['filename'] = filename
+                        vr = "%s-%s" % (version, release)
+
+                        task['version'] = vr
+                        task['package'] = name
 
 
             build_info['arch_tasks'] = arch_tasks
-            self.build_to_archtask_map[build_info['build_id']] = arch_tasks
+            self.repo_to_archtask_map[repo_name] = arch_tasks
 
 class RequiresGridWidget(TW2Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.requires_table_widget'
-    resource = 'koji'
+    resource = 'yum'
     resource_path = 'query_requires'
     onReady = "update_grid()"
 
 class ProvidesGridWidget(TW2Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.provides_table_widget'
-    resource = 'koji'
+    resource = 'yum'
     resource_path = 'query_provides'
     onReady = "update_grid()"
 
 class ObsoletesGridWidget(TW2Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.obsoletes_table_widget'
-    resource = 'koji'
+    resource = 'yum'
     resource_path = 'query_obsoletes'
     onReady = "update_grid()"
 
 class ConflictsGridWidget(TW2Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.conflicts_table_widget'
-    resource = 'koji'
+    resource = 'yum'
     resource_path = 'query_conflicts'
     onReady = "update_grid()"
 

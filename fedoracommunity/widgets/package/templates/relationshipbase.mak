@@ -4,37 +4,42 @@
         <div id='grid-controls'>
           <form>
             <div id="filter" class="grid_filter" name="build_filter">
-              <label for="build_id">Build:</label>
+              <label for="repo">Repo:</label>
                 <script type="text/javascript">
 
                     <%
                     import json
-                    json_build_arch_tasks = json.dumps(w.build_to_archtask_map)
+                    json_repo_arch_tasks = json.dumps(w.repo_to_archtask_map)
                     %>
 
-                    var build_arch_tasks = ${json_build_arch_tasks};
                     var $grid = null;
+                    var repo_arch_tasks = ${json_repo_arch_tasks};
 
                     function update_grid() {
                         if ($grid == null)
                             throw "Grid is not registered";
 
-                        var build_id = $("#build_select").val();
+                        var build_repo = $("#repo_select").val();
                         var arch_index = $("#arch_select").val();
-                        var task = build_arch_tasks[build_id][arch_index];
-                        var nvr = task['nvr'];
+                        var task = repo_arch_tasks[build_repo][arch_index];
+                        var vr = task['version'];
+                        var package = task['package'];
                         var arch = task['label'];
 
-                        $grid.mokshagrid("request_update",{"filters":{"nvr": nvr,
-                                                           "arch": arch}});
+                        $grid.mokshagrid("request_update",{"filters":{
+                                                             "package": package,
+                                                             "version": vr,
+                                                             "repo": build_repo,
+                                                             "arch": arch}
+                                                          });
                     }
 
                     function register_grid(grid) {
                         $grid = grid;
                     }
 
-                    function on_build_change(self) {
-                        var archs = build_arch_tasks[self.value];
+                    function on_repo_change(self) {
+                        var archs = repo_arch_tasks[self.value];
                         var $arch_select = $('#arch_select');
                         $arch_select.html('');
                         for (var i in archs) {
@@ -47,13 +52,13 @@
                         update_grid();
                     }
                 </script>
-                <select name="build_id" id="build_select" onChange="on_build_change(this)">
-                  % for (i, build) in enumerate(w.latest_builds.keys()):
+                <select name="repo" id="repo_select" onChange="on_repo_change(this)">
+                  % for (i, repo) in enumerate(w.latest_builds.keys()):
                     <%
                         selected = ""
                         if i == 0:
                             selected = 'selected = "selected"'
-                        build_values = w.latest_builds[build]
+                        build_values = w.latest_builds[repo]
 
                         display_ver = ""
 
@@ -64,7 +69,7 @@
                         else:
                             display_ver = vr
                     %>
-                    <option ${selected} value="${str(build_values['build_id'])}">${build} (${display_ver})</option>
+                    <option ${selected} value="${repo}">${repo} (${display_ver})</option>
                   % endfor
                 </select>
                 <label for="arch_task_id">Arch:</label>
