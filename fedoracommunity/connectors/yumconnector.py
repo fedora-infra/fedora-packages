@@ -134,6 +134,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
     def _pkgtuples_to_rows(self, pkgtuples, _eq='=', _gt='>', _lt='<', _ge='>=', _le='<='):
         rows = []
+
         for pkg in pkgtuples:
             flags =  pkg[1]
             ops = None
@@ -161,7 +162,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                          'version': version,
                          'flags': flags,
                          'ops': ops})
-            return rows
+        return rows
 
     @classmethod
     def register_query_provides(cls):
@@ -277,7 +278,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
         rows = self._pkgtuples_to_rows(pkg.requires)
 
-        return (len(rows), rows)
+        return (len(rows), rows[start_row:start_row + rows_per_page])
 
     @classmethod
     def register_query_obsoletes(cls):
@@ -309,7 +310,9 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                         can_filter_wildcards = False)
 
         f = ParamFilter()
-        f.add_filter('nvr',[], allow_none = False)
+        f.add_filter('package',[], allow_none = False)
+        f.add_filter('version',[], allow_none = False)
+        f.add_filter('repo',[], allow_none = False)
         f.add_filter('arch',[], allow_none = False)
         cls._query_obsoletes_filter = f
 
@@ -324,45 +327,16 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             filters = {}
         filters = self._query_obsoletes_filter.filter(filters, conn=self)
 
-        nvr = filters.get('nvr', '')
+        package = filters.get('package', '')
+        version = filters.get('version', '')
+        repo = filters.get('repo', '')
         arch = filters.get('arch', '')
 
-        file_path = self._download_rpm(nvr, arch)
-        fd = os.open(file_path, os.O_RDONLY)
-        ts = rpm.TransactionSet()
-        h = ts.hdrFromFdno(fd)
-        os.close(fd)
+        pkg = self._get_pkg_object(package, repo, arch)
 
-        obsoletes_names = h[rpm.RPMTAG_OBSOLETENAME]
-        obsoletes_versions = h[rpm.RPMTAG_OBSOLETEVERSION]
-        obsoletes_flags = h[rpm.RPMTAG_OBSOLETEFLAGS]
-        obsoletes_ops = []
-        for flags in obsoletes_flags:
-            op = ""
-            if flags & rpm.RPMSENSE_GREATER:
-                op = ">"
-            elif flags & rpm.RPMSENSE_LESS:
-                op = "<"
-            if flags & rpm.RPMSENSE_EQUAL:
-                if op:
-                    op += "="
-                else:
-                    op = "="
-            obsoletes_ops.append(op)
+        rows = self._pkgtuples_to_rows(pkg.obsoletes)
 
-        total_rows = len(obsoletes_names)
-        rows = []
-        for i in range(start_row, start_row + rows_per_page):
-            if i >= total_rows:
-                break
-
-            rows.append({'name': obsoletes_names[i],
-                        'version': obsoletes_versions[i],
-                        'flags': obsoletes_flags[i],
-                        'ops': obsoletes_ops[i]
-                       })
-
-        return (total_rows, rows)
+        return (len(rows), rows[start_row:start_row + rows_per_page])
 
     @classmethod
     def register_query_conflicts(cls):
@@ -394,7 +368,9 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                         can_filter_wildcards = False)
 
         f = ParamFilter()
-        f.add_filter('nvr',[], allow_none = False)
+        f.add_filter('package',[], allow_none = False)
+        f.add_filter('version',[], allow_none = False)
+        f.add_filter('repo',[], allow_none = False)
         f.add_filter('arch',[], allow_none = False)
         cls._query_conflicts_filter = f
 
@@ -409,41 +385,13 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             filters = {}
         filters = self._query_conflicts_filter.filter(filters, conn=self)
 
-        nvr = filters.get('nvr', '')
+        package = filters.get('package', '')
+        version = filters.get('version', '')
+        repo = filters.get('repo', '')
         arch = filters.get('arch', '')
 
-        file_path = self._download_rpm(nvr, arch)
-        fd = os.open(file_path, os.O_RDONLY)
-        ts = rpm.TransactionSet()
-        h = ts.hdrFromFdno(fd)
-        os.close(fd)
+        pkg = self._get_pkg_object(package, repo, arch)
 
-        conflict_names = h[rpm.RPMTAG_CONFLICTNAME]
-        conflict_versions = h[rpm.RPMTAG_CONFLICTVERSION]
-        conflict_flags = h[rpm.RPMTAG_CONFLICTFLAGS]
-        conflict_ops = []
-        for flags in conflict_flags:
-            op = ""
-            if flags & rpm.RPMSENSE_GREATER:
-                op = ">"
-            elif flags & rpm.RPMSENSE_LESS:
-                op = "<"
-            if flags & rpm.RPMSENSE_EQUAL:
-                if op:
-                    op += "="
-                else:
-                    op = "="
-            conflict_ops.append(op)
+        rows = self._pkgtuples_to_rows(pkg.conflicts)
 
-        total_rows = len(conflict_names)
-        rows = []
-        for i in range(start_row, start_row + rows_per_page):
-            if i >= total_rows:
-                break
-            rows.append({'name': conflict_names[i],
-                        'version': conflict_versions[i],
-                        'flags': conflict_flags[i],
-                        'ops': conflict_ops[i]
-                       })
-
-        return (total_rows, rows)
+        return (len(rows), rows[start_row:start_row + rows_per_page])
