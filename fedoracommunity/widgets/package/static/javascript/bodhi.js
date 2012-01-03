@@ -115,26 +115,27 @@ function get_menu_links(nvr) {
 function generate_package_column(build) {
     var nvr = get_nvr(build);
     var build_id = update_id(build);
-    var entry = $('<div/>').addClass('menu')
-                  .attr('id', 'menu_' + build_id)
-                  .attr('panel', 'menu_panel_' + build_id);
+    var entry = $('<div/>', {
+                    'class': 'menu',
+                    'id': 'menu_' + build_id,
+                    'panel': 'menu_panel_' + build_id
+                    })
 
-    $('<span/>').addClass('package-name')
+    $('<span/>', {'class': 'package-name'})
       .append(
-        $('<a/>')
-            .attr('href', '/package_maintenance/tools/updates?package=' + nvr.name)
-            .attr('moksha_url', 'dynamic')
-            .text(nvr.name))
+        $('<a/>', {
+            'href': moksha.url('/' + nvr.name),
+            'text': nvr.name
+            }))
       .append('<br/>')
       .appendTo(entry);
 
-    $('<span/>').addClass('version')
+    $('<span/>', {'class': 'version'})
       .append(nvr.version + '-' + nvr.release)
       .append('<br/><br/>')
       .appendTo(entry);
 
-    $('<span/>').addClass('menu_panel')
-      .attr('id', 'menu_panel_' + build_id)
+    $('<span/>', {'class': 'menu_panel', 'id': 'menu_panel_' + build_id})
       .append(
         $('<h4/>')
           .append('Quick links for ')
@@ -142,8 +143,7 @@ function generate_package_column(build) {
       .append(get_menu_links(nvr))
       .appendTo(entry);
 
-    $("<div/>")
-      .addClass("moksha_extpoint")
+    $("<div/>", {'class': 'moksha_extpoint'})
       .append("{'type': 'make_menu', 'placeholder_id': 'menu_" + build_id + "', 'id': '" + build_id + "_id'}")
       .appendTo(entry);
 
