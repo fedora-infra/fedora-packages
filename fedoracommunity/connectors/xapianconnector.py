@@ -89,12 +89,15 @@ class XapianConnector(IConnector, ICall, IQuery):
 
     def _highlight_matches(self, row_data, term):
         # make link from name before we potentially rewrite it
-        row_data['link'] = row_data['name']
+        # if we haven't already
+        if 'link' not in row_data:
+            row_data['link'] = row_data['name']
         row_data['name'] = self._highlight_str(row_data['name'], term);
         row_data['summary'] = self._highlight_str(row_data['summary'], term);
         row_data['description'] = self._highlight_str(row_data['description'], term);
         for pkg in row_data['sub_pkgs']:
-            pkg['link'] = pkg['name']
+            if 'link' not in pkg:
+                pkg['link'] = pkg['name']
             pkg['name'] = self._highlight_str(pkg['name'], term);
             pkg['summary'] = self._highlight_str(pkg['summary'], term);
             pkg['description'] = self._highlight_str(pkg['description'], term);
@@ -130,8 +133,6 @@ class XapianConnector(IConnector, ICall, IQuery):
         for m in matches:
             result = json.loads(m.document.get_data())
 
-            # copy name so we can highlight strings that match the search
-            result['link'] = result['name']
             # mark matches in <span class="match">
             for term in unfiltered_search_terms:
                 if term == '':
