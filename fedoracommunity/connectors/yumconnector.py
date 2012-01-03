@@ -124,7 +124,6 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
         # enable repos we care about
         for r in self._yum_client.repos.findRepos('*'):
-            print r.id
             if r.id in enable_repos:
                 r.enable()
             else:

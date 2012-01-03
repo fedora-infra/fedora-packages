@@ -115,6 +115,12 @@ class Indexer(object):
             os.mkdir(self.icons_path)
 
         yb.doConfigSetup(self.yum_conf, root=os.getcwd(), init_plugins=False)
+        for r in yb.repos.findRepos('*'):
+            if r.id in ['rawhide', 'rawhide-source']:
+                r.enable()
+            else:
+                r.disable()
+
         yb._getRepos(doSetup = True)
         yb._getSacks(['x86_64', 'noarch', 'src'])
         yb.doRepoSetup()
