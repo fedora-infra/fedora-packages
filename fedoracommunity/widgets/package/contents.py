@@ -35,9 +35,9 @@ class ContentsWidget(twc.Widget):
 
         tasks = koji.get_tasks_for_builds(build_ids)
 
-        self.build_to_archtask_map = {}
+        self.repo_to_archtask_map = {}
         # filter tasks to only contain buildArch tasks
-        for build_info in self.latest_builds.values():
+        for (repo_name, build_info) in self.latest_builds.items():
             arch_tasks = []
 
             build_tasks = tasks.get(build_info['build_id'], None)
@@ -56,7 +56,8 @@ class ContentsWidget(twc.Widget):
                         filename = "%s.%s.rpm" % (nvr, arch)
                         task['nvr'] = nvr
                         task['filename'] = filename
+                        task['package'] = name
 
             build_info['arch_tasks'] = arch_tasks
-            self.build_to_archtask_map[build_info['build_id']] = arch_tasks
+            self.repo_to_archtask_map[repo_name] = arch_tasks
 
