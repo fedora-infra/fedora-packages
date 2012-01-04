@@ -46,6 +46,8 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         cls.register_query_conflicts()
         cls.register_query_obsoletes()
 
+        cls.register_method('get_file_tree', cls.call_get_file_tree)
+
     def introspect(self):
         # FIXME: return introspection data
         return None
@@ -400,3 +402,56 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         rows = self._pkgtuples_to_rows(pkg.conflicts)
 
         return (len(rows), rows[start_row:start_row + rows_per_page])
+
+    def _add_to_path(self, paths_cache, path, data):
+        if path == '':
+            path = '/'
+
+        if path in paths_cache:
+            dir_info = paths_cache[path]
+            if data:
+               dir_info.append(data)
+            return
+
+        new_data = []
+        if data:
+           new_data.append(data)
+        paths_cache[path] = new_data
+        (new_path, dir_name) = os.path.split(path)
+        self._add_to_path(paths_cache, new_path, {'dirname': dir_name, 'content':new_data})
+
+    def _process_files(self, pkg):
+        paths_cache = {'/':[]}
+
+        for d in pkg.dirlist:
+            self._add_to_path(paths_cache, d, None)
+
+        for full_path in pkg.filelist:
+            output = {'name': None,
+                      'path': None,
+                      'display_size': None,
+                      'type': 'F',
+                      'modestring': '',
+                      'linked_to': None,
+                      'user': None,
+                      'group': None}
+
+            (path, name) = os.path.split(full_path)
+            output['name'] = name
+            output['path'] = path
+
+            # yum lacks size and file type data
+            #output['display_size'] = self._size_to_human_format(size)
+
+            # construct directory structure
+            self._add_to_path(paths_cache, path, output)
+
+        return paths_cache['/']
+
+    def call_get_file_tree(self, resource_path, _cookies=None, package=None, repo=None, arch=None):
+        try:
+            pkg = self._get_pkg_object(package, repo, arch)
+
+            return self._process_files(pkg)
+        except Exception as e:
+            return {'error': "Error: %s" % str(e)}
