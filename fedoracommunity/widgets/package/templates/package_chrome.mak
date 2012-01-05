@@ -37,7 +37,7 @@ icon_url = tg.url("/images/icons/%s.png" % w.package_info['icon'])
            <div id="package-header">
              <h2>${w.kwds['package_name']}</h2>
              % if w.kwds['package_name'] != w.package_info['name']:
-                 Subpackage of <a class="subpackage_link" href="/${w.package_info['name']}/">${w.package_info['name']}</a>
+                 Subpackage of <a class="subpackage_link" href="${tg.url('/%s' % w.package_info['name'])}">${w.package_info['name']}</a>
              % endif
              <div><em>${w.summary}</em></div>
            </div>
