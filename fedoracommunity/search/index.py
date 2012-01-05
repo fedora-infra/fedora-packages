@@ -164,6 +164,13 @@ class Indexer(object):
             if pkg.ui_from_repo == 'rawhide-source':
                base_pkg['src_pkg'] = pkg
                base_pkg['upstream_url'] = pkg.URL
+
+               if not base_pkg['devel_owner']:
+                   base_pkg['devel_owner'] = self.find_devel_owner(pkg.name)
+               if not base_pkg['summary']:
+                   base_pkg['summary'] = pkg.summary
+               if not base_pkg['description']:
+                   base_pkg['description'] = pkg.description
                continue
 
             # avoid duplicates
