@@ -5,4 +5,4 @@
 	${child.display(package=w.package)}
 % endfor
 </body>
-</head>
+</html>
