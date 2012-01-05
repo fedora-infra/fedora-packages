@@ -97,6 +97,10 @@ setup(
     widgets = fedoracommunity.widgets
     moksha_js = moksha.widgets.moksha_js
     moksha_widgets = moksha.api.widgets
+    bodhi_js = fedoracommunity.widgets.package.updates:bodhi_js
+
+    fedoracommunity.bodhi_js = fedoracommunity.widgets.package.updates:bodhi_js
+    fedoracommunity.updates = fedoracommunity.widgets.package.updates:Updates
 
     packages = fedoracommunity.widgets.package
 
@@ -136,14 +140,13 @@ setup(
     torrent = fedoracommunity.connectors:TorrentConnector
 
     [moksha.widget]
-    fedoracommunity.bodhi = fedoracommunity.widgets.bodhi:bodhi_js
+    fedoracommunity.bodhi = fedoracommunity.widgets.package.updates:Updates
     grid = moksha.api.widgets:Grid
 
     package.overview = fedoracommunity.widgets.package.overview:Details
 
     package.updates = fedoracommunity.widgets.package.updates:Updates
     package.builds = fedoracommunity.widgets.package.builds:Builds
-
     package.bugs = fedoracommunity.widgets.package.bugs:BugsWidget
     package.contents = fedoracommunity.widgets.package.contents:ContentsWidget
     package.changelog = fedoracommunity.widgets.package.changelog:ChangelogWidget

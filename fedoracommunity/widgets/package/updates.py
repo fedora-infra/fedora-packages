@@ -13,9 +13,9 @@ class Updates(TW2Grid):
     release_table = twc.Param()
     resource = 'bodhi'
     resource_path = 'query_updates'
+    resources = [bodhi_js]
 
     def prepare(self):
-        self.resources.append(bodhi_js)
         self.package_name = self.kwds['package_name']
         self.filters = {'package': self.package_name}
         self.rows_per_page = 10
