@@ -122,10 +122,10 @@ setup(
     fedoracommunity_960_24_col_cs = fedoracommunity.widgets:fedoracommunity_960_24_col_css
     fedoracommunity_appchrome_css = fedoracommunity.widgets:fedoracommunity_appchrome_css
     fedoracommunity_branding_css = fedoracommunity.widgets:fedoracommunity_branding_css
-    jquery_json_js = moksha.widgets.json:jquery_json_js
+    #jquery_json_js = moksha.widgets.json:jquery_json_js
     #jquery_ui_tabs = tw.jquery.ui_tabs:jquery_ui_tabs_js
-    moksha_js = moksha.widgets.moksha_js:moksha_js
-    jquery_template_js = moksha.widgets.jquery_template:jquery_template_js
+    #moksha_js = moksha.widgets.moksha_js:moksha_js
+    #jquery_template_js = moksha.widgets.jquery_template:jquery_template_js
 
     [moksha.connector]
     koji = fedoracommunity.connectors:KojiConnector
