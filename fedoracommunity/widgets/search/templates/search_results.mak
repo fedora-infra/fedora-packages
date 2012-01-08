@@ -33,8 +33,15 @@
         <div class="pager" id="pager" type="more" ></div>
    </div>
    <script type="text/javascript">
+
        function update_search_grid(search_term) {
             var grid = $("#${w.id}").mokshagrid("request_update", {"filters":{"search": search_term}});
+       }
+
+       function ready_search() {
+           var search_term = "${w.filters['search']}";
+           if (search_term)
+               moksha.defer(this, update_search_grid, [search_term]);
        }
    </script>
 </div>
