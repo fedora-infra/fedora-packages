@@ -116,7 +116,7 @@ class Indexer(object):
 
         yb.doConfigSetup(self.yum_conf, root=os.getcwd(), init_plugins=False)
         for r in yb.repos.findRepos('*'):
-            if r.id in ['rawhide', 'rawhide-source']:
+            if r.id in ['rawhide-x86_64', 'rawhide-source-x86_64']:
                 r.enable()
             else:
                 r.disable()

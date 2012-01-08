@@ -118,16 +118,17 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
     def _get_pkg_object(self, package, repo, arch):
         repo_id = repo.lower().replace(' ', '-')
-        enable_repos = [repo_id]
+
+        enable_repos = ["%s-%s" % (repo_id, arch)]
         # enable base id if this is a testing repo
         if repo_id.endswith('-testing'):
             repo_id = repo_id[:-8]
-            enable_repos.append(repo_id)
+            enable_repos.append("%s-%s" % (repo_id, arch))
 
         if self.fedora_base_repo_re.match(repo) is not None:
             # latest package for fedora repo can be in either the base repo
             # or the updates repo so treat as one repo and enable both
-            enable_repos.append('%s-updates' % repo_id)
+            enable_repos.append('%s-updates-%s' % (repo_id, arch))
 
         # enable repos we care about
         for r in self._yum_client.repos.findRepos('*'):
