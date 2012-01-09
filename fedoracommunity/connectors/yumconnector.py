@@ -137,7 +137,12 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             else:
                 r.disable()
 
-        pkg = self._yum_client.getPackageObject((package, arch, None, None, None))
+        try:
+            pkg = self._yum_client.getPackageObject((package, arch, None, None, None))
+        except yum.Errors.DepError:
+            # might be a noarch subpackage so try again
+            # FIXME: we should list individual subpackages with archs in latest build db
+            pkg = self._yum_client.getPackageObject((package, 'noarch', None, None, None))
         return pkg
 
     def _pkgtuples_to_rows(self, pkgtuples, _eq='=', _gt='>', _lt='<', _ge='>=', _le='<='):
