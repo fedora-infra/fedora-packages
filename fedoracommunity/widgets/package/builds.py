@@ -17,3 +17,11 @@ class BuildsGrid(TW2Grid):
 class Builds(twc.Widget):
     template = 'mako:fedoracommunity.widgets.package.templates.builds'
     in_progress_builds = BuildsGrid
+
+    def prepare(self):
+        super(Builds, self).prepare()
+        subpackage_of = self.kwds.get('subpackage_of', None)
+        if subpackage_of is not None:
+            self.main_package = subpackage_of
+        else:
+            self.main_package = self.kwds['package_name']
