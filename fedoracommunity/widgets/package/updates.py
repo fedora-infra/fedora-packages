@@ -17,7 +17,12 @@ class Updates(TW2Grid):
 
     def prepare(self):
         self.package_name = self.kwds['package_name']
-        self.filters = {'package': self.package_name}
+        self.subpackage_of = self.kwds.get('subpackage_of', None)
+        main_pkg = self.package_name
+        if self.subpackage_of is not None:
+            main_pkg = self.subpackage_of
+
+        self.filters = {'package': main_pkg}
         self.rows_per_page = 10
 
         releases = []
