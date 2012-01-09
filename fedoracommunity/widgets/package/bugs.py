@@ -63,6 +63,6 @@ class BugsWidget(twc.Widget):
     def prepare(self):
         super(BugsWidget, self).prepare()
         self.package = self.kwds['package_name']
-        self.main_package = self.kwds.get('subpackage_of', None)
-        if self.main_package is None:
+        self.main_package = self.kwds.get('subpackage_of', '')
+        if not self.main_package:
             self.main_package = self.package

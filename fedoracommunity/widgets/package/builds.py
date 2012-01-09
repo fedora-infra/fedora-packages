@@ -20,8 +20,9 @@ class Builds(twc.Widget):
 
     def prepare(self):
         super(Builds, self).prepare()
-        subpackage_of = self.kwds.get('subpackage_of', None)
-        if subpackage_of is not None:
+        subpackage_of = self.kwds.get('subpackage_of', '')
+
+        if subpackage_of:
             self.main_package = subpackage_of
         else:
             self.main_package = self.kwds['package_name']

@@ -21,10 +21,10 @@ class ChangelogWidget(twc.Widget):
 
     def prepare(self):
         self.package_name = self.kwds['package_name']
-        self.subpackage_of = self.kwds.get('subpackage_of', None)
+        self.subpackage_of = self.kwds.get('subpackage_of', '')
         xapian = get_connector('xapian')
 
-        if self.subpackage_of is not None:
+        if self.subpackage_of:
             latest_builds = xapian.get_latest_builds(self.subpackage_of)
         else:
             latest_builds = xapian.get_latest_builds(self.package_name)

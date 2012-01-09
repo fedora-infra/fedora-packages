@@ -88,7 +88,7 @@ class PackageWidget(twc.Widget):
         super(PackageWidget, self).prepare()
         name = self.args.pop(0)
         self.kwds['package_name'] = name
-        self.kwds['subpackage_of'] = None
+        self.kwds['subpackage_of'] = ""
         xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(name)
         self.package_info = result

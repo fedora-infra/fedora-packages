@@ -30,8 +30,8 @@ class RelationshipBaseWidget(twc.Widget):
         self.package_name = self.kwds['package_name']
         xapian = get_connector('xapian')
         koji = get_connector('koji')
-        self.subpackage_of = self.kwds.get('subpackage_of', None)
-        if self.subpackage_of is not None:
+        self.subpackage_of = self.kwds.get('subpackage_of', '')
+        if self.subpackage_of:
             latest_builds = xapian.get_latest_builds(self.subpackage_of)
         else:
             latest_builds = xapian.get_latest_builds(self.package_name)

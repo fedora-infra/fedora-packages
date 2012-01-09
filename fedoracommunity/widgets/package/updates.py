@@ -17,9 +17,9 @@ class Updates(TW2Grid):
 
     def prepare(self):
         self.package_name = self.kwds['package_name']
-        self.subpackage_of = self.kwds.get('subpackage_of', None)
+        self.subpackage_of = self.kwds.get('subpackage_of', '')
         main_pkg = self.package_name
-        if self.subpackage_of is not None:
+        if self.subpackage_of:
             main_pkg = self.subpackage_of
 
         self.filters = {'package': main_pkg}
