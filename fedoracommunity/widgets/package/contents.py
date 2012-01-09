@@ -20,9 +20,14 @@ class ContentsWidget(twc.Widget):
         super(ContentsWidget, self).prepare()
 
         self.package_name = self.kwds['package_name']
+        self.subpackage_of = self.kwds.get('subpackage_of', None)
         xapian = get_connector('xapian')
         koji = get_connector('koji')
-        latest_builds = xapian.get_latest_builds(self.package_name)
+
+        if self.subpackage_of is not None:
+            latest_builds = xapian.get_latest_builds(self.subpackage_of)
+        else:
+            latest_builds = xapian.get_latest_builds(self.package_name)
         self.default_build_id = latest_builds['Rawhide']['build_id']
         self.latest_builds = latest_builds
         build_ids = []
