@@ -1737,3 +1737,10 @@ word-break: break-all; /* for IE and friends */
   font-size:  .75em !important;
 }
 
+#grid-controls #info_display {
+  display: none;
+}
+
+#grid-controls #pager {
+  display: none;
+}
