@@ -11,7 +11,6 @@
             <thead>
                 <tr>
                     <th>Obsoletes</th>
-                    <th>Provided By</th>
                 </tr>
             </thead>
 
@@ -20,10 +19,6 @@
                         <td>
                           ${'${name}'} ${'${ops}'} ${'${version}'}
                         </td>
-
-                        <td>
-                        </td>
-
                     </tr>
                 </tbody>
         </table>
