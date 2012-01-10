@@ -1,3 +1,6 @@
+<%
+import tg
+%>
 <html>
 <head></head>
 <body>
@@ -22,6 +25,7 @@
                         </td>
 
                         <td>
+                          <a href="${tg.url('/${provided_by}/relationships/requires')}">${'${provided_by}'}</a>
                         </td>
 
                     </tr>

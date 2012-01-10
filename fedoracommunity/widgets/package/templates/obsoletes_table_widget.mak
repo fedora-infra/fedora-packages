@@ -4,14 +4,13 @@
     <div class="list header-list">
         <div id="grid-controls">
             <div class="message template" id="info_display" >
-               ${'${total_rows}'} total requirements
+               ${'${total_rows}'} total obsoletes
             </div>
         </div>
         <table id="${w.id}" class="">
             <thead>
                 <tr>
                     <th>Obsoletes</th>
-                    <th>Provided By</th>
                 </tr>
             </thead>
 
@@ -20,10 +19,6 @@
                         <td>
                           ${'${name}'} ${'${ops}'} ${'${version}'}
                         </td>
-
-                        <td>
-                        </td>
-
                     </tr>
                 </tbody>
         </table>

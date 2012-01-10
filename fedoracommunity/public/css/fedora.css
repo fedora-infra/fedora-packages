@@ -67,7 +67,7 @@ body {
 	padding-top: 1.6em;
 	padding-bottom: 12px;
 	margin-bottom: 1em;
- background: #3c6eb4 url("http://linuxgrrl.com/fedora-ux/Projects/Fedora%20Community%20v2/HTML/img/repeater.png") repeat-x !important
+ background: #3c6eb4 url("../images/repeater.png") repeat-x !important
 }
 
 #searchbar input[type="text"] {

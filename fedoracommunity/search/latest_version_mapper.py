@@ -40,9 +40,10 @@ class Mapper(object):
 
     Last run timestamp is indexed by the _last_run_ key.
     """
-    def __init__(self, dbpath):
+    def __init__(self, dbpath, koji_url='http://koji.fedoraproject.org/kojihub'):
         self.dbpath = dbpath
         self.create_index()
+
         self.koji_client = koji.ClientSession('http://koji.fedoraproject.org/kojihub')
         self.koji_client.opts['anon_retry'] = True
         self.koji_client.opts['offline_retry'] = True
@@ -320,7 +321,7 @@ class Mapper(object):
         self.iconn.close()
         self.sconn.close()
 
-def run(cache_path, action=None, timestamp=None):
+def run(cache_path, action=None, timestamp=None, koji_url=None):
 
     versionmap_path = os.path.join(cache_path, 'versionmap')
     if action is None:
@@ -338,6 +339,6 @@ def run(cache_path, action=None, timestamp=None):
         print "Unknown action %s" % action
         exit(-1)
 
-    mapper = Mapper(versionmap_path)
+    mapper = Mapper(versionmap_path, koji_url=koji_url)
     action(mapper, timestamp)
     mapper.cleanup()

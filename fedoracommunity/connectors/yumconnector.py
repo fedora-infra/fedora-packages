@@ -145,7 +145,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             pkg = self._yum_client.getPackageObject((package, 'noarch', None, None, None))
         return pkg
 
-    def _pkgtuples_to_rows(self, pkgtuples, _eq='=', _gt='>', _lt='<', _ge='>=', _le='<='):
+    def _pkgtuples_to_rows(self, pkgtuples, _eq='=', _gt='>', _lt='<', _ge='>=', _le='<=', find_provided_by=False):
         rows = []
 
         for pkg in pkgtuples:
@@ -171,10 +171,17 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                 if i > 0:
                     version += '-'
                 version += ver_tuple[i]
+
+            provided_by = None
+            if find_provided_by:
+                provided_by_pkg = self._yum_client.searchPackageProvides([pkg[0]])
+                provided_by = provided_by_pkg.keys()[0].name
+
             rows.append({'name': pkg[0],
                          'version': version,
                          'flags': flags,
-                         'ops': ops})
+                         'ops': ops,
+                         'provided_by': provided_by})
         return rows
 
     @classmethod
@@ -289,7 +296,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
         pkg = self._get_pkg_object(package, repo, arch)
 
-        rows = self._pkgtuples_to_rows(pkg.requires)
+        rows = self._pkgtuples_to_rows(pkg.requires, find_provided_by=True)
 
         return (len(rows), rows[start_row:start_row + rows_per_page])
 
