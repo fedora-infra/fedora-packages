@@ -29,6 +29,7 @@ BuildRequires: pytz
 BuildRequires: pyOpenSSL
 BuildRequires: moksha
 BuildRequires: python-tw2-jquery-ui
+BuildRequires: python-bunch
 
 %if 0%{?el6} || 0%{?el5}
 BuildRequires: python-ordereddict
