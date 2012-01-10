@@ -4,7 +4,7 @@
     <div class="list header-list">
         <div id="grid-controls">
             <div class="message template" id="info_display" >
-               ${'${total_rows}'} total requirements
+               ${'${total_rows}'} total obsoletes
             </div>
         </div>
         <table id="${w.id}" class="">
