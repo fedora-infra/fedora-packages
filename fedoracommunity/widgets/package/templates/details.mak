@@ -1,7 +1,7 @@
-<div id="overview">
-    <div class="description-block">
+<div id="package-overview">
+  <div class="description-block">
         <h3>Description</h3>
-        <p class="package-description">${w.description}</div>
+        <p class="package-description">${w.description}</p>
     </div>
     <div class="active-release-block">
         <h3>Active Releases Overview</h3>
@@ -16,5 +16,6 @@
             %>
             <a href="${homepage}">${homepage}</a>
         </div>
-    </div>
+  </div>
 </div>
+

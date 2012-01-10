@@ -4,7 +4,7 @@ import tg
 icon_url = tg.url("/images/icons/%s.png" % w.package_info['icon'])
 %>
 <div id="container">
-    <div class="container_24">
+    <div class="container_24" id="package-details">
          <div class="grid_5" id="package-info-bar">
              <img src="${icon_url}" height="128" width="128"/>
              <div class="build">
