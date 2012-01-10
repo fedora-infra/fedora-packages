@@ -355,8 +355,8 @@ class Indexer(object):
 
         return i
 
-def run(cache_path, yum_conf, tagger_url=None):
-    indexer = Indexer(cache_path, yum_conf, tagger_url)
+def run(cache_path, yum_conf, tagger_url=None, pkgdb_url=None):
+    indexer = Indexer(cache_path, yum_conf, tagger_url, pkgdb_url)
 
     print "Indexing packages from Yum..."
     count = indexer.index_pkgs()

@@ -321,7 +321,7 @@ class Mapper(object):
         self.iconn.close()
         self.sconn.close()
 
-def run(cache_path, action=None, timestamp=None):
+def run(cache_path, action=None, timestamp=None, koji_url=None):
 
     versionmap_path = os.path.join(cache_path, 'versionmap')
     if action is None:
@@ -339,6 +339,6 @@ def run(cache_path, action=None, timestamp=None):
         print "Unknown action %s" % action
         exit(-1)
 
-    mapper = Mapper(versionmap_path)
+    mapper = Mapper(versionmap_path, koji_url=koji_url)
     action(mapper, timestamp)
     mapper.cleanup()
