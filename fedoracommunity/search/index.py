@@ -21,15 +21,13 @@ from iconcache import IconCache
 # how many time to retry a downed server
 MAX_RETRY = 10
 
-pkgdb_client = PackageDB()
-
 try:
     import json
 except ImportError:
     import simplejson as json
 
 class Indexer(object):
-    def __init__(self, cache_path, yum_conf, tagger_url=None):
+    def __init__(self, cache_path, yum_conf, tagger_url=None, pkgdb_url=None):
         self.cache_path = cache_path
         self.dbpath = join(cache_path, 'search')
         self.yum_cache_path = join(cache_path, 'yum-cache')
@@ -39,6 +37,10 @@ class Indexer(object):
         self._owners_cache = None
         self.default_icon = 'package_128x128'
         self.tagger_url = tagger_url
+        if pkgdb_url:
+            self.pkgdb_client = PackageDB(base_url=pkgdb_url)
+        else:
+            self.pkgdb_client = PackageDB()
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
@@ -73,8 +75,8 @@ class Indexer(object):
     def find_devel_owner(self, pkg_name, retry=0):
         if self._owners_cache == None:
             print "Caching the owners list from PackageDB"
-            pkgdb = PackageDB()
-            self._owners_cache = pkgdb.get_bugzilla_acls()
+
+            self._owners_cache = self.pkgdb_client.get_bugzilla_acls()
 
         try:
             mainowner = self._owners_cache['Fedora'][pkg_name]['owner']

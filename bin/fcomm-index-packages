@@ -30,6 +30,9 @@ if __name__=="__main__":
     parser.add_option("--tagger-url", dest="tagger_url", default=None,
                       help="the url to get the tagger json data from",
                       metavar="TAGGERURL")
+    parser.add_option("--pkgdb-url", dest="pkgdb_url", default=None,
+                      help="the base url to get pkgdb data from",
+                      metavar="PKGDBURL")
 
     (options, args) = parser.parse_args()
     lockfile = LockFile(os.path.join(options.cache_path, '.fcomm_index_lock'))
@@ -43,7 +46,8 @@ if __name__=="__main__":
     try:
         run(cache_path=options.cache_path,
             yum_conf=options.yum_conf,
-            tagger_url=options.tagger_url)
+            tagger_url=options.tagger_url,
+            pkgdb_url=options.pkgdb_url)
 
         if options.icons_dest is not None:
             icon_dir = os.path.join(options.cache_path, 'icons')

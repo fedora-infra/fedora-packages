@@ -40,9 +40,10 @@ class Mapper(object):
 
     Last run timestamp is indexed by the _last_run_ key.
     """
-    def __init__(self, dbpath):
+    def __init__(self, dbpath, koji_url='http://koji.fedoraproject.org/kojihub'):
         self.dbpath = dbpath
         self.create_index()
+
         self.koji_client = koji.ClientSession('http://koji.fedoraproject.org/kojihub')
         self.koji_client.opts['anon_retry'] = True
         self.koji_client.opts['offline_retry'] = True
