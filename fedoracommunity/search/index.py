@@ -5,6 +5,7 @@ and then populates it with packages from yum repositories
 import os
 import sys
 import shutil
+import urllib2
 import tempfile
 import xappy
 
@@ -15,6 +16,7 @@ from fedora.client import PackageDB, ServerError
 from rpmcache import RPMCache
 from parsers import DesktopParser, SimpleSpecfileParser
 from iconcache import IconCache
+
 
 # how many time to retry a downed server
 MAX_RETRY = 10
@@ -27,7 +29,7 @@ except ImportError:
     import simplejson as json
 
 class Indexer(object):
-    def __init__(self, cache_path, yum_conf):
+    def __init__(self, cache_path, yum_conf, tagger_url=None):
         self.cache_path = cache_path
         self.dbpath = join(cache_path, 'search')
         self.yum_cache_path = join(cache_path, 'yum-cache')
@@ -36,6 +38,7 @@ class Indexer(object):
         self.create_index()
         self._owners_cache = None
         self.default_icon = 'package_128x128'
+        self.tagger_url = tagger_url
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
@@ -60,7 +63,7 @@ class Indexer(object):
         iconn.add_field_action('cmd', xappy.FieldActions.INDEX_FREETEXT)
         # FieldActions.TAG not currently supported in F15 xapian (1.2.7)
         #iconn.add_field_action('tags', xappy.FieldActions.TAG)
-        iconn.add_field_action('tag', xappy.FieldActions.INDEX_EXACT)
+        iconn.add_field_action('tag', xappy.FieldActions.INDEX_FREETEXT)
 
         #iconn.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
         #iconn.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
@@ -137,6 +140,18 @@ class Indexer(object):
         pkgs = yb.pkgSack.returnPackages()
         base_pkgs = {}
         seen_pkg_names = []
+
+        # get the tagger data
+        self.tagger_cache = None
+        if self.tagger_url:
+            print "Caching tagger data"
+            response = urllib2.urlopen(self.tagger_url)
+            html = response.read()
+            tagger_data = json.loads(html)
+            self.tagger_cache = {}
+            for pkg_tag_info in tagger_data['packages']:
+                for pkg_name in pkg_tag_info.keys():
+                    self.tagger_cache[pkg_name] = pkg_tag_info[pkg_name]
 
         i = 0
         for pkg in pkgs:
@@ -258,6 +273,20 @@ class Indexer(object):
                 print "    Setting upstream_url to empty string for now"
                 pkg['upstream_url'] = ''
 
+    def index_tags(self, doc, pkg):
+        if not self.tagger_cache:
+            return
+
+        name = pkg['name']
+        tags = self.tagger_cache.get(name, [])
+        for tag_info in tags:
+            tag_name = tag_info['tag']
+            total = tag_info['total']
+            if total > 0:
+                print "    adding '%s' tag (%d)" % (tag_name, total)
+            for i in range(total):
+                doc.fields.append(xappy.Field('tag', tag_name))
+
     def index_pkgs(self):
         yum_pkgs = self.index_yum_pkgs()
         i = 0
@@ -281,6 +310,7 @@ class Indexer(object):
             doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
 
             self.index_files(doc, pkg)
+            self.index_tags(doc, pkg)
 
             for sub_pkg in pkg['sub_pkgs']:
                 i += 1
@@ -292,7 +322,9 @@ class Indexer(object):
 
                 doc.fields.append(xappy.Field('subpackages', filtered_sub_pkg_name, weight=1.0))
                 doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_pkg_name + '__EX', weight=10.0))
+
                 self.index_files(doc, sub_pkg)
+                self.index_tags(doc, sub_pkg)
 
                 # remove anything we don't want to store
                 del sub_pkg['pkg']
@@ -321,12 +353,12 @@ class Indexer(object):
 
         return i
 
-def run(cache_path, yum_conf):
-    indexer = Indexer(cache_path, yum_conf)
+def run(cache_path, yum_conf, tagger_url=None):
+    indexer = Indexer(cache_path, yum_conf, tagger_url)
 
     print "Indexing packages from Yum..."
     count = indexer.index_pkgs()
     print "Indexed %d packages." % count
 
 if __name__ == '__main__':
-    run('index_cache', join(dirname(__file__), 'yum.conf'))
+    run('index_cache', join(dirname(__file__), 'yum.conf'), 'http://community.dev.fedoraproject.org/tagger/dump')

@@ -27,6 +27,9 @@ if __name__=="__main__":
     parser.add_option("--index-db-dest", dest="index_db_dest", default=None,
                       help="directory to move the xapian index to when we are done",
                       metavar="INDEXDBDEST")
+    parser.add_option("--tagger-url", dest="tagger_url", default=None,
+                      help="the url to get the tagger json data from",
+                      metavar="TAGGERURL")
 
     (options, args) = parser.parse_args()
     lockfile = LockFile(os.path.join(options.cache_path, '.fcomm_index_lock'))
@@ -38,7 +41,10 @@ if __name__=="__main__":
         exit(-1)
 
     try:
-        run(cache_path=options.cache_path, yum_conf=options.yum_conf)
+        run(cache_path=options.cache_path,
+            yum_conf=options.yum_conf,
+            tagger_url=option.tagger_url)
+
         if options.icons_dest is not None:
             icon_dir = os.path.join(options.cache_path, 'icons')
 
