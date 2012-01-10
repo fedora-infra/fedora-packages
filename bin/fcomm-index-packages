@@ -43,7 +43,7 @@ if __name__=="__main__":
     try:
         run(cache_path=options.cache_path,
             yum_conf=options.yum_conf,
-            tagger_url=option.tagger_url)
+            tagger_url=options.tagger_url)
 
         if options.icons_dest is not None:
             icon_dir = os.path.join(options.cache_path, 'icons')
