@@ -85,7 +85,7 @@
         </div>
         <div id="grid-controls" if="visible_rows < total_rows && total_rows != 0">
             <div class="message template" id="info_display" >
-               Viewing @{first_visible_row}-@{last_visible_row} of @{total_rows} Changelog entries
+               Viewing ${'${first_visible_row}'}-${'${last_visible_row}'} of ${'${total_rows}'} Changelog entries
             </div>
             <div class="pager" id="pager" type="more" ></div>
 
