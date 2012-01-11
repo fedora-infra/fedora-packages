@@ -33,7 +33,7 @@ class Sources(TabWidget):
         ('Patches', 'package.sources.patches'),
         ('Spec', 'package.sources.spec'),
         #('Diffs', 'package.sources.diffs'),
-        ('Tarballs', 'package.sources.tarballs'),
+        #('Tarballs', 'package.sources.tarballs'),
         #('Git', 'package.sources.git'),
         ])
     base_url = Template(text='/${kwds["package_name"]}/sources/')
