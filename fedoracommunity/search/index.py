@@ -285,7 +285,7 @@ class Indexer(object):
             tag_name = tag_info['tag']
             total = tag_info['total']
             if total > 0:
-                print "    adding '%s' tag (%d)" % (tag_name, total)
+                print "    adding '%s' tag (%d)" % (tag_name.encode('utf-8'), total)
             for i in range(total):
                 doc.fields.append(xappy.Field('tag', tag_name))
 
