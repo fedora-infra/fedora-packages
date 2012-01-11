@@ -13,7 +13,7 @@ class Updates(TW2Grid):
     release_table = twc.Param()
     resource = 'bodhi'
     resource_path = 'query_updates'
-    resources = [bodhi_js]
+    resources = TW2Grid.resources + [bodhi_js]
 
     def prepare(self):
         self.package_name = self.kwds['package_name']
