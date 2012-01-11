@@ -1,6 +1,6 @@
 <%namespace file="fedoracommunity.templates.header" import="resources" />
 <%namespace file="fedoracommunity.templates.footer" import="*" />
-<% from tg import flash %>
+
 <html>
     <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />

@@ -1,6 +1,6 @@
 <%namespace file="fedoracommunity.templates.header" import="*" />
 <%namespace file="fedoracommunity.templates.footer" import="*" />
-<% from tg import flash %>
+
 <html>
     <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
@@ -28,9 +28,7 @@
 <body id="chrome" class="home">
     <div id="wrapper">
         ${header()}
-        % if flash.message:
-             ${flash.message}
-        % endif
+
         <div id="main_app">
            ${tmpl_context.widget.display(**options) | n}
         </div>
