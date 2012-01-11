@@ -43,7 +43,7 @@
                     <div class="karma"><a href="https://admin.fedoraproject.org/updates/${'${title}'}" moksha_url="dynamic"><img src="${tg.url('/images/16_karma-${karma_level}.png')}" />${'${karma_str}'} karma</a></div>
                 </td>
                 <td>
-                  ${'${details}'}
+                  {{html details}}
                 </td>
             </tr>
         </tbody>
