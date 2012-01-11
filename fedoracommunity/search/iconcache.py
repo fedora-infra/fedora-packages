@@ -21,6 +21,9 @@ class IconCache(object):
             pass
 
     def _find_best_icon(self, icon, cache):
+        if icon.endswith('.png'):
+            icon = icon[:-4]
+
         icon_path_list = cache.find_files(icon + '.png', '*.png')
         best_match = None
 
