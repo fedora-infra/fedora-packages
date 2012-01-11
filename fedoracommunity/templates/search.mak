@@ -28,9 +28,6 @@
 <body id="chrome" class="home">
     ${resources()}
     <div id="wrapper">
-        % if flash.message:
-             ${flash.message}
-        % endif
         <div id="main_app">
     <div id="container">
        <div class="container_24">
