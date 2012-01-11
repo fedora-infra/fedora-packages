@@ -307,7 +307,13 @@ class Indexer(object):
                 print("%d: indexing %s" % (i, pkg['name']))
 
             doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_name + '__EX', weight=10.0))
-            doc.fields.append(xappy.Field('name', filtered_name, weight=10.0))
+
+            name_parts = filtered_name.split('_')
+            for i in range(20):
+                if len(name_parts) > 1:
+                    for part in name_parts:
+                        doc.fields.append(xappy.Field('name', part, weight=1.0))
+                doc.fields.append(xappy.Field('name', filtered_name, weight=10.0))
             doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
             doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
 
