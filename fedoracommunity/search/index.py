@@ -314,7 +314,9 @@ class Indexer(object):
                     for part in name_parts:
                         doc.fields.append(xappy.Field('name', part, weight=1.0))
                 doc.fields.append(xappy.Field('name', filtered_name, weight=10.0))
-            doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
+
+            for i in range(4):
+                doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
             doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
 
             self.index_files(doc, pkg)
