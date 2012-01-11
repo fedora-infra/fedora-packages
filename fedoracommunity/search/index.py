@@ -48,7 +48,7 @@ class Indexer(object):
 
         iconn.add_field_action('exact_name', xappy.FieldActions.INDEX_FREETEXT)
         iconn.add_field_action('name', xappy.FieldActions.INDEX_FREETEXT,
-                               language='en')
+                               language='en', spell=True)
 
         iconn.add_field_action('summary', xappy.FieldActions.INDEX_FREETEXT,
                                language='en')
@@ -57,15 +57,15 @@ class Indexer(object):
                                language='en')
 
         iconn.add_field_action('subpackages',xappy.FieldActions.INDEX_FREETEXT,
-                               language='en')
+                               language='en', spell=True)
 
         iconn.add_field_action('category_tags', xappy.FieldActions.INDEX_FREETEXT,
-                               language='en')
+                               language='en', spell=True)
 
-        iconn.add_field_action('cmd', xappy.FieldActions.INDEX_FREETEXT)
+        iconn.add_field_action('cmd', xappy.FieldActions.INDEX_FREETEXT, spell=True)
         # FieldActions.TAG not currently supported in F15 xapian (1.2.7)
         #iconn.add_field_action('tags', xappy.FieldActions.TAG)
-        iconn.add_field_action('tag', xappy.FieldActions.INDEX_FREETEXT)
+        iconn.add_field_action('tag', xappy.FieldActions.INDEX_FREETEXT, spell=True)
 
         #iconn.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
         #iconn.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
