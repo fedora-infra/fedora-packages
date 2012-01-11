@@ -122,7 +122,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         arch_id = arch
         # there are no noarch repos so we need to enable the x86_64 repo
         if arch_id == 'noarch':
-           arch_id = x86_64
+           arch_id = 'x86_64'
 
         enable_repos = ["%s-%s" % (repo_id, arch_id)]
         # enable base id if this is a testing repo
