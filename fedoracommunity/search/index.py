@@ -291,10 +291,10 @@ class Indexer(object):
 
     def index_pkgs(self):
         yum_pkgs = self.index_yum_pkgs()
-        i = 0
+        pkg_count = 0
 
         for pkg in yum_pkgs.values():
-            i += 1
+            pkg_count += 1
 
             doc = xappy.UnprocessedDocument()
             filtered_name = filter_search_string(pkg['name'])
@@ -302,9 +302,9 @@ class Indexer(object):
             filtered_description = filter_search_string(pkg['description'])
 
             if pkg['name'] != filtered_name:
-                print("%d: indexing %s as %s" % (i, pkg['name'], filtered_name) )
+                print("%d: indexing %s as %s" % (pkg_count, pkg['name'], filtered_name) )
             else:
-                print("%d: indexing %s" % (i, pkg['name']))
+                print("%d: indexing %s" % (pkg_count, pkg['name']))
 
             doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_name + '__EX', weight=10.0))
 
@@ -321,12 +321,12 @@ class Indexer(object):
             self.index_tags(doc, pkg)
 
             for sub_pkg in pkg['sub_pkgs']:
-                i += 1
+                pkg_count += 1
                 filtered_sub_pkg_name = filter_search_string(sub_pkg['name'])
                 if filtered_sub_pkg_name != sub_pkg['name']:
-                    print("%d:    indexing subpkg %s as %s" % (i, sub_pkg['name'], filtered_sub_pkg_name))
+                    print("%d:    indexing subpkg %s as %s" % (pkg_count, sub_pkg['name'], filtered_sub_pkg_name))
                 else:
-                    print("%d:    indexing subpkg %s" % (i, sub_pkg['name']))
+                    print("%d:    indexing subpkg %s" % (pkg_count, sub_pkg['name']))
 
                 doc.fields.append(xappy.Field('subpackages', filtered_sub_pkg_name, weight=1.0))
                 doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_pkg_name + '__EX', weight=10.0))
@@ -359,7 +359,7 @@ class Indexer(object):
 
         self.icon_cache.close()
 
-        return i
+        return pkg_count
 
 def run(cache_path, yum_conf, tagger_url=None, pkgdb_url=None):
     indexer = Indexer(cache_path, yum_conf, tagger_url, pkgdb_url)

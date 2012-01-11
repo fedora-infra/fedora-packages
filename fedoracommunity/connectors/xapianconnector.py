@@ -163,10 +163,7 @@ class XapianConnector(IConnector, ICall, IQuery):
         enquire = xapian.Enquire(self._search_db)
         qp = xapian.QueryParser()
         qp.set_database(self._search_db)
-        query = qp.parse_query(search_string,
-                               flags=xapian.QueryParser.FLAG_SPELLING_CORRECTION)
-        spell_corrected_search = qp.get_corrected_query_string()
-        query = qp.parse_query(search_string + " " + spell_corrected_search)
+        query = qp.parse_query(search_string)
 
         enquire.set_query(query)
         matches = enquire.get_mset(start_row, rows_per_page)
