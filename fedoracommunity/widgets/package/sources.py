@@ -39,7 +39,6 @@ class Sources(TabWidget):
     base_url = Template(text='/${kwds["package_name"]}/sources/')
     default_tab = 'Patches'
 
-
 class ReleaseFilter(twc.Widget):
     on_change = twc.Param('The name of the javascript function to call upon change')
     package = twc.Param('The name of the package')
@@ -82,8 +81,13 @@ class Spec(twc.Widget):
     def prepare(self):
         super(Spec, self).prepare()
         self.package_name = self.kwds['package_name']
+        self.subpackage_of = self.kwds['subpackage_of']
         self.branch = self.kwds.get('branch', 'master')
-        repo = FedoraGitRepo(self.package_name, branch=self.branch)
+        if self.subpackage_of:
+            main_package = self.subpackage_of
+        else:
+            main_package = self.package_name
+        repo = FedoraGitRepo(main_package, branch=self.branch)
         self.text = highlight(repo.get_spec(), BashLexer(),
                 HtmlFormatter(full=True, linenos=True, nobackground=True))
 
@@ -99,8 +103,13 @@ class Patches(twc.Widget):
     def prepare(self):
         super(Patches, self).prepare()
         self.package = self.kwds['package_name']
+        self.subpackage_of = self.kwds['subpackage_of']
+        if self.subpackage_of:
+            main_package = self.subpackage_of
+        else:
+            main_package = self.package
         self.branch = self.kwds.get('branch', 'master')
-        repo = FedoraGitRepo(self.package, branch=self.branch)
+        repo = FedoraGitRepo(main_package, branch=self.branch)
         self.patches = repo.get_patches()
         self.diffstat = repo.get_diffstat()
 
@@ -115,9 +124,14 @@ class Patch(twc.Widget):
     def prepare(self):
         super(Patch, self).prepare()
         self.package = self.kwds['package']
+        self.subpackage_of = self.kwds['subpackage_of']
         self.patch = self.kwds['patch']
         self.branch = self.kwds['branch']
-        repo = FedoraGitRepo(self.package, branch=self.branch)
+        if self.subpackage_of:
+            main_package = self.subpackage_of
+        else:
+            main_package = self.package
+        repo = FedoraGitRepo(main_package, branch=self.branch)
         diff = repo.get_patch(self.patch)
         if self.diffstat:
             self.diffstat = repo.get_diffstat(self.patch)
@@ -142,8 +156,13 @@ class Tarballs(twc.Widget):
     def prepare(self):
         super(Tarballs, self).prepare()
         self.package = self.kwds['package_name']
+        self.subpackage_of = self.kwds['subpackage_of']
         self.branch = self.kwds.get('branch', 'master')
-        repo = FedoraGitRepo(self.package, branch=self.branch)
+        if self.subpackage_of:
+            main_package = self.subpackage_of
+        else:
+            main_package = self.package
+        repo = FedoraGitRepo(main_package, branch=self.branch)
         self.upstream_tarball = repo.get_source_url()
         self.fedora_tarball = repo.get_fedora_source()
 

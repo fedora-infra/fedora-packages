@@ -2,12 +2,13 @@
 function on_change(self) {
 	$('#patches_container').load(moksha.url('/_w/package.sources.patches #patches'), {
 		'package_name': '${w.package}',
+		'subpackage_of': '${w.subpackage_of}',
 		'branch': self.value
 		});
 }
 </script>
 
-${w.children[0].display(on_change='on_change', package=w.package)}
+${w.children[0].display(on_change='on_change', package=w.package, subpackage_of=w.subpackage_of)}
 
 <div id="patches_container">
 <div id="patches" class="patches">
@@ -50,6 +51,7 @@ function toggle_patch(patch) {
 		  $('<td/>', {colspan: 3}).load(
             moksha.url('/_w/package.sources.patch'), {
                 package: '${w.package}',
+                subpackage_of: '${w.subpackage_of}',
                 patch: patch,
                 branch: $('#release_select').val()
                 })));
