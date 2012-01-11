@@ -335,6 +335,8 @@ class Indexer(object):
 
                 self.index_files(doc, sub_pkg)
                 self.index_tags(doc, sub_pkg)
+                if sub_pkg['icon'] != self.default_icon and pkg['icon'] == self.default_icon:
+                    pkg['icon'] = sub_pkg['icon']
 
                 # remove anything we don't want to store
                 del sub_pkg['pkg']
