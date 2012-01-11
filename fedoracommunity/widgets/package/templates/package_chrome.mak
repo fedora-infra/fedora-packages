@@ -3,10 +3,11 @@
 import tg
 
 icon = w.package_info['icon']
-if w.package_name != w.package_info['name']:
+package_name = w.kwds['package_name']
+if package_name != w.package_info['name']:
     # subpackage
     for sub_pkg in w.package_info['sub_pkgs']:
-        if sub_pkg['name'] == w.package_name:
+        if sub_pkg['name'] == package_name:
             sub_icon = sub_pkg.get('icon', None)
             if sub_icon:
                 icon = sub_icon
