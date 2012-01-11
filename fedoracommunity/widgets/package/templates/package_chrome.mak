@@ -1,7 +1,19 @@
 <!-- START package chrome -->
 <%
 import tg
-icon_url = tg.url("/images/icons/%s.png" % w.package_info['icon'])
+
+icon = w.package_info['icon']
+if w.package_name != w.package_info['name']:
+    # subpackage
+    for sub_pkg in w.package_info['sub_pkgs']:
+        if sub_pkg['name'] == w.package_name:
+            sub_icon = sub_pkg.get('icon', None)
+            if sub_icon:
+                icon = sub_icon
+
+            break
+
+icon_url = tg.url("/images/icons/%s.png" % icon)
 %>
 <div id="container">
     <div class="container_24" id="package-details">
