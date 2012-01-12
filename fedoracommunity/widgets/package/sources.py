@@ -81,7 +81,7 @@ class Spec(twc.Widget):
     def prepare(self):
         super(Spec, self).prepare()
         self.package_name = self.kwds['package_name']
-        self.subpackage_of = self.kwds['subpackage_of']
+        self.subpackage_of = self.kwds.get('subpackage_of')
         self.branch = self.kwds.get('branch', 'master')
         if self.subpackage_of:
             main_package = self.subpackage_of
@@ -103,7 +103,7 @@ class Patches(twc.Widget):
     def prepare(self):
         super(Patches, self).prepare()
         self.package = self.kwds['package_name']
-        self.subpackage_of = self.kwds['subpackage_of']
+        self.subpackage_of = self.kwds.get('subpackage_of')
         if self.subpackage_of:
             main_package = self.subpackage_of
         else:
@@ -124,7 +124,7 @@ class Patch(twc.Widget):
     def prepare(self):
         super(Patch, self).prepare()
         self.package = self.kwds['package']
-        self.subpackage_of = self.kwds['subpackage_of']
+        self.subpackage_of = self.kwds.get('subpackage_of')
         self.patch = self.kwds['patch']
         self.branch = self.kwds['branch']
         if self.subpackage_of:
@@ -156,7 +156,7 @@ class Tarballs(twc.Widget):
     def prepare(self):
         super(Tarballs, self).prepare()
         self.package = self.kwds['package_name']
-        self.subpackage_of = self.kwds['subpackage_of']
+        self.subpackage_of = self.kwds.get('subpackage_of')
         self.branch = self.kwds.get('branch', 'master')
         if self.subpackage_of:
             main_package = self.subpackage_of
