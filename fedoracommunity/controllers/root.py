@@ -28,30 +28,17 @@ from fedoracommunity.widgets.package import PackageWidget
 
 class RootController(BaseController):
 
+    @expose('mako:fedoracommunity.templates.error')
+    def error(self, *args, **kw):
+        resp = request.environ.get('pylons.original_response')
+        return dict(prefix=request.environ.get('SCRIPT_NAME', ''),
+                    code=str(request.params.get('code', resp.status_int)),
+                    message=request.params.get('message', resp.body))
+
     @expose('mako:fedoracommunity.templates.search')
     def index(self, ec = None, **kwds):
         '''We show search page by default'''
         return self.s(**kwds)
-
-    @expose('mako:fedoracommunity.templates.invalid_path')
-    def invalid_path(self, invalid_path):
-        title = 'Invalid Path'
-        #split_path = invalid_path.split('/')
-        #first_path = None
-        login = False
-        #for path in split_path:
-        #    if path:
-        #        first_path = path
-        #        break
-        # hack for now to see if we need to show a login box
-        #if first_path == 'my_profile':
-        #    login = True
-        #    title = 'Restricted Page'
-        #    tmpl_context.widget = login_widget
-
-        return {'title': title,
-                'invalid_path': invalid_path,
-                'login': login}
 
     @expose('mako:fedoracommunity.templates.search')
     def s(self, *args, **kwds):
