@@ -35,19 +35,5 @@ if __name__=="__main__":
 
     try:
         run(cache_path=options.cache_path, koji_url=options.koji_url)
-        if options.icons_dest is not None:
-            icon_dir = os.path.join(options.cache_path, 'icons')
-
-            for file_name in os.listdir(icon_dir):
-                file_path = os.path.join(icon_dir, file_name)
-                if os.path.isdir(file_path) and not os.path.islink(file_path):
-                    shutil.move(file_path, options.icon_dest)
-        if options.index_db_dest is not None:
-            index_dir = os.path.join(options.cache_path, 'search')
-
-            for file_name in os.listdir(index_dir):
-                file_path = os.path.join(index_dir, file_name)
-                if os.path.isdir(file_path) and not os.path.islink(file_path):
-                    shutil.move(file_path, options.index_db_dest)
     finally:
         lockfile.release()
