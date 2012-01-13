@@ -31,7 +31,7 @@ class TabWidget(twc.Widget):
         self._expanded_tabs = OrderedDict()
         for key, widget_key in self.tabs.items():
             display_name = key
-            key = key.lower()
+            key = key.lower().replace(' ', '_')
             self._expanded_tabs[key] =  {'display_name': display_name,
                                          'widget_key': widget_key}
 

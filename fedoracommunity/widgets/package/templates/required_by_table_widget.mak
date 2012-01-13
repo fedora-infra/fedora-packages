@@ -21,7 +21,7 @@ import tg
             <tbody class="rowtemplate">
                     <tr>
                         <td>
-                          <a href="${tg.url('/${name}/relationships/requiredby')}">${'${name}'}</a>
+                          <a href="${tg.url('/${name}/relationships/required_by')}">${'${name}'}</a>
                         </td>
 
                         <td>
