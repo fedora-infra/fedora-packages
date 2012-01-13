@@ -155,11 +155,8 @@ class Indexer(object):
                 for pkg_name in pkg_tag_info.keys():
                     self.tagger_cache[pkg_name] = pkg_tag_info[pkg_name]
 
-        i = 0
+        pkg_count = 0
         for pkg in pkgs:
-            i += 1
-            print "%d: pre-processing package '%s':" % (i, pkg['name'])
-
             # precache the icon themes for later extraction and matching
             if pkg.ui_from_repo != 'rawhide-source':
                 self.icon_cache.check_pkg(pkg)
@@ -179,6 +176,9 @@ class Indexer(object):
             base_pkg = base_pkgs[pkg.base_package_name]
 
             if pkg.ui_from_repo == 'rawhide-source':
+               pkg_count += 1
+               print "%d: pre-processing package '%s':" % (pkg_count, pkg['name'])
+
                base_pkg['src_pkg'] = pkg
                base_pkg['upstream_url'] = pkg.URL
 
@@ -198,12 +198,19 @@ class Indexer(object):
 
             if pkg.base_package_name == pkg.name:
                 # this is the main package
+                if not base_pkg['src_pkg']:
+                    pkg_count += 1
+                    print "%d: pre-processing package '%s':" % (pkg_count, pkg['name'])
+
                 base_pkg['summary'] = pkg.summary
                 base_pkg['description'] = pkg.description
                 base_pkg['pkg'] = pkg
                 base_pkg['devel_owner'] = self.find_devel_owner(pkg.name)
             else:
                 # this is a sub package
+                pkg_count += 1
+                print "%d: pre-processing package '%s':" % (pkg_count, pkg['name'])
+
                 subpkgs = base_pkg['sub_pkgs']
                 subpkgs.append({'name': pkg.name,
                                 'summary': pkg.summary,
