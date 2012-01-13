@@ -125,7 +125,9 @@ class XapianConnector(IConnector, ICall, IQuery):
             search_string += " EX__%s__EX" % term
 
         # add phrase match
-        search_string += phrase
+        search_string += " OR %s" % phrase
+        # add near phrase match
+        search_string += " OR (%s)" % ' NEAR '.join(search_terms)
 
         matches = self.do_search(search_string,
                                  start_row,
