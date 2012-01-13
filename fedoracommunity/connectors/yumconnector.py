@@ -249,7 +249,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
         rows = self._pkgtuples_to_rows(pkg.provides, _eq=None)
 
-        return (len(rows), rows)
+        return (len(rows), rows[start_row:start_row + rows_per_page])
 
     @classmethod
     def register_query_requires(cls):
