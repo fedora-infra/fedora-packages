@@ -43,6 +43,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         cls.register_search_packages()
         cls.register_query_provides()
         cls.register_query_requires()
+        cls.register_query_required_by()
         cls.register_query_conflicts()
         cls.register_query_obsoletes()
 
@@ -116,7 +117,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         self._yum_client.close()
         return results
 
-    def _get_pkg_object(self, package, repo, arch):
+    def _setup_repo(self, repo, arch):
         repo_id = repo.lower().replace(' ', '-')
 
         arch_id = arch
@@ -141,6 +142,14 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                 r.enable()
             else:
                 r.disable()
+
+    def _get_required_by(self, package, repo, arch):
+        self._setup_repo(repo, arch)
+        pkgs = self._yum_client.pkgSack.getRequires(package)
+        return pkgs
+
+    def _get_pkg_object(self, package, repo, arch):
+        self._setup_repo(repo, arch)
 
         try:
             pkg = self._yum_client.getPackageObject((package, arch, None, None, None))
@@ -306,6 +315,110 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         pkg = self._get_pkg_object(package, repo, arch)
 
         rows = self._pkgtuples_to_rows(pkg.requires, find_provided_by=True)
+
+        return (len(rows), rows[start_row:start_row + rows_per_page])
+
+    @classmethod
+    def register_query_obsoletes(cls):
+        path = cls.register_query(
+                      'query_obsoletes',
+                      cls.query_obsoletes,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('flags',
+                        default_visible = False,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('version',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('ops',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('package',[], allow_none = False)
+        f.add_filter('version',[], allow_none = False)
+        f.add_filter('repo',[], allow_none = False)
+        f.add_filter('arch',[], allow_none = False)
+        cls._query_obsoletes_filter = f
+
+    @classmethod
+    def register_query_required_by(cls):
+        path = cls.register_query(
+                      'query_required_by',
+                      cls.query_required_by,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('flags',
+                        default_visible = False,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('version',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('ops',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('package',[], allow_none = False)
+        f.add_filter('version',[], allow_none = False)
+        f.add_filter('repo',[], allow_none = False)
+        f.add_filter('arch',[], allow_none = False)
+        cls._query_required_by_filter = f
+
+    def query_required_by(self, start_row=None,
+                                rows_per_page=10,
+                                order=-1,
+                                sort_col=None,
+                                filters=None,
+                                **params):
+
+        if not filters:
+            filters = {}
+        filters = self._query_requires_filter.filter(filters, conn=self)
+
+        package = filters.get('package', '')
+        version = filters.get('version', '')
+        repo = filters.get('repo', '')
+        arch = filters.get('arch', '')
+
+        req_by = self._get_required_by(package, repo, arch)
+        rows = []
+        for pkg in req_by.keys():
+            name = pkg['name']
+            ver_list = req_by[pkg]
+            req = self._pkgtuples_to_rows(ver_list)
+            if req:
+                req = req[0]
+            else:
+                req = ''
+
+            rows.append({'name': name,
+                         'requires': req})
 
         return (len(rows), rows[start_row:start_row + rows_per_page])
 

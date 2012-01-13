@@ -160,6 +160,7 @@ setup(
 
     package.relationships = fedoracommunity.widgets.package.relationships:RelationshipsWidget
     package.relationships.requires = fedoracommunity.widgets.package.relationships:RequiresWidget
+    package.relationships.requiredby = fedoracommunity.widgets.package.relationships:RequiredByWidget
     package.relationships.depends = fedoracommunity.widgets.package.relationships:DependsWidget
     package.relationships.provides = fedoracommunity.widgets.package.relationships:ProvidesWidget
     package.relationships.obsoletes = fedoracommunity.widgets.package.relationships:ObsoletesWidget

@@ -8,6 +8,7 @@ from moksha.api.widgets.grid import TW2Grid
 
 class RelationshipsNavWidget(TabWidget):
     tabs = OrderedDict([('Requires', 'package.relationships.requires'),
+                        ('RequiredBy', 'package.relationships.requiredby'),
                         ('Provides', 'package.relationships.provides'),
                         ('Obsoletes', 'package.relationships.obsoletes'),
                         ('Conflicts', 'package.relationships.conflicts')])
@@ -79,6 +80,12 @@ class RequiresGridWidget(TW2Grid):
     resource_path = 'query_requires'
     onReady = "update_grid()"
 
+class RequiredByGridWidget(TW2Grid):
+    template = 'mako:fedoracommunity.widgets.package.templates.required_by_table_widget'
+    resource = 'yum'
+    resource_path = 'query_required_by'
+    onReady = "update_grid()"
+
 class ProvidesGridWidget(TW2Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.provides_table_widget'
     resource = 'yum'
@@ -99,6 +106,9 @@ class ConflictsGridWidget(TW2Grid):
 
 class RequiresWidget(RelationshipBaseWidget):
     grid = RequiresGridWidget
+
+class RequiredByWidget(RelationshipBaseWidget):
+    grid = RequiredByGridWidget
 
 class DependsWidget(RelationshipBaseWidget):
     pass
