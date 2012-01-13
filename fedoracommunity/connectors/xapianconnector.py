@@ -110,9 +110,11 @@ class XapianConnector(IConnector, ICall, IQuery):
                               **params):
 
         search_string = filters.get('search')
+
         unfiltered_search_terms = search_string.split(' ')
 
         search_string = utils.filter_search_string (search_string)
+        phrase = '"%s"' % search_string
 
         # add exact matchs
         search_terms = search_string.split(' ')
@@ -121,6 +123,9 @@ class XapianConnector(IConnector, ICall, IQuery):
                 continue
 
             search_string += " EX__%s__EX" % term
+
+        # add phrase match
+        search_string += phrase
 
         matches = self.do_search(search_string,
                                  start_row,
