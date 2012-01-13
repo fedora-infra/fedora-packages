@@ -153,12 +153,14 @@ class XapianConnector(IConnector, ICall, IQuery):
 
     def get_package_info(self, package_name):
         package_name = utils.filter_search_string(package_name)
-        search_string = "Ex__%s__EX" % package_name
+        search_string = "%s EX__%s__EX" % (package_name, package_name)
+
         matches = self.do_search(search_string, 0, 1)
         if len(matches) == 0:
             return None
 
-        result = json.loads(matches[0].document.get_data())
+        result = json.loads(m.document.get_data())
+
         return result
 
     def do_search(self,
