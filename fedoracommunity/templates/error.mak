@@ -3,7 +3,7 @@
 <title>Oops!</title>
 <body id="error-page">
 <head>
-<script type="text/javascript" src="https://community.dev.fedoraproject.org/packages/_res/tw2.jquery/static/jquery/1.6.2/jquery.js" ></script>
+<script type="text/javascript" src="/packages/_res/tw2.jquery/static/jquery/1.6.2/jquery.js" ></script>
 <style type="text/css">
   
 #geiger {
