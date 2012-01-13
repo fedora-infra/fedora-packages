@@ -587,7 +587,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         try:
             pkg = self._get_pkg_object(package, repo, arch)
 
-            if 'error' in pkg:
+            if type(pkg) is dict and 'error' in pkg:
                 return pkg
 
             return self._process_files(pkg)
