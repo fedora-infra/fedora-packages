@@ -3,6 +3,8 @@ import tw2.core as twc
 from moksha.api.widgets.grid import TW2Grid
 from moksha.api.connectors import get_connector
 
+from fedoracommunity.widgets.expander import expander_js
+
 bodhi_js = twc.JSLink(filename='static/javascript/bodhi.js',
                       modname=__name__)
 
@@ -13,7 +15,7 @@ class Updates(TW2Grid):
     release_table = twc.Param()
     resource = 'bodhi'
     resource_path = 'query_updates'
-    resources = TW2Grid.resources + [bodhi_js]
+    resources = TW2Grid.resources + [bodhi_js, expander_js]
 
     def prepare(self):
         self.package_name = self.kwds['package_name']
