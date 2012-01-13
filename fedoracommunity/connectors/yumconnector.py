@@ -473,6 +473,9 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         try:
             pkg = self._get_pkg_object(package, repo, arch)
 
+            if 'error' in pkg:
+                return pkg
+
             return self._process_files(pkg)
         except Exception as e:
             return {'error': "Error: %s" % str(e)}
