@@ -187,7 +187,7 @@ function render_update_builds(update) {
     html = result.html();
 
     if (partial) {
-        html += '<script>$("#' + updateid + '_hidden").expander({slicePoint: 0, expandText: \'<strong>Show package list</strong> <img src=/packages/images/arrow_down.png />\', userCollapseText: \'<strong>Hide package list</strong> <img src=/packages/images/arrow_up.png />\', expandPrefix: \'\'});</script>';
+        html += '<script>$("#' + updateid + '_hidden").expander({slicePoint: 0, expandText: \'<strong>Show package list</strong> <img src=' + moksha.url('/images/arrow_down.png') + ' />\', userCollapseText: \'<strong>Hide package list</strong> <img src=' + moksha.url('/images/arrow_up.png') + ' />\', expandPrefix: \'\'});</script>';
     }
 
     return html;
