@@ -183,7 +183,8 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             provided_by = None
             if find_provided_by:
                 provided_by_pkg = self._yum_client.searchPackageProvides([pkg[0]])
-                provided_by = provided_by_pkg.keys()[0].name
+                if len(provided_by_pkg) > 0:
+                    provided_by = provided_by_pkg.keys()[0].name
 
             rows.append({'name': pkg[0],
                          'version': version,
