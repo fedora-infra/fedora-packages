@@ -159,7 +159,7 @@ class XapianConnector(IConnector, ICall, IQuery):
         if len(matches) == 0:
             return None
 
-        result = json.loads(m.document.get_data())
+        result = json.loads(matches[0].document.get_data())
 
         return result
 
