@@ -21,11 +21,12 @@ from tg import config
 from mako.template import Template
 from fedoracommunity.lib.utils import OrderedDict
 from pygments import highlight
-from pygments.lexers import DiffLexer, BashLexer
+from pygments.lexers import DiffLexer
 from pygments.formatters import HtmlFormatter
 from moksha.api.connectors import get_connector
 
 from fedoracommunity.connectors.gitconnector import FedoraGitRepo
+from fedoracommunity.lib.utils import RpmSpecLexer
 from package import TabWidget
 
 class Sources(TabWidget):
@@ -88,7 +89,7 @@ class Spec(twc.Widget):
         else:
             main_package = self.package_name
         repo = FedoraGitRepo(main_package, branch=self.branch)
-        self.text = highlight(repo.get_spec(), BashLexer(),
+        self.text = highlight(repo.get_spec(), RpmSpecLexer(),
                 HtmlFormatter(full=True, linenos=True, nobackground=True))
 
 
