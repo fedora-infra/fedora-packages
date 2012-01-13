@@ -8,7 +8,7 @@ from moksha.api.widgets.grid import TW2Grid
 
 class RelationshipsNavWidget(TabWidget):
     tabs = OrderedDict([('Requires', 'package.relationships.requires'),
-                        ('RequiredBy', 'package.relationships.requiredby'),
+                        ('Required By', 'package.relationships.requiredby'),
                         ('Provides', 'package.relationships.provides'),
                         ('Obsoletes', 'package.relationships.obsoletes'),
                         ('Conflicts', 'package.relationships.conflicts')])
