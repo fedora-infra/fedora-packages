@@ -60,6 +60,8 @@ class RootController(BaseController):
 
         if len(args) > 0:
             search_str = args[0]
+        else:
+            search_str = kwds.get('search', '')
 
         tmpl_context.widget = XapianSearchGrid
         return {'title': 'Fedora Packages Search',
