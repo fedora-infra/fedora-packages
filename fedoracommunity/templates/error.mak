@@ -3,7 +3,8 @@
 <title>Oops!</title>
 <body id="error-page">
 <head>
-<script type="text/javascript" src="/packages/_res/tw2.jquery/static/jquery/1.6.2/jquery.js" ></script>
+<script type="text/javascript" src="${tg.url('/_res/tw2.jquery/static/jquery/1.6.2/jquery.js')}" ></script>
+<script type="text/javascript" src="${tg.url('/javascripts/jquery.jparallax.js')}" ></script>
 <style type="text/css">
   
 #geiger {
@@ -30,7 +31,19 @@ body, h1, h2, h3 {
   font-family: Comfortaa, sans-serif;
   text-transform: uppercase;
   text-align: center;
+}  
+
+#parallax {
+	margin: auto;
+	background: black;
+	border: solid thin black;
+	position:relative; 
+	overflow:hidden; 
+	width:1000px; 
+	height:500px;
 }
+
+
 
 #panda {
   position: relative;
@@ -74,18 +87,73 @@ body {
 <img src="${tg.url('/images/geiger.png')}"/>
 <h3 id="error-code">${code}</h3>
 </div>
+<div id="parallax">
+  <img id='rad-back'  src="${tg.url('/images/parallax-radiation1.png')}" />
+  <img id='panda'  		src="${tg.url('/images/parallax-panda-only.png')}" />
+  <img id='rad-front' src="${tg.url('/images/parallax-radiation-top.png')}" />
+  <img id='blast'  		src="${tg.url('/images/blast.png')}" />
+  <img id='hotdog'  	src="${tg.url('/images/laser.png')}" />
+</div>
 
-<a href="/"><img id="hotdog" src="${tg.url('/images/laser.png')}"/></a>
-<a href="/"><img id="panda" src="${tg.url('/images/panda-wee.png')}"/></a>
 <br/>
 <script>
-		$(document).ready(function() {
-			for (var i=0; i < 20; i++) {
-				$("img#panda").fadeIn(4500);
-				$("img#panda").fadeOut(4500);
-			}
-			$("img#panda").fadeIn(4500);
-		}); // end doc ready
+jQuery(document).ready(function(){
+  var opts = {
+  };
+
+  var rad_back ={
+    xtravel: '45%',
+    xorigin: '.55',
+    ytravel: '50%',
+    yorigin: '-0.6'
+  };
+
+  var panda = {
+    xtravel: '40%',
+    xorigin: '.8',
+    ytravel: '40%',
+    yorigin: '0.12'
+  };
+
+  var rad_front ={
+    xtravel: '35%',
+    xorigin: '.50',
+    ytravel: '30%',
+    yorigin: '-0.25'
+  };
+
+  var blast = {
+    xtravel: '20%',
+    xorigin: '.18',
+    ytravel: '20%',
+    yorigin: '.34'
+  };
+
+  var laser = {
+    xtravel: '10%',
+    xorigin: '0',
+    ytravel: '10%',
+  };
+
+  $('#parallax').jparallax( opts, rad_back,panda,rad_front,blast,laser);
+
+  var _fade = function(element,duration,loops){
+    for (var i=0; i < loops; i++) {
+      element
+        .fadeIn(duration)
+        .fadeOut(duration);
+    }
+    element.fadeIn(duration);
+  }
+
+  var delay = 4500;
+  var loops = 20;
+  var ratio = .6;
+
+  _fade($('#rad-back'),delay,loops);
+  _fade($('#rad-front'),delay * ratio,loops/ratio);
+});
+
 </script>
 </body>
 </html>
