@@ -39,6 +39,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def __init__(self, environ, request):
         super(BodhiConnector, self).__init__(environ, request)
+        self._prod_url = config.get('fedoracommunity.connector.bodhi.baseurl', 'https://admin.fedoraproject.org/updates')
         self._bodhi_client = ProxyClient(self._base_url,
                                          session_as_cookie=False,
                                          insecure = self._insecure)
@@ -348,7 +349,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         if update['status'] == 'stable':
             if update.get('updateid'):
                 details += HTML.tag('a', c=update['updateid'], href='%s/%s' % (
-                                    self._base_url, update['updateid']))
+                                    self._prod_url, update['updateid']))
             if update.get('date_pushed'):
                 details += HTML.tag('br') + update['date_pushed']
             else:
@@ -357,14 +358,14 @@ class BodhiConnector(IConnector, ICall, IQuery):
             details += 'Pending push to %s' % update['request']
             details += HTML.tag('br')
             details += HTML.tag('a', c="View update details >",
-                                href="%s/%s" % (self._base_url,
+                                href="%s/%s" % (self._prod_url,
                                                 update['title']))
         elif update['status'] == 'obsolete':
             for comment in update['comments']:
                 if comment['author'] == 'bodhi':
                     if comment['text'].startswith('This update has been obsoleted by '):
                         details += 'Obsoleted by %s' % HTML.tag('a',
-                                href='%s/%s' % (self._base_url,update['title']),
+                                href='%s/%s' % (self._prod_url,update['title']),
                                 c=comment['text'].split()[-1])
         return details
 
@@ -524,12 +525,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
                 details += HTML.tag('br')
                 details += HTML.tag('a', c="View update details >",
-                                    href="%s/%s" % (self._base_url,
+                                    href="%s/%s" % (self._prod_url,
                                                     build['update']['title']))
             else:
                 details = HTML.tag('a', c='Push to updates >',
                                    href='%s/new?builds.text=%s' % (
-                                       self._base_url, build['nvr']))
+                                       self._prod_url, build['nvr']))
 
             build['update_details'] = details
 
@@ -625,7 +626,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         nvr = parse_build(release['nvr'])
                         row['testing_version'] = HTML.tag('a',
                                 c='%(version)s-%(release)s' % nvr,
-                                href='%s/%s' % (self._base_url, nvr['nvr']))
+                                href='%s/%s' % (self._prod_url, nvr['nvr']))
                         testing_builds.append(release['nvr'])
                         testing_builds_row[release['nvr']] = row
                     else: # stable
@@ -633,7 +634,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         if release['tag_name'].endswith('-updates'):
                             row['stable_version'] = HTML.tag('a',
                                     c='%(version)s-%(release)s' % nvr,
-                                    href='%s/%s' % (self._base_url, nvr['nvr']))
+                                    href='%s/%s' % (self._prod_url, nvr['nvr']))
                         else:
                             row['stable_version'] = '%(version)s-%(release)s' % nvr
 
@@ -656,7 +657,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                     row = testing_builds_row[build]
                     row['testing_version'] += HTML.tag('div',
                             c=HTML.tag('a', href="%s/%s" % (
-                                self._base_url, up.title),
+                                self._prod_url, up.title),
                                 c=HTML.tag('img',
                                     src=url('/images/16_karma-%s.png' %
                                     up.karma_icon)) +
