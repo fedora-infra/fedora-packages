@@ -4,6 +4,18 @@ import tg
 <html>
 <head></head>
 <body>
+    <script type="text/javascript">
+        function render_provided_by_list(prov_by_list) {
+            var result = "";
+            for (var i = 0; i < prov_by_list.length; i++) {
+                if (i > 0)
+                    result += "<br />";
+                var url = moksha.url('/' + prov_by_list[i] + '/relationships/requires');
+                result += '<a href="'+ url + '">' + prov_by_list[i] + '</a>';
+            }
+            return result;
+        }
+    </script>
     <div class="list header-list">
         <div id="grid-controls">
             <div class="message template" id="info_display" >
@@ -25,7 +37,7 @@ import tg
                         </td>
 
                         <td>
-                          <a href="${tg.url('/${provided_by}/relationships/requires')}">${'${provided_by}'}</a>
+                          {{html render_provided_by_list(provided_by)}}
                         </td>
 
                     </tr>
