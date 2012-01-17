@@ -29,51 +29,7 @@
                       }
 
                       function displayTree() {
-                          var construct_ul_from_dir_list = function(list) {
-                              var $ul = $('<ul></ul>');
-                              for (var i in list) {
-                                  var $li = $('<li></li>');
-                                  var obj = list[i];
-                                  if (undefined != obj.dirname) {
-                                      // we are an directory, recurse
-                                      var $a = $("<a>" +obj.dirname + "</a>");
-                                      $a.addClass('jstree-directory');
-                                      $li.append($a);
-                                      $li.append(construct_ul_from_dir_list(obj.content));
-                                      $li.addClass('jstree-open');
-                                  } else {
-                                      var display = obj.name;
-                                      if (obj.type == 'L')
-                                          display += '->' + obj.linked_to;
-
-                                      var $a = $("<a>" + display + "</a>");
-
-                                      if (obj.type == 'L')
-                                          $a.addClass("jstree-link");
-                                      $li.append($a);
-                                  }
-                                  $ul.append($li);
-                              }
-
-                              return($ul);
-                          }
-                          var done_cb = function(data) {
-                              var $tc = $('#tree_content').html('');
-                              if (undefined != data.length) {
-                                  var $root = construct_ul_from_dir_list(data);
-                                  $root.attr('id','file_tree');
-                                  $tc.append($root);
-                                  $tc.jstree({"plugins": ["html_data", "themes", "search"],
-                                              "themes":{"url":"${tg.url('/css/filetreetheme/style.css')}",
-                                                        "icons": true,
-                                                        "dots": false}});
-                              } else if (undefined != data['error']) {
-                                  $tc.append(data['error'].toString());
-                              } else {
-                                  $tc.append(data.toString());
-                              }
-                          }
-
+                          var $tc = $('#tree_content').html('');
                           var $arch_select = $('#arch_select');
                           var $repo_select = $('#repo_select');
 
@@ -84,9 +40,28 @@
                           var package = task['package'];
                           var arch = task['label'];
 
+                          $tc.jstree({"plugins": ["json_data", "themes"],
+                                      "themes": {
+                                          "url": moksha.url('/css/filetreetheme/style.css'),
+                                          "icons": true,
+                                          "dots": false
+                                       },
+                                       "json_data": {
+                                           "ajax": {
+                                               "url": moksha.url("/moksha_connector/yum/get_file_tree"),
+                                               "data": {
+                                                   'package': package,
+                                                   'arch': arch,
+                                                   'repo': repo
+                                               }
+                                           }
+                                       }
+                                     });
+                         /*
                           moksha.connector_load('yum', 'get_file_tree', {'package': package,
                                                                          'arch': arch,
                                                                          'repo': repo}, done_cb);
+                          */
                       }
                   </script>
                   <select name="repo" id="repo_select" onChange="on_repo_change(this)">
@@ -131,11 +106,11 @@
             </div>
             <div class="clear"></div>
           </form>
-          <script type="text/javascript">
-              displayTree();
-          </script>
         </div>
         <div id="tree_content">
         </div>
+        <script type="text/javascript">
+            $(document).ready( function () { displayTree(); } );
+        </script>
 </div>
 

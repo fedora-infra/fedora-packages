@@ -545,18 +545,26 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         if path in paths_cache:
             dir_info = paths_cache[path]
             if data:
-               dir_info.append(data)
+               dir_info['children'].append(data)
             return
 
-        new_data = []
+        new_data = {
+                    'data': {
+                          'title': '',
+                          'icon': 'jstree-directory'
+                       },
+                     'state': 'open',
+                     'children': []
+                   }
         if data:
-           new_data.append(data)
+           new_data['children'].append(data)
         paths_cache[path] = new_data
         (new_path, dir_name) = os.path.split(path)
-        self._add_to_path(paths_cache, new_path, {'dirname': dir_name, 'content':new_data})
+        new_data['data']['title'] = dir_name
+        self._add_to_path(paths_cache, new_path, new_data)
 
     def _process_files(self, pkg):
-        paths_cache = {'/':[]}
+        paths_cache = {'/':{'children':[]}}
 
         for d in pkg.dirlist:
             self._add_to_path(paths_cache, d, None)
@@ -569,11 +577,19 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                       'modestring': '',
                       'linked_to': None,
                       'user': None,
-                      'group': None}
+                      'group': None,
+                       # jsTree JSON data
+                      'data': {
+                          'title': '',
+                          'icon': 'jstree-file'
+                       },
+                       'state': 'open',
+                      }
 
             (path, name) = os.path.split(full_path)
             output['name'] = name
             output['path'] = path
+            output['data']['title'] = name
 
             # yum lacks size and file type data
             #output['display_size'] = self._size_to_human_format(size)
@@ -581,7 +597,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             # construct directory structure
             self._add_to_path(paths_cache, path, output)
 
-        return paths_cache['/']
+        return paths_cache['/']['children']
 
     def call_get_file_tree(self, resource_path, _cookies=None, package=None, repo=None, arch=None):
         try:
