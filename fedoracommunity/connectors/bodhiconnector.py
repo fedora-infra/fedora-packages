@@ -39,7 +39,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def __init__(self, environ, request):
         super(BodhiConnector, self).__init__(environ, request)
-        self._prod_url = config.get('fedoracommunity.connector.bodhi.baseurl', 'https://admin.fedoraproject.org/updates')
+        self._prod_url = config.get('fedoracommunity.connector.bodhi.produrl', 'https://admin.fedoraproject.org/updates')
         self._bodhi_client = ProxyClient(self._base_url,
                                          session_as_cookie=False,
                                          insecure = self._insecure)
