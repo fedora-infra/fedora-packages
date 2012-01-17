@@ -110,6 +110,9 @@ class XapianConnector(IConnector, ICall, IQuery):
                               **params):
 
         search_string = filters.get('search')
+        # short circut for empty string
+        if not search_string:
+            return (0, [])
 
         unfiltered_search_terms = search_string.split(' ')
 
