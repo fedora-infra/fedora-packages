@@ -23,6 +23,8 @@ from tg import expose, tmpl_context, redirect, flash, url, request, override_tem
 import moksha
 from moksha.lib.base import BaseController
 
+from tw2.jquery import jquery_js
+
 from fedoracommunity.widgets.search import XapianSearchGrid
 from fedoracommunity.widgets.package import PackageWidget
 
@@ -30,6 +32,7 @@ class RootController(BaseController):
 
     @expose('mako:fedoracommunity.templates.error')
     def error(self, *args, **kw):
+        jquery_js.display()
         resp = request.environ.get('pylons.original_response')
         return dict(prefix=request.environ.get('SCRIPT_NAME', ''),
                     code=str(request.params.get('code', resp.status_int)),
