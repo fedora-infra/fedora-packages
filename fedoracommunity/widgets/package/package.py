@@ -92,6 +92,8 @@ class PackageWidget(twc.Widget):
         xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(name)
         self.package_info = result
+        if not result:
+            tg.redirect('/error')
         if result['name'] == name:
             self.summary = result['summary']
             self.description = result['description']
