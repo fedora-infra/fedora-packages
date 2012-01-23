@@ -35,8 +35,10 @@ class RootController(BaseController):
         jquery_js.display()
         resp = request.environ.get('pylons.original_response')
         return dict(prefix=request.environ.get('SCRIPT_NAME', ''),
-                    code=str(request.params.get('code', resp.status_int)),
-                    message=request.params.get('message', resp.body))
+                    code=str(request.params.get('code',
+                        getattr(resp, 'status_int', 404))),
+                    message=request.params.get('message',
+                        getattr(resp, 'body', 'Not Found')))
 
     @expose('mako:fedoracommunity.templates.search')
     def index(self, ec = None, **kwds):
