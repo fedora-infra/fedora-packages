@@ -1,8 +1,5 @@
 import tw2.core as twc
-from fedoracommunity.lib.utils import OrderedDict
 
-from package import TabWidget
-from mako.template import Template
 from moksha.api.connectors import get_connector
 from moksha.api.widgets.grid import TW2Grid
 
