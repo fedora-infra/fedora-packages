@@ -118,3 +118,6 @@ class PackageWidget(twc.Widget):
                 self.latest_build = 'Not built in rawhide'
         except Exception, e:
             log.error('Unable to query koji: %s' % str(e))
+
+    def __repr__(self):
+        return u"<PackageWidget %s>" % self.package_name
