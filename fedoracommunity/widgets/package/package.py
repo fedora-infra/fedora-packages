@@ -100,14 +100,14 @@ class PackageWidget(twc.Widget):
             self.summary = result['summary']
             self.description = result['description']
         else:
-            if not result['sub_pkgs']:
-                tg.redirect('/error')
             self.kwds['subpackage_of'] = result['name']
             for subpkg in result['sub_pkgs']:
                 if subpkg['name'] == name:
                     self.summary = subpkg['summary']
                     self.description = subpkg['description']
-                    break;
+                    break
+            else:
+                tg.redirect('/error')
 
         koji = get_connector('koji')
         try:
