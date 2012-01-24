@@ -43,3 +43,6 @@ class Details(twc.Widget):
                     break;
 
         self.package_info = result
+
+    def __repr__(self):
+        return "<Details %s>" % self.kwds

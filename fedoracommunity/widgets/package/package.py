@@ -81,7 +81,8 @@ class PackageWidget(twc.Widget):
     package_name = twc.Param()
     args = twc.Param(default=None)
     kwds = twc.Param(default=None)
-    latest_build = twc.Variable()
+    latest_build = twc.Variable(default='Koji unavailable')
+    summary = twc.Variable(default='No summary provided')
     navigation_widget = PackageNavWidget
 
     def prepare(self):
@@ -115,4 +116,3 @@ class PackageWidget(twc.Widget):
                 self.latest_build = 'Not built in rawhide'
         except Exception, e:
             log.error('Unable to query koji: %s' % str(e))
-            self.latest_build = 'Koji unavailable'
