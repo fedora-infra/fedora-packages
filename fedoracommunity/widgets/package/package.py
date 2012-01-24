@@ -83,6 +83,7 @@ class PackageWidget(twc.Widget):
     kwds = twc.Param(default=None)
     latest_build = twc.Variable(default='Koji unavailable')
     summary = twc.Variable(default='No summary provided')
+    description = twc.Variable(default='No description provided')
     navigation_widget = PackageNavWidget
 
     def prepare(self):
