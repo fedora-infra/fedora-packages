@@ -21,7 +21,7 @@ if not os.path.exists(TIMESTAMP):
 else:
     timestamp = file(TIMESTAMP).read().strip()
     koji = ClientSession('http://koji.fedoraproject.org/kojihub')
-    builds = koji.listBuilds(queryOpts={'createdAfter': float(timestamp)})
+    builds = koji.listBuilds(createdAfter=float(timestamp))
     packages = set([build['name'] for build in builds])
     packages = [pkg for pkg in packages
                 if os.path.isdir(os.path.join(REPO_DIR, pkg))]
