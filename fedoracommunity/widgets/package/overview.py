@@ -37,7 +37,7 @@ class Details(twc.Widget):
                 if subpkg['name'] == package_name:
                     self.summary = subpkg['summary']
                     self.description = subpkg['description']
-                    break;
+                    break
 
         self.package_info = result
 
