@@ -67,15 +67,15 @@ body {
 </style>
 </head>
 <h2>Oops, something went wrong!</h2>
-<a href="/"><h3>Click the panda to go back.</h3></a>
+<a href="javascript:history.go(-1)"><h3>Click the panda to go back.</h3></a>
 
 <div id="geiger">
 <img src="${tg.url('/images/geiger.png')}"/>
 <h3 id="error-code">${code}</h3>
 </div>
 
-<a href="/"><img id="hotdog" src="${tg.url('/images/laser.png')}"/></a>
-<a href="/"><img id="panda" src="${tg.url('/images/panda-wee.png')}"/></a>
+<a href="javascript:history.go(-1)"><img id="hotdog" src="${tg.url('/images/laser.png')}"/></a>
+<a href="javascript:history.go(-1)"><img id="panda" src="${tg.url('/images/panda-wee.png')}"/></a>
 <br/>
 <script>
 		$(document).ready(function() {
