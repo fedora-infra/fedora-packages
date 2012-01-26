@@ -86,7 +86,7 @@ def bootstrap():
     if os.path.exists('/etc/redhat-release'):
         reqs = [
             'python-kitchen', 'python-fedora', 'python-bugzilla', 'koji',
-            'xapian-bindings-python', 'diffstat', 'fedpkg',
+            'xapian-bindings-python', 'diffstat', 'fedpkg', 'svn',
         ]
         ret = ret and not os.system(
             'sudo yum install -q -y ' + ' '.join(reqs))
