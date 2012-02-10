@@ -21,6 +21,11 @@ import __main__; __main__.__requires__ = __requires__ = ['WebOb>=1.0']; import p
 import os
 import glob
 
+# These two imports are not actually used, but are required to stop tests from
+# failing on python 2.7.
+import multiprocessing
+import logging
+
 try:
     from setuptools import setup, find_packages
 except ImportError:
