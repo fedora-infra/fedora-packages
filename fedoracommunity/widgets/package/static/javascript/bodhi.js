@@ -40,7 +40,7 @@ function update_action(update, action) {
         args['_csrf_token'] = moksha_csrf_token;
     }
 
-    $.getJSON(moksha.url('/moksha_connector/bodhi/request_data/request'), args, function(json) {
+    $.getJSON(moksha.url('/fcomm_connector/bodhi/request_data/request'), args, function(json) {
         json = json[1];
         $('#flash').text('');
         $('div.left-content-column')

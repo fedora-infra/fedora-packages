@@ -1,8 +1,8 @@
 import tw2.core as twc
-from moksha.api.widgets.grid import TW2Grid
-from moksha.api.connectors import get_connector
+from fedoracommunity.widgets.grid import Grid
+from fedoracommunity.connectors.api import get_connector
 
-class ChangelogGrid(TW2Grid):
+class ChangelogGrid(Grid):
     template='mako:fedoracommunity.widgets.package.templates.changelog_table_widget'
     resource='koji'
     resource_path='query_changelogs'

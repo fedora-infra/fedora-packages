@@ -21,7 +21,7 @@ from datetime import datetime, timedelta
 from pylons import config, cache
 from bugzilla import RHBugzilla3 as Bugzilla
 
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import DateTimeDisplay
 
 # Don't query closed bugs for these packages, since the queries timeout

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter, ISearch
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter, ISearch
 from pylons import config
 from fedora.client import ProxyClient, PackageDB
 from beaker.cache import Cache

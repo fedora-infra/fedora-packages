@@ -11,7 +11,7 @@
         }
         $(document).ready(function(){
 
-moksha.connector_load('bugzilla', 'get_bug_stats', {package: '${w.package}'}, got_bug_stats, $(".count-summary-dashboard .overlay"));
+fcomm.connector_load('bugzilla', 'get_bug_stats', {package: '${w.package}'}, got_bug_stats, $(".count-summary-dashboard .overlay"));
         });
     </script>
     <dl class="count-box">

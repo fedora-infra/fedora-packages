@@ -96,6 +96,7 @@ setup(
     [tw2.widgets]
     widgets = fedoracommunity.widgets
     moksha_js = moksha.widgets.moksha_js
+    fcomm_js = fedoracommunity.connectors.widgets:fcomm_js
     moksha_widgets = moksha.api.widgets
     bodhi_js = fedoracommunity.widgets.package.updates:bodhi_js
 
@@ -127,7 +128,7 @@ setup(
     #moksha_js = moksha.widgets.moksha_js:moksha_js
     #jquery_template_js = moksha.widgets.jquery_template:jquery_template_js
 
-    [moksha.connector]
+    [fcomm.connector]
     koji = fedoracommunity.connectors:KojiConnector
     bodhi = fedoracommunity.connectors:BodhiConnector
     pkgdb = fedoracommunity.connectors:PkgdbConnector
@@ -141,7 +142,7 @@ setup(
 
     [moksha.widget]
     fedoracommunity.bodhi = fedoracommunity.widgets.package.updates:Updates
-    grid = moksha.api.widgets:Grid
+    grid = fedoracommunity.widgets.grid:Grid
 
     package.overview = fedoracommunity.widgets.package.overview:Details
 

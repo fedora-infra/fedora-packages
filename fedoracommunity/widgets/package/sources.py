@@ -23,7 +23,7 @@ from fedoracommunity.lib.utils import OrderedDict
 from pygments import highlight
 from pygments.lexers import DiffLexer
 from pygments.formatters import HtmlFormatter
-from moksha.api.connectors import get_connector
+from fedoracommunity.connectors.api import get_connector
 
 from fedoracommunity.connectors.gitconnector import FedoraGitRepo
 from fedoracommunity.lib.utils import RpmSpecLexer

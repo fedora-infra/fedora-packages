@@ -29,7 +29,7 @@ from datetime import datetime, timedelta
 from pylons import cache
 from urllib import urlopen
 import simplejson
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 
 class SimpleJsonConnector(IConnector, ICall, IQuery):
     _method_paths = {}

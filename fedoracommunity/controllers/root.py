@@ -21,12 +21,22 @@ import pylons
 from tg import expose, tmpl_context, redirect, flash, url, request, override_template
 
 import moksha
-from moksha.lib.base import BaseController
+from moksha.lib.base import BaseController as _BaseController
 
 from tw2.jquery import jquery_js
 
 from fedoracommunity.widgets.search import XapianSearchGrid
 from fedoracommunity.widgets.package import PackageWidget
+from fedoracommunity.connectors.widgets import fcomm_js
+
+
+class BaseController(_BaseController):
+    """ Extend the moksha base controller to inject fcomm_js. """
+
+    def __call__(self, environ, start_response):
+        fcomm_js.display()
+        return super(BaseController, self).__call__(environ, start_response)
+
 
 class RootController(BaseController):
 

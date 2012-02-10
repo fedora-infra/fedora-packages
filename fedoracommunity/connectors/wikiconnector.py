@@ -28,7 +28,7 @@ from datetime import datetime, timedelta
 from time import mktime
 from pylons import cache, config
 from shove import Shove
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import defaultdict
 
 class WikiConnector(IConnector, IQuery):

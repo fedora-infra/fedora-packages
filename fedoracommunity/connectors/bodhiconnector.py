@@ -25,8 +25,8 @@ from datetime import datetime, timedelta
 from webhelpers.date import distance_of_time_in_words
 from webhelpers.html import HTML
 
-from moksha.api.connectors import get_connector
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import get_connector
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import DateTimeDisplay
 
 from fedoracommunity.lib.utils import parse_build
