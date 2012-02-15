@@ -131,7 +131,7 @@ setup(
     #jquery_json_js = moksha.widgets.json:jquery_json_js
     #jquery_ui_tabs = tw.jquery.ui_tabs:jquery_ui_tabs_js
     #moksha_js = moksha.widgets.moksha_js:moksha_js
-    #jquery_template_js = moksha.widgets.jquery_template:jquery_template_js
+    #jquery_template_js = fedoracommunity.widgets.jquery_template:jquery_template_js
 
     [fcomm.connector]
     koji = fedoracommunity.connectors:KojiConnector

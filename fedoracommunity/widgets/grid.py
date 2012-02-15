@@ -25,14 +25,14 @@ import tw2.jquery
 import tw2.jqplugins.ui
 
 from moksha.lib.helpers import when_ready
-from moksha.widgets.jquery_template import tw2_jquery_template_js
+from fedoracommunity.widgets.jquery_template import jquery_template_js
 
 moksha_ui_grid_js = twc.JSLink(
     filename='static/javascript/ui/moksha.ui.grid.js',
     modname=__name__,
     resources=[
         tw2.jqplugins.ui.jquery_ui_js,
-        tw2_jquery_template_js,
+        jquery_template_js,
     ],
 )
 
