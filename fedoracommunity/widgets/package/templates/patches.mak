@@ -1,10 +1,20 @@
 <script type="text/javascript">
+
+## The release we are changing from. Used to prevent race conditions.
+last_release =  null;
+$(document).ready(function(){
+	last_release = $('#release_select').val();
+});
+
 function on_change(self) {
 	$('#patches_container').load(moksha.url('/_w/package.sources.patches #patches'), {
 		'package_name': '${w.package}',
 		'subpackage_of': '${w.subpackage_of}',
-		'branch': self.value
-		});
+		'branch': self.value,
+		}, function() {
+			last_release = $('#release_select').val();
+		}
+	);
 }
 </script>
 
@@ -53,7 +63,7 @@ function toggle_patch(patch) {
                 package: '${w.package}',
                 subpackage_of: '${w.subpackage_of}',
                 patch: patch,
-                branch: $('#release_select').val()
+                branch: last_release
                 })));
 
 	return false;
