@@ -1,10 +1,10 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
-Name:           fedoracommunity
-Version:        0.5.0
-Release:        0.1%{?dist}
-Summary:        A modular framework for consolidating Fedora Infrastructure 
+Name:           fedora-packages
+Version:        2.0
+Release:        1%{?dist}
+Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
 URL:            https://fedorahosted.org/fedoracommunity
@@ -16,7 +16,7 @@ BuildArch:      noarch
 %if 0%{?rhel}
 %if "%rhel" < "6"
 BuildRequires: python-setuptools
-%else   
+%else
 BuildRequires: python-setuptools-devel
 %endif
 %else
@@ -89,7 +89,7 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 %{__rm} -rf %{buildroot}
 
 
-%files 
+%files
 %defattr(-,root,root,-)
 %doc README.txt COPYING AUTHORS
 %{python_sitelib}/%{name}/
@@ -105,6 +105,9 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Tue Feb 28 2012 Luke Macken <lmacken@redhat.com> - 2.0-1
+- Rename to fedora-packages and bump to 2.0
+
 * Mon Dec 19 2011 Luke Macken <lmacken@redhat.com> - 0.5.1-2
 - Update our requirements
 
