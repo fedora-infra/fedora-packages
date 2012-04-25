@@ -1,6 +1,8 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
 
+%define oldname fedoracommunity
+
 Name:           fedora-packages
 Version:        2.0
 Release:        1%{?dist}
@@ -51,21 +53,22 @@ Requires: diffstat
 Requires: fedpkg
 Requires: python-ordereddict
 Requires: python-lockfile
-Requires: python-tw2-jquery-ui
+Requires: python-tw2-jqplugins-ui
 Requires: python-bugzilla
 Requires: xapian-bindings-python
 Requires: python-xappy
 # For spectool
 Requires: rpmdevtools
 
-
 Obsoletes: myfedora
+Conflicts: fedoracommunity
+
 
 %description
 Fedora Community is a set of web applications for consolidating Fedora Infrastructure
 
 %prep
-%setup -q
+%setup -q -n fedoracommunity-%{version}
 
 %build
 %{__python} setup.py build
@@ -74,16 +77,16 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 %{__rm} -rf %{buildroot}
 %{__python} setup.py install -O1 --skip-build \
     --install-data=%{_datadir} --root %{buildroot}
-%{__python} setup.py archive_fedoracommunity_resources -f -o %{buildroot}%{_datadir}/%{name}/public/toscawidgets -d moksha -d fedoracommunity
+%{__python} setup.py archive_fedoracommunity_resources -f -o %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets -d moksha -d fedoracommunity
 
 %{__mkdir_p} %{buildroot}/var/lib/
-%{__mkdir_p} %{buildroot}%{_datadir}/%{name}/production/apache
-%{__mkdir_p} -m 0755 %{buildroot}/%{_localstatedir}/log/%{name}
-%{__mkdir_p} -m 0700 %{buildroot}/%{_localstatedir}/cache/%{name}
+%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/production/apache
+%{__mkdir_p} -m 0755 %{buildroot}/%{_localstatedir}/log/%{oldname}
+%{__mkdir_p} -m 0700 %{buildroot}/%{_localstatedir}/cache/%{oldname}
 
-%{__install} -m 640 production/apache/%{name}.conf %{buildroot}%{_datadir}/%{name}/production/apache
-%{__install} production/apache/%{name}.wsgi %{buildroot}%{_datadir}/%{name}/production/apache/%{name}.wsgi
-%{__install} production/sample-production.ini %{buildroot}%{_datadir}/%{name}/production
+%{__install} -m 640 production/apache/%{oldname}.conf %{buildroot}%{_datadir}/%{oldname}/production/apache
+%{__install} production/apache/%{oldname}.wsgi %{buildroot}%{_datadir}/%{oldname}/production/apache/%{oldname}.wsgi
+%{__install} production/sample-production.ini %{buildroot}%{_datadir}/%{oldname}/production
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -92,14 +95,14 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 %files
 %defattr(-,root,root,-)
 %doc README.txt COPYING AUTHORS
-%{python_sitelib}/%{name}/
-%attr(-,apache,root) %dir %{_datadir}/%{name}
-%attr(-,apache,root) %{_datadir}/%{name}/production
-%attr(-,apache,root) %{_datadir}/%{name}/public
-%attr(-,apache,root) %{_localstatedir}/log/%{name}
-%{python_sitelib}/%{name}-%{version}-py%{pyver}.egg-info/
-#%{python_sitelib}/%{name}-%{version}-py%{pyver}-nspkg.pth
-%attr(-,apache,apache) %dir %{_localstatedir}/cache/%{name}
+%{python_sitelib}/%{oldname}/
+%attr(-,apache,root) %dir %{_datadir}/%{oldname}
+%attr(-,apache,root) %{_datadir}/%{oldname}/production
+%attr(-,apache,root) %{_datadir}/%{oldname}/public
+%attr(-,apache,root) %{_localstatedir}/log/%{oldname}
+%{python_sitelib}/%{oldname}-%{version}-py%{pyver}.egg-info/
+#%{python_sitelib}/%{oldname}-%{version}-py%{pyver}-nspkg.pth
+%attr(-,apache,apache) %dir %{_localstatedir}/cache/%{oldname}
 %{_bindir}/fedoracommunity_makeyumcache
 %{_bindir}/fcomm-index-packages
 %{_bindir}/fcomm-index-latest-builds
