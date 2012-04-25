@@ -5,7 +5,7 @@
 
 Name:           fedora-packages
 Version:        2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -30,7 +30,7 @@ BuildRequires: python-pygments
 BuildRequires: pytz
 BuildRequires: pyOpenSSL
 BuildRequires: moksha
-BuildRequires: python-tw2-jquery-ui
+BuildRequires: python-tw2-jqplugins-ui
 BuildRequires: python-bunch
 
 %if 0%{?el6} || 0%{?el5}
@@ -108,6 +108,9 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Wed Apr 25 2012 Luke Macken <lmacken@redhat.com> - 2.0-2
+- python-tw2-jquery-ui was renamed to python-tw2-jqplugins-ui
+
 * Tue Feb 28 2012 Luke Macken <lmacken@redhat.com> - 2.0-1
 - Rename to fedora-packages and bump to 2.0
 
