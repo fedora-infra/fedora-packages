@@ -84,9 +84,6 @@ class Grid(tw2.forms.widgets.FormField):
         for p in self.params:
             v = getattr(self, p)
             if v is not None:
-                if isinstance(v, dict):
-                    v = json.dumps(v)
-
                 grid_d[p] = v
 
         self.id = self.__class__.__name__ + str(uuid.uuid4())
