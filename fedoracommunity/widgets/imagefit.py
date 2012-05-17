@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from tw.api import JSLink, Widget
-from tw.jquery import jquery_js
+from tw2.core import JSLink
+from tw2.jquery import jquery_js
 
 jquery_imagefit_js = JSLink(filename='static/javascript/jquery.imagefit.js',
-                            modname=__name__, javascript=[jquery_js])
+                            modname=__name__, resources=[jquery_js])
