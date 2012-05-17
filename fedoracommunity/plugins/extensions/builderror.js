@@ -66,7 +66,7 @@
     var params = {'task_id' : data.task_id}
     var burl = moksha.get_base_url();
 
-    moksha.connector_load('koji', 'get_error_log',
+    fcomm.connector_load('koji', 'get_error_log',
                    params,
                    render,
                    data.overlay,

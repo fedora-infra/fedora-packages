@@ -1,5 +1,5 @@
 import tw2.core as twc
-from moksha.api.connectors import get_connector
+from fedoracommunity.connectors.api import get_connector
 
 from fedoracommunity.widgets.tree import tree_js
 

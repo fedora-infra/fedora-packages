@@ -29,8 +29,8 @@ try:
 except ImportError:
     from lockfile import FileLock as LockFile
 
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
-from moksha.api.connectors import get_connector
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import get_connector
 from moksha.lib.helpers import DateTimeDisplay
 
 class KojiConnector(IConnector, ICall, IQuery):

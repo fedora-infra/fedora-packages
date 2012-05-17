@@ -24,11 +24,15 @@ make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
 def make_app(global_conf, full_stack=True, **app_conf):
     from moksha.middleware import make_moksha_middleware
+    from fedoracommunity.connectors.api.mw import FCommConnectorMiddleware
 
-    make_middleware = make_moksha_middleware
+    def make_middleware(app):
+        if tg_version_tuple < (2, 1):
+            app = base_config.add_tosca2_middleware(app)
 
-    if tg_version_tuple < (2, 1):
-        make_middleware = lambda app : make_moksha_middleware(base_config.add_tosca2_middleware(app))
+        app = FCommConnectorMiddleware(app)
+        app = make_moksha_middleware(app)
+        return app
 
     app = make_base_app(global_conf,
                         wrap_app=make_middleware,

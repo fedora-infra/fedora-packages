@@ -21,6 +21,11 @@ import __main__; __main__.__requires__ = __requires__ = ['WebOb>=1.0']; import p
 import os
 import glob
 
+# These two imports are not actually used, but are required to stop tests from
+# failing on python 2.7.
+import multiprocessing
+import logging
+
 try:
     from setuptools import setup, find_packages
 except ImportError:
@@ -96,6 +101,7 @@ setup(
     [tw2.widgets]
     widgets = fedoracommunity.widgets
     moksha_js = moksha.widgets.moksha_js
+    fcomm_js = fedoracommunity.connectors.widgets:fcomm_js
     moksha_widgets = moksha.api.widgets
     bodhi_js = fedoracommunity.widgets.package.updates:bodhi_js
 
@@ -125,9 +131,9 @@ setup(
     #jquery_json_js = moksha.widgets.json:jquery_json_js
     #jquery_ui_tabs = tw.jquery.ui_tabs:jquery_ui_tabs_js
     #moksha_js = moksha.widgets.moksha_js:moksha_js
-    #jquery_template_js = moksha.widgets.jquery_template:jquery_template_js
+    #jquery_template_js = fedoracommunity.widgets.jquery_template:jquery_template_js
 
-    [moksha.connector]
+    [fcomm.connector]
     koji = fedoracommunity.connectors:KojiConnector
     bodhi = fedoracommunity.connectors:BodhiConnector
     pkgdb = fedoracommunity.connectors:PkgdbConnector
@@ -141,7 +147,7 @@ setup(
 
     [moksha.widget]
     fedoracommunity.bodhi = fedoracommunity.widgets.package.updates:Updates
-    grid = moksha.api.widgets:Grid
+    grid = fedoracommunity.widgets.grid:Grid
 
     package.overview = fedoracommunity.widgets.package.overview:Details
 

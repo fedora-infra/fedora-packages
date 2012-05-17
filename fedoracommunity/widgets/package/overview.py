@@ -1,9 +1,9 @@
 import tw2.core as twc
 
-from moksha.api.connectors import get_connector
-from moksha.api.widgets.grid import TW2Grid
+from fedoracommunity.connectors.api import get_connector
+from fedoracommunity.widgets.grid import Grid
 
-class ActiveReleasesGrid(TW2Grid):
+class ActiveReleasesGrid(Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.active_releases'
     package_name = twc.Param('The name of the package to view')
     resource = 'bodhi'

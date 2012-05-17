@@ -8,7 +8,7 @@ import tg
 from fedoracommunity.lib.utils import OrderedDict
 
 from mako.template import Template
-from moksha.api.connectors import get_connector
+from fedoracommunity.connectors.api import get_connector
 
 log = logging.getLogger(__name__)
 

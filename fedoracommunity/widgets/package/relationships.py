@@ -3,8 +3,8 @@ from fedoracommunity.lib.utils import OrderedDict
 
 from package import TabWidget
 from mako.template import Template
-from moksha.api.connectors import get_connector
-from moksha.api.widgets.grid import TW2Grid
+from fedoracommunity.connectors.api import get_connector
+from fedoracommunity.widgets.grid import Grid
 
 class RelationshipsNavWidget(TabWidget):
     tabs = OrderedDict([('Requires', 'package.relationships.requires'),
@@ -74,31 +74,31 @@ class RelationshipBaseWidget(twc.Widget):
             build_info['arch_tasks'] = arch_tasks
             self.repo_to_archtask_map[repo_name] = arch_tasks
 
-class RequiresGridWidget(TW2Grid):
+class RequiresGridWidget(Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.requires_table_widget'
     resource = 'yum'
     resource_path = 'query_requires'
     onReady = "update_grid()"
 
-class RequiredByGridWidget(TW2Grid):
+class RequiredByGridWidget(Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.required_by_table_widget'
     resource = 'yum'
     resource_path = 'query_required_by'
     onReady = "update_grid()"
 
-class ProvidesGridWidget(TW2Grid):
+class ProvidesGridWidget(Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.provides_table_widget'
     resource = 'yum'
     resource_path = 'query_provides'
     onReady = "update_grid()"
 
-class ObsoletesGridWidget(TW2Grid):
+class ObsoletesGridWidget(Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.obsoletes_table_widget'
     resource = 'yum'
     resource_path = 'query_obsoletes'
     onReady = "update_grid()"
 
-class ConflictsGridWidget(TW2Grid):
+class ConflictsGridWidget(Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.conflicts_table_widget'
     resource = 'yum'
     resource_path = 'query_conflicts'
