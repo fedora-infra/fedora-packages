@@ -38,6 +38,9 @@ class FedoraCommunityConfig(AppConfig):
         res_prefix = config.get('fedoracommunity.resource_path_prefix')
         if res_prefix:
             default_tw2_config['res_prefix'] = res_prefix
+        script_name = config.get('fedoracommunity.script_name')
+        if script_name:
+            default_tw2_config['script_name'] = script_name
         if getattr(self, 'custom_tw2_config', None):
             default_tw2_config.update(self.custom_tw2_config)
         app = TwMiddleware(app, **default_tw2_config)
