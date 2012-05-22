@@ -19,7 +19,7 @@ import re
 import koji
 import rpm
 
-from pylons import config, request
+from pylons import config
 from datetime import datetime
 from cgi import escape
 from urlgrabber import grabber
@@ -696,7 +696,7 @@ class KojiConnector(IConnector, ICall, IQuery):
                 completion_display['when'] = complete.age(
                         granularity='minute', general=True) + ' ago'
 
-                ident = request.environ.get('repoze.who.identity')
+                ident = self._request.environ.get('repoze.who.identity')
                 if ident:
                     username = ident.get('repoze.who.userid')
                     tz = ident['person']['timezone']
