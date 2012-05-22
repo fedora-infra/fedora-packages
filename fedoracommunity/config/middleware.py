@@ -31,7 +31,7 @@ def make_app(global_conf, full_stack=True, **app_conf):
             app = base_config.add_tosca2_middleware(app)
 
         app = FCommConnectorMiddleware(app)
-        app = make_moksha_middleware(app)
+        app = make_moksha_middleware(app, tg.config)
         return app
 
     app = make_base_app(global_conf,
