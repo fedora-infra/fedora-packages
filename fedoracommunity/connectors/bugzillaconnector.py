@@ -177,7 +177,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'version': version,
                 'component': package,
                 'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
-                'order': 'bug_id',
+                #'order': 'bug_id',
                 }
 
         bugzilla_cache = self._request.environ['beaker.cache'].get_cache('bugzilla')
