@@ -1,4 +1,4 @@
-from moksha.api.widgets import Grid
+from fedoracommunity.widgets.grid import Grid
 
 class XapianSearchGrid(Grid):
     template="mako:fedoracommunity.widgets.search.templates.search_results"

@@ -136,6 +136,9 @@ def install_hacks():
     easy_install = os.path.join(os.getenv('WORKON_HOME'),
             ctl_config['venv'], 'bin', 'easy_install')
     os.system(easy_install + ' GitPython')
+    os.system(easy_install + ' Pylons==1.0.0')
+    os.system(easy_install + ' TurboGears2')
+    os.system(easy_install + ' repoze.tm')
 
     return True
 

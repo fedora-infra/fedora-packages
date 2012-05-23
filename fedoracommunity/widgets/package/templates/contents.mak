@@ -48,7 +48,7 @@
                                        },
                                        "json_data": {
                                            "ajax": {
-                                               "url": moksha.url("/moksha_connector/yum/get_file_tree"),
+                                               "url": moksha.url("/fcomm_connector/yum/get_file_tree"),
                                                "data": {
                                                    'package': package,
                                                    'arch': arch,
@@ -58,7 +58,7 @@
                                        }
                                      });
                          /*
-                          moksha.connector_load('yum', 'get_file_tree', {'package': package,
+                          fcomm.connector_load('yum', 'get_file_tree', {'package': package,
                                                                          'arch': arch,
                                                                          'repo': repo}, done_cb);
                           */

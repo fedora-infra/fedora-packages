@@ -22,16 +22,20 @@
 .. moduleauthor:: Luke Macken <lmacken@redhat.com>
 """
 
-from tw.api import CSSLink, JSLink
+from tw2.core import CSSLink, JSLink
 from moksha.api.widgets import ContextAwareWidget
 from moksha.api.widgets.feed import Feed
 from fedoracommunity.widgets.expander import expander_js
 
 
-class PlanetFedoraWidget(Feed, ContextAwareWidget):
+class PlanetFedoraWidget(Feed):
     url = 'http://planet.fedoraproject.org/atom.xml'
     template = "mako:fedoracommunity.widgets.templates.planet"
-    javascript = [expander_js]
-    css = [CSSLink(link='/community/css/planet-fedora-bubbles.css')]
-    params = ['limit']
-    limit = 3
+    resources = [
+        expander_js,
+        CSSLink(link='/community/css/planet-fedora-bubbles.css'),
+    ]
+    limit = twc.Param(default=3)
+    def prepare(self):
+        super(Feed, self).prepare()
+        self.tmpl_context = pylons.tmpl_context

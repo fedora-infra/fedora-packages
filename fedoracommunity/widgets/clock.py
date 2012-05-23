@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from tw.api import JSLink
+from tw2.core import JSLink
 
 clock_js = JSLink(filename='static/javascript/jquery.jclock.js',
                   modname=__name__)

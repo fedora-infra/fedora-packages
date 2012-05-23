@@ -18,15 +18,26 @@
 
 import pylons
 
-from tg import expose, tmpl_context, redirect, flash, url, request, override_template
+from tg import expose, tmpl_context, redirect, flash, url, request, override_template, TGController
 
 import moksha
-from moksha.lib.base import BaseController
+from moksha.ext.turbogears import global_resources
 
 from tw2.jquery import jquery_js
 
 from fedoracommunity.widgets.search import XapianSearchGrid
 from fedoracommunity.widgets.package import PackageWidget
+from fedoracommunity.connectors.widgets import fcomm_js
+
+
+class BaseController(TGController):
+    """ Extend the TG base controller to inject fcomm_js and moksha globs. """
+
+    def __call__(self, environ, start_response):
+        fcomm_js.inject()
+        tmpl_context.moksha_global_resources = global_resources
+        return super(BaseController, self).__call__(environ, start_response)
+
 
 class RootController(BaseController):
 

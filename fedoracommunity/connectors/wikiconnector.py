@@ -26,9 +26,9 @@ This Connector works with the MediaWiki API of the Fedora Project wiki.
 from fedora.client import Wiki
 from datetime import datetime, timedelta
 from time import mktime
-from pylons import cache, config
+from pylons import config
 from shove import Shove
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import defaultdict
 
 class WikiConnector(IConnector, IQuery):
@@ -82,7 +82,7 @@ class WikiConnector(IConnector, IQuery):
         edit_counts = defaultdict(int) # {pagename: # of edits}
         last_edited_by = {} # {pagename: username}
 
-        wiki_cache = cache.get_cache('wiki')
+        wiki_cache = self._request.environ['beaker.cache'].get_cache('wiki')
         changes = wiki_cache.get_value(key='recent_changes',
                                        createfunc=self._get_recent_changes,
                                        expiretime=3600)
@@ -106,7 +106,7 @@ class WikiConnector(IConnector, IQuery):
     def query_most_active_users(self, user_count=10, **params):
         users = defaultdict(list)
 
-        wiki_cache = cache.get_cache('wiki')
+        wiki_cache = self._request.environ['beaker.cache'].get_cache('wiki')
         changes = wiki_cache.get_value(key='recent_changes',
                                        createfunc=self._get_recent_changes,
                                        expiretime=3600)

@@ -1,7 +1,7 @@
 import tw2.core as twc
-from moksha.api.widgets.grid import TW2Grid
+from fedoracommunity.widgets.grid import Grid
 
-class BuildsGrid(TW2Grid):
+class BuildsGrid(Grid):
     template='mako:fedoracommunity.widgets.package.templates.builds_table_widget'
     resource='koji'
     resource_path='query_builds'

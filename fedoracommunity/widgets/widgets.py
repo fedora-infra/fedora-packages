@@ -21,7 +21,11 @@ from tg.controllers import url
 class CSSLink(twc.CSSLink):
     path = Param('Path to where you would find these files on the web server')
     def prepare(self):
-        self.link = url(self.path)
+        try:
+            self.link = url(self.path)
+        except:
+            pass
+
         super(CSSLink, self).prepare()
 
 fedora_css = CSSLink(modname='fedoracommunity', path='/css/fedora.css')

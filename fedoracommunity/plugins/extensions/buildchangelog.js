@@ -53,7 +53,7 @@
 
         $menu.unbind('show.changelog');
 
-        moksha.connector_load('koji', 'get_latest_changelog',
+        fcomm.connector_load('koji', 'get_latest_changelog',
                    params,
                    render,
                    data.overlay,

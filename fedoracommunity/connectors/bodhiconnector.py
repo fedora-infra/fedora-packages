@@ -17,16 +17,15 @@
 import time
 import logging
 
-from tg import url
 from paste.deploy.converters import asbool
-from pylons import config, cache
+from pylons import config
 from fedora.client import ProxyClient
 from datetime import datetime, timedelta
 from webhelpers.date import distance_of_time_in_words
 from webhelpers.html import HTML
 
-from moksha.api.connectors import get_connector
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import get_connector
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import DateTimeDisplay
 
 from fedoracommunity.lib.utils import parse_build
@@ -437,7 +436,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         return result
 
     def get_dashboard_stats(self, username=None):
-        bodhi_cache = cache.get_cache('bodhi')
+        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
         return bodhi_cache.get_value(key='dashboard_%s' % username,
                 createfunc=lambda: self._get_dashboard_stats(username),
                 expiretime=300)
@@ -462,7 +461,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def query_updates_count(self, status, username=None,
                             before=None, after=None):
-        bodhi_cache = cache.get_cache('bodhi')
+        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
         return bodhi_cache.get_value(key='count_%s_%s_%s_%s' % (
                 status, username, str(before).split('.')[0],
                 str(after).split('.')[0]), expiretime=300,
@@ -654,13 +653,14 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         up.karma_icon = 'bad'
                     else:
                         up.karma_icon = 'meh'
+                    karma_icon_url = self._request.environ['SCRIPT_NAME'] + \
+				'/images/16_karma-%s.png' % up.karma_icon
                     row = testing_builds_row[build]
                     row['testing_version'] += HTML.tag('div',
                             c=HTML.tag('a', href="%s/%s" % (
                                 self._prod_url, up.title),
                                 c=HTML.tag('img',
-                                    src=url('/images/16_karma-%s.png' %
-                                    up.karma_icon)) +
+                                    src=karma_icon_url) +
                                 HTML.tag('span', c='%s karma' %
                                     up.karma)),
                                 **{'class': 'karma'})
@@ -668,7 +668,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         return (len(releases), releases)
 
     def get_metrics(self):
-        bodhi_cache = cache.get_cache('bodhi')
+        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
         return bodhi_cache.get_value(key='bodhi_metrics',
                 createfunc=self._get_metrics,
                 expiretime=300)

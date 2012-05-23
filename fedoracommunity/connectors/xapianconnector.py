@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 from pylons import config
 from urllib import quote
 from fedoracommunity.search import utils, distmappings

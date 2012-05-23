@@ -18,10 +18,10 @@ import ssl
 import time
 
 from datetime import datetime, timedelta
-from pylons import config, cache
+from pylons import config
 from bugzilla import RHBugzilla3 as Bugzilla
 
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 from moksha.lib.helpers import DateTimeDisplay
 
 # Don't query closed bugs for these packages, since the queries timeout
@@ -86,7 +86,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         package = kw.get('package', None)
         if not package:
             raise Exception('No package specified')
-        bugzilla_cache = cache.get_cache('bugzilla')
+        bugzilla_cache = self._request.environ['beaker.cache'].get_cache('bugzilla')
         return bugzilla_cache.get_value(key=package, expiretime=21600,
                            createfunc=lambda: self._get_bug_stats(package))
 
@@ -177,9 +177,10 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'version': version,
                 'component': package,
                 'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
-                'order': 'bug_id',
+                #'order': 'bug_id',
                 }
-        bugzilla_cache = cache.get_cache('bugzilla')
+
+        bugzilla_cache = self._request.environ['beaker.cache'].get_cache('bugzilla')
         key = '%s_%s_%s' % (collection, version, package)
         bugs = bugzilla_cache.get_value(key=key, expiretime=900,
                 createfunc=lambda: self._query_bugs(query,
