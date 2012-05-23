@@ -79,6 +79,20 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
     --install-data=%{_datadir} --root %{buildroot}
 %{__python} setup.py archive_fedoracommunity_resources -f -o %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets -d moksha -d fedoracommunity
 
+# Hack, to work around tw2 resource archiving issues
+%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.jquery_template/static/javascript
+cp fedoracommunity/widgets/static/javascript/jquery.tmpl.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.jquery_template/static/javascript
+%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.connectors.widgets.widgets/static/js
+cp fedoracommunity/connectors/widgets/static/js/fcomm.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.connectors.widgets.widgets/static/js
+%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.grid/static/javascript/ui/
+cp fedoracommunity/widgets/static/javascript/ui/moksha.ui.{grid,popup}.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.grid/static/javascript/ui
+%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.package.updates/static/javascript/
+cp fedoracommunity/widgets/package/static/javascript/bodhi.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.package.updates/static/javascript/
+%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.expander/static/javascript/
+cp fedoracommunity/widgets/static/javascript/jquery.expander.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.expander/static/javascript/
+%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.tree/static/javascript/
+cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.tree/static/javascript/
+
 %{__mkdir_p} %{buildroot}/var/lib/
 %{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/production/apache
 %{__mkdir_p} -m 0755 %{buildroot}/%{_localstatedir}/log/%{oldname}
