@@ -28,6 +28,7 @@ from moksha.lib.helpers import defaultdict
 from jsonconnector import SimpleJsonConnector
 from operator import itemgetter
 import logging
+from tg import config
 log = logging.getLogger(__name__)
 
 class TorrentConnector(SimpleJsonConnector):
