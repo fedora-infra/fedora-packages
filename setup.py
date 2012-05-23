@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import __main__; __main__.__requires__ = __requires__ = ['WebOb>=1.0']; import pkg_resources
+import __main__; __main__.__requires__ = __requires__ = ['WebOb>=1.0', 'sqlalchemy>=0.6']; import pkg_resources
 
 import os
 import glob
