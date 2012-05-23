@@ -18,7 +18,7 @@ import time
 import logging
 
 from paste.deploy.converters import asbool
-from pylons import config, cache
+from pylons import config
 from fedora.client import ProxyClient
 from datetime import datetime, timedelta
 from webhelpers.date import distance_of_time_in_words
@@ -436,7 +436,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         return result
 
     def get_dashboard_stats(self, username=None):
-        bodhi_cache = cache.get_cache('bodhi')
+        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
         return bodhi_cache.get_value(key='dashboard_%s' % username,
                 createfunc=lambda: self._get_dashboard_stats(username),
                 expiretime=300)
@@ -461,7 +461,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def query_updates_count(self, status, username=None,
                             before=None, after=None):
-        bodhi_cache = cache.get_cache('bodhi')
+        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
         return bodhi_cache.get_value(key='count_%s_%s_%s_%s' % (
                 status, username, str(before).split('.')[0],
                 str(after).split('.')[0]), expiretime=300,
@@ -668,7 +668,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         return (len(releases), releases)
 
     def get_metrics(self):
-        bodhi_cache = cache.get_cache('bodhi')
+        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
         return bodhi_cache.get_value(key='bodhi_metrics',
                 createfunc=self._get_metrics,
                 expiretime=300)

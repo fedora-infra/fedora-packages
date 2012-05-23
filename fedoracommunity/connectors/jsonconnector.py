@@ -26,7 +26,6 @@ import logging
 log = logging.getLogger(__name__)
 
 from datetime import datetime, timedelta
-from pylons import cache
 from urllib import urlopen
 import simplejson
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
@@ -42,7 +41,7 @@ class SimpleJsonConnector(IConnector, ICall, IQuery):
     def call(self, url):
         log.info('JsonConnector.call(%s)' % url)
         self._url = url
-        json_cache = cache.get_cache('json')
+        json_cache = self._request.environ['beaker.cache'].get_cache('json')
         return json_cache.get_value(key=url,
                                     createfunc=self._get_json_url,
                                     expiretime=1800)

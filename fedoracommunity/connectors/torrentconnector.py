@@ -24,7 +24,6 @@ This Connector works with the jsonconnector
 """
 
 from datetime import datetime, timedelta
-from pylons import cache, config
 from moksha.lib.helpers import defaultdict
 from jsonconnector import SimpleJsonConnector
 from operator import itemgetter
