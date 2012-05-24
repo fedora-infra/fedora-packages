@@ -56,15 +56,21 @@ function toggle_patch(patch) {
 		return false;
 	}
 
-	tr.addClass('active-patch').after(
-	  $('<tr/>', {id: 'patch'}).addClass('patch-content').append(
-		  $('<td/>', {colspan: 3}).load(
-            moksha.url('/_w/package.sources.patch'), {
-                package: '${w.package}',
-                subpackage_of: '${w.subpackage_of}',
-                patch: patch,
-                branch: last_release
-                })));
+	$.ajax({
+		url: moksha.url('/_w/package.sources.patch'),
+		data: {
+			package: '${w.package}',
+			subpackage_of: '${w.subpackage_of}',
+			patch: patch,
+			branch: last_release
+		},
+		success: function(html) {
+			tr.addClass('active-patch').after(
+			  $('<tr/>', {id: 'patch'}).addClass('patch-content').append(
+				  $('<td/>', {colspan: 3}).html(
+                      moksha.filter_resources(html))));
+		}
+	});
 
 	return false;
 }
