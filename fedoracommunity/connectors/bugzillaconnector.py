@@ -100,51 +100,59 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         if not self._bugzilla:
             self._bugzilla = Bugzilla(url=self._base_url)
 
-        mc = self._bugzilla._multicall()
+        # Multi-call support is broken in the latest Bugzilla upgrade
+        #mc = self._bugzilla._multicall()
+
+        results = []
 
         # Open bugs
-        mc._query({
-            'product': collection,
-            'component': package,
-            'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
-            })
+        if package in BLACKLIST:
+            queries.remove('open')
+        else:
+            results.append(self._bugzilla.query({
+                'product': collection,
+                'component': package,
+                'status': ['NEW', 'ASSIGNED', 'REOPENED'],
+                }))
 
         # New bugs
-        mc._query({
-            'product': collection,
-            'component': package,
-            'bug_status': ['NEW'],
-            })
+        if package in BLACKLIST:
+            queries.remove('new')
+        else:
+            results.append(self._bugzilla.query({
+                'product': collection,
+                'component': package,
+                'status': 'NEW',
+                }))
 
         # New bugs this week
-        mc._query({
+        results.append(self._bugzilla.query({
             'product': collection,
             'component': package,
-            'bug_status': ['NEW'],
-            'chfieldfrom': last_week,
-            'chfieldto': 'Now',
-            })
+            'status': 'NEW',
+            'creation_time': last_week,
+            }))
 
         # Closed bugs
         if package in BLACKLIST:
             queries.remove('closed')
         else:
-            mc._query({
+            results.append(self._bugzilla.query({
                 'product': collection,
                 'component': package,
-                'bug_status': ['CLOSED'],
-                })
+                'status': 'CLOSED',
+                }))
 
         # Closed bugs this week
-        mc._query({
+        results.append(self._bugzilla.query({
             'product': collection,
             'component': package,
-            'bug_status': ['CLOSED'],
-            'chfieldfrom': last_week,
-            'chfieldto': 'Now',
-            })
+            'status': 'CLOSED',
+            'creation_time': last_week,
+            }))
 
-        results = dict([(q, len(r['bugs'])) for q, r in zip(queries, mc.run())])
+        #results = dict([(q, len(r['bugs'])) for q, r in zip(queries, mc.run())])
+        results = dict([(q, len(r)) for q, r in zip(queries, results)])
 
         return dict(results=results)
 
