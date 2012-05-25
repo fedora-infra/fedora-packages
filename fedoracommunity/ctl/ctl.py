@@ -138,7 +138,6 @@ def install_hacks():
     os.system(easy_install + ' GitPython')
     os.system(easy_install + ' Pylons==1.0.0')
     os.system(easy_install + ' TurboGears2')
-    os.system(easy_install + ' repoze.tm')
 
     return True
 

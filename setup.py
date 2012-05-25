@@ -63,7 +63,6 @@ setup(
     install_requires=[
         "moksha>=0.8.0",
         "TurboGears2",
-        "repoze.tm",
         #"PyOpenSSL",
         "SQLAlchemy>=0.5",
         #"xappy",
