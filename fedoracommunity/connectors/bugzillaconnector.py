@@ -33,7 +33,16 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
     def __init__(self, environ=None, request=None):
         super(BugzillaConnector, self).__init__(environ, request)
-        self._bugzilla = None
+        self.__bugzilla = None
+
+    @property
+    def _bugzilla(self):
+        """ A singleton over our python-bugzilla connection. """
+        if not self.__bugzilla:
+            self.__bugzilla = Bugzilla(
+                url=self._base_url,
+            )
+        return self.__bugzilla
 
     # IConnector
     @classmethod
@@ -97,8 +106,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         queries = ['open', 'new', 'new_this_week', 'closed', 'closed_this_week']
 
         last_week = str(datetime.utcnow() - timedelta(days=7)),
-        if not self._bugzilla:
-            self._bugzilla = Bugzilla(url=self._base_url)
 
         # Multi-call support is broken in the latest Bugzilla upgrade
         #mc = self._bugzilla._multicall()
@@ -209,15 +216,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
                    sort_col='number', filters=None, collection='Fedora',
                    **params):
-        if not self._bugzilla:
-            self._bugzilla = Bugzilla(url=self._base_url)
         results = self._bugzilla.query(query)
         results.reverse()
         return [bug.bug_id for bug in results]
 
     def get_bugs(self, bugids, collection='Fedora'):
-        if not self._bugzilla:
-            self._bugzilla = Bugzilla(url=self._base_url)
         bugs = self._bugzilla.getbugs(bugids)
         bugs_list = []
         for bug in bugs:
