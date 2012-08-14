@@ -27,6 +27,15 @@ from moksha.lib.helpers import DateTimeDisplay
 # Don't query closed bugs for these packages, since the queries timeout
 BLACKLIST = ['kernel']
 
+MAX_BZ_QUERIES = 200
+
+
+def chunks(l, n):
+    """ Yield successive n-sized chunks from l. """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
+
+
 class BugzillaConnector(IConnector, ICall, IQuery):
     _method_paths = {}
     _query_paths = {}
@@ -182,6 +191,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                    sort_col='number', filters=None, **params):
         if not filters:
             filters = {}
+
         filters = self._query_bugs_filter.filter(filters, conn=self)
         collection = filters.get('collection', 'Fedora')
         version = filters.get('version', '')
@@ -225,8 +235,10 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         """
 
         results, _results = [], None
-        offset, limit = 0, 200
+        offset, limit = 0, MAX_BZ_QUERIES
 
+        # XXX - This is a hack until the multicall stuff gets worked out
+        # https://bugzilla.redhat.com/show_bug.cgi?id=824241 -- threebean
         while _results == None or len(_results):
             query.update(dict(offset=offset, limit=limit))
             _results = self._bugzilla.query(query)
@@ -237,7 +249,13 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         return [bug.bug_id for bug in results]
 
     def get_bugs(self, bugids, collection='Fedora'):
-        bugs = self._bugzilla.getbugs(bugids)
+        bugs = []
+
+        # XXX - This is a hack until the multicall stuff gets worked out
+        # https://bugzilla.redhat.com/show_bug.cgi?id=824241 -- threebean
+        for chunk_of_bugids in chunks(bugids, 20):
+            bugs.extend(self._bugzilla.getbugs(chunk_of_bugids))
+
         bugs_list = []
         for bug in bugs:
             modified = DateTimeDisplay(str(bug.last_change_time),

@@ -928,8 +928,24 @@
               page_link.click(goto_page);
               page.html(page_link);
           }
-
           pager.append(page);
+
+          var page = $("<li>All</li>").addClass('page-button').addClass('all-pages').addClass('no-link');
+          if (total_pages != 1) {
+              page.removeClass('no-link');
+              var page_link = $('<a href="javascript:void(0)"></a>').html('All');
+              page_link.data('start_row.moksha_grid', 1);
+              page_link.data('rows_per_page.moksha_grid', total_rows);
+              var show_all = function() {
+                  $grid.options.page_num = $(this).data('start_row.moksha_grid');
+                  $grid.options.rows_per_page = $(this).data('rows_per_page.moksha_grid');
+                  $grid.request_data_refresh();
+              }
+              page_link.click(show_all);
+              page.html(page_link);
+              pager.append(page);
+          }
+
           return(pager);
       }
   }
