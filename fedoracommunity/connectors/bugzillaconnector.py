@@ -216,7 +216,19 @@ class BugzillaConnector(IConnector, ICall, IQuery):
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
                    sort_col='number', filters=None, collection='Fedora',
                    **params):
-        results = self._bugzilla.query(query)
+        """ Make bugzilla queries but only grab up to 250 bugs at a time,
+        otherwise we might drop due to SSL timeout.  :/
+        """
+
+        results, _results = [], None
+        offset, limit = 0, 250
+
+        while _results == None or len(_results):
+            query.update(dict(offset=offset, limit=limit))
+            _results = self._bugzilla.query(query)
+            results.extend(_results)
+            offset += limit
+
         results.reverse()
         return [bug.bug_id for bug in results]
 
