@@ -41,7 +41,11 @@ fcomm.connector_load('bugzilla', 'get_bug_stats', {package: '${w.package}'}, got
          </dd>
        </a>
     </dl>
-    <div class="action-box"><a class="action-header" href="https://bugzilla.redhat.com/enter_bug.cgi?product=${w.product}&version=${w.version}&component=${w.package}">Open A New Bug<br /> <img src="${tg.url('/images/action-box_add-button.png')}"></a>
+    <div class="action-box"><a class="action-header"
+        target="_blank" href="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&version=${w.version}&component=${w.package}">Open A New Bug (Fedora)<br /> <img src="${tg.url('/images/action-box_add-button.png')}"></a>
+    </div>
+    <div class="action-box"><a class="action-header"
+        target="_blank" href="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora EPEL&version=${w.version}&component=${w.package}">Open A New Bug (EPEL)<br /> <img src="${tg.url('/images/action-box_add-button.png')}"></a>
     </div>
 <div class="clear" />
 </div>
