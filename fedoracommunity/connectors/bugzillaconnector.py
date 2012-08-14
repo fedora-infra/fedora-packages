@@ -191,7 +191,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'product': collection,
                 'version': version,
                 'component': package,
-                'bug_status': ['NEW', 'ASSIGNED', 'REOPENED'],
+                'bug_status': [
+                    'ASSIGNED', 'NEW', 'MODIFIED',
+                    'ON_DEV', 'ON_QA', 'VERIFIED', 'FAILS_QA',
+                    'RELEASE_PENDING', 'POST', 'REOPENED',
+                ],
                 #'order': 'bug_id',
                 }
 
