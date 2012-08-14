@@ -1,7 +1,9 @@
 import tw2.core as twc
+import datetime
 
 from fedoracommunity.widgets.grid import Grid
 from fedoracommunity.connectors.api import get_connector
+
 
 class BugStatsWidget(twc.Widget):
     template = "mako:fedoracommunity.widgets.package.templates.bugs_stats_widget"
@@ -15,6 +17,38 @@ class BugStatsWidget(twc.Widget):
     num_new = twc.Param(default='-')
     num_new_this_week = twc.Param(default='')
     num_closed_this_week = twc.Param(default='')
+
+    bz_prefix = "https://bugzilla.redhat.com/buglist.cgi"
+    status_open_string = "bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
+    status_closed_string = "bug_status=CLOSED"
+
+    base_query_string = twc.Variable(default='')
+    open_query_string = twc.Variable(default='')
+    closed_query_string = twc.Variable(default='')
+
+    def prepare(self):
+        super(BugStatsWidget, self).prepare()
+        def to_query_string(query):
+            return "&".join([
+                "{key}={value}".format(key=key, value=value)
+                for key, value in query.items()
+            ])
+        self.base_query_string = to_query_string({
+            "query_format": "advanced",
+            "product": self.product,
+            "component": self.package,
+        })
+        self.open_query_string = to_query_string({
+            "chfieldto": "Now",
+            "chfield": "[Bug creation]",
+            "chfieldfrom": datetime.datetime.now().isoformat().split('T')[0],
+        })
+        self.closed_query_string = to_query_string({
+            "chfieldto": "Now",
+            "chfield": "bug_status",
+            "chfieldvalue": "CLOSED",
+            "chfieldfrom": datetime.datetime.now().isoformat().split('T')[0],
+        })
 
 
 class BugsGrid(Grid):

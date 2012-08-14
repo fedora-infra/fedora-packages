@@ -16,14 +16,30 @@ fcomm.connector_load('bugzilla', 'get_bug_stats', {package: '${w.package}'}, got
     </script>
     <dl class="count-box">
        <dt class="count-header main-count-header">Open Bugs</dt>
-       <a href="https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&product=${w.product}&component=${w.package}&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED" target="_blank"><dd class="main-count-value" id="${w.id}_open_bugs">${w.num_open}</dd></a>
-        <dd><span class="count-header">New</span> <a href="https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&product=${w.product}&component=${w.package}&bug_status=NEW" target="_blank"><span id="${w.id}_num_new">${w.num_new}</span></a></dd>
-        <dd class="additional-info" colspan="2" id="${w.id}_num_new_this_week">${w.num_new_this_week}</dd>
+       <a href="${w.bz_prefix}?${w.base_query_string}&${w.status_open_string}" target="_blank">
+         <dd class="main-count-value" id="${w.id}_open_bugs">${w.num_open}</dd>
+       </a>
+       <dd><span class="count-header">New</span> <a
+           href="${w.bz_prefix}?${w.base_query_string}&bug_status=NEW" target="_blank">
+           <span id="${w.id}_num_new">${w.num_new}</span>
+         </a>
+       </dd>
+       <a href="${w.bz_prefix}?${w.base_query_string}&${w.open_query_string}&${w.status_open_string}" target="_blank">
+         <dd class="additional-info" colspan="2" id="${w.id}_num_new_this_week">
+             ${w.num_new_this_week}
+         </dd>
+       </a>
     </dl>
     <dl class="count-box">
        <dt class="count-header main-count-header">Closed Bugs</dt>
-       <a href="https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&product=${w.product}&component=${w.package}&bug_status=CLOSED" target="_blank"><dd class="main-count-value" id="${w.id}_num_closed">${w.num_closed}</dd></a>
-        <dd class="additional-info" colspan="2" id="${w.id}_num_closed_this_week">${w.num_closed_this_week}</dd>
+       <a href="${w.bz_prefix}?${w.base_query_string}&${w.status_closed_string}" target="_blank">
+         <dd class="main-count-value" id="${w.id}_num_closed">${w.num_closed}</dd>
+       </a>
+       <a href="${w.bz_prefix}?${w.base_query_string}&${w.closed_query_string}&${w.status_closed_string}" target="_blank">
+         <dd class="additional-info" colspan="2" id="${w.id}_num_closed_this_week">
+           ${w.num_closed_this_week}
+         </dd>
+       </a>
     </dl>
     <div class="action-box"><a class="action-header" href="https://bugzilla.redhat.com/enter_bug.cgi?product=${w.product}&version=${w.version}&component=${w.package}">Open A New Bug<br /> <img src="${tg.url('/images/action-box_add-button.png')}"></a>
     </div>
