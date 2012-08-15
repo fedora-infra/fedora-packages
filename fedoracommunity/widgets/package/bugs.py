@@ -98,5 +98,10 @@ class BugsWidget(twc.Widget):
         super(BugsWidget, self).prepare()
         self.package = self.kwds['package_name']
         self.main_package = self.kwds.get('subpackage_of', '')
+
         if not self.main_package:
             self.main_package = self.package
+
+        # This is here so you can hit packages/kernel/bugs/all
+        if self.args == ['all']:
+            self.children[1].rows_per_page = 100000
