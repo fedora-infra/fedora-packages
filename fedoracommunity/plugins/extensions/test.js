@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-        {{  
+        {
            info: {consumes:['build_message'],
                  author: 'John (J5) Palmieri <johnp@redhat.com>',
                  version: '0.1',
