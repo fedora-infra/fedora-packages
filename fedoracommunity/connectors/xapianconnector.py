@@ -20,6 +20,7 @@ from urllib import quote
 from fedoracommunity.search import utils, distmappings
 from fedoracommunity.lib.utils import OrderedDict
 import os
+import re
 import sys
 import xapian
 import cgi
@@ -68,36 +69,25 @@ class XapianConnector(IConnector, ICall, IQuery):
                         can_filter_wildcards = False)
 
     def _highlight_str(self, string, term):
-        # we are injecting html so url escape the origional string
-        # to avoid an html injection attack from the packages themselves
-        # string = cgi.escape(string)
-        lc_string = string.lower()
-        term = term.lower()
-        term_len = len(term)
-        result = ''
-
-        i = lc_string.find(term, 0)
-        start = 0
-        while i != -1:
-            result += string[start:i] + '<span class="match">'
-            start = i + term_len
-            result += string[i:start] + '</span>'
-            i = lc_string.find(term, start)
-
-        result += string[start:]
-        return result
+        terms = "|".join(term)
+        regex = re.compile(r'(\b(%s)\b(\s*(%s)\b)*)' % (terms, terms), re.I)
+        return regex.sub(r'<span class="match">\1</span>', string)
 
     def _highlight_matches(self, row_data, term):
         # make link from name before we potentially rewrite it
         # if we haven't already
         if 'link' not in row_data:
             row_data['link'] = row_data['name']
+
         row_data['name'] = self._highlight_str(row_data['name'], term);
         row_data['summary'] = self._highlight_str(row_data['summary'], term);
         row_data['description'] = self._highlight_str(row_data['description'], term);
+
         for pkg in row_data['sub_pkgs']:
+
             if 'link' not in pkg:
                 pkg['link'] = pkg['name']
+
             pkg['name'] = self._highlight_str(pkg['name'], term);
             pkg['summary'] = self._highlight_str(pkg['summary'], term);
             pkg['description'] = self._highlight_str(pkg['description'], term);
@@ -114,17 +104,17 @@ class XapianConnector(IConnector, ICall, IQuery):
         if not search_string:
             return (0, [])
 
-        unfiltered_search_terms = search_string.split(' ')
+        unfiltered_search_terms = [
+            t.strip() for t in search_string.split(' ') if t.strip()
+        ]
 
         search_string = utils.filter_search_string (search_string)
         phrase = '"%s"' % search_string
 
         # add exact matchs
         search_terms = search_string.split(' ')
+        search_terms = [t.strip() for t in search_terms if t.strip()]
         for term in search_terms:
-            if term == '':
-                continue
-
             search_string += " EX__%s__EX" % term
 
         # add phrase match
@@ -144,11 +134,7 @@ class XapianConnector(IConnector, ICall, IQuery):
             result = json.loads(m.document.get_data())
 
             # mark matches in <span class="match">
-            for term in unfiltered_search_terms:
-                if term == '':
-                    continue
-
-                self._highlight_matches(result, term)
+            self._highlight_matches(result, unfiltered_search_terms)
  
             rows.append(result)
 
