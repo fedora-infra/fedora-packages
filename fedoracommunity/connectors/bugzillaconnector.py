@@ -28,7 +28,7 @@ from moksha.lib.helpers import DateTimeDisplay
 BLACKLIST = ['kernel']
 
 MAX_BZ_QUERIES = 200
-
+BUG_SORT_KEYS = ['status', 'product', 'version', 'bug_id']
 
 def chunks(l, n):
     """ Yield successive n-sized chunks from l. """
@@ -215,6 +215,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 createfunc=lambda: self._query_bugs(query,
                     filters=filters, collection=collection, **params))
         total_count = len(bugs)
+
         # This caching is a bit too aggressive
         #five_pages = rows_per_page * 5
         #if start_row < five_pages: # Cache the first 5 pages of every bug grid
@@ -222,6 +223,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         #    bugs = bugzilla_cache.get_value(key=key + '_details',
         #            expiretime=900, createfunc=lambda: self.get_bugs(
         #                bugs, collection=collection))
+
+        # Sort based on feedback from users of bugz.fedoraproject.org/{package}
+        # See https://fedorahosted.org/fedoracommunity/ticket/381
+        bugs.sort(cmp=bug_sort)
+
         bugs = bugs[start_row:start_row+rows_per_page]
         #if start_row >= five_pages:
         bugs = self.get_bugs(bugs, collection=collection)
@@ -245,16 +251,18 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             results.extend(_results)
             offset += limit
 
-        results.reverse()
-        return [bug.bug_id for bug in results]
+        return [
+            dict(((key, getattr(bug, key)) for key in BUG_SORT_KEYS))
+            for bug in results
+        ]
 
     def get_bugs(self, bugids, collection='Fedora'):
         bugs = []
 
         # XXX - This is a hack until the multicall stuff gets worked out
         # https://bugzilla.redhat.com/show_bug.cgi?id=824241 -- threebean
-        for chunk_of_bugids in chunks(bugids, 20):
-            bugs.extend(self._bugzilla.getbugs(chunk_of_bugids))
+        for chunk in chunks(bugids, 20):
+            bugs.extend(self._bugzilla.getbugs([b['bug_id'] for b in chunk]))
 
         bugs_list = []
         for bug in bugs:
@@ -272,3 +280,45 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'bug_class': bug_class.strip(),
                 })
         return bugs_list
+
+
+def bug_sort(arg1, arg2):
+    """ Sort bugs using logic adapted from old pkgdb.
+
+    :author: Ralph Bean <rbean@redhat.com>
+
+    """
+
+    LARGE = 10000
+
+    for key in BUG_SORT_KEYS:
+        val1, val2 = arg1[key], arg2[key]
+
+        if key == 'version':
+            # version is a string which may contain an integer such as 13 or
+            # a string such as 'rawhide'.  We want the integers first in
+            # decending order followed by the strings.
+            def version_to_int(val):
+                try:
+                    return -1 * int(val[0])
+                except (ValueError, IndexError):
+                    return -1 * LARGE
+
+            val1, val2 = version_to_int(val1), version_to_int(val2)
+        elif key == 'status':
+            # We want items to appear by status in a certain order, not
+            # alphabetically.  Items I forgot to hardcode just go last.
+            status_order = ['NEW', 'ASSIGNED', 'MODIFIED', 'ON_QA', 'POST']
+            def status_to_index(val):
+                try:
+                    return status_order.index(val)
+                except ValueError, e:
+                    return len(status_order)
+
+            val1, val2 = status_to_index(val1), status_to_index(val2)
+
+        result = cmp(val1, val2)
+        if result:
+            return result
+
+    return 0
