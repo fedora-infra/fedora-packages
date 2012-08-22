@@ -95,9 +95,17 @@ class FCommConnectorMiddleware(object):
         if path.startswith('/fcomm_connector'):
             s = path.split('/')[2:]
 
+            if len(s) < 2:
+                log.info('Invalid connector path: %s' % str(e))
+                return Response(status='404 Not Found')(environ, start_response)
+
             # check to see if we need to hand this off to the profile collector
             if s[0] == 'prof_collector':
                 return self.prof_collector(environ, request, start_response)
+
+            if len(s) < 3:
+                log.info('Invalid connector path: %s' % str(e))
+                return Response(status='404 Not Found')(environ, start_response)
 
             # since keys are not unique we need to condense them
             # into an actual dictionary with multiple entries becoming lists
