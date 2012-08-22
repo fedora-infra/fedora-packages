@@ -37,7 +37,11 @@ class RelationshipBaseWidget(twc.Widget):
         else:
             latest_builds = xapian.get_latest_builds(self.package_name)
         self.default_build_repo = 'rawhide'
-        self.latest_builds = latest_builds
+        self.latest_builds = latest_builds or {}
+
+        if not self.latest_builds:
+            return
+
         build_ids = []
         for build_info in self.latest_builds.values():
             build_id = build_info['build_id']

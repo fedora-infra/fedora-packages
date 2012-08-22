@@ -27,6 +27,10 @@ class ContentsWidget(twc.Widget):
             latest_builds = xapian.get_latest_builds(self.subpackage_of)
         else:
             latest_builds = xapian.get_latest_builds(self.package_name)
+
+        if not latest_builds.get('Rawhide'):
+            return
+
         self.default_build_id = latest_builds['Rawhide']['build_id']
         self.latest_builds = latest_builds
         build_ids = []
