@@ -58,6 +58,7 @@ setup(
     authors=('John (J5) Palmieri <johnp@redhat.com>',
              'Luke Macken <lmacken@redhat.com>',
              'Máirín Duffy <duffy@redhat.com>',
+             'Ralph Bean <rbean@redhat.com>',
              ),
     url='http://fedoracommunity.fedorahosted.org',
     install_requires=[
