@@ -4,13 +4,13 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0
-Release:        2%{?dist}
+Version:        2.0.1
+Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
 URL:            https://fedorahosted.org/fedoracommunity
-Source0:        fedoracommunity-%{version}.tar.bz2
+Source0:        fedoracommunity-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -29,6 +29,7 @@ BuildRequires: python-devel
 BuildRequires: python-pygments
 BuildRequires: pytz
 BuildRequires: pyOpenSSL
+BuildRequires: TurboGears2
 BuildRequires: moksha
 BuildRequires: python-tw2-jqplugins-ui
 BuildRequires: python-bunch
@@ -38,6 +39,7 @@ BuildRequires: python-ordereddict
 Requires: python-ordereddict
 %endif
 
+Requires: TurboGears2
 Requires: moksha >= 0.4.3
 Requires: intltool
 Requires: koji
@@ -122,6 +124,12 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Wed Aug 22 2012 Ralph Bean <rbean@redhat.com> - 2.0.1-1
+- Workaround bugzilla ssl timeouts
+- Expanded /bugs page - http://bit.ly/TCMoXc
+- Lots of little traceback fixes.
+- Added newly required dependency on TurboGears2
+
 * Wed Apr 25 2012 Luke Macken <lmacken@redhat.com> - 2.0-2
 - python-tw2-jquery-ui was renamed to python-tw2-jqplugins-ui
 
