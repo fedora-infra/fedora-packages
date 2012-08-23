@@ -4,7 +4,7 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.1
+Version:        2.0.2
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
@@ -124,6 +124,9 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Thu Aug 23 2012 Ralph Bean <rbean@redhat.com> - 2.0.2-1
+- Something got messed up with the versioning.  New tarball.
+
 * Wed Aug 22 2012 Ralph Bean <rbean@redhat.com> - 2.0.1-1
 - Workaround bugzilla ssl timeouts
 - Expanded /bugs page - http://bit.ly/TCMoXc
