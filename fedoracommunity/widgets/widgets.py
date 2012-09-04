@@ -23,17 +23,42 @@ class CSSLink(twc.CSSLink):
     def prepare(self):
         try:
             self.link = url(self.path)
-        except:
-            pass
+        except Exception as e:
+            self.link = self.path
 
         super(CSSLink, self).prepare()
 
-fedora_css = CSSLink(modname='fedoracommunity', path='/css/fedora.css')
-fedoracommunity_appchrome_css = CSSLink(modname='fedoracommunity', path='/css/application-chrome.css')
-fedoracommunity_branding_css = CSSLink(modname='fedoracommunity', path='/css/myfedora-branding.css')
-fedoracommunity_reset_css = CSSLink(modname='fedoracommunity', path='/css/reset.css')
-fedoracommunity_text_css = CSSLink(modname='fedoracommunity', path='/css/text.css')
-fedoracommunity_960_24_col_css = CSSLink(modname='fedoracommunity', path='/css/960_24_col.css')
+# These resources form a dependency chain.
+# https://fedorahosted.org/fedoracommunity/ticket/396
+fedoracommunity_reset_css = CSSLink(
+    modname='fedoracommunity',
+    path='/css/reset.css',
+)
+fedoracommunity_text_css = CSSLink(
+    modname='fedoracommunity',
+    path='/css/text.css',
+    resources=[fedoracommunity_reset_css],
+)
+fedora_css = CSSLink(
+    modname='fedoracommunity',
+    path='/css/fedora.css',
+    resources=[fedoracommunity_text_css],
+)
+fedoracommunity_960_24_col_css = CSSLink(
+    modname='fedoracommunity',
+    path='/css/960_24_col.css',
+    resources=[fedora_css],
+)
+fedoracommunity_branding_css = CSSLink(
+    modname='fedoracommunity',
+    path='/css/myfedora-branding.css',
+    resources=[fedoracommunity_960_24_col_css],
+)
+fedoracommunity_appchrome_css = CSSLink(
+    modname='fedoracommunity',
+    path='/css/application-chrome.css',
+    resources=[fedoracommunity_branding_css],
+)
 
 
 class PagerWidget(twc.Widget):
