@@ -31,7 +31,7 @@ except ImportError:
 
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 from fedoracommunity.connectors.api import get_connector
-from moksha.lib.helpers import DateTimeDisplay
+from moksha.common.lib.dates import DateTimeDisplay
 
 class KojiConnector(IConnector, ICall, IQuery):
     _method_paths = {}

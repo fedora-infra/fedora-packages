@@ -22,7 +22,7 @@ from pylons import config
 from bugzilla import RHBugzilla3 as Bugzilla
 
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
-from moksha.lib.helpers import DateTimeDisplay
+from moksha.common.lib.dates import DateTimeDisplay
 
 # Don't query closed bugs for these packages, since the queries timeout
 BLACKLIST = ['kernel']

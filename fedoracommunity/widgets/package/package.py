@@ -1,6 +1,6 @@
 import mako
 import uuid
-import moksha
+import moksha.common.utils
 import logging
 import tw2.core as twc
 import tg
@@ -52,7 +52,7 @@ class TabWidget(twc.Widget):
         else:
             active_tab = self.default_tab.lower()
 
-        self.widget = moksha.utils.get_widget(self._expanded_tabs[active_tab]['widget_key'])
+        self.widget = moksha.common.utils.get_widget(self._expanded_tabs[active_tab]['widget_key'])
         self.tabs = self._expanded_tabs
         self.active_tab = active_tab
 

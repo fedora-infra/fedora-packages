@@ -30,7 +30,7 @@ BuildRequires: python-pygments
 BuildRequires: pytz
 BuildRequires: pyOpenSSL
 BuildRequires: TurboGears2
-BuildRequires: moksha
+BuildRequires: python-moksha-wsgi
 BuildRequires: python-tw2-jqplugins-ui
 BuildRequires: python-bunch
 
@@ -40,7 +40,7 @@ Requires: python-ordereddict
 %endif
 
 Requires: TurboGears2
-Requires: moksha >= 0.4.3
+Requires: python-moksha-wsgi
 Requires: intltool
 Requires: koji
 Requires: python-fedora

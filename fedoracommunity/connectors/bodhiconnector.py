@@ -26,7 +26,7 @@ from webhelpers.html import HTML
 
 from fedoracommunity.connectors.api import get_connector
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
-from moksha.lib.helpers import DateTimeDisplay
+from moksha.common.lib.dates import DateTimeDisplay
 
 from fedoracommunity.lib.utils import parse_build
 

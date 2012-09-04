@@ -22,7 +22,7 @@ import subprocess
 
 from tg import config
 from kitchen.text.converters import to_unicode
-from moksha.lib.helpers import DateTimeDisplay
+from moksha.common.lib.dates import DateTimeDisplay
 
 log = logging.getLogger(__name__)
 

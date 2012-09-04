@@ -62,7 +62,7 @@ setup(
              ),
     url='http://fedoracommunity.fedorahosted.org',
     install_requires=[
-        "moksha>=0.8.0",
+        "moksha.wsgi",
         "TurboGears2",
         #"PyOpenSSL",
         "SQLAlchemy>=0.5",

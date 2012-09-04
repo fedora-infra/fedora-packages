@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from moksha.api.widgets.containers import TabbedContainer
-from moksha.api.widgets.containers.dashboardcontainer import applist_widget
-from moksha.lib.helpers import Category
+from moksha.wsgi.widgets.api.containers import TabbedContainer
+from moksha.wsgi.widgets.api.containers.dashboardcontainer import applist_widget
+from moksha.wsgi.lib.helpers import Category
 
 class ExtraContentTabbedContainer(TabbedContainer):
     params = ['applist_widget', 'sidebar_apps', 'header_apps']

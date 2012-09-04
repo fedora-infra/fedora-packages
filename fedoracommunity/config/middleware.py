@@ -23,7 +23,7 @@ tg_version_tuple = tuple(map(int, tg.__version__.split('.')))
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
 def make_app(global_conf, full_stack=True, **app_conf):
-    from moksha.middleware import make_moksha_middleware
+    from moksha.wsgi.middleware import make_moksha_middleware
     from fedoracommunity.connectors.api.mw import FCommConnectorMiddleware
 
     def make_middleware(app):

@@ -1,6 +1,6 @@
 
 import tw2.core as twc
-from moksha.widgets.moksha_js import moksha_js
+from moksha.wsgi.widgets.moksha_js import moksha_js
 
 fcomm_js = twc.JSLink(
     modname=__name__,

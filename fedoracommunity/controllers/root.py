@@ -20,8 +20,8 @@ import pylons
 
 from tg import expose, tmpl_context, redirect, flash, url, request, override_template, TGController
 
-import moksha
-from moksha.ext.turbogears import global_resources
+import moksha.common.utils
+from moksha.wsgi.ext.turbogears import global_resources
 
 from tw2.jquery import jquery_js
 
@@ -76,7 +76,7 @@ class RootController(BaseController):
     def _w(self, widget_name, *args, **kwds):
         '''generic widget controller - loads a widget from our widget list
            for dynamic loading of sections of the current page'''
-        return {'widget': moksha.utils.get_widget(widget_name),
+        return {'widget': moksha.common.utils.get_widget(widget_name),
                 'args': list(args), 'kwds': kwds}
 
     @expose()

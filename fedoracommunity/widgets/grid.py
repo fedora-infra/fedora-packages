@@ -24,7 +24,7 @@ import tw2.forms
 import tw2.jquery
 import tw2.jqplugins.ui
 
-from moksha.lib.helpers import when_ready
+from moksha.wsgi.lib.helpers import when_ready
 from fedoracommunity.widgets.jquery_template import jquery_template_js
 
 moksha_ui_grid_js = twc.JSLink(

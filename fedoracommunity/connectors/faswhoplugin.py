@@ -33,9 +33,9 @@ from Cookie import SimpleCookie
 from paste.request import parse_dict_querystring, parse_formvars
 from urllib import quote_plus
 
-from moksha.middleware.csrf import CSRFMetadataProvider
-from moksha.api.errorcodes import login_err
-from moksha.lib.helpers import replace_app_header
+from moksha.wsgi.middleware.csrf import CSRFMetadataProvider
+from moksha.wsgi.lib.helpers import replace_app_header
+from fedoracommunity.lib.errorcodes import login_error
 
 log = logging.getLogger(__name__)
 

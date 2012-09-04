@@ -29,7 +29,7 @@ from time import mktime
 from pylons import config
 from shove import Shove
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
-from moksha.lib.helpers import defaultdict
+from moksha.common.lib.helpers import defaultdict
 
 class WikiConnector(IConnector, IQuery):
     _method_paths = {}

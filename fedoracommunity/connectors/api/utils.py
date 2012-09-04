@@ -22,7 +22,7 @@ import warnings
 from datetime import datetime
 from UserDict import DictMixin
 
-from moksha.lib.helpers import odict
+from moksha.common.lib.helpers import odict
 
 class DateTimeDisplay(object):
     """DateTimeDisplay is an object which takes any number of datetime objects
@@ -30,7 +30,7 @@ class DateTimeDisplay(object):
     """
     def __init__(self, *datetime_args):
         warnings.warn("fedoracommunity.connectors.api.utils.DateTimeDisplay has been "
-                      "deprecated, use moksha.lib.helpers.DateTimeDisplay "
+                      "deprecated, use moksha.common.lib.helpers.DateTimeDisplay "
                       "instead.", DeprecationWarning)
 
         # All dates are sorted from latest to earliest

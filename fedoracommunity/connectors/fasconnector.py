@@ -18,7 +18,7 @@ from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ISearch, P
 from pylons import config
 from fedora.client import ProxyClient, ServerError
 from fedora.client.fas2 import AccountSystem
-from moksha.lib.helpers import DateTimeDisplay
+from moksha.common.lib.dates import DateTimeDisplay
 import time
 
 USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
