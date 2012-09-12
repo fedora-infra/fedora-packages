@@ -58,7 +58,9 @@
                <form action="${tg.url('/s')}"
                       onSubmit="return do_search(this);">
                    <div class="grid_20">
-                       <input type="text" name="search" value="${options['filters']['search']}" />
+                     <input type="text" name="search"
+                            autofocus="autofocus"
+                            value="${options['filters']['search']}" />
                    </div>
                    <div class="grid_2">
                        <input type="submit" value="Search"/>
