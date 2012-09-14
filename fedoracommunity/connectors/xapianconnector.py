@@ -119,8 +119,14 @@ class XapianConnector(IConnector, ICall, IQuery):
 
         # add phrase match
         search_string += " OR %s" % phrase
-        # add near phrase match
-        search_string += " OR (%s)" % ' NEAR '.join(search_terms)
+
+        if len(search_terms) > 1:
+            # add near phrase match (phrases that are near each other)
+            search_string += " OR (%s)" % ' NEAR '.join(search_terms)
+
+        # Add partial/wildcard matches
+        search_string += " OR (%s)" % ' OR '.join([
+            "*%s*" % term for term in search_terms])
 
         matches = self.do_search(search_string,
                                  start_row,
@@ -135,7 +141,7 @@ class XapianConnector(IConnector, ICall, IQuery):
 
             # mark matches in <span class="match">
             self._highlight_matches(result, unfiltered_search_terms)
- 
+
             rows.append(result)
 
         return (count, rows)
@@ -161,7 +167,10 @@ class XapianConnector(IConnector, ICall, IQuery):
         enquire = xapian.Enquire(self._search_db)
         qp = xapian.QueryParser()
         qp.set_database(self._search_db)
-        query = qp.parse_query(search_string)
+        flags = xapian.QueryParser.FLAG_DEFAULT | \
+                xapian.QueryParser.FLAG_PARTIAL | \
+                xapian.QueryParser.FLAG_WILDCARD
+        query = qp.parse_query(search_string, flags)
 
         enquire.set_query(query)
         matches = enquire.get_mset(start_row, rows_per_page)
