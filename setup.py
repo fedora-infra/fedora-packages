@@ -102,8 +102,8 @@ setup(
     # easiest way to get things working
     [tw2.widgets]
     widgets = fedoracommunity.widgets
-    moksha_js = moksha.widgets.moksha_js
-    fcomm_js = fedoracommunity.connectors.widgets:fcomm_js
+    moksha_js = moksha.wsgi.widgets.moksha_js
+    fcomm_js = fedoracommunity.connectors.widgets.widgets
     moksha_widgets = moksha.api.widgets
     bodhi_js = fedoracommunity.widgets.package.updates:bodhi_js
 
