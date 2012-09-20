@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2010  Red Hat, Inc.
@@ -52,7 +51,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='2.0.2',
+    version='2.0.3',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',
@@ -104,7 +103,7 @@ setup(
     widgets = fedoracommunity.widgets
     moksha_js = moksha.wsgi.widgets.moksha_js
     fcomm_js = fedoracommunity.connectors.widgets.widgets
-    moksha_widgets = moksha.api.widgets
+    moksha_widgets = moksha.wsgi.widgets.api
     bodhi_js = fedoracommunity.widgets.package.updates:bodhi_js
 
     fedoracommunity.bodhi_js = fedoracommunity.widgets.package.updates:bodhi_js

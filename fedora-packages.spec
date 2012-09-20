@@ -4,7 +4,7 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.2
+Version:        2.0.3
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
@@ -35,8 +35,10 @@ BuildRequires: python-tw2-jqplugins-ui
 BuildRequires: python-bunch
 
 %if 0%{?el6} || 0%{?el5}
-BuildRequires: python-ordereddict
-Requires: python-ordereddict
+BuildRequires:  python-ordereddict
+Requires:       python-ordereddict
+BuildRequires:  python-webob1.0
+Requires:       python-webob1.0
 %endif
 
 Requires: TurboGears2
@@ -71,6 +73,13 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 
 %prep
 %setup -q -n fedoracommunity-%{version}
+
+%if %{?rhel}%{!?rhel:0} >= 6
+# Make sure that epel/rhel picks up the correct version of webob
+awk 'NR==1{print "import __main__; __main__.__requires__ = __requires__ = [\"WebOb==1.0.8\", \"sqlalchemy>=0.7\"]; import pkg_resources"}1' setup.py > setup.py.tmp
+mv setup.py.tmp setup.py
+%endif
+
 
 %build
 %{__python} setup.py build
@@ -124,6 +133,12 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Thu Sep 20 2012 Ralph Bean <rbean@redhat.com> - 2.0.3-1
+- Smarter searching.
+- Fixed tw2 resource archival for deployment.
+- HTML5 autofocus on search bar on main page.
+- Port forward to using the latest moksha.
+
 * Thu Aug 23 2012 Ralph Bean <rbean@redhat.com> - 2.0.2-1
 - Something got messed up with the versioning.  New tarball.
 
