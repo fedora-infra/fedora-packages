@@ -30,6 +30,11 @@ BLACKLIST = ['kernel']
 MAX_BZ_QUERIES = 200
 BUG_SORT_KEYS = ['status', 'product', 'version', 'bug_id']
 
+OPEN_BUG_STATUS = ['ASSIGNED', 'NEW', 'MODIFIED', 'ON_DEV', 'ON_QA',
+                   'VERIFIED', 'FAILS_QA', 'RELEASE_PENDING', 'POST',
+                   'REOPENED']
+
+
 def chunks(l, n):
     """ Yield successive n-sized chunks from l. """
     for i in xrange(0, len(l), n):
@@ -128,7 +133,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             results.append(self._bugzilla.query({
                 'product': collection,
                 'component': package,
-                'status': ['NEW', 'ASSIGNED', 'REOPENED'],
+                'status': OPEN_BUG_STATUS,
                 }))
 
         # New bugs
@@ -201,11 +206,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'product': collection,
                 'version': version,
                 'component': package,
-                'bug_status': [
-                    'ASSIGNED', 'NEW', 'MODIFIED',
-                    'ON_DEV', 'ON_QA', 'VERIFIED', 'FAILS_QA',
-                    'RELEASE_PENDING', 'POST', 'REOPENED',
-                ],
+                'bug_status': OPEN_BUG_STATUS,
                 #'order': 'bug_id',
                 }
 
