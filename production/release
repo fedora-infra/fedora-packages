@@ -4,10 +4,11 @@
 
 VERSION=$1
 RELEASE=$2
+TARGET=epel-6-x86_64
 
 python setup.py sdist --format=bztar
 mv dist/* ~/rpmbuild/SOURCES/
 cp *.spec ~/rpmbuild/SPECS/
 rpmbuild -bs ~/rpmbuild/SPECS/fedora-packages.spec
-mock -v -r epel-6-x86_64 ~/rpmbuild/SRPMS/fedora-packages-$1-$2.*src.rpm
+mock -v -r $TARGET ~/rpmbuild/SRPMS/fedora-packages-$1-$2.*src.rpm
 scp /var/lib/mock/epel-6-x86_64/result/*.rpm puppet1:~/fcomm/

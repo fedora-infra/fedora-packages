@@ -1,5 +1,6 @@
 #!/bin/bash -x
-# Update fedoracommunity dev instance
+# Update fedoracommunity dev instance. This command must be run on our puppet
+# server in Fedora Infrastructure.
 
 RELEASE=$1
 REVISION=$2
@@ -14,6 +15,6 @@ sudo createrepo --update $REPO/x86_64/
 sudo createrepo --update $REPO/SRPMS
 sudo func-command --host=$MINION "yum clean metadata"
 sudo func-command --host=$MINION "yum update -y fedoracommunity moksha"
-sudo func-command --host=$MINION "puppetd -t"
-sudo func-command --host=$MINION "service httpd restart"
-curl http://$MINION/community/
+sudo func-command --host=$MINION "/usr/local/bin/run-puppet nowait"
+sudo func-command --host=$MINION "apachectl graceful"
+curl http://$MINION/packages/
