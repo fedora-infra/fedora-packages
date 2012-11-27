@@ -36,7 +36,7 @@ def install_deps():
         run('sudo yum install -q -y ' + ' '.join(reqs))
 
 
-snapshot_url = 'http://lmacken.fedorapeople.org/fedora-packages/'
+snapshot_url = 'http://lmacken.fedorapeople.org/fedora-packages'
 
 
 def download_db_snapshot():
