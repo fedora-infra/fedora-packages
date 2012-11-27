@@ -30,7 +30,7 @@ def install_deps():
     if os.path.exists('/etc/redhat-release'):
         reqs = [
             'python-kitchen', 'python-fedora', 'python-bugzilla', 'koji',
-            'xapian-bindings-python', 'diffstat', 'fedpkg', 'svn',
+            'xapian-bindings-python', 'diffstat', 'fedpkg', 'svn', 'wget',
             'python-xappy', 'python-webob', 'moksha'
         ]
         run('sudo yum install -q -y ' + ' '.join(reqs))
