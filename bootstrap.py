@@ -31,7 +31,7 @@ def install_deps():
         reqs = [
             'python-kitchen', 'python-fedora', 'python-bugzilla', 'koji',
             'xapian-bindings-python', 'diffstat', 'fedpkg', 'svn', 'wget',
-            'python-xappy', 'python-webob', 'moksha'
+            'python-xappy', 'python-webob', 'moksha', 'TurboGears2',
         ]
         run('sudo yum install -q -y ' + ' '.join(reqs))
 
