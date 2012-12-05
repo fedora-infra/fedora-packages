@@ -1583,7 +1583,7 @@ em.note {
 }
 
 #package-info-bar .package-name,
-#package-info-bar .package-owner {
+#package-info-bar .package-owner{
   color: #3c6eb4;
   font-weight: bold;
   font-size: 13pt;
@@ -1594,6 +1594,11 @@ em.note {
 #package-info-bar a:visited.package-name { color: #3c6eb4; text-decoration: none; font-weight: bold;}
 #package-info-bar a:hover.package-name { color: #db347a; text-decoration: none; background-color: #e7e8e9; font-weight: bold;}
 #package-info-bar a:active.package-name { color: #3c6eb4; text-decoration: none; font-weight: bold;}
+
+#package-info-bar a:link.other-app { color: #3c6eb4; text-decoration: underline; font-weight: bold;}
+#package-info-bar a:visited.other-app { color: #3c6eb4; text-decoration: underline; font-weight: bold;}
+#package-info-bar a:hover.other-app { color: #db347a; text-decoration: underline; background-color: #e7e8e9; font-weight: bold;}
+#package-info-bar a:active.other-app { color: #3c6eb4; text-decoration: underline; font-weight: bold;}
 
 #package-info-bar ul {
   list-style: none;
@@ -1607,7 +1612,8 @@ em.note {
 
 #package-info-bar .package-name, 
 #package-info-bar .owner,
-#package-info-bar .package-tree {
+#package-info-bar .package-tree,
+#package-info-bar .other-app {
   margin-bottom: 1.5em;
 }
 
@@ -1792,5 +1798,3 @@ table#active-releases a {
 table#active-releases td.release {
   font-weight: bold;
 }
-
-
