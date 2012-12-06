@@ -1,7 +1,8 @@
 <html>
     <%def name="footer()">
         <div class="container_24">
-					<div id="bottom" class="grid_24">
+          <div id="bottom" class="grid_24">
+            <p>Found a bug?  <a href="http://fedorahosted.org/fedoracommunity/newticket">File a ticket</a></p>
             This Web Site is licensed under the GNU Affero General Public License.  You may get sources for the current running code from these repositories:
             <ul>
                 <li><a href="http://fedoraproject.org/wiki/Legal/TrademarkGuidelines">Trademark Guidelines</a></li>
