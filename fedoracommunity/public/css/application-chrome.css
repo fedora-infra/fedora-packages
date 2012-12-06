@@ -1583,7 +1583,8 @@ em.note {
 }
 
 #package-info-bar .package-name,
-#package-info-bar .package-owner{
+#package-info-bar .package-owner,
+#package-info-bar .other-app {
   color: #3c6eb4;
   font-weight: bold;
   font-size: 13pt;

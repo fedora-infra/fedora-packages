@@ -50,7 +50,7 @@ icon_url = tg.url("/images/icons/%s.png" % icon)
                  </ul>
              </div>
              <div class="other-app">
-		 <h3> &#9660; In other apps: </h3>
+		 <h3> In other apps </h3>
                  <ul>
 	           <li><a class="other-app" href="https://admin.fedoraproject.org/updates/${w.package_info['name']}"><img src ="https://admin.fedoraproject.org/community/images/16_bodhi.png"/> Bodhi </a> </li>
                    <li><a class="other-app" href="http://koji.fedoraproject.org/koji/search?match=glob&type=package&terms=${w.package_info['name']}"><img src = "https://fedoraproject.org/static/images/icons/fedora-infra-icon_koji.png"/> Koji Builds </a> </li>
