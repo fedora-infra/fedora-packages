@@ -1591,6 +1591,11 @@ em.note {
   text-decoration: none;
 }
 
+#package-info-bar a:link.package-owner { color: #3c6eb4; text-decoration: underline; font-weight: bold;}
+#package-info-bar a:visited.package-owner { color: #3c6eb4; text-decoration: underline; font-weight: bold;}
+#package-info-bar a:hover.package-owner { color: #db347a; text-decoration: underline; background-color: #e7e8e9; font-weight: bold;}
+#package-info-bar a:active.package-owner { color: #3c6eb4; text-decoration: underline; font-weight: bold;}
+
 #package-info-bar a:link.package-name { color: #3c6eb4; text-decoration: none; font-weight: bold;}
 #package-info-bar a:visited.package-name { color: #3c6eb4; text-decoration: none; font-weight: bold;}
 #package-info-bar a:hover.package-name { color: #db347a; text-decoration: none; background-color: #e7e8e9; font-weight: bold;}
