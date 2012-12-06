@@ -53,8 +53,8 @@ icon_url = tg.url("/images/icons/%s.png" % icon)
 		 <h3> &#9660; In other apps: </h3>
                  <ul>
 	           <li><a class="other-app" href="https://admin.fedoraproject.org/updates/${w.package_info['name']}"><img src ="https://admin.fedoraproject.org/community/images/16_bodhi.png"/> Bodhi </a> </li>
-                   <li><a class="other-app" href="http://koji.fedoraproject.org/koji/packageinfo"><img src = "https://fedoraproject.org/static/images/icons/fedora-infra-icon_koji.png"/> Koji Builds </a> </li>
-                   <li><a class="other-app" href="https://admin.fedoraproject.org/pkgdb/packages/bugs/${w.package_info['name']}"><img src = "https://admin.fedoraproject.org/community/images/16_bugs.png"/> Bugzilla </a> </li>
+                   <li><a class="other-app" href="http://koji.fedoraproject.org/koji/search?match=glob&type=package&terms=${w.package_info['name']}"><img src = "https://fedoraproject.org/static/images/icons/fedora-infra-icon_koji.png"/> Koji Builds </a> </li>
+                   <li><a class="other-app" href="https://admin.fedoraproject.org/pkgdb/acls/bugs/${w.package_info['name']}"><img src = "https://admin.fedoraproject.org/community/images/16_bugs.png"/> Bugzilla </a> </li>
                    <li><a class="other-app" href="https://admin.fedoraproject.org/pkgdb/acls/name/${w.package_info['name']}"><img src = "https://fedoraproject.org/static/images/icons/fedora-infra-icon_pkgdb.png"/> Pkgdb Package Info </a></li>
                  </ul>
              </div>
