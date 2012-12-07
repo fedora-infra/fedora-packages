@@ -18,7 +18,10 @@ from fedoracommunity.config.app_cfg import base_config
 from fedoracommunity.config.environment import load_environment
 
 import tg
-tg_version_tuple = tuple(map(int, tg.__version__.split('.')))
+try:
+    tg_version_tuple = tuple(map(int, tg.__version__.split('.')))
+except ValueError:
+    tg_version_tuple = tg.__version__.split('.')
 
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 

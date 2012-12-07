@@ -16,8 +16,6 @@
 
 # The fedoracommunity moksha app root controller is our root controller
 
-import pylons
-
 from tg import expose, tmpl_context, redirect, flash, url, request, override_template, TGController
 
 import moksha.common.utils

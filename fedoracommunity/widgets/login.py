@@ -15,8 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import tw2.core as twc
-from tg import url
-from pylons import request
 
 class LoginWidget(twc.Widget):
     username = twc.Param()

@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
-from pylons import config
+from tg import config
 from urllib import quote
 from fedoracommunity.search import utils, distmappings
 from fedoracommunity.lib.utils import OrderedDict

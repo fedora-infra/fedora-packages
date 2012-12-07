@@ -26,7 +26,7 @@ This Connector works with the MediaWiki API of the Fedora Project wiki.
 from fedora.client import Wiki
 from datetime import datetime, timedelta
 from time import mktime
-from pylons import config
+from tg import config
 from shove import Shove
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 from moksha.common.lib.helpers import defaultdict

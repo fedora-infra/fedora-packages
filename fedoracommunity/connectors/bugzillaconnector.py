@@ -18,7 +18,7 @@ import ssl
 import time
 
 from datetime import datetime, timedelta
-from pylons import config
+from tg import config
 from bugzilla import RHBugzilla3 as Bugzilla
 
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter

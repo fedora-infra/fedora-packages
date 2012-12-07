@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from UserDict import DictMixin
-from tg import url
-from pylons import request
+from tg import url, request
+
 import paste
 
 architectures = ('i386', 'x86_64', 'ppc', 'ppc64', 'noarch')

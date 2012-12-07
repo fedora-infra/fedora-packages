@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ISearch, ParamFilter
-from pylons import config
+from tg import config
 from fedora.client import ProxyClient, ServerError
 from fedora.client.fas2 import AccountSystem
 from moksha.common.lib.dates import DateTimeDisplay

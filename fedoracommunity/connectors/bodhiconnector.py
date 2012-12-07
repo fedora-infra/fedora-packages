@@ -18,7 +18,7 @@ import time
 import logging
 
 from paste.deploy.converters import asbool
-from pylons import config
+from tg import config
 from fedora.client import ProxyClient
 from datetime import datetime, timedelta
 from webhelpers.date import distance_of_time_in_words

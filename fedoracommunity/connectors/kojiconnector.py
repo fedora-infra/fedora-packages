@@ -19,7 +19,7 @@ import re
 import koji
 import rpm
 
-from pylons import config
+from tg import config
 from datetime import datetime
 from cgi import escape
 from urlgrabber import grabber
