@@ -117,7 +117,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         """
         Returns (# of open bugs, # of new bugs, # of closed bugs)
         """
-        queries = ['open', 'new', 'new_this_week', 'closed', 'closed_this_week']
+        queries = ['open', 'new_this_week', 'closed_this_week']
 
         last_week = str(datetime.utcnow() - timedelta(days=7)),
 
@@ -127,48 +127,29 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         results = []
 
         # Open bugs
-        if package in BLACKLIST:
-            queries.remove('open')
-        else:
-            results.append(self._bugzilla.query({
-                'product': collection,
-                'component': package,
-                'status': OPEN_BUG_STATUS,
-                }))
+        results.append(self._bugzilla.query({
+            'product': collection,
+            'component': package,
+            'status': OPEN_BUG_STATUS,
+            }))
 
-        # New bugs
-        if package in BLACKLIST:
-            queries.remove('new')
-        else:
-            results.append(self._bugzilla.query({
-                'product': collection,
-                'component': package,
-                'status': 'NEW',
-                }))
+        # Blocking Bugs
+        # TODO
+        # https://fedoraproject.org/w/uploads/8/87/Packager-mockup_packageprofile_bugs.png
+
+        # Closed Bugs this week
+        results.append(self._bugzilla.query({
+            'product': collection,
+            'component': package,
+            'status': 'CLOSED',
+            'creation_time': last_week,
+            }))
 
         # New bugs this week
         results.append(self._bugzilla.query({
             'product': collection,
             'component': package,
             'status': 'NEW',
-            'creation_time': last_week,
-            }))
-
-        # Closed bugs
-        if package in BLACKLIST:
-            queries.remove('closed')
-        else:
-            results.append(self._bugzilla.query({
-                'product': collection,
-                'component': package,
-                'status': 'CLOSED',
-                }))
-
-        # Closed bugs this week
-        results.append(self._bugzilla.query({
-            'product': collection,
-            'component': package,
-            'status': 'CLOSED',
             'creation_time': last_week,
             }))
 

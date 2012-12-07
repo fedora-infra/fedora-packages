@@ -4,9 +4,7 @@
     <script type="text/javascript">
         function got_bug_stats(json) {
             $('#${w.id}_open_bugs').text(json.results.open);
-            $('#${w.id}_num_new').text(json.results.new);
             $('#${w.id}_num_new_this_week').text(json.results.new_this_week + ' new this week.');
-            $('#${w.id}_num_closed').text(json.results.closed);
             $('#${w.id}_num_closed_this_week').text(json.results.closed_this_week + ' closed this week.');
         }
         $(document).ready(function(){
