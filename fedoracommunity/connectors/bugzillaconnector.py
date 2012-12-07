@@ -113,7 +113,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         return bugzilla_cache.get_value(key=package, expiretime=21600,
                            createfunc=lambda: self._get_bug_stats(package))
 
-    def _get_bug_stats(self, package, collection='Fedora'):
+    def _get_bug_stats(self, package, collection=('Fedora', 'Fedora EPEL')):
         """
         Returns (# of open bugs, # of new bugs, # of closed bugs)
         """
