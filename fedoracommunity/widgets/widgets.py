@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2010  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -18,8 +18,10 @@ import tw2.core as twc
 from tw2.core.params import Param
 from tg.controllers import url
 
+
 class CSSLink(twc.CSSLink):
     path = Param('Path to where you would find these files on the web server')
+
     def prepare(self):
         try:
             self.link = url(self.path)
@@ -30,19 +32,25 @@ class CSSLink(twc.CSSLink):
 
 # These resources form a dependency chain.
 # https://fedorahosted.org/fedoracommunity/ticket/396
-fedoracommunity_reset_css = CSSLink(
-    modname='fedoracommunity',
-    path='/css/reset.css',
-)
 fedoracommunity_text_css = CSSLink(
     modname='fedoracommunity',
     path='/css/text.css',
-    resources=[fedoracommunity_reset_css],
+    resources=[],
+)
+fedoracommunity_appchrome_css = CSSLink(
+    modname='fedoracommunity',
+    path='/css/application-chrome.css',
+    resources=[fedoracommunity_text_css],
+)
+fedoracommunity_reset_css = CSSLink(
+    modname='fedoracommunity',
+    path='/css/reset.css',
+    resources=[fedoracommunity_appchrome_css],
 )
 fedora_css = CSSLink(
     modname='fedoracommunity',
     path='/css/fedora.css',
-    resources=[fedoracommunity_text_css],
+    resources=[fedoracommunity_reset_css],
 )
 fedoracommunity_960_24_col_css = CSSLink(
     modname='fedoracommunity',
@@ -53,11 +61,6 @@ fedoracommunity_branding_css = CSSLink(
     modname='fedoracommunity',
     path='/css/myfedora-branding.css',
     resources=[fedoracommunity_960_24_col_css],
-)
-fedoracommunity_appchrome_css = CSSLink(
-    modname='fedoracommunity',
-    path='/css/application-chrome.css',
-    resources=[fedoracommunity_branding_css],
 )
 
 
