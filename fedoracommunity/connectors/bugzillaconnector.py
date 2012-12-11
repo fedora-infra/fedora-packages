@@ -21,7 +21,12 @@ from datetime import datetime, timedelta
 from tg import config
 from bugzilla import RHBugzilla3 as Bugzilla
 
-from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import (
+    IConnector,
+    ICall,
+    IQuery,
+    ParamFilter,
+)
 from moksha.common.lib.dates import DateTimeDisplay
 
 # Don't query closed bugs for these packages, since the queries timeout
@@ -38,7 +43,7 @@ OPEN_BUG_STATUS = ['ASSIGNED', 'NEW', 'MODIFIED', 'ON_DEV', 'ON_QA',
 def chunks(l, n):
     """ Yield successive n-sized chunks from l. """
     for i in xrange(0, len(l), n):
-        yield l[i:i+n]
+        yield l[i:i + n]
 
 
 class BugzillaConnector(IConnector, ICall, IQuery):
@@ -61,8 +66,9 @@ class BugzillaConnector(IConnector, ICall, IQuery):
     # IConnector
     @classmethod
     def register(cls):
-        cls._base_url = config.get('fedoracommunity.connector.bugzilla.baseurl',
-                                   'https://bugzilla.redhat.com/xmlrpc.cgi')
+        cls._base_url = config.get(
+            'fedoracommunity.connector.bugzilla.baseurl',
+            'https://bugzilla.redhat.com/xmlrpc.cgi')
 
         cls.register_query_bugs()
 
@@ -72,32 +78,36 @@ class BugzillaConnector(IConnector, ICall, IQuery):
     @classmethod
     def register_query_bugs(cls):
         path = cls.register_query(
-                      'query_bugs',
-                      cls.query_bugs,
-                      primary_key_col='id',
-                      default_sort_col='date',
-                      default_sort_order=-1,
-                      can_paginate=True)
+            'query_bugs',
+            cls.query_bugs,
+            primary_key_col='id',
+            default_sort_col='date',
+            default_sort_order=-1,
+            can_paginate=True)
 
-        path.register_column('id',
-                        default_visible=True,
-                        can_sort=True,
-                        can_filter_wildcards=False)
+        path.register_column(
+            'id',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('status',
-                        default_visible=True,
-                        can_sort=True,
-                        can_filter_wildcards=False)
+        path.register_column(
+            'status',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('description',
-                        default_visible=True,
-                        can_sort=True,
-                        can_filter_wildcards=False)
+        path.register_column(
+            'description',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('release',
-                        default_visible=True,
-                        can_sort=True,
-                        can_filter_wildcards=False)
+        path.register_column(
+            'release',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
         f = ParamFilter()
         f.add_filter('package', [], allow_none=False)
@@ -107,11 +117,17 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
     def query_bug_stats(self, *args, **kw):
         package = kw.get('package', None)
+
         if not package:
             raise Exception('No package specified')
-        bugzilla_cache = self._request.environ['beaker.cache'].get_cache('bugzilla')
-        return bugzilla_cache.get_value(key=package, expiretime=21600,
-                           createfunc=lambda: self._get_bug_stats(package))
+
+        bugzilla_cache = self._request.environ['beaker.cache']\
+            .get_cache('bugzilla')
+        return bugzilla_cache.get_value(
+            key=package,
+            expiretime=21600,
+            createfunc=lambda: self._get_bug_stats(package),
+        )
 
     def _get_bug_stats(self, package, collection=('Fedora', 'Fedora EPEL')):
         """
@@ -131,11 +147,10 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             'product': collection,
             'component': package,
             'status': OPEN_BUG_STATUS,
-            }))
+        }))
 
         # Blocking Bugs
-        # TODO
-        # https://fedoraproject.org/w/uploads/8/87/Packager-mockup_packageprofile_bugs.png
+        # TODO - http://bit.ly/XPGo2k
 
         # Closed Bugs this week
         results.append(self._bugzilla.query({
@@ -143,7 +158,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             'component': package,
             'status': 'CLOSED',
             'creation_time': last_week,
-            }))
+        }))
 
         # New bugs this week
         results.append(self._bugzilla.query({
@@ -151,9 +166,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             'component': package,
             'status': 'NEW',
             'creation_time': last_week,
-            }))
+        }))
 
-        #results = dict([(q, len(r['bugs'])) for q, r in zip(queries, mc.run())])
+        #results = dict([
+        #       (q, len(r['bugs'])) for q, r in zip(queries, mc.run())
+        #])
         results = dict([(q, len(r)) for q, r in zip(queries, results)])
 
         return dict(results=results)
@@ -184,18 +201,26 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         package = filters['package']
         query = {
-                'product': collection,
-                'version': version,
-                'component': package,
-                'bug_status': OPEN_BUG_STATUS,
-                #'order': 'bug_id',
-                }
+            'product': collection,
+            'version': version,
+            'component': package,
+            'bug_status': OPEN_BUG_STATUS,
+            #'order': 'bug_id',
+        }
 
-        bugzilla_cache = self._request.environ['beaker.cache'].get_cache('bugzilla')
+        bugzilla_cache = self._request.environ['beaker.cache']\
+            .get_cache('bugzilla')
         key = '%s_%s_%s' % (collection, version, package)
-        bugs = bugzilla_cache.get_value(key=key, expiretime=900,
-                createfunc=lambda: self._query_bugs(query,
-                    filters=filters, collection=collection, **params))
+        bugs = bugzilla_cache.get_value(
+            key=key,
+            expiretime=900,
+            createfunc=lambda: self._query_bugs(
+                query,
+                filters=filters,
+                collection=collection,
+                **params
+            )
+        )
         total_count = len(bugs)
 
         # This caching is a bit too aggressive
@@ -210,14 +235,14 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         # See https://fedorahosted.org/fedoracommunity/ticket/381
         bugs.sort(cmp=bug_sort)
 
-        bugs = bugs[start_row:start_row+rows_per_page]
+        bugs = bugs[start_row:start_row + rows_per_page]
         #if start_row >= five_pages:
         bugs = self.get_bugs(bugs, collection=collection)
         return (total_count, bugs)
 
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
-                   sort_col='number', filters=None, collection='Fedora',
-                   **params):
+                    sort_col='number', filters=None, collection='Fedora',
+                    **params):
         """ Make bugzilla queries but only grab up to 200 bugs at a time,
         otherwise we might drop due to SSL timeout.  :/
         """
@@ -227,7 +252,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         # XXX - This is a hack until the multicall stuff gets worked out
         # https://bugzilla.redhat.com/show_bug.cgi?id=824241 -- threebean
-        while _results == None or len(_results):
+        while _results is None or len(_results):
             query.update(dict(offset=offset, limit=limit))
             _results = self._bugzilla.query(query)
             results.extend(_results)
@@ -260,7 +285,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'last_modified': modified.age(),
                 'release': '%s %s' % (collection, bug.version[0]),
                 'bug_class': bug_class.strip(),
-                })
+            })
         return bugs_list
 
 
@@ -291,6 +316,7 @@ def bug_sort(arg1, arg2):
             # We want items to appear by status in a certain order, not
             # alphabetically.  Items I forgot to hardcode just go last.
             status_order = ['NEW', 'ASSIGNED', 'MODIFIED', 'ON_QA', 'POST']
+
             def status_to_index(val):
                 try:
                     return status_order.index(val)
