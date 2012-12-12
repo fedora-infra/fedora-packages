@@ -130,24 +130,19 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         f.add_filter('version', [], allow_none=False)
         cls._query_bugs_filter = f
 
-    def query_bug_stats(self, *args, **kw):
-        package = kw.get('package', None)
+    def query_bug_stats(self, path, cookies, package=None, **kw):
+        """
+        Returns (# of open bugs, # of new bugs, # of closed bugs)
+
+        Registered with the fcomm_connector middleware as get_bug_stats..
+        which is non-obvious and confusing.
+        """
 
         if not package:
             raise Exception('No package specified')
 
-        bugzilla_cache = self._request.environ['beaker.cache']\
-            .get_cache('bugzilla')
-        return bugzilla_cache.get_value(
-            key=package,
-            expiretime=21600,
-            createfunc=lambda: self._get_bug_stats(package),
-        )
+        collection = ('Fedora', 'Fedora EPEL')
 
-    def _get_bug_stats(self, package, collection=('Fedora', 'Fedora EPEL')):
-        """
-        Returns (# of open bugs, # of new bugs, # of closed bugs)
-        """
         queries = ['open', 'blockers', 'new_this_week', 'closed_this_week']
 
         last_week = str(datetime.utcnow() - timedelta(days=7)),
@@ -169,11 +164,9 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             key_prefix + "-open", open_bugs))
 
         # Blocking Bugs
-        blockers = []
-        for bug in results[-1]:
-            if bug.blocks:
-                blockers.append(bug)
-        results.append(blockers)
+        blocker_bugs = lambda: [bug for bug in results[-1] if bug.blocks]
+        results.append(self.cache.get_or_create(
+            key_prefix + "-block", blocker_bugs))
 
         # Closed Bugs this week
         def closed_bugs():
