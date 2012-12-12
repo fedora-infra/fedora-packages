@@ -163,9 +163,9 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         # Blocking Bugs
         def blocker_bugs():
-            all_open_bugs = self.cache.get_or_create(
-                key_prefix + "-open", open_bugs)
-            return [b for b in all_open_bugs if b.blocks]
+            # Yes.. we make the open_bugs() query twice, but if we don't it
+            # plays incorrectly with the cache.
+            return [b for b in open_bugs() if b.blocks]
 
         # Closed Bugs this week
         def closed_bugs():
