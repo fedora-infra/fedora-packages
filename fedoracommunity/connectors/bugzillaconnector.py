@@ -232,13 +232,10 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             #'order': 'bug_id',
         }
 
-        bugzilla_cache = self._request.environ['beaker.cache']\
-            .get_cache('bugzilla')
-        key = '%s_%s_%s' % (collection, version, package)
-        bugs = bugzilla_cache.get_value(
-            key=key,
-            expiretime=900,
-            createfunc=lambda: self._query_bugs(
+        key = str('full_%s_%s_%s' % (collection, version, package))
+        bugs = self.cache.get_or_create(
+            key,
+            lambda: self._query_bugs(
                 query,
                 filters=filters,
                 collection=collection,
@@ -247,20 +244,12 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         )
         total_count = len(bugs)
 
-        # This caching is a bit too aggressive
-        #five_pages = rows_per_page * 5
-        #if start_row < five_pages: # Cache the first 5 pages of every bug grid
-        #    bugs = bugs[:five_pages]
-        #    bugs = bugzilla_cache.get_value(key=key + '_details',
-        #            expiretime=900, createfunc=lambda: self.get_bugs(
-        #                bugs, collection=collection))
-
         # Sort based on feedback from users of bugz.fedoraproject.org/{package}
         # See https://fedorahosted.org/fedoracommunity/ticket/381
         bugs.sort(cmp=bug_sort)
-
+        # Paginate
         bugs = bugs[start_row:start_row + rows_per_page]
-        #if start_row >= five_pages:
+        # Get bug details
         bugs = self.get_bugs(bugs, collection=collection)
         return (total_count, bugs)
 
@@ -288,28 +277,41 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         ]
 
     def get_bugs(self, bugids, collection='Fedora'):
-        bugs = []
+        def _bugids_to_dicts(chunk_of_bugids):
+
+            # First, query bugzilla for ids
+            bz_bugs = self._bugzilla.getbugs(chunk_of_bugids)
+            dicts = []
+            for bug in bz_bugs:
+                modified = DateTimeDisplay(str(bug.last_change_time),
+                                           format='%Y%m%dT%H:%M:%S')
+
+                bug_class = ''
+                if self._is_security_bug(bug):
+                    bug_class += 'security-bug '
+
+                d = {
+                    'id': bug.bug_id,
+                    'status': bug.bug_status.title(),
+                    'description': bug.summary,
+                    'last_modified': modified.age(),
+                    'release': '%s %s' % (collection, bug.version[0]),
+                    'bug_class': bug_class.strip(),
+                }
+                dicts.append(d)
+
+            return dicts
+
+        bugs_list = []
 
         # XXX - This is a hack until the multicall stuff gets worked out
         # https://bugzilla.redhat.com/show_bug.cgi?id=824241 -- threebean
         for chunk in chunks(bugids, 20):
-            bugs.extend(self._bugzilla.getbugs([b['bug_id'] for b in chunk]))
+            chunk_of_bugids = [b['bug_id'] for b in chunk]
+            key = 'bug_details_' + ','.join(map(str, chunk_of_bugids))
+            createfunc = lambda: _bugids_to_dicts(chunk_of_bugids)
+            bugs_list.extend(self.cache.get_or_create(key, createfunc))
 
-        bugs_list = []
-        for bug in bugs:
-            modified = DateTimeDisplay(str(bug.last_change_time),
-                                       format='%Y%m%dT%H:%M:%S')
-            bug_class = ''
-            if self._is_security_bug(bug):
-                bug_class += 'security-bug '
-            bugs_list.append({
-                'id': bug.bug_id,
-                'status': bug.bug_status.title(),
-                'description': bug.summary,
-                'last_modified': modified.age(),
-                'release': '%s %s' % (collection, bug.version[0]),
-                'bug_class': bug_class.strip(),
-            })
         return bugs_list
 
 
