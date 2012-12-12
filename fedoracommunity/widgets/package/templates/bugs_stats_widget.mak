@@ -4,8 +4,9 @@
     <script type="text/javascript">
         function got_bug_stats(json) {
             $('#${w.id}_open_bugs').text(json.results.open);
+            $('#${w.id}_blockers').text(json.results.blockers);
             $('#${w.id}_num_new_this_week').text(json.results.new_this_week + ' new this week.');
-            $('#${w.id}_num_closed_this_week').text(json.results.closed_this_week + ' closed this week.');
+            $('#${w.id}_num_closed_this_week').text(json.results.closed_this_week);
         }
         $(document).ready(function(){
 
@@ -17,26 +18,17 @@ fcomm.connector_load('bugzilla', 'get_bug_stats', {package: '${w.package}'}, got
        <a href="${w.bz_prefix}?${w.base_query_string}&${w.status_open_string}" target="_blank">
          <dd class="main-count-value" id="${w.id}_open_bugs">${w.num_open}</dd>
        </a>
-       <dd><span class="count-header">New</span> <a
-           href="${w.bz_prefix}?${w.base_query_string}&bug_status=NEW" target="_blank">
-           <span id="${w.id}_num_new">${w.num_new}</span>
-         </a>
-       </dd>
-       <a href="${w.bz_prefix}?${w.base_query_string}&${w.open_query_string}&${w.status_open_string}" target="_blank">
-         <dd class="additional-info" colspan="2" id="${w.id}_num_new_this_week">
-             ${w.num_new_this_week}
-         </dd>
+    </dl>
+    <dl class="count-box">
+       <dt class="count-header main-count-header">Blocking Bugs</dt>
+       <a href="${w.bz_prefix}?${w.base_query_string}&${w.status_open_string}" target="_blank">
+         <dd class="main-count-value" id="${w.id}_blockers"></dd>
        </a>
     </dl>
     <dl class="count-box">
        <dt class="count-header main-count-header">Closed Bugs</dt>
-       <a href="${w.bz_prefix}?${w.base_query_string}&${w.status_closed_string}" target="_blank">
-         <dd class="main-count-value" id="${w.id}_num_closed">${w.num_closed}</dd>
-       </a>
-       <a href="${w.bz_prefix}?${w.base_query_string}&${w.closed_query_string}&${w.status_closed_string}" target="_blank">
-         <dd class="additional-info" colspan="2" id="${w.id}_num_closed_this_week">
-           ${w.num_closed_this_week}
-         </dd>
+       <a href="${w.bz_prefix}?${w.base_query_string}&${w.closed_query_string}" target="_blank">
+         <dd class="main-count-value" id="${w.id}_num_closed_this_week">${w.num_closed_this_week}</dd>
        </a>
     </dl>
     <div class="action-box"><a class="action-header"

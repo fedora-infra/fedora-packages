@@ -133,7 +133,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         """
         Returns (# of open bugs, # of new bugs, # of closed bugs)
         """
-        queries = ['open', 'new_this_week', 'closed_this_week']
+        queries = ['open', 'blockers', 'new_this_week', 'closed_this_week']
 
         last_week = str(datetime.utcnow() - timedelta(days=7)),
 
@@ -150,7 +150,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         }))
 
         # Blocking Bugs
-        # TODO - http://bit.ly/XPGo2k
+        blockers = []
+        for bug in results[-1]:
+            if bug.blocks:
+                blockers.append(bug)
+        results.append(blockers)
 
         # Closed Bugs this week
         results.append(self._bugzilla.query({
