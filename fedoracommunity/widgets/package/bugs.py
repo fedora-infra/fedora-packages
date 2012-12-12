@@ -12,9 +12,7 @@ class BugStatsWidget(twc.Widget):
     product = twc.Param(default='Fedora')
     version = twc.Param(default='rawhide')
     package = twc.Param(default=None)
-    num_closed = twc.Param(default='-')
     num_open = twc.Param(default='-')
-    num_new = twc.Param(default='-')
     num_new_this_week = twc.Param(default='')
     num_closed_this_week = twc.Param(default='')
 
