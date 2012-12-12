@@ -160,13 +160,12 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'component': package,
                 'status': OPEN_BUG_STATUS,
             })
-        results.append(self.cache.get_or_create(
-            key_prefix + "-open", open_bugs))
 
         # Blocking Bugs
-        blocker_bugs = lambda: [bug for bug in results[-1] if bug.blocks]
-        results.append(self.cache.get_or_create(
-            key_prefix + "-block", blocker_bugs))
+        def blocker_bugs():
+            all_open_bugs = self.cache.get_or_create(
+                key_prefix + "-open", open_bugs)
+            return [b for b in all_open_bugs if b.blocks]
 
         # Closed Bugs this week
         def closed_bugs():
@@ -176,8 +175,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'status': 'CLOSED',
                 'creation_time': last_week,
             })
-        results.append(self.cache.get_or_create(
-            key_prefix + "-closed", closed_bugs))
 
         # New bugs this week
         def new_bugs():
@@ -187,8 +184,13 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'status': 'NEW',
                 'creation_time': last_week,
             })
-        results.append(self.cache.get_or_create(
-            key_prefix + "-new", new_bugs))
+
+        results = [
+            self.cache.get_or_create(key_prefix + "-open", open_bugs),
+            self.cache.get_or_create(key_prefix + "-block", blocker_bugs),
+            self.cache.get_or_create(key_prefix + "-closed", closed_bugs),
+            self.cache.get_or_create(key_prefix + "-new", new_bugs),
+        ]
 
         #results = dict([
         #       (q, len(r['bugs'])) for q, r in zip(queries, mc.run())
