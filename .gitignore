@@ -32,3 +32,4 @@ paster.pid
 icons
 fedoracommunity/templates/home/
 var
+dogpile-cache.dbm*

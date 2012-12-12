@@ -61,6 +61,8 @@ Requires: python-tw2-jqplugins-ui
 Requires: python-bugzilla
 Requires: xapian-bindings-python
 Requires: python-xappy
+Requires: python-dogpile-cache
+Requires: python-pylibmc
 # For spectool
 Requires: rpmdevtools
 

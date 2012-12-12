@@ -29,6 +29,8 @@ from fedoracommunity.connectors.api import (
 )
 from moksha.common.lib.dates import DateTimeDisplay
 
+import dogpile.cache
+
 # Don't query closed bugs for these packages, since the queries timeout
 BLACKLIST = ['kernel']
 
@@ -53,6 +55,19 @@ class BugzillaConnector(IConnector, ICall, IQuery):
     def __init__(self, environ=None, request=None):
         super(BugzillaConnector, self).__init__(environ, request)
         self.__bugzilla = None
+
+        # Defaults for the dogpile cache
+        cache_config = {
+            "dogpile.cache.backend": "dogpile.cache.dbm",
+            "dogpile.cache.arguments.filename": "dogpile-cache.dbm",
+            "dogpile.cache.expiration_time": "300",
+        }
+
+        cache_config.update(config)
+
+        # Initialize our dogpile cache.
+        self.cache = dogpile.cache.make_region()
+        self.cache.configure_from_config(cache_config, "dogpile.cache.")
 
     @property
     def _bugzilla(self):
@@ -140,14 +155,18 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         # Multi-call support is broken in the latest Bugzilla upgrade
         #mc = self._bugzilla._multicall()
 
+        key_prefix = str(package) + "-" + str(collection)
         results = []
 
         # Open bugs
-        results.append(self._bugzilla.query({
-            'product': collection,
-            'component': package,
-            'status': OPEN_BUG_STATUS,
-        }))
+        def open_bugs():
+            return self._bugzilla.query({
+                'product': collection,
+                'component': package,
+                'status': OPEN_BUG_STATUS,
+            })
+        results.append(self.cache.get_or_create(
+            key_prefix + "-open", open_bugs))
 
         # Blocking Bugs
         blockers = []
@@ -157,20 +176,26 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         results.append(blockers)
 
         # Closed Bugs this week
-        results.append(self._bugzilla.query({
-            'product': collection,
-            'component': package,
-            'status': 'CLOSED',
-            'creation_time': last_week,
-        }))
+        def closed_bugs():
+            return self._bugzilla.query({
+                'product': collection,
+                'component': package,
+                'status': 'CLOSED',
+                'creation_time': last_week,
+            })
+        results.append(self.cache.get_or_create(
+            key_prefix + "-closed", closed_bugs))
 
         # New bugs this week
-        results.append(self._bugzilla.query({
-            'product': collection,
-            'component': package,
-            'status': 'NEW',
-            'creation_time': last_week,
-        }))
+        def new_bugs():
+            return self._bugzilla.query({
+                'product': collection,
+                'component': package,
+                'status': 'NEW',
+                'creation_time': last_week,
+            })
+        results.append(self.cache.get_or_create(
+            key_prefix + "-new", new_bugs))
 
         #results = dict([
         #       (q, len(r['bugs'])) for q, r in zip(queries, mc.run())

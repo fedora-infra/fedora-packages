@@ -32,6 +32,8 @@ def install_deps():
             'python-kitchen', 'python-fedora', 'python-bugzilla', 'koji',
             'xapian-bindings-python', 'diffstat', 'fedpkg', 'svn', 'wget',
             'python-xappy', 'python-webob', 'moksha', 'TurboGears2',
+            #'python-dogpile-cache',  # Not actually available in F18 yet.
+            # http://bit.ly/VQPlIo
         ]
         run('sudo yum install -q -y ' + ' '.join(reqs))
 
@@ -61,7 +63,10 @@ def link_external_libs():
     template = 'ln -s /usr/{location}/{lib} {venv}/{location}/'
     for lib in ['koji', 'rpm', 'rpmUtils', 'fedora', 'kitchen', 'pycurl',
                 'yum', 'urlgrabber', 'sqlitecachec', '_sqlitecache',
-                'bugzilla', 'xapian', 'xappy']:
+                'bugzilla', 'xapian', 'xappy',
+                #'dogpile',  # Not actually available in F18 yet.
+                # http://bit.ly/VQPlIo
+               ]:
         for libdir in ('lib64', 'lib'):
             for ext in ('.py', '.so', ''):
                 mod = '/usr/%s/%s/%s%s' % (libdir, location, lib, ext)
