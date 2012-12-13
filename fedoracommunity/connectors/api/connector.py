@@ -37,6 +37,7 @@ from dogpile.cache import make_region
 from beaker.cache import Cache
 from kitchen.text.converters import to_bytes
 
+import hashlib
 import inspect
 
 def cache_key_generator(namespace, fn):
@@ -63,7 +64,6 @@ def cache_key_generator(namespace, fn):
     return generate_key
 
 
-
 class IConnector(object):
     """ Data connector interface
 
@@ -73,7 +73,10 @@ class IConnector(object):
         super(IConnector, self).__init__()
         self._environ = environ
         self._request = request
-        self._cache = make_region(function_key_generator=cache_key_generator)
+        self._cache = make_region(
+            function_key_generator=cache_key_generator,
+            key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
+        )
         self._cache.configure_from_config(config, 'cache.connectors.')
 
     @classmethod

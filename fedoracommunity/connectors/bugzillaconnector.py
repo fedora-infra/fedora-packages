@@ -16,6 +16,7 @@
 
 import ssl
 import time
+import hashlib
 
 from datetime import datetime, timedelta
 from tg import config
@@ -32,7 +33,10 @@ from moksha.common.lib.dates import DateTimeDisplay
 
 import dogpile.cache
 
-cache = dogpile.cache.make_region(function_key_generator=cache_key_generator)
+cache = dogpile.cache.make_region(
+    function_key_generator=cache_key_generator,
+    key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
+)
 _cache_configured = False
 
 # Don't query closed bugs for these packages, since the queries timeout
