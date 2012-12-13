@@ -58,16 +58,16 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         # Defaults for the dogpile cache
         cache_config = {
-            "dogpile.cache.backend": "dogpile.cache.dbm",
-            "dogpile.cache.arguments.filename": "dogpile-cache.dbm",
-            "dogpile.cache.expiration_time": "300",
+            "cache.bugzilla.backend": "dogpile.cache.dbm",
+            "cache.bugzilla.arguments.filename": "dogpile-cache.dbm",
+            "cache.bugzilla.expiration_time": "300",
         }
 
         cache_config.update(config)
 
         # Initialize our dogpile cache.
         self.cache = dogpile.cache.make_region()
-        self.cache.configure_from_config(cache_config, "dogpile.cache.")
+        self.cache.configure_from_config(cache_config, "cache.bugzilla.")
 
     @property
     def _bugzilla(self):
