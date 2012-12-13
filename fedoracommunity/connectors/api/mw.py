@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 # Authors: John (J5) Palmieri <johnp@redhat.com>
+#          Ralph Bean <rbean@redhat.com>
 
 import logging
 import pkg_resources
@@ -174,7 +175,7 @@ class FCommConnectorMiddleware(object):
             r = None
             if asbool(config.get('profile.connectors')):
                 try:
-		    import cProfile as profile
+                    import cProfile as profile
                 except ImportError:
                     import profile
                 directory = config.get('profile.dir', '')
