@@ -31,7 +31,38 @@ NotImplementedError if the value is set to anything but None
 """
 
 from utils import QueryPath, QueryCol, ParamFilter, WeightedSearch
+from tg import config
+from dogpile.cache import make_region
+# TODO -- phase out beaker cache in favor of dogpile.
 from beaker.cache import Cache
+from kitchen.text.converters import to_bytes
+
+import inspect
+
+def cache_key_generator(namespace, fn):
+    """ This is used by dogpile.cache to uniquely namespace-out all the
+    connector queries we are cacheing.  This is so queries on "nethack" for
+    'updates' and queries on "nethack" for 'builds' don't collide (since those
+    two calls would have the same arguments, just different function.__name__'s.
+    """
+
+    if namespace is None:
+        namespace = '%s:%s' % (fn.__module__, fn.__name__)
+    else:
+        namespace = '%s:%s|%s' % (fn.__module__, fn.__name__, namespace)
+
+    args = inspect.getargspec(fn)
+    has_self = args[0] and args[0][0] in ('self', 'cls')
+    def generate_key(*args, **kw):
+        args = args + tuple((
+            "==".join(map(to_bytes, pair)) for pair in kw.items()
+        ))
+        if has_self:
+            args = args[1:]
+        return namespace + "|" + " ".join(map(to_bytes, args))
+    return generate_key
+
+
 
 class IConnector(object):
     """ Data connector interface
@@ -42,6 +73,8 @@ class IConnector(object):
         super(IConnector, self).__init__()
         self._environ = environ
         self._request = request
+        self._cache = make_region(function_key_generator=cache_key_generator)
+        self._cache.configure_from_config(config, 'cache.connectors.')
 
     @classmethod
     def register(self):
@@ -262,6 +295,10 @@ class IQuery(object):
             params = {}
 
         query_func = self.query_model(resource_path).get_query()
+
+        # Wrap every query in our dogpile cache.
+        query_func = self._cache.cache_on_arguments()(query_func)
+
         (total_rows, rows_or_error) = query_func(self,
                                         start_row = start_row,
                                         rows_per_page = rows_per_page,
@@ -353,6 +390,11 @@ class ISearch(IQuery):
                              default_sort_order = None,
                              can_paginate = True):
 
+        # TODO --
+        # We should phase this out in favor of dogpile.cache.. but I'm not quite
+        # sure how it is or isnot integrated with WeightedSearch and other
+        # stuff.  If someone has time to investigate this down the road, please
+        # do so and remove it.
         cls._search_cache = Cache('moksha_search_cache_%s_%s ' %( cls.__name__, path))
 
         def query_func(conn=None,
