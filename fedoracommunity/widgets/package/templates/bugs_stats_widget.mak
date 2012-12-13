@@ -5,6 +5,7 @@
         function got_bug_stats(json) {
             $('#${w.id}_open_bugs').text(json.results.open);
             $('#${w.id}_blockers').text(json.results.blockers);
+            $('#${w.id}_blocker_url').attr('href', json.blocker_url);
             $('#${w.id}_num_new_this_week').text(json.results.new_this_week + ' new this week.');
             $('#${w.id}_num_closed_this_week').text(json.results.closed_this_week);
         }
@@ -21,7 +22,7 @@ fcomm.connector_load('bugzilla', 'get_bug_stats', {package: '${w.package}'}, got
     </dl>
     <dl class="count-box">
        <dt class="count-header main-count-header">Blocking Bugs</dt>
-       <a href="${w.bz_prefix}?${w.base_query_string}&${w.status_open_string}" target="_blank">
+       <a id="${w.id}_blocker_url" href="#" target="_blank">
          <dd class="main-count-value" id="${w.id}_blockers"></dd>
        </a>
     </dl>

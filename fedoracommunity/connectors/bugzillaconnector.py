@@ -18,6 +18,7 @@ import ssl
 import time
 import hashlib
 
+from urllib import urlencode
 from datetime import datetime, timedelta
 from tg import config
 from bugzilla import RHBugzilla3 as Bugzilla
@@ -38,6 +39,8 @@ cache = dogpile.cache.make_region(
     key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
 )
 _cache_configured = False
+
+PRODUCTS = ['Fedora', 'Fedora EPEL']
 
 # Don't query closed bugs for these packages, since the queries timeout
 BLACKLIST = ['kernel']
@@ -181,6 +184,30 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'status': OPEN_BUG_STATUS,
             }) if b.blocks]
 
+        blockers = set()
+        blocks = set()
+        for bug in results[-1]:
+            if bug.blocks:
+                map(blocks.add, bug.blocks)
+                blockers.add(bug.id)
+        results.append(list(blockers))
+
+        # Generate the URL for the blocker bugs
+        args = [
+            ('f1', 'blocked'),
+            ('o1', 'anywordssubstr'),
+            ('classification', 'Fedora'),
+            ('query_format', 'advanced'),
+            ('component', package),
+            ('v1', ' '.join(map(str, blocks))),
+        ]
+        for product in PRODUCTS:
+            args.append(('product', product))
+        for status in OPEN_BUG_STATUS:
+            args.append(('bug_status', status))
+        blocker_url = 'https://bugzilla.redhat.com/buglist.cgi?' + \
+                urlencode(args)
+
         # Closed Bugs this week
         @cache.cache_on_arguments(namespace)
         def closed_bugs():
@@ -213,7 +240,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         #])
         results = dict([(q, len(r)) for q, r in zip(queries, results)])
 
-        return dict(results=results)
+        return dict(results=results, blocker_url=blocker_url)
 
     def _is_security_bug(self, bug):
         security = False
