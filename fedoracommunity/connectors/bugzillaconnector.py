@@ -27,9 +27,13 @@ from fedoracommunity.connectors.api import (
     IQuery,
     ParamFilter,
 )
+from fedoracommunity.connectors.api.connector import cache_key_generator
 from moksha.common.lib.dates import DateTimeDisplay
 
 import dogpile.cache
+
+cache = dogpile.cache.make_region(function_key_generator=cache_key_generator)
+_cache_configured = False
 
 # Don't query closed bugs for these packages, since the queries timeout
 BLACKLIST = ['kernel']
@@ -53,6 +57,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
     _query_paths = {}
 
     def __init__(self, environ=None, request=None):
+        global _cache_configured
         super(BugzillaConnector, self).__init__(environ, request)
         self.__bugzilla = None
 
@@ -66,8 +71,9 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         cache_config.update(config)
 
         # Initialize our dogpile cache.
-        self.cache = dogpile.cache.make_region()
-        self.cache.configure_from_config(cache_config, "cache.bugzilla.")
+        if not _cache_configured:
+            cache.configure_from_config(cache_config, "cache.bugzilla.")
+            _cache_configured = True
 
     @property
     def _bugzilla(self):
@@ -150,10 +156,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         # Multi-call support is broken in the latest Bugzilla upgrade
         #mc = self._bugzilla._multicall()
 
-        key_prefix = str(package) + "-" + str(collection)
+        namespace = str(package) + "-" + str(collection)
         results = []
 
         # Open bugs
+        @cache.cache_on_arguments(namespace)
         def open_bugs():
             return self._bugzilla.query({
                 'product': collection,
@@ -162,12 +169,16 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             })
 
         # Blocking Bugs
+        @cache.cache_on_arguments(namespace)
         def blocker_bugs():
-            # Yes.. we make the open_bugs() query twice, but if we don't it
-            # plays incorrectly with the cache.
-            return [b for b in open_bugs() if b.blocks]
+            return [b for b in self._bugzilla.query({
+                'product': collection,
+                'component': package,
+                'status': OPEN_BUG_STATUS,
+            }) if b.blocks]
 
         # Closed Bugs this week
+        @cache.cache_on_arguments(namespace)
         def closed_bugs():
             return self._bugzilla.query({
                 'product': collection,
@@ -177,6 +188,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             })
 
         # New bugs this week
+        @cache.cache_on_arguments(namespace)
         def new_bugs():
             return self._bugzilla.query({
                 'product': collection,
@@ -186,10 +198,10 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             })
 
         results = [
-            self.cache.get_or_create(key_prefix + "-open", open_bugs),
-            self.cache.get_or_create(key_prefix + "-block", blocker_bugs),
-            self.cache.get_or_create(key_prefix + "-closed", closed_bugs),
-            self.cache.get_or_create(key_prefix + "-new", new_bugs),
+            open_bugs(),
+            blocker_bugs(),
+            closed_bugs(),
+            new_bugs(),
         ]
 
         #results = dict([
@@ -232,15 +244,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             #'order': 'bug_id',
         }
 
-        key = str('full_%s_%s_%s' % (collection, version, package))
-        bugs = self.cache.get_or_create(
-            key,
-            lambda: self._query_bugs(
-                query,
-                filters=filters,
-                collection=collection,
-                **params
-            )
+        bugs = self._query_bugs(
+            query,
+            filters=filters,
+            collection=collection,
+            **params
         )
         total_count = len(bugs)
 
@@ -253,6 +261,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         bugs = self.get_bugs(bugs, collection=collection)
         return (total_count, bugs)
 
+    @cache.cache_on_arguments()
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
                     sort_col='number', filters=None, collection='Fedora',
                     **params):
@@ -277,6 +286,8 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         ]
 
     def get_bugs(self, bugids, collection='Fedora'):
+
+        @cache.cache_on_arguments()
         def _bugids_to_dicts(chunk_of_bugids):
 
             # First, query bugzilla for ids
@@ -309,8 +320,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         for chunk in chunks(bugids, 20):
             chunk_of_bugids = [b['bug_id'] for b in chunk]
             key = 'bug_details_' + ','.join(map(str, chunk_of_bugids))
-            createfunc = lambda: _bugids_to_dicts(chunk_of_bugids)
-            bugs_list.extend(self.cache.get_or_create(key, createfunc))
+            bugs_list.extend(_bugids_to_dicts(chunk_of_bugids))
 
         return bugs_list
 
