@@ -166,55 +166,57 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         namespace = str(package) + "-" + str(collection)
         results = []
 
-        # Open bugs
+        # Open bugs - returns an int
         @cache.cache_on_arguments(namespace)
         def open_bugs():
-            return self._bugzilla.query({
+            return len(self._bugzilla.query({
+                'product': collection,
+                'component': package,
+                'status': OPEN_BUG_STATUS,
+            }))
+
+        # Blocking Bugs - returns a list of lists of blocked bug ids
+        @cache.cache_on_arguments(namespace)
+        def blocker_bugs():
+            blockers = self._bugzilla.query({
                 'product': collection,
                 'component': package,
                 'status': OPEN_BUG_STATUS,
             })
 
-        # Blocking Bugs
-        @cache.cache_on_arguments(namespace)
-        def blocker_bugs():
-            return [b for b in self._bugzilla.query({
-                'product': collection,
-                'component': package,
-                'status': OPEN_BUG_STATUS,
-            }) if b.blocks]
+            return [b.blocks for b in blockers if b.blocks]
 
-        # Closed Bugs this week
+        # Closed Bugs this week - returns an int
         @cache.cache_on_arguments(namespace)
         def closed_bugs():
-            return self._bugzilla.query({
+            return len(self._bugzilla.query({
                 'product': collection,
                 'component': package,
                 'status': 'CLOSED',
                 'creation_time': last_week,
-            })
+            }))
 
-        # New bugs this week
+        # New bugs this week - returns a list
         @cache.cache_on_arguments(namespace)
         def new_bugs():
-            return self._bugzilla.query({
+            return len(self._bugzilla.query({
                 'product': collection,
                 'component': package,
                 'status': 'NEW',
                 'creation_time': last_week,
-            })
+            }))
 
         results = [
-            open_bugs(),
-            blocker_bugs(),
-            closed_bugs(),
-            new_bugs(),
+            open_bugs(),     # int
+            blocker_bugs(),  # list of lists of bug_ids
+            closed_bugs(),   # int
+            new_bugs(),      # int
         ]
 
         blocks = set()
         # for bug in blocker bugs
-        for bug in results[1]:
-            map(blocks.add, bug.blocks)
+        for bug_ids in results[1]:
+            map(blocks.add, bug_ids)
 
         # Generate the URL for the blocker bugs
         args = [
@@ -225,17 +227,20 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             ('component', package),
             ('v1', ' '.join(map(str, blocks))),
         ]
+
         for product in PRODUCTS:
             args.append(('product', product))
+
         for status in OPEN_BUG_STATUS:
             args.append(('bug_status', status))
-        blocker_url = 'https://bugzilla.redhat.com/buglist.cgi?' + \
-                urlencode(args)
 
-        #results = dict([
-        #       (q, len(r['bugs'])) for q, r in zip(queries, mc.run())
-        #])
-        results = dict([(q, len(r)) for q, r in zip(queries, results)])
+        blocker_url = 'https://bugzilla.redhat.com/buglist.cgi?' + \
+            urlencode(args)
+
+        # Convert that list of bug_ids into a list, just like the others
+        results[1] = len(results[1])
+
+        results = dict([(q, count) for q, count in zip(queries, results)])
 
         return dict(results=results, blocker_url=blocker_url)
 
