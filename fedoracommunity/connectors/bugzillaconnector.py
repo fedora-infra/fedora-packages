@@ -184,30 +184,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'status': OPEN_BUG_STATUS,
             }) if b.blocks]
 
-        blockers = set()
-        blocks = set()
-        for bug in results[-1]:
-            if bug.blocks:
-                map(blocks.add, bug.blocks)
-                blockers.add(bug.id)
-        results.append(list(blockers))
-
-        # Generate the URL for the blocker bugs
-        args = [
-            ('f1', 'blocked'),
-            ('o1', 'anywordssubstr'),
-            ('classification', 'Fedora'),
-            ('query_format', 'advanced'),
-            ('component', package),
-            ('v1', ' '.join(map(str, blocks))),
-        ]
-        for product in PRODUCTS:
-            args.append(('product', product))
-        for status in OPEN_BUG_STATUS:
-            args.append(('bug_status', status))
-        blocker_url = 'https://bugzilla.redhat.com/buglist.cgi?' + \
-                urlencode(args)
-
         # Closed Bugs this week
         @cache.cache_on_arguments(namespace)
         def closed_bugs():
@@ -234,6 +210,27 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             closed_bugs(),
             new_bugs(),
         ]
+
+        blocks = set()
+        # for bug in blocker bugs
+        for bug in results[1]:
+            map(blocks.add, bug.blocks)
+
+        # Generate the URL for the blocker bugs
+        args = [
+            ('f1', 'blocked'),
+            ('o1', 'anywordssubstr'),
+            ('classification', 'Fedora'),
+            ('query_format', 'advanced'),
+            ('component', package),
+            ('v1', ' '.join(map(str, blocks))),
+        ]
+        for product in PRODUCTS:
+            args.append(('product', product))
+        for status in OPEN_BUG_STATUS:
+            args.append(('bug_status', status))
+        blocker_url = 'https://bugzilla.redhat.com/buglist.cgi?' + \
+                urlencode(args)
 
         #results = dict([
         #       (q, len(r['bugs'])) for q, r in zip(queries, mc.run())
