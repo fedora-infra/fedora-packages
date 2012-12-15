@@ -21,7 +21,12 @@ import fedoracommunity.lib
 from tg.configuration import AppConfig
 from bunch import Bunch
 from paste.deploy.converters import asbool
-from tg.i18n import ugettext
+try:
+    # TG-2.3
+    from tg.i18n import ugettext
+except ImportError:
+    # Earlier TG2
+    from pylons.i18n import ugettext
 
 class FedoraCommunityConfig(AppConfig):
     tw2_initialized = False

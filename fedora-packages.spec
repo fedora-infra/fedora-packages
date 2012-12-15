@@ -4,8 +4,8 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.3
-Release:        1%{?dist}
+Version:        2.0.4
+Release:        2%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -62,7 +62,7 @@ Requires: python-bugzilla
 Requires: xapian-bindings-python
 Requires: python-xappy
 Requires: python-dogpile-cache
-Requires: python-pylibmc
+Requires: python-memcached
 # For spectool
 Requires: rpmdevtools
 
@@ -135,6 +135,14 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Fri Dec 14 2012 Ralph Bean <rbean@redhat.com> - 2.0.4-2
+- Fixed and enhanced developer bootstrapping (Luke Macken)
+- Added Blocker Bugs to the stats widget (Luke Macken)
+- Links to other apps (Marija Radevskaa)
+- Link to owner profile (Marija Radevskaa)
+- Connector cacheing with dogpile (Ralph Bean)
+- Fixed CSS resource inconsistencies (Ralph Bean)
+
 * Thu Sep 20 2012 Ralph Bean <rbean@redhat.com> - 2.0.3-1
 - Smarter searching.
 - Fixed tw2 resource archival for deployment.
