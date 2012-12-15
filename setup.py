@@ -51,7 +51,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='2.0.3',
+    version='2.0.4',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',
@@ -63,7 +63,7 @@ setup(
     install_requires=[
         "moksha.wsgi",
         "TurboGears2",
-        "dogpile.cache",
+        #"dogpile.cache",
         #"PyOpenSSL",
         #"SQLAlchemy>=0.5",
         #"xappy",
