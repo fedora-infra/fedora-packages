@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 # Authors: John (J5) Palmieri <johnp@redhat.com>
+#          Ralph Bean <rbean@redhat.com>
 """
 Moksha Data Connector Interfaces
 --------------------------------
@@ -40,11 +41,12 @@ from kitchen.text.converters import to_bytes
 import hashlib
 import inspect
 
+
 def cache_key_generator(namespace, fn):
     """ This is used by dogpile.cache to uniquely namespace-out all the
     connector queries we are cacheing.  This is so queries on "nethack" for
     'updates' and queries on "nethack" for 'builds' don't collide (since those
-    two calls would have the same arguments, just different function.__name__'s.
+    two calls would have the same arguments, just different function.__name__s.
     """
 
     if namespace is None:
@@ -54,13 +56,25 @@ def cache_key_generator(namespace, fn):
 
     args = inspect.getargspec(fn)
     has_self = args[0] and args[0][0] in ('self', 'cls')
+
+    def dict_to_key(d):
+        """ Serialize a dict to a str in a repeatable way. """
+        if type(d) == list:
+            return ",".join(map(dict_to_key, d))
+        if type(d) != dict:
+            return to_bytes(d)
+        return "||".join([
+            "==".join(map(to_bytes, map(dict_to_key, pair)))
+            for pair in sorted(d.items(), lambda a, b: cmp(a[0], b[0]))
+        ])
+
     def generate_key(*args, **kw):
-        args = args + tuple((
-            "==".join(map(to_bytes, pair)) for pair in kw.items()
-        ))
+        """ Turn the args and keyword dict of a call into a str. """
         if has_self:
             args = args[1:]
+        args = map(dict_to_key, args) + [dict_to_key(kw)]
         return namespace + "|" + " ".join(map(to_bytes, args))
+
     return generate_key
 
 
