@@ -5,7 +5,7 @@
 
 Name:           fedora-packages
 Version:        2.0.4
-Release:        2%{?dist}
+Release:        3.20130103gitc211bc6%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -135,6 +135,10 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Thu Jan 03 2013 Ralph Bean <rbean@redhat.com> - 2.0.4-3.20130103gitc211bc6
+- Moved to git checkout.
+- Experimenting with background dogpile cache refresh.
+
 * Fri Dec 14 2012 Ralph Bean <rbean@redhat.com> - 2.0.4-2
 - Fixed and enhanced developer bootstrapping (Luke Macken)
 - Added Blocker Bugs to the stats widget (Luke Macken)
