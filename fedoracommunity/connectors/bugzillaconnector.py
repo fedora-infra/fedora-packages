@@ -33,10 +33,25 @@ from fedoracommunity.connectors.api.connector import cache_key_generator
 from moksha.common.lib.dates import DateTimeDisplay
 
 import dogpile.cache
+import threading
+
+
+# This lets us refresh our cache in a background thread.  Awesome!
+def background_runner(mutex, creator):
+    def f():
+        try:
+            creator()
+        finally:
+            mutex.release()
+
+    t = threading.Thread(target=f)
+    t.start()
+
 
 cache = dogpile.cache.make_region(
     function_key_generator=cache_key_generator,
     key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
+    background_runner=background_runner,
 )
 _cache_configured = False
 
@@ -84,12 +99,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
     @property
     def _bugzilla(self):
-        """ A singleton over our python-bugzilla connection. """
-        if not self.__bugzilla:
-            self.__bugzilla = Bugzilla(
-                url=self._base_url,
-            )
-        return self.__bugzilla
+        return Bugzilla(url=self._base_url)
 
     # IConnector
     @classmethod

@@ -40,6 +40,19 @@ from kitchen.text.converters import to_bytes
 
 import hashlib
 import inspect
+import threading
+
+
+# This lets us refresh our cache in a background thread.  Awesome!
+def background_runner(mutex, creator):
+    def f():
+        try:
+            creator()
+        finally:
+            mutex.release()
+
+    t = threading.Thread(target=f)
+    t.start()
 
 
 def cache_key_generator(namespace, fn):
@@ -90,6 +103,7 @@ class IConnector(object):
         self._cache = make_region(
             function_key_generator=cache_key_generator,
             key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
+            background_runner=background_runner,
         )
         self._cache.configure_from_config(config, 'cache.connectors.')
 
