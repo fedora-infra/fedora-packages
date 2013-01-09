@@ -11,6 +11,7 @@ class BugStatsWidget(twc.Widget):
     kwds = twc.Param(default=None)
     product = twc.Param(default='Fedora')
     version = twc.Param(default='rawhide')
+    epel_version = twc.Param(default='el6')
     package = twc.Param(default=None)
     num_open = twc.Param(default='-')
     num_new_this_week = twc.Param(default='')
