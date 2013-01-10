@@ -36,6 +36,44 @@ import dogpile.cache
 import threading
 
 
+def hotpatch_bugzilla():
+    """ Hotpatch or "duck-punch" bugzilla.base.SafeCookieTransport
+    to use a longer timeout with xmlrpclib.  When we ask for "all
+    the bugs on the kernel ever", it can take a long time.
+    """
+
+    import bugzilla.base
+    import httplib
+
+    # This is in seconds.  120 seconds is two minutes.
+    longer_timeout = 120
+
+    def patched_make_connection(self, host):
+        if self._connection and host == self._connection[0]:
+            return self._connection[1]
+        # create a HTTPS connection object from a host descriptor
+        # host may be a string, or a (host, x509-dict) tuple
+        try:
+            HTTPS = httplib.HTTPSConnection
+        except AttributeError:
+            raise NotImplementedError(
+                "your version of httplib doesn't support HTTPS"
+                )
+        else:
+            chost, self._extra_headers, x509 = self.get_host_info(host)
+            self._connection = host, HTTPS(
+                chost,
+                None,
+                timeout=longer_timeout,
+                **(x509 or {})
+            )
+            return self._connection[1]
+
+    bugzilla.base.SafeCookieTransport.make_connection = patched_make_connection
+
+# Do it at import-time.
+hotpatch_bugzilla()
+
 # This lets us refresh our cache in a background thread.  Awesome!
 def background_runner(mutex, creator):
     def f():
