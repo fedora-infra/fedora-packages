@@ -5,7 +5,7 @@
 
 Name:           fedora-packages
 Version:        2.0.4
-Release:        3.20130103gitc211bc6%{?dist}
+Release:        4.20130111git919e4de%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -135,6 +135,11 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Fri Jan 11 2013 Ralph Bean <rbean@redhat.com> - 2.0.4-4.20130111git919e4de
+- Fixed a link for new EPEL bugs
+- Fixed that bonkers SSL timeout with bugz
+- Update to latest experimental dogpile cache refresh.
+
 * Thu Jan 03 2013 Ralph Bean <rbean@redhat.com> - 2.0.4-3.20130103gitc211bc6
 - Moved to git checkout.
 - Experimenting with background dogpile cache refresh.
