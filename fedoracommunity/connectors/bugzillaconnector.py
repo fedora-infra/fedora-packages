@@ -75,10 +75,11 @@ def hotpatch_bugzilla():
 hotpatch_bugzilla()
 
 # This lets us refresh our cache in a background thread.  Awesome!
-def background_runner(mutex, creator):
+def async_creation_runner(cache, somekey, creator, mutex):
     def f():
         try:
-            creator()
+            value = creator()
+            cache.set(somekey, value)
         finally:
             mutex.release()
 
@@ -89,7 +90,7 @@ def background_runner(mutex, creator):
 cache = dogpile.cache.make_region(
     function_key_generator=cache_key_generator,
     key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
-    background_runner=background_runner,
+    async_creation_runner=async_creation_runner,
 )
 _cache_configured = False
 
