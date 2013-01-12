@@ -5,7 +5,7 @@
 
 Name:           fedora-packages
 Version:        2.0.4
-Release:        4.20130111git919e4de%{?dist}
+Release:        5.20130111gitd823e16%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -135,6 +135,9 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Fri Jan 11 2013 Ralph Bean <rbean@redhat.com> - 2.0.4-5.20130111gitd823e16
+- Py2.6 bugfix for the SSL/bugzilla hack.
+
 * Fri Jan 11 2013 Ralph Bean <rbean@redhat.com> - 2.0.4-4.20130111git919e4de
 - Fixed a link for new EPEL bugs
 - Fixed that bonkers SSL timeout with bugz
