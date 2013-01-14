@@ -88,14 +88,17 @@ class PackageWidget(twc.Widget):
 
     def prepare(self):
         super(PackageWidget, self).prepare()
+
         name = self.args.pop(0)
         self.kwds['package_name'] = name
         self.kwds['subpackage_of'] = ""
         xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(name)
         self.package_info = result
+
         if not result:
-            tg.redirect('/error')
+            tg.redirect('/s/' + name)
+
         if result['name'] == name:
             self.summary = result['summary']
             self.description = result['description']
@@ -107,7 +110,7 @@ class PackageWidget(twc.Widget):
                     self.description = subpkg['description']
                     break
             else:
-                tg.redirect('/error')
+                tg.redirect('/s/' + name)
 
         koji = get_connector('koji')
         try:
