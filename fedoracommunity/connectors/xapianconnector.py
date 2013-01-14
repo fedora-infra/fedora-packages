@@ -147,16 +147,22 @@ class XapianConnector(IConnector, ICall, IQuery):
         return (count, rows)
 
     def get_package_info(self, package_name):
-        package_name = utils.filter_search_string(package_name)
-        search_string = "%s EX__%s__EX" % (package_name, package_name)
+        search_name = utils.filter_search_string(package_name)
+        search_string = "%s EX__%s__EX" % (search_name, search_name)
 
-        matches = self.do_search(search_string, 0, 1)
+        matches = self.do_search(search_string, 0, 10)
         if len(matches) == 0:
             return None
 
-        result = json.loads(matches[0].document.get_data())
+        # Sometimes (rarely), the first match is not the one we actually want.
+        for match in matches:
+            result = json.loads(match.document.get_data())
+            if result['name'] == package_name:
+                return result
+            if any([sp['name'] == package_name for sp in result['sub_pkgs']]):
+                return result
 
-        return result
+        return None
 
     def do_search(self,
                   search_string,
