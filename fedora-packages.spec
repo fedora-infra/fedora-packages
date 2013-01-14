@@ -5,7 +5,7 @@
 
 Name:           fedora-packages
 Version:        2.0.4
-Release:        5.20130111gitd823e16%{?dist}
+Release:        6.20130114git6c5b194%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -135,6 +135,12 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-latest-builds
 
 %changelog
+* Mon Jan 14 2013 Ralph Bean <rbean@redhat.com> - 2.0.4-6.20130114git6c5b194
+- Fix bug where /packages/qt returned a 404
+- Fix bug where /packages/python-webob1.2 returned a 404
+- Redirecting users with 404s to the search interface
+- Update hardcoded URL in fedoracommunity/search/index.py
+
 * Fri Jan 11 2013 Ralph Bean <rbean@redhat.com> - 2.0.4-5.20130111gitd823e16
 - Py2.6 bugfix for the SSL/bugzilla hack.
 
