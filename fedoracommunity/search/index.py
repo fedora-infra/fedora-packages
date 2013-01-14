@@ -380,4 +380,4 @@ def run(cache_path, yum_conf, tagger_url=None, pkgdb_url=None):
     print "Indexed %d packages." % count
 
 if __name__ == '__main__':
-    run('index_cache', join(dirname(__file__), 'yum.conf'), 'http://community.dev.fedoraproject.org/tagger/dump')
+    run('index_cache', join(dirname(__file__), 'yum.conf'), 'http://apps.fedoraproject.org/tagger/dump')
