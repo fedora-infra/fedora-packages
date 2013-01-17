@@ -32,8 +32,7 @@ def install_deps():
             'python-kitchen', 'python-fedora', 'python-bugzilla', 'koji',
             'xapian-bindings-python', 'diffstat', 'fedpkg', 'svn', 'wget',
             'python-xappy', 'python-webob', 'moksha', 'TurboGears2',
-            #'python-dogpile-cache',  # Not actually available in F18 yet.
-            # http://bit.ly/VQPlIo
+            'python-dogpile-cache', 'python-dogpile-core',
         ]
         run('sudo yum install -q -y ' + ' '.join(reqs))
 
