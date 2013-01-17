@@ -63,7 +63,7 @@ setup(
     install_requires=[
         "moksha.wsgi",
         "TurboGears2",
-        #"dogpile.cache",
+        "dogpile.cache",
         #"PyOpenSSL",
         #"SQLAlchemy>=0.5",
         #"xappy",

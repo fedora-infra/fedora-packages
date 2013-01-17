@@ -104,7 +104,8 @@ class IConnector(object):
         self._cache = make_region(
             function_key_generator=cache_key_generator,
             key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
-            async_creation_runner=async_creation_runner,
+            # This requires a patched version of dogpile.{core,cache}
+            #async_creation_runner=async_creation_runner,
         )
         self._cache.configure_from_config(config, 'cache.connectors.')
 
