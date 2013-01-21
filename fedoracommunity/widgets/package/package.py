@@ -114,7 +114,7 @@ class PackageWidget(twc.Widget):
 
         koji = get_connector('koji')
         try:
-            builds = koji._koji_client.getLatestBuilds('dist-rawhide', package=result['name'])
+            builds = koji._koji_client.getLatestBuilds('rawhide', package=result['name'])
             if builds:
                 self.latest_build = builds[0]['version'] + '-' + \
                                     builds[0]['release']

@@ -162,7 +162,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         d = info[1]['packageListings'][0]
 
         for dist in info[1]['packageListings']:
-            if dist['collection']['koji_name'] == 'dist-rawhide':
+            if dist['collection']['koji_name'] == 'rawhide':
                 d = dist
                 break
 
@@ -604,7 +604,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         releases.sort(cmp=lambda x, y: cmp(int(x[1].split()[-1]),
                                            int(y[1].split()[-1])), reverse=True)
         if rawhide:
-            releases = [('dist-rawhide', 'Rawhide')] + releases
+            releases = [('rawhide', 'Rawhide')] + releases
         return releases
 
     def get_pkgdb(self):

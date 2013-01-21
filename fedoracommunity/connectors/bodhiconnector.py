@@ -578,7 +578,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
             name = release[1]
             r = {'release': name, 'stable_version': 'None',
                  'testing_version': 'None'}
-            if tag == 'dist-rawhide':
+            if tag == 'rawhide':
                 koji.listTagged(tag, package=package, latest=True, inherit=True)
                 queries.append(tag)
                 release_tag[tag] = r
