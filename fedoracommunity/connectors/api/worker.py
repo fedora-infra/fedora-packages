@@ -158,7 +158,7 @@ def daemon():
 
 def foreground():
     t = Thread()
-    t.run()
+    t.start()
 
 
 def main():
