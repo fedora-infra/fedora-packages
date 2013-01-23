@@ -29,38 +29,12 @@ from fedoracommunity.connectors.api import (
     IQuery,
     ParamFilter,
 )
-from fedoracommunity.connectors.api.connector import cache_key_generator
 from moksha.common.lib.dates import DateTimeDisplay
-
-import dogpile.cache
-import threading
 
 from bugzillahacks import hotpatch_bugzilla
 
 # Do it at import-time.
 hotpatch_bugzilla()
-
-
-# This lets us refresh our cache in a background thread.  Awesome!
-def async_creation_runner(cache, somekey, creator, mutex):
-    def f():
-        try:
-            value = creator()
-            cache.set(somekey, value)
-        finally:
-            mutex.release()
-
-    t = threading.Thread(target=f)
-    t.start()
-
-
-cache = dogpile.cache.make_region(
-    function_key_generator=cache_key_generator,
-    key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
-    # This requires a patched version of dogpile.{core,cache}
-    #async_creation_runner=async_creation_runner,
-)
-_cache_configured = False
 
 PRODUCTS = ['Fedora', 'Fedora EPEL']
 
@@ -86,23 +60,8 @@ class BugzillaConnector(IConnector, ICall, IQuery):
     _query_paths = {}
 
     def __init__(self, environ=None, request=None):
-        global _cache_configured
         super(BugzillaConnector, self).__init__(environ, request)
         self.__bugzilla = None
-
-        # Defaults for the dogpile cache
-        cache_config = {
-            "cache.bugzilla.backend": "dogpile.cache.dbm",
-            "cache.bugzilla.arguments.filename": "dogpile-cache.dbm",
-            "cache.bugzilla.expiration_time": "300",
-        }
-
-        cache_config.update(config)
-
-        # Initialize our dogpile cache.
-        if not _cache_configured:
-            cache.configure_from_config(cache_config, "cache.bugzilla.")
-            _cache_configured = True
 
     @property
     def _bugzilla(self):
@@ -184,7 +143,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         results = []
 
         # Open bugs - returns an int
-        @cache.cache_on_arguments(namespace)
         def open_bugs():
             return len(self._bugzilla.query({
                 'product': collection,
@@ -193,7 +151,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             }))
 
         # Blocking Bugs - returns a list of lists of blocked bug ids
-        @cache.cache_on_arguments(namespace)
         def blocker_bugs():
             blockers = self._bugzilla.query({
                 'product': collection,
@@ -204,7 +161,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             return [b.blocks for b in blockers if b.blocks]
 
         # Closed Bugs this week - returns an int
-        @cache.cache_on_arguments(namespace)
         def closed_bugs():
             return len(self._bugzilla.query({
                 'product': collection,
@@ -214,7 +170,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             }))
 
         # New bugs this week - returns a list
-        @cache.cache_on_arguments(namespace)
         def new_bugs():
             return len(self._bugzilla.query({
                 'product': collection,
@@ -311,7 +266,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         bugs = self.get_bugs(bugs, collection=collection)
         return (total_count, bugs)
 
-    @cache.cache_on_arguments()
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
                     sort_col='number', filters=None, collection='Fedora',
                     **params):
@@ -337,7 +291,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
     def get_bugs(self, bugids, collection='Fedora'):
 
-        @cache.cache_on_arguments()
         def _bugids_to_dicts(chunk_of_bugids):
 
             # First, query bugzilla for ids
