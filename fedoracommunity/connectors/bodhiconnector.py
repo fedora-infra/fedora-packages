@@ -16,6 +16,7 @@
 
 import time
 import logging
+import requests
 
 from paste.deploy.converters import asbool
 from tg import config
@@ -212,15 +213,21 @@ class BodhiConnector(IConnector, ICall, IQuery):
         else:
             params['tg_paginate_limit'] = rows_per_page
 
-        results = self._bodhi_client.send_request('list', req_params=params)
+        # Make a JSON query using python-requests instead of python-fedora.
+        headers = {'Accept': 'application/json'}
+        response = requests.get(self._base_url + '/list', params=params,
+                                headers=headers)
+        results = response.json
+        if callable(results):
+            results = results()
 
-        total_count = results[1]['num_items']
+        total_count = results['num_items']
 
         if group_updates:
-            updates_list = self._group_updates(results[1]['updates'],
+            updates_list = self._group_updates(results['updates'],
                                                num_packages=rows_per_page)
         else:
-            updates_list = results[1]['updates']
+            updates_list = results['updates']
 
         for up in updates_list:
             versions = []
