@@ -97,20 +97,26 @@ class IConnector(object):
 
     All connectors must derive from this interface
     """
-    def __init__(self, environ=None, request=None):
-        super(IConnector, self).__init__()
-        self._environ = environ
-        self._request = request
 
-        self._cache = None
-        if any(['cache.connectors.' in k for k in config]):
-            self._cache = make_region(
+    __cache = None
+
+    @classmethod
+    def _cache(cls):
+        if not cls.__cache and any(['cache.connectors.' in k for k in config]):
+            cls.__cache = make_region(
                 function_key_generator=cache_key_generator,
                 key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
                 # This requires a patched version of dogpile.{core,cache}
                 #async_creation_runner=async_creation_runner,
             )
-            self._cache.configure_from_config(config, 'cache.connectors.')
+            cls.__cache.configure_from_config(config, 'cache.connectors.')
+
+        return cls.__cache
+
+    def __init__(self, environ=None, request=None):
+        super(IConnector, self).__init__()
+        self._environ = environ
+        self._request = request
 
     @classmethod
     def register(self):
@@ -123,6 +129,11 @@ class IConnector(object):
 
     @classmethod
     def register_method(cls, method_path, method):
+
+        # Wrap every query in our dogpile cache.
+        if cls._cache():
+            method = cls._cache().cache_on_arguments(method_path)(method)
+
         cls._method_paths[method_path] = method
 
     def _dispatch(self, op, resource_path, params, _cookies = None, **kwds):
@@ -332,10 +343,6 @@ class IQuery(object):
 
         query_func = self.query_model(resource_path).get_query()
 
-        # Wrap every query in our dogpile cache.
-        if self._cache:
-            query_func = self._cache.cache_on_arguments()(query_func)
-
         (total_rows, rows_or_error) = query_func(self,
                                         start_row = start_row,
                                         rows_per_page = rows_per_page,
@@ -384,6 +391,12 @@ class IQuery(object):
                           default_sort_col = default_sort_col,
                           default_sort_order = default_sort_order,
                           can_paginate = can_paginate)
+
+
+        # Wrap every query in our dogpile cache.
+        if cls._cache():
+            qpath['query_func'] = \
+                    cls._cache().cache_on_arguments(path)(qpath['query_func'])
 
         cls._query_paths[path] = qpath
         return qpath

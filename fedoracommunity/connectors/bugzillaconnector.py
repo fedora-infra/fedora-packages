@@ -29,38 +29,12 @@ from fedoracommunity.connectors.api import (
     IQuery,
     ParamFilter,
 )
-from fedoracommunity.connectors.api.connector import cache_key_generator
 from moksha.common.lib.dates import DateTimeDisplay
-
-import dogpile.cache
-import threading
 
 from bugzillahacks import hotpatch_bugzilla
 
 # Do it at import-time.
 hotpatch_bugzilla()
-
-
-# This lets us refresh our cache in a background thread.  Awesome!
-def async_creation_runner(cache, somekey, creator, mutex):
-    def f():
-        try:
-            value = creator()
-            cache.set(somekey, value)
-        finally:
-            mutex.release()
-
-    t = threading.Thread(target=f)
-    t.start()
-
-
-cache = dogpile.cache.make_region(
-    function_key_generator=cache_key_generator,
-    key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
-    # This requires a patched version of dogpile.{core,cache}
-    #async_creation_runner=async_creation_runner,
-)
-_cache_configured = False
 
 PRODUCTS = ['Fedora', 'Fedora EPEL']
 
@@ -86,17 +60,8 @@ class BugzillaConnector(IConnector, ICall, IQuery):
     _query_paths = {}
 
     def __init__(self, environ=None, request=None):
-        global _cache_configured
         super(BugzillaConnector, self).__init__(environ, request)
         self.__bugzilla = None
-
-
-        # Initialize our dogpile cache.
-        if not _cache_configured and any([
-            'cache.bugzilla' in k for k in config]):
-
-            cache.configure_from_config(config, "cache.bugzilla.")
-            _cache_configured = True
 
     @property
     def _bugzilla(self):
@@ -213,12 +178,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'creation_time': last_week,
             }))
 
-        if _cache_configured:
-            open_bugs = cache.cache_on_arguments(namespace)(open_bugs)
-            blocker_bugs = cache.cache_on_arguments(namespace)(blocker_bugs)
-            closed_bugs = cache.cache_on_arguments(namespace)(closed_bugs)
-            new_bugs = cache.cache_on_arguments(namespace)(new_bugs)
-
         results = [
             open_bugs(),     # int
             blocker_bugs(),  # list of lists of bug_ids
@@ -290,11 +249,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             #'order': 'bug_id',
         }
 
-        _query_bugs = self._query_bugs
-        if _cache_configured:
-            _query_bugs = cache.cache_on_arguments()(_query_bugs)
-
-        bugs = _query_bugs(
+        bugs = self._query_bugs(
             query,
             filters=filters,
             collection=collection,
