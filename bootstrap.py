@@ -32,11 +32,10 @@ def install_deps():
             'python-kitchen', 'python-fedora', 'python-bugzilla', 'koji',
             'xapian-bindings-python', 'diffstat', 'fedpkg', 'svn', 'wget',
             'python-xappy', 'python-webob', 'moksha', 'TurboGears2',
-            # The version in pypi is up to date.  fedora is on the way.
-            #'python-dogpile-cache', 'python-dogpile-core',
+            'python-dogpile-cache', 'python-dogpile-core',
             'python-retask',
         ]
-        run('sudo yum install -q -y ' + ' '.join(reqs))
+        run('sudo yum install -q -y --enablerepo=updates-testing ' + ' '.join(reqs))
 
 
 snapshot_url = 'http://lmacken.fedorapeople.org/fedora-packages'
