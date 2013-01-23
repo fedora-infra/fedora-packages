@@ -34,6 +34,9 @@ for key in list(tg.config.keys()):
 from fedoracommunity.connectors.api.mw import FCommConnectorMiddleware
 mw_obj = FCommConnectorMiddleware(lambda *args, **kw: None)
 
+class fake_request(object):
+    environ = {}
+
 def main():
     if queue.length == 0:
         print("No tasks found in the queue.  Sleeping for 2 seconds.")
@@ -51,7 +54,10 @@ def main():
         typ = data['fn']['type']
 
         conn_cls = mw_obj._connectors[name]['connector_class']
-        conn_obj = conn_cls({}, object())
+
+        request = fake_request()
+        conn_obj = conn_cls(request.environ, request)
+
         if typ == 'query':
             fn = conn_obj._query_paths[path]['query_func']
         else:
