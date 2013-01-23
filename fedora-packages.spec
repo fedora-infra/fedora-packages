@@ -35,6 +35,7 @@ BuildRequires: python-tw2-jqplugins-ui
 BuildRequires: python-bunch
 BuildRequires: python-dogpile-cache
 BuildRequires: python-retask
+BuildRequires: python-daemon
 
 %if 0%{?el6} || 0%{?el5}
 BuildRequires:  python-ordereddict
@@ -68,6 +69,7 @@ Requires: python-memcached
 Requires: python-retask
 # For spectool
 Requires: rpmdevtools
+Requires: python-daemon
 
 # Needs to be running so the wsgi process can share jobs with worker processes
 Requires: redis
