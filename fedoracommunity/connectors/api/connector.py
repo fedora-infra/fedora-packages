@@ -101,13 +101,16 @@ class IConnector(object):
         super(IConnector, self).__init__()
         self._environ = environ
         self._request = request
-        self._cache = make_region(
-            function_key_generator=cache_key_generator,
-            key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
-            # This requires a patched version of dogpile.{core,cache}
-            #async_creation_runner=async_creation_runner,
-        )
-        self._cache.configure_from_config(config, 'cache.connectors.')
+
+        self._cache = None
+        if any(['cache.connectors.' in k for k in config]):
+            self._cache = make_region(
+                function_key_generator=cache_key_generator,
+                key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
+                # This requires a patched version of dogpile.{core,cache}
+                #async_creation_runner=async_creation_runner,
+            )
+            self._cache.configure_from_config(config, 'cache.connectors.')
 
     @classmethod
     def register(self):
@@ -330,7 +333,8 @@ class IQuery(object):
         query_func = self.query_model(resource_path).get_query()
 
         # Wrap every query in our dogpile cache.
-        query_func = self._cache.cache_on_arguments()(query_func)
+        if self._cache:
+            query_func = self._cache.cache_on_arguments()(query_func)
 
         (total_rows, rows_or_error) = query_func(self,
                                         start_row = start_row,

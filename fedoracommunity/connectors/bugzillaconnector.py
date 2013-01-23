@@ -90,18 +90,12 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         super(BugzillaConnector, self).__init__(environ, request)
         self.__bugzilla = None
 
-        # Defaults for the dogpile cache
-        cache_config = {
-            "cache.bugzilla.backend": "dogpile.cache.dbm",
-            "cache.bugzilla.arguments.filename": "dogpile-cache.dbm",
-            "cache.bugzilla.expiration_time": "300",
-        }
-
-        cache_config.update(config)
 
         # Initialize our dogpile cache.
-        if not _cache_configured:
-            cache.configure_from_config(cache_config, "cache.bugzilla.")
+        if not _cache_configured and any([
+            'cache.bugzilla' in k for k in config]):
+
+            cache.configure_from_config(config, "cache.bugzilla.")
             _cache_configured = True
 
     @property
@@ -184,7 +178,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         results = []
 
         # Open bugs - returns an int
-        @cache.cache_on_arguments(namespace)
         def open_bugs():
             return len(self._bugzilla.query({
                 'product': collection,
@@ -193,7 +186,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             }))
 
         # Blocking Bugs - returns a list of lists of blocked bug ids
-        @cache.cache_on_arguments(namespace)
         def blocker_bugs():
             blockers = self._bugzilla.query({
                 'product': collection,
@@ -204,7 +196,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             return [b.blocks for b in blockers if b.blocks]
 
         # Closed Bugs this week - returns an int
-        @cache.cache_on_arguments(namespace)
         def closed_bugs():
             return len(self._bugzilla.query({
                 'product': collection,
@@ -214,7 +205,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             }))
 
         # New bugs this week - returns a list
-        @cache.cache_on_arguments(namespace)
         def new_bugs():
             return len(self._bugzilla.query({
                 'product': collection,
@@ -222,6 +212,12 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 'status': 'NEW',
                 'creation_time': last_week,
             }))
+
+        if _cache_configured:
+            open_bugs = cache.cache_on_arguments(namespace)(open_bugs)
+            blocker_bugs = cache.cache_on_arguments(namespace)(blocker_bugs)
+            closed_bugs = cache.cache_on_arguments(namespace)(closed_bugs)
+            new_bugs = cache.cache_on_arguments(namespace)(new_bugs)
 
         results = [
             open_bugs(),     # int
@@ -294,7 +290,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             #'order': 'bug_id',
         }
 
-        bugs = self._query_bugs(
+        _query_bugs = self._query_bugs
+        if _cache_configured:
+            _query_bugs = cache.cache_on_arguments()(_query_bugs)
+
+        bugs = _query_bugs(
             query,
             filters=filters,
             collection=collection,
@@ -311,7 +311,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         bugs = self.get_bugs(bugs, collection=collection)
         return (total_count, bugs)
 
-    @cache.cache_on_arguments()
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
                     sort_col='number', filters=None, collection='Fedora',
                     **params):
@@ -337,7 +336,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
     def get_bugs(self, bugids, collection='Fedora'):
 
-        @cache.cache_on_arguments()
         def _bugids_to_dicts(chunk_of_bugids):
 
             # First, query bugzilla for ids
