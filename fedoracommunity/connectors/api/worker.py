@@ -21,22 +21,10 @@ from paste.deploy import appconfig
 import dogpile.cache.api
 import dogpile.cache.region
 
-# Initialize an incoming redis queue right off the bat.
-queue = retask.queue.Queue('fedora-packages')
-queue.connect()
-
-config = appconfig('config:development.ini', relative_to=os.getcwd())
-tg.config = config
-
-# Disable all caching so we don't cyclically cache ourselves into a corner
-for key in list(tg.config.keys()):
-    if 'cache.connector' in key:
-        del tg.config[key]
-
-from fedoracommunity.connectors.api.mw import FCommConnectorMiddleware
-mw_obj = FCommConnectorMiddleware(lambda *args, **kw: None)
-
 threads = []
+
+import logging
+log = logging.getLogger("fcomm-cache-worker")
 
 
 class fake_request(object):
@@ -44,12 +32,31 @@ class fake_request(object):
 
 
 class Thread(threading.Thread):
+    def init(self):
+        self.die = False
+
+        # Initialize an incoming redis queue right off the bat.
+        self.queue = retask.queue.Queue('fedora-packages')
+        self.queue.connect()
+
+        config = appconfig('config:development.ini', relative_to=os.getcwd())
+        tg.config.update(config)
+
+        # Disable all caching so we don't cyclically cache ourselves
+        # into a corner
+        for key in list(tg.config.keys()):
+            if 'cache.connector' in key:
+                del tg.config[key]
+
+        from fedoracommunity.connectors.api.mw import FCommConnectorMiddleware
+        self.mw_obj = FCommConnectorMiddleware(lambda *args, **kw: None)
+
     def iteration(self):
-        if queue.length == 0:
-            print("No tasks found in the queue.  Sleeping for 2 seconds.")
+        if self.queue.length == 0:
+            log.info("No tasks found in the queue.  Sleeping for 2 seconds.")
             return
 
-        task = queue.dequeue()
+        task = self.queue.dequeue()
         data = json.loads(task.data)
 
         mc = memcache.Client(data['memcached_addrs'])
@@ -61,7 +68,7 @@ class Thread(threading.Thread):
             path = data['fn']['path']
             typ = data['fn']['type']
 
-            conn_cls = mw_obj._connectors[name]['connector_class']
+            conn_cls = self.mw_obj._connectors[name]['connector_class']
 
             request = fake_request()
             conn_obj = conn_cls(request.environ, request)
@@ -73,8 +80,8 @@ class Thread(threading.Thread):
 
             fn = types.MethodType(fn, conn_obj, conn_cls)
 
-            print "Calling {name}(**{kw})".format(
-                name=repr(fn), kw=data['kw'])
+            log.info("Calling {name}(**{kw})".format(
+                name=repr(fn), kw=data['kw']))
 
             value = fn(**data['kw'])
 
@@ -83,18 +90,18 @@ class Thread(threading.Thread):
                 "v": dogpile.cache.region.value_version,
             })
             cache_key = str(data['cache_key'])
-            print "Value Recorded at", cache_key
+            log.debug("Value Recorded at " + cache_key)
             mc.set(cache_key, value)
         finally:
             # Release the kraken!
-            print "Mutex released."
+            log.info("Mutex released.")
             mc.delete(str(data['mutex_key']))
 
     def kill(self):
         self.die = True
 
     def run(self):
-        self.die = False
+        self.init()
         while not self.die:
             try:
                 self.iteration()
@@ -102,12 +109,12 @@ class Thread(threading.Thread):
                 break
             except Exception:
                 import traceback
-                traceback.print_exc()
+                log.error(traceback.format_exc())
             time.sleep(2)
             sys.stdout.flush()
 
 
-def main():
+def daemon():
     def _handle_signal(self, signum, stackframe):
         for thread in threads:
             thread.kill()
@@ -128,10 +135,10 @@ def main():
 
     n = 1
     with daemon:
-        print "changing dir (just for development)"
+        log.info("changing dir (just for development)")
         os.chdir("/home/threebean/devel/fedora-packages/")
 
-        print "Creating %i threads" % n
+        log.info("Creating %i threads" % n)
         threads = [Thread() for i in range(n)]
 
         for thread in threads:
@@ -140,5 +147,15 @@ def main():
         for thread in threads:
             thread.join()
 
-if __name__ == '__main__':
-    main()
+
+def foreground():
+    t = Thread()
+    t.run()
+
+
+def main():
+    logging.basicConfig()
+    if '--daemon' in sys.argv:
+        daemon()
+    else:
+        foreground()

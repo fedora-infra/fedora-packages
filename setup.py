@@ -180,5 +180,8 @@ setup(
     [distutils.commands]
     archive_fedoracommunity_resources = fedoracommunity.distutils.command:archive_fedoracommunity_resources
 
+    [console_scripts]
+    fcomm-cache-worker = fedoracommunity.connectors.api.worker:main
+
     """
 )
