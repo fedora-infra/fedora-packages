@@ -64,6 +64,7 @@ setup(
         "moksha.wsgi",
         "TurboGears2",
         "dogpile.cache",
+        "retask",
         #"PyOpenSSL",
         #"SQLAlchemy>=0.5",
         #"xappy",

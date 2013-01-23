@@ -40,20 +40,42 @@ from kitchen.text.converters import to_bytes
 
 import hashlib
 import inspect
-import threading
+import retask.task
+import retask.queue
+import json
+
+# Initialize an outgoing redis queue right off the bat.
+queue = retask.queue.Queue('fedora-packages')
+queue.connect()
 
 
-# This lets us refresh our cache in a background thread.  Awesome!
 def async_creation_runner(cache, somekey, creator, mutex):
-    def f():
-        try:
-            value = creator()
-            cache.set(somekey, value)
-        finally:
-            mutex.release()
+    """ Used by dogpile.core:Lock when appropriate.
 
-    t = threading.Thread(target=f)
-    t.start()
+    Instead of directly computing the value, this instead adds a task to
+    a redis queue with instructions for a worker on how to import and
+    invoke function that we want.
+
+    It also assumes the cache is backed by memcached and so provides the
+    worker both with the cache key for the new value as well as the
+    memcached key for the distributed mutex (so it can be released later).
+    """
+
+    # Re-use those artificial attributes that we stuck on the cached fns
+    fn = dict(path=creator._path, type=creator._type, name=creator._name)
+    freevar_dict = dict(zip(
+        creator.func_code.co_freevars,
+        [c.cell_contents for c in (creator.func_closure or [])]
+    ))
+    task = retask.task.Task(json.dumps(dict(
+        fn=fn,
+        kw=freevar_dict['kw'],
+        mutex_key=mutex.key,
+        cache_key=somekey,
+        memcached_addrs=cache.backend.url,
+    )))
+    # fire-and-forget
+    queue.enqueue(task)
 
 
 def cache_key_generator(namespace, fn):
@@ -106,8 +128,7 @@ class IConnector(object):
             cls.__cache = make_region(
                 function_key_generator=cache_key_generator,
                 key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
-                # This requires a patched version of dogpile.{core,cache}
-                #async_creation_runner=async_creation_runner,
+                async_creation_runner=async_creation_runner,
             )
             cls.__cache.configure_from_config(config, 'cache.connectors.')
 
@@ -129,6 +150,11 @@ class IConnector(object):
 
     @classmethod
     def register_method(cls, method_path, method):
+
+        # Attach an attribute so the worker can look us up later.
+        method.__dict__['_path'] = method_path
+        method.__dict__['_type'] = 'method'
+        method.__dict__['_name'] = cls.__name__[:-9].lower()
 
         # Wrap every query in our dogpile cache.
         if cls._cache():
@@ -392,6 +418,10 @@ class IQuery(object):
                           default_sort_order = default_sort_order,
                           can_paginate = can_paginate)
 
+        # Attach an attribute so the worker can look us up later.
+        qpath['query_func'].__dict__['_path'] = path
+        qpath['query_func'].__dict__['_type'] = 'query'
+        qpath['query_func'].__dict__['_name'] = cls.__name__[:-9].lower()
 
         # Wrap every query in our dogpile cache.
         if cls._cache():

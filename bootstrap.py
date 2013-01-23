@@ -33,6 +33,7 @@ def install_deps():
             'xapian-bindings-python', 'diffstat', 'fedpkg', 'svn', 'wget',
             'python-xappy', 'python-webob', 'moksha', 'TurboGears2',
             'python-dogpile-cache', 'python-dogpile-core',
+            'python-retask',
         ]
         run('sudo yum install -q -y ' + ' '.join(reqs))
 

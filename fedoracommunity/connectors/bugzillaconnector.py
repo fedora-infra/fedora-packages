@@ -119,7 +119,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         f.add_filter('version', [], allow_none=False)
         cls._query_bugs_filter = f
 
-    def query_bug_stats(self, path, cookies, package=None, **kw):
+    def query_bug_stats(self, path=None, cookies=None, package=None, **kw):
         """
         Returns (# of open bugs, # of new bugs, # of closed bugs)
 
