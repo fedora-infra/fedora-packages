@@ -56,6 +56,7 @@ class Thread(threading.Thread):
             log.info("No tasks found in the queue.  Sleeping for 2 seconds.")
             return
 
+        log.info("Picking up a task from the queue.")
         task = self.queue.dequeue()
         data = json.loads(task.data)
 
@@ -115,9 +116,15 @@ class Thread(threading.Thread):
 
 
 def daemon():
-    def _handle_signal(self, signum, stackframe):
+    def handle_signal(self, signum, stackframe):
+        print "got %r %r" % (signum, stackframe)
         for thread in threads:
             thread.kill()
+
+        for thread in threads:
+            thread.join()
+
+        raise SystemExit("Signalled")
 
     from daemon import DaemonContext
     try:
@@ -131,7 +138,7 @@ def daemon():
     output = file('/tmp/fedoracommunity-worker.log', 'a')
 
     daemon = DaemonContext(pidfile=pidlock, stdout=output, stderr=output)
-    daemon.terminate = _handle_signal
+    daemon.terminate = handle_signal
 
     n = 1
     with daemon:
@@ -139,7 +146,8 @@ def daemon():
         os.chdir("/home/threebean/devel/fedora-packages/")
 
         log.info("Creating %i threads" % n)
-        threads = [Thread() for i in range(n)]
+        for i in range(n):
+            threads.append(Thread())
 
         for thread in threads:
             thread.start()
@@ -154,7 +162,10 @@ def foreground():
 
 
 def main():
-    logging.basicConfig()
+    logging.basicConfig(
+        level=logging.DEBUG,
+        stream=sys.stdout,
+    )
     if '--daemon' in sys.argv:
         daemon()
     else:
