@@ -33,6 +33,8 @@ BuildRequires: TurboGears2
 BuildRequires: python-moksha-wsgi
 BuildRequires: python-tw2-jqplugins-ui
 BuildRequires: python-bunch
+BuildRequires: python-dogpile-cache
+BuildRequires: python-retask
 
 %if 0%{?el6} || 0%{?el5}
 BuildRequires:  python-ordereddict
@@ -63,8 +65,12 @@ Requires: xapian-bindings-python
 Requires: python-xappy
 Requires: python-dogpile-cache
 Requires: python-memcached
+Requires: python-retask
 # For spectool
 Requires: rpmdevtools
+
+# Needs to be running so the wsgi process can share jobs with worker processes
+Requires: redis
 
 Obsoletes: myfedora
 Conflicts: fedoracommunity
