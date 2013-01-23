@@ -599,7 +599,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
         return paths_cache['/']['children']
 
-    def call_get_file_tree(self, resource_path, _cookies=None, package=None, repo=None, arch=None):
+    def call_get_file_tree(self, resource_path=None, _cookies=None, package=None, repo=None, arch=None):
         try:
             pkg = self._get_pkg_object(package, repo, arch)
 
