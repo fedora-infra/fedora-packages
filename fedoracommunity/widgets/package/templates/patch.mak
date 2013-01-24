@@ -21,7 +21,7 @@
 ${render_diffstat(w.diffstat)}
 % endif
 <div class="patch_raw">
-<a href="http://pkgs.fedoraproject.org/gitweb/?p=${w.package}.git;a=blob_plain;hb=HEAD;f=${w.patch}" target="_blank">Link to raw patch</a>
+<a href="http://pkgs.fedoraproject.org/cgit/${w.package}.git/tree/${w.patch}" target="_blank">Link to raw patch</a>
 </div>
 <br/>
 ${w.text}
