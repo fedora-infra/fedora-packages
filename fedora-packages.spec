@@ -123,6 +123,12 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{__install} production/apache/%{oldname}.wsgi %{buildroot}%{_datadir}/%{oldname}/production/apache/%{oldname}.wsgi
 %{__install} production/sample-production.ini %{buildroot}%{_datadir}/%{oldname}/production
 
+%{__mkdir_p} %{buildroot}%{_sysconfdir}/init.d
+%{__install} initsys/sysv/fcomm-cache-worker.init %{buildroot}%{_sysconfdir}/init.d/fcomm-cache-worker
+
+%{__mkdir_p} %{buildroot}%{_sbindir}
+%{__mv} %{buildroot}%{_bindir}/fcomm-cache-worker %{buildroot}%{_sbindir}/fcomm-cache-worker
+
 %clean
 %{__rm} -rf %{buildroot}
 
@@ -141,6 +147,9 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fedoracommunity_makeyumcache
 %{_bindir}/fcomm-index-packages
 %{_bindir}/fcomm-index-latest-builds
+%{_sbindir}/fcomm-cache-worker
+%{_sysconfdir}/init.d/fedmsg-hub
+
 
 %changelog
 * Mon Jan 14 2013 Ralph Bean <rbean@redhat.com> - 2.0.4-6.20130114git6c5b194

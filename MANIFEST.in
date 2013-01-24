@@ -3,6 +3,7 @@ recursive-include fedoracommunity *.mak
 recursive-include fedoracommunity *.js
 recursive-include fedoracommunity *.png *.gif *.svg
 recursive-include fedoracommunity/public/css *.css *.ttf *.png *.gif *.svg *.eot *.woff
+recursive-include initsys *
 
 include fedoracommunity_makeyumcache
 include fedoracommunity.spec
