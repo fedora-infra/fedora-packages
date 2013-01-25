@@ -152,8 +152,10 @@ def daemon():
         for thread in threads:
             thread.start()
 
-        for thread in threads:
-            thread.join()
+        # I used to do thread.join() here, but that makes it so the
+        # signal_handler never gets fired.  Crazy python...
+        while any([not thread.die for thread in threads]):
+            time.sleep(2)
 
 
 def foreground():
