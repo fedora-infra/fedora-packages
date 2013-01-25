@@ -39,7 +39,7 @@ class Thread(threading.Thread):
         self.queue = retask.queue.Queue('fedora-packages')
         self.queue.connect()
 
-        config = appconfig('config:development.ini', relative_to=os.getcwd())
+        config = appconfig("config:" + find_config_file())
         tg.config.update(config)
 
         # Disable all caching so we don't cyclically cache ourselves
@@ -98,9 +98,6 @@ class Thread(threading.Thread):
             log.info("Mutex released.")
             mc.delete(str(data['mutex_key']))
 
-    def kill(self):
-        self.die = True
-
     def run(self):
         self.init()
         while not self.die:
@@ -113,38 +110,54 @@ class Thread(threading.Thread):
                 log.error(traceback.format_exc())
             time.sleep(2)
             sys.stdout.flush()
+        log.info("Thread exiting.")
+
+
+    def kill(self):
+        self.die = True
+
+def find_config_file():
+    locations = (
+        '.',
+        '/etc/fedoracommunity/',
+        '/'.join(__file__.split('/') + ['..', '..', '..', '..']),
+    )
+    for config_path in locations:
+        for config_file in ('production.ini', 'development.ini'):
+            cfg = os.path.join(os.path.abspath(config_path), config_file)
+            if os.path.isfile(cfg):
+                return cfg
+    return None
 
 
 def daemon():
-    def handle_signal(self, signum, stackframe):
-        print "got %r %r" % (signum, stackframe)
+    def die_in_a_fire(signum, stack):
         for thread in threads:
             thread.kill()
 
-        for thread in threads:
-            thread.join()
-
-        raise SystemExit("Signalled")
-
+    import signal
     from daemon import DaemonContext
     try:
         from daemon.pidfile import TimeoutPIDLockFile as PIDLockFile
     except:
         from daemon.pidlockfile import PIDLockFile
 
+    config = appconfig("config:" + find_config_file())
+
     #pidlock = PIDLockFile('/var/run/fedoracommunity/worker.pid')
     #output = file('/var/log/fedoracommunity/worker.log', 'a')
-    pidlock = PIDLockFile('/tmp/fedoracommunity-worker.pid')
-    output = file('/tmp/fedoracommunity-worker.log', 'a')
+    pidlock = PIDLockFile(
+        config.get('cache-worker.pidfile', '/tmp/fedoracommunity-worker.pid')
+    )
+    output = file(
+        config.get('cache-worker.logfile', '/tmp/fedoracommunity-worker.log'),
+        'a')
 
     daemon = DaemonContext(pidfile=pidlock, stdout=output, stderr=output)
-    daemon.terminate = handle_signal
+    daemon.terminate = die_in_a_fire
 
-    n = 1
+    n = int(config.get('cache-worker.threads', '8'))
     with daemon:
-        log.info("changing dir (just for development)")
-        os.chdir("/home/threebean/devel/fedora-packages/")
-
         log.info("Creating %i threads" % n)
         for i in range(n):
             threads.append(Thread())
@@ -160,7 +173,7 @@ def daemon():
 
 def foreground():
     t = Thread()
-    t.start()
+    t.run()
 
 
 def main():
