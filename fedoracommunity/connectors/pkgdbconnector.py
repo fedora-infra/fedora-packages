@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import requests
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter, ISearch
 from tg import config
 from fedora.client import ProxyClient, PackageDB
@@ -90,18 +89,15 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return self.request_data(resource_path, params, _cookies)
 
     def request_collection_table(self, eol=False):
+        session_id = None
+        if self._environ:
+            identity = self._environ.get('repoze.who.identity')
+            if identity:
+                session_id = identity.get('session_id')
+
         table = {}
-        headers = {'Accept': 'application/json'}
-        response = requests.get(self._base_url + '/collections/',
-                                headers=headers)
-        results = response.json
-        if callable(results):
-            results = results()
-
-        co = results['collections']
-        if not eol:
-            co = [c for c in co if c[0]['statuscode'] != 9]
-
+        pkgdb = PackageDB(self._base_url, insecure=self._insecure, session_id=session_id)
+        co = pkgdb.get_collection_list(eol=eol)
         for c, num in co:
             table[c['id']] = c
 
