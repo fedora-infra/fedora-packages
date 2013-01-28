@@ -14,16 +14,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import re
 import koji
+import rpm
 
-from pylons import config, request
+from tg import config
 from datetime import datetime
 from cgi import escape
+from urlgrabber import grabber
 
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
-from moksha.api.connectors import get_connector
-from moksha.lib.helpers import DateTimeDisplay
+try:
+    from lockfile import LockFile
+except ImportError:
+    from lockfile import FileLock as LockFile
+
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import get_connector
+from moksha.common.lib.dates import DateTimeDisplay
 
 class KojiConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -42,12 +50,26 @@ class KojiConnector(IConnector, ICall, IQuery):
         cls._koji_url = config.get('fedoracommunity.connector.koji.baseurl',
                                    'http://koji.fedoraproject.org/koji')
 
+        cls._koji_pkg_url = config.get('fedoracommunity.connector.koji.pkgurl',
+                                       'http://koji.fedoraproject.org/packages')
+
+        cls._rpm_cache = config.get('fedoracommunity.rpm_cache',
+                                    None)
+        if not cls._rpm_cache:
+            print "You must specify fedoracommunity.rpm_cache in you .ini file"
+            exit(-1)
+
         cls.register_query_builds()
         cls.register_query_packages()
         cls.register_query_changelogs()
+        cls.register_query_provides()
+        cls.register_query_requires()
+        cls.register_query_conflicts()
+        cls.register_query_obsoletes()
 
         cls.register_method('get_error_log', cls.call_get_error_log)
         cls.register_method('get_latest_changelog', cls.call_get_latest_changelog)
+        cls.register_method('get_file_tree', cls.call_get_file_tree)
 
     def request_data(self, resource_path, params, _cookies):
         return self._koji_client.callMethod(resource_path, **params)
@@ -121,12 +143,168 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         return changelogs[0]
 
+    def _size_to_human_format(self, size):
+        suffixes = ['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
+        result = size
+        for suffix in suffixes:
+            result /= 1024.0
+            if result < 1024:
+                return '{0:.1f} {1}'.format(result, suffix)
+        return str(size)
+
+    def _add_to_path(self, path, path_cache, data):
+        if path == '':
+            path = '/'
+        if path in path_cache:
+            dir_info = path_cache[path]
+            if data:
+               dir_info.append(data)
+            return
+
+        new_data = []
+        if data:
+           new_data.append(data)
+        path_cache[path] = new_data
+        (new_path, dir_name) = os.path.split(path)
+        self._add_to_path(new_path, path_cache, {'dirname': dir_name, 'content':new_data})
+
+    def _rpm_list_files(self, file_path):
+        fd = os.open(file_path, os.O_RDONLY)
+        ts = rpm.TransactionSet()
+        h = ts.hdrFromFdno(fd)
+        attr_names = []
+
+        os.close(fd)
+        fi = h.fiFromHeader()
+        file_list = []
+        links = {}
+        paths = {'/':[]}
+        result = {}
+        for f in fi:
+            """
+            input: (full_path, size, mode, mtime, Fflags, rdev, inode, nlink, state, Vflags, user, group, digest)
+            output: (name, path, display_size, type, modestring, linked_to, user, group)
+
+                name - name of the file, link or directory
+                path - path to file, link or directory
+                display_size - size of file in human readable terms (e.g. 15.2K, 3.4M, 6.3G)
+                type - 'F', 'L' for file and link respectively. Directory info is discarded.
+                       Links and directories are guesses based on size.
+                modestring - the mode in human readable string format (e.g. xrwxr-xr-)
+                linked_to - guess based on files with the same name
+                user - user who owns this file
+                group - group who owns this file
+            """
+            (full_path, size, mode, mtime, Fflags, rdev, inode, nlink, state,
+             Vflags, user, group, digest) = f
+            output = {'name': None,
+                      'path': None,
+                      'display_size': None,
+                      'type': 'F',
+                      'modestring': '',
+                      'linked_to': None,
+                      'user': user,
+                      'group': group}
+
+            (path, name) = os.path.split(full_path)
+            output['name'] = name
+            output['path'] = path
+            output['display_size'] = self._size_to_human_format(size)
+
+            digest = int(digest, 16)
+            if digest == 0:
+                # could be directory or link based on size
+                if size > 1024:
+                    # if we are a directory check to see if it exists
+                    self._add_to_path(path, paths, None)
+                    continue;
+                else:
+                    output['type'] = 'L'
+                    links[name] = output
+                    # check to see if the file this links to has been seen
+                    for file_info in file_list:
+                        if file_info['name'] == name:
+                            output['linked_to'] = os.path.join(file_info['path'], name)
+                            break;
+            else:
+                # check to see if we are linked to
+                link = links.get(name, None)
+                if link and not link['linked_to']:
+                    link['linked_to'] = os.path.join(path, name)
+
+                file_list.append(output)
+
+            # construct directory structure
+            self._add_to_path(path, paths, output)
+
+        return paths['/']
+
+    def _download_rpm(self, nvr, arch):
+        if nvr is None or arch is None:
+            raise ValueError("Invalid option passed to connector")
+
+        filename = '%s.%s.rpm' % (nvr, arch)
+        file_path = os.path.split(filename)
+        if file_path[0] != '':
+            raise ValueError("Nvr can not contain path elements")
+        if len(arch.split('/')) != 1 or os.path.split(arch)[0] != '':
+            raise ValueError("Arch can not contain path elements")
+
+        rpm_file_path = os.path.join(self._rpm_cache, filename)
+        if os.path.exists(rpm_file_path):
+            return rpm_file_path
+
+        lockfile = LockFile(file_path)
+        if lockfile.is_locked():
+            # block until the lock is released and then assume other
+            # thread was successful
+            lockfile.acquire()
+            lockfile.release()
+            return rpm_file_path
+
+        # acquire the lock and release when done
+        lockfile.acquire()
+        try:
+            info = self.call('getBuild', {'buildInfo': nvr})
+            if info is None:
+                return {'error': 'No such build (%s)' % filename}
+
+            if not os.path.exists(self._rpm_cache):
+                os.mkdir(self._rpm_cache,)
+
+            url = '%s/%s/%s/%s/%s/%s' % (self._koji_pkg_url, info['name'], info['version'], info['release'], arch, filename)
+
+            url_file = grabber.urlopen(url, text=filename)
+            out = os.open(rpm_file_path, os.O_WRONLY|os.O_CREAT|os.O_TRUNC, 0666)
+            try:
+                while 1:
+                    buf = url_file.read(4096)
+                    if not buf:
+                        break
+                    os.write(out, buf)
+            except Exception as e:
+                raise e
+            finally:
+                os.close(out)
+                url_file.close()
+        finally:
+            lockfile.release()
+
+        return rpm_file_path
+
+    def call_get_file_tree(self, resource_path, _cookies=None, nvr=None, arch=None):
+        try:
+            rpm_file_path = self._download_rpm(nvr, arch)
+            return self._rpm_list_files(rpm_file_path)
+        except Exception as e:
+            return {'error': "Error: %s" % str(e)}
 
     def call_get_error_log(self, resource_path, _cookies=None, task_id=None):
         results = {'log_url':'', 'log_name':'', 'task_id':''}
         task_id = int(task_id);
 
-        decendents = self.call('getTaskDescendents', {'task_id': task_id})
+        decendents = self.call('getTaskDescendents', {'task_id': task_id,
+        })
         for task in decendents.keys():
             task_children = decendents[task]
             for child in task_children:
@@ -196,7 +374,7 @@ class KojiConnector(IConnector, ICall, IQuery):
                         can_filter_wildcards = False)
 
         f = ParamFilter()
-        f.add_filter('package',[], allow_none = False)
+        f.add_filter('build_id',[], allow_none = False)
         cls._query_changelogs_filter = f
 
         cls._changelog_version_extract_re = re.compile('(.*)\W*<(.*)>\W*-?\W*(.*)')
@@ -208,23 +386,20 @@ class KojiConnector(IConnector, ICall, IQuery):
                            filters=None,
                            **params):
 
+
         if not filters:
             filters = {}
+
         filters = self._query_changelogs_filter.filter(filters, conn=self)
 
-        package = filters.get('package', '')
+        build_id = int(filters.get('build_id', None))
+        task_id = filters.get('task_id', None)
+        state = filters.get('state', None)
 
         if order < 0:
             order = '-' + sort_col
         else:
             order = sort_col
-
-        pkg_id = None
-        if package:
-            pkg_id = self._koji_client.getPackageID(package)
-
-        if not pkg_id:
-            return (0, [])
 
         queryOpts = None
 
@@ -243,30 +418,9 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         countQueryOpts = {'countOnly': True}
 
-        self._koji_client.multicall = False
-
-        # FIXME: Figure out how to deal with different builds
-        #tags = self._koji_client.listTags(package=pkg_id,
-        #                                  queryOpts={})
-
-        # ask pkgdb for the collections table
-        # pkgdb = get_connector('pkgdb', self._request)
-        # collections_table = pkgdb.get_collection_table()
-
-        # get latest version and use that to get the changelog
-        builds = self._koji_client.listBuilds(packageID=pkg_id,
-                                              queryOpts={'limit': 1,
-                                                         'offset': 0,
-                                                         'order': '-nvr'})
-
-        build_id = builds[0].get('build_id')
-        if not build_id:
-            return (0, [])
-
         self._koji_client.multicall = True
         self._koji_client.getChangelogEntries(buildID=build_id,
-                                                queryOpts=countQueryOpts)
-
+                                              queryOpts=countQueryOpts)
         self._koji_client.getChangelogEntries(buildID=build_id,
                                               queryOpts=queryOpts)
 
@@ -459,14 +613,15 @@ class KojiConnector(IConnector, ICall, IQuery):
         else:
             order = sort_col
 
-        user = self._koji_client.getUser(username)
-        
-        # we need to check if this user exists
-        if username and not user:
-            return (0, [])
-
+        user = None
         id = None
-        if user:
+        if username:
+            user = self._koji_client.getUser(username)
+
+            # we need to check if this user exists
+            if username and not user:
+                return (0, [])
+
             id = user['id']
 
         pkg_id = None
@@ -476,7 +631,16 @@ class KojiConnector(IConnector, ICall, IQuery):
         queryOpts = None
 
         if state:
-            state = int(state)
+            try:
+                state = int(state)
+            except ValueError:
+                state_list = []
+                for value in state.split(','):
+                    state_list.append(int(value))
+                    state = state_list
+
+        elif state == '':
+            state = None
 
         qo = {}
         if not (start_row == None):
@@ -532,7 +696,7 @@ class KojiConnector(IConnector, ICall, IQuery):
                 completion_display['when'] = complete.age(
                         granularity='minute', general=True) + ' ago'
 
-                ident = request.environ.get('repoze.who.identity')
+                ident = self._request.environ.get('repoze.who.identity')
                 if ident:
                     username = ident.get('repoze.who.userid')
                     tz = ident['person']['timezone']
@@ -553,3 +717,360 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         return (total_count, builds_list)
 
+    @classmethod
+    def register_query_provides(cls):
+        path = cls.register_query(
+                      'query_provides',
+                      cls.query_provides,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('flags',
+                        default_visible = False,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('version',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('ops',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('nvr',[], allow_none = False)
+        f.add_filter('arch',[], allow_none = False)
+        cls._query_provides_filter = f
+
+    def query_provides(self, start_row=None,
+                            rows_per_page=10,
+                            order=-1,
+                            sort_col=None,
+                            filters=None,
+                            **params):
+
+        if not filters:
+            filters = {}
+        filters = self._query_provides_filter.filter(filters, conn=self)
+
+        nvr = filters.get('nvr', '')
+        arch = filters.get('arch', '')
+
+        file_path = self._download_rpm(nvr, arch)
+        fd = os.open(file_path, os.O_RDONLY)
+        ts = rpm.TransactionSet()
+        h = ts.hdrFromFdno(fd)
+        os.close(fd)
+
+        provides_names = h[rpm.RPMTAG_PROVIDENAME]
+        provides_versions = h[rpm.RPMTAG_PROVIDEVERSION]
+        provides_flags = h[rpm.RPMTAG_PROVIDEFLAGS]
+        provides_ops = []
+        for flags in provides_flags:
+            op = ""
+            if flags & rpm.RPMSENSE_GREATER:
+                op = ">"
+            elif flags & rpm.RPMSENSE_LESS:
+                op = "<"
+            if flags & rpm.RPMSENSE_EQUAL:
+                op += "="
+
+            provides_ops.append(op)
+
+        total_rows = len(provides_names)
+        rows = []
+        for i in range(start_row, start_row + rows_per_page):
+            if i >= total_rows:
+                break
+            rows.append({'name': provides_names[i],
+                        'version': provides_versions[i],
+                        'flags': provides_flags[i],
+                        'ops': provides_ops[i]
+                       })
+        return (total_rows, rows)
+
+    @classmethod
+    def register_query_requires(cls):
+        path = cls.register_query(
+                      'query_requires',
+                      cls.query_requires,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('flags',
+                        default_visible = False,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('version',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('ops',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('nvr',[], allow_none = False)
+        f.add_filter('arch',[], allow_none = False)
+        cls._query_requires_filter = f
+
+    def query_requires(self, start_row=None,
+                            rows_per_page=10,
+                            order=-1,
+                            sort_col=None,
+                            filters=None,
+                            **params):
+
+        if not filters:
+            filters = {}
+        filters = self._query_requires_filter.filter(filters, conn=self)
+
+        nvr = filters.get('nvr', '')
+        arch = filters.get('arch', '')
+
+        file_path = self._download_rpm(nvr, arch)
+        fd = os.open(file_path, os.O_RDONLY)
+        ts = rpm.TransactionSet()
+        h = ts.hdrFromFdno(fd)
+        os.close(fd)
+
+        requires_names = h[rpm.RPMTAG_REQUIRENAME]
+        requires_versions = h[rpm.RPMTAG_REQUIREVERSION]
+        requires_flags = h[rpm.RPMTAG_REQUIREFLAGS]
+        requires_ops = []
+        for flags in requires_flags:
+            op = ""
+            if flags & rpm.RPMSENSE_GREATER:
+                op = ">"
+            elif flags & rpm.RPMSENSE_LESS:
+                op = "<"
+            if flags & rpm.RPMSENSE_EQUAL:
+                if op:
+                    op += "="
+                else:
+                    op = "="
+            requires_ops.append(op)
+
+        total_rows = len(requires_names)
+        rows = []
+        for i in range(start_row, start_row + rows_per_page):
+            if i >= total_rows:
+                break
+            rows.append({'name': requires_names[i],
+                        'version': requires_versions[i],
+                        'flags': requires_flags[i],
+                        'ops': requires_ops[i]
+                       })
+
+        return (total_rows, rows)
+
+    @classmethod
+    def register_query_obsoletes(cls):
+        path = cls.register_query(
+                      'query_obsoletes',
+                      cls.query_obsoletes,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('flags',
+                        default_visible = False,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('version',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('ops',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('nvr',[], allow_none = False)
+        f.add_filter('arch',[], allow_none = False)
+        cls._query_obsoletes_filter = f
+
+    def query_obsoletes(self, start_row=None,
+                            rows_per_page=10,
+                            order=-1,
+                            sort_col=None,
+                            filters=None,
+                            **params):
+
+        if not filters:
+            filters = {}
+        filters = self._query_obsoletes_filter.filter(filters, conn=self)
+
+        nvr = filters.get('nvr', '')
+        arch = filters.get('arch', '')
+
+        file_path = self._download_rpm(nvr, arch)
+        fd = os.open(file_path, os.O_RDONLY)
+        ts = rpm.TransactionSet()
+        h = ts.hdrFromFdno(fd)
+        os.close(fd)
+
+        obsoletes_names = h[rpm.RPMTAG_OBSOLETENAME]
+        obsoletes_versions = h[rpm.RPMTAG_OBSOLETEVERSION]
+        obsoletes_flags = h[rpm.RPMTAG_OBSOLETEFLAGS]
+        obsoletes_ops = []
+        for flags in obsoletes_flags:
+            op = ""
+            if flags & rpm.RPMSENSE_GREATER:
+                op = ">"
+            elif flags & rpm.RPMSENSE_LESS:
+                op = "<"
+            if flags & rpm.RPMSENSE_EQUAL:
+                if op:
+                    op += "="
+                else:
+                    op = "="
+            obsoletes_ops.append(op)
+
+        total_rows = len(obsoletes_names)
+        rows = []
+        for i in range(start_row, start_row + rows_per_page):
+            if i >= total_rows:
+                break
+
+            rows.append({'name': obsoletes_names[i],
+                        'version': obsoletes_versions[i],
+                        'flags': obsoletes_flags[i],
+                        'ops': obsoletes_ops[i]
+                       })
+
+        return (total_rows, rows)
+
+    @classmethod
+    def register_query_conflicts(cls):
+        path = cls.register_query(
+                      'query_conflicts',
+                      cls.query_conflicts,
+                      primary_key_col = 'name',
+                      default_sort_col = 'name',
+                      default_sort_order = -1,
+                      can_paginate = True)
+
+        path.register_column('name',
+                        default_visible = True,
+                        can_sort = True,
+                        can_filter_wildcards = False)
+
+        path.register_column('flags',
+                        default_visible = False,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        path.register_column('version',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+        path.register_column('ops',
+                        default_visible = True,
+                        can_sort = False,
+                        can_filter_wildcards = False)
+
+        f = ParamFilter()
+        f.add_filter('nvr',[], allow_none = False)
+        f.add_filter('arch',[], allow_none = False)
+        cls._query_conflicts_filter = f
+
+    def query_conflicts(self, start_row=None,
+                            rows_per_page=10,
+                            order=-1,
+                            sort_col=None,
+                            filters=None,
+                            **params):
+
+        if not filters:
+            filters = {}
+        filters = self._query_conflicts_filter.filter(filters, conn=self)
+
+        nvr = filters.get('nvr', '')
+        arch = filters.get('arch', '')
+
+        file_path = self._download_rpm(nvr, arch)
+        fd = os.open(file_path, os.O_RDONLY)
+        ts = rpm.TransactionSet()
+        h = ts.hdrFromFdno(fd)
+        os.close(fd)
+
+        conflict_names = h[rpm.RPMTAG_CONFLICTNAME]
+        conflict_versions = h[rpm.RPMTAG_CONFLICTVERSION]
+        conflict_flags = h[rpm.RPMTAG_CONFLICTFLAGS]
+        conflict_ops = []
+        for flags in conflict_flags:
+            op = ""
+            if flags & rpm.RPMSENSE_GREATER:
+                op = ">"
+            elif flags & rpm.RPMSENSE_LESS:
+                op = "<"
+            if flags & rpm.RPMSENSE_EQUAL:
+                if op:
+                    op += "="
+                else:
+                    op = "="
+            conflict_ops.append(op)
+
+        total_rows = len(conflict_names)
+        rows = []
+        for i in range(start_row, start_row + rows_per_page):
+            if i >= total_rows:
+                break
+            rows.append({'name': conflict_names[i],
+                        'version': conflict_versions[i],
+                        'flags': conflict_flags[i],
+                        'ops': conflict_ops[i]
+                       })
+
+        return (total_rows, rows)
+
+    def get_tasks_for_builds(self, build_ids=[]):
+        results = {}
+
+        if build_ids:
+            for id in build_ids:
+                self._koji_client.multicall = True
+                self._koji_client.getBuild(int(id))
+
+            builds = self._koji_client.multiCall()
+            if builds:
+                for b in builds:
+                    self._koji_client.multicall = True
+                    task_id = b[0]['task_id']
+                    if task_id:
+                        self._koji_client.getTaskDescendents(b[0]['task_id'])
+
+                tasks = self._koji_client.multiCall()
+                if tasks:
+                    for t, id in zip(tasks, build_ids):
+                        results[id] = t[0]
+
+        self._koji_client.multicall = False
+        return results

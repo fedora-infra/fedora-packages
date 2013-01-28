@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter, ISearch
-from pylons import config
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter, ISearch
+from tg import config
 from fedora.client import ProxyClient, PackageDB
 from beaker.cache import Cache
 
@@ -583,6 +583,11 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return (total_count, package_list)
 
     def get_fedora_releases(self, rawhide=True):
+        return pkgdb_cache.get_value(key='fedora_releases_%s' % rawhide,
+                createfunc=lambda : self._get_fedora_releases(rawhide),
+                type="memory", expiretime=COLLECTION_TABLE_CACHE_TIMEOUT)
+
+    def _get_fedora_releases(self, rawhide=True):
         releases = []
         collections = self.get_collection_table(active_only=True)
         for collection in collections.values():

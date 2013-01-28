@@ -15,11 +15,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from UserDict import DictMixin
-from tg import url
-from pylons import request
+from tg import url, request
+
 import paste
 
 architectures = ('i386', 'x86_64', 'ppc', 'ppc64', 'noarch')
+
+def parse_build(build):
+    """
+    >>> nvr = parse_build('python-sqlalchemy-0.4.8-1.fc10')
+    >>> nvr['name']
+    'python-sqlalchemy'
+    >>> nvr['version']
+    '0.4.8'
+    >>> nvr['release']
+    '1.fc10'
+    """
+    chunks = build.split('-')
+    return {
+            'name': '-'.join(chunks[:-2]),
+            'version': '-'.join(chunks[-2:-1]),
+            'release': chunks[-1],
+            'nvr': build,
+           }
 
 def fullurl(path):
     h = url(path)
@@ -195,3 +213,140 @@ class HRElapsedTime(object):
         
     def get_hr_end_time(self):
         return self.get_hr_time(self.end)
+
+import collections
+
+if getattr(collections, 'OrderedDict', None):
+    OrderedDict = collections.OrderedDict
+else:
+    import ordereddict
+    OrderedDict = ordereddict.OrderedDict
+
+
+# -*- coding: utf-8 -*-
+"""
+    pygments.lexers.package
+    ~~~~~~~~~~~~~~~~~~~~~~~
+
+    Lexers for package formats.
+
+    :copyright: 2006-2008 by Georg Brandl, Tim Hatch ,
+                Stou Sandalski, Paulo Moura, Clara Dimene,
+                Andreas Amann ,
+                Steve 'Ashcrow' Milner 
+    :license: BSD, see LICENSE for more details.
+"""
+
+import re
+from pygments.lexer import Lexer, RegexLexer, include, bygroups, using, this, \
+                           do_insertions
+from pygments.token import Error, Punctuation, Literal, \
+     Text, Comment, Operator, Keyword, Name, String, Number, Generic
+
+line_re  = re.compile('.*?\n')
+
+class RpmSpecLexer(RegexLexer):
+    """
+    Lexer for RPM specs based of the bash lexer.
+
+    *New in Pygments X.Y.*
+    """
+
+    name = 'RPM'
+    aliases = ['spec']
+    filenames = ['*.spec']
+
+    flags = re.IGNORECASE
+
+    tokens = {
+        'root': [
+            include('basic'),
+            (r'\$\(\(', Keyword, 'math'),
+            (r'\$\(', Keyword, 'paren'),
+            (r'\${#?', Keyword, 'curly'),
+            (r'`', String.Backtick, 'backticks'),
+            include('data'),
+        ],
+        'basic': [
+            # TODO: Verify we are using the colors right
+
+            (r'\b(Name:|Version:|Release:|Summary:|Group:|License:|URL:|'
+             r'Source[0-9]*:|BuildRoot:|BuildArch:|BuildRequires:|Requires:|'
+             r'Provides:)\s*\b', Name.Builtin),
+            # things like %install
+            (r'(\%[a-zA-Z0-9]{1}[a-zA-Z0-9]*\n)', Keyword.Reserved),
+            (r'(\%\{_[a-zA-Z0-9]*\})', Keyword), # FIXME: Kind of works ...
+            # things like %attr(...)
+            (r'(\%[a-zA-Z0-9]*)(\(.*\))',
+             bygroups(Keyword.Declaration, Name.Function)),
+            # Macros
+            (r'(\%\{!\?[a-zA-Z0-9_]*:)(.*)(\})',
+             bygroups(Keyword, String, Keyword)),
+            # Variables like %{my_item}
+            (r'(\%{[a-zA-Z0-9]{1}[a-zA-Z0-9_\-]*})', Name.Variable),
+            # things like %doc 
+            (r'(\%[a-zA-Z0-9]*)(.*)', bygroups(Keyword.Reserved, String.Doc)),
+
+            # Changelog related
+            (r'(\* )([a-zA-Z]{3} [a-zA-Z]{3} [0-9 ]* [0-9]* )(.* )(<)(.*)(> )(.*)(-)(.*)',
+             bygroups(Punctuation, Literal.Date, String.Doc, Punctuation,
+                      Name.Builtin, Punctuation, Number, Punctuation, Number)),
+            # Changelog entry
+            (r'(^\-)(.*)',
+             bygroups(Punctuation, String.Doc)),
+
+            # ---
+            (r'\b(alias|bg|bind|break|builtin|caller|cd|command|compgen|'
+             r'complete|declare|dirs|disown|echo|enable|eval|exec|exit|'
+             r'export|false|fc|fg|getopts|hash|help|history|jobs|kill|let|'
+             r'local|logout|popd|printf|pushd|pwd|read|readonly|set|shift|'
+             r'shopt|source|suspend|test|time|times|trap|true|type|typeset|'
+             r'if|fi|else|while|do|done|for|then|return|function|case|'
+             r'select|continue|until|esac|elif|ulimit|umask|unalias|unset|'
+             r'wait|rm|mkdir|sh|find|install|xargs|bash)\s*\b', Name.Builtin),
+            (r'#.*\n', Comment),
+            (r'\\[\w\W]', String.Escape),
+            (r'(\b\w+)(\s*)(=)', bygroups(Name.Variable, Text, Operator)),
+            (r'[\[\]{}()=]+', Operator),
+            (r'<<\s*(\'?)\\?(\w+)[\w\W]+?\2', String),
+            (r'&&|\|\|', Operator),
+        ],
+        'data': [
+            (r'\$?"(\\\\|\\[0-7]+|\\.|[^"])*"', String.Double),
+            (r"\$?'(\\\\|\\[0-7]+|\\.|[^'])*'", String.Single),
+            (r';', Text),
+            (r'\s+', Text),
+            (r'[^=\s\n\[\]{}()$"\'`\\<]+', Text),
+            (r'\d+(?= |\Z)', Number),
+            (r'\$#?(\w+|.)', Name.Variable),
+            (r'<', Text),
+        ],
+        'curly': [
+            (r'}', Keyword, '#pop'),
+            (r':-', Keyword),
+            (r'[a-zA-Z0-9_]+', Name.Variable),
+            (r'[^}:"\'`$]+', Punctuation),
+            (r':', Punctuation),
+            include('root'),
+        ],
+        'paren': [
+            (r'\)', Keyword, '#pop'),
+            include('root'),
+        ],
+        'math': [
+            (r'\)\)', Keyword, '#pop'),
+            (r'[-+*/%^|&]|\*\*|\|\|', Operator),
+            (r'\d+', Number),
+            include('root'),
+        ],
+        'backticks': [
+            (r'`', String.Backtick, '#pop'),
+            include('root'),
+        ],
+    }
+
+    def analyse_text(text):
+        """
+        TODO: Implement me
+        """
+        return 1.0

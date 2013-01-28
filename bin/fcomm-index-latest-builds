@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+# use this script when running the indexer from cron
+
+import sys
+import os
+import shutil
+
+from fedoracommunity.search.latest_version_mapper import run
+try:
+    from lockfile import LockFile
+except:
+    from lockfile import FileLock as LockFile
+
+from optparse import OptionParser
+
+if __name__=="__main__":
+    parser = OptionParser()
+    parser.add_option("-p", "--path", dest="cache_path",
+                      help="path to where we create or update the version map",
+                      metavar="CACHEPATH")
+    parser.add_option("--koji-url", dest="koji_url",
+                      default='http://koji.fedoraproject.org/kojihub',
+                      help="the base url to get koji data from",
+                      metavar="KOJIURL")
+
+    (options, args) = parser.parse_args()
+    lockfile = LockFile(os.path.join(options.cache_path, '.fcomm_version_mapper_lock'))
+
+    try:
+        lockfile.acquire(timeout=30)
+    except Exception as e:
+        print "Error acquiring lock file: %s" % str(e)
+        exit(-1)
+
+    try:
+        run(cache_path=options.cache_path, koji_url=options.koji_url)
+    finally:
+        lockfile.release()

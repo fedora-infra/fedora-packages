@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from tw.api import Widget
-from tw.jquery import jQuery, jquery_js
-from tw.jquery.flot import flot_css, flot_js, excanvas_js
+import tw2.core as twc
+from tw2.jquery import jQuery, jquery_js
+from tw2.jqplugins.flot import flot_css, flot_js
+from tw2.excanvas import excanvas_js
 
-class FlotWidget(Widget):
+class FlotWidget(twc.Widget):
     """ An attractive plotting widget.
 
     Using Flot, a pure Javascript plotting library for jQuery,
@@ -29,13 +30,13 @@ class FlotWidget(Widget):
     homepage: http://code.google.com/p/flot
     """
     template = u"""
-        % if label:
-          <h3>${label}</h3>
+        % if w.label:
+          <h3>${w.label}</h3>
         % endif
-        <div id="${id}" style="width:${width};height:${height};">
+        <div id="${w.id}" style="width:${w.width};height:${w.height};">
         </div>
         <script>
-        % if tooltips:
+        % if w.tooltips:
             function showTooltip(x, y, contents) {
                 $('<div id="tooltip">' + contents + '</div>').css( {
                     position: 'absolute',
@@ -50,7 +51,7 @@ class FlotWidget(Widget):
             }
 
             var previousPoint = null;
-            $("#${id}").bind("plothover", function (event, pos, item) {
+            $("#${w.id}").bind("plothover", function (event, pos, item) {
                 $("#x").text(pos.x.toFixed(2));
                 $("#y").text(pos.y.toFixed(2));
                 if (item) {
@@ -70,35 +71,32 @@ class FlotWidget(Widget):
         % endif
 
             $(document).ready(function(){
-                if (!${data}) {
-                    $('#${id}').text('Data not ready for display \u2014 sorry!');
+                if (!${w.data}) {
+                    $('#${w.id}').text('Data not ready for display \u2014 sorry!');
                 } else {
-                    $.plot($('#${id}'), ${data}, ${options});
+                    $.plot($('#${w.id}'), ${w.data}, ${w.options});
                 }
             });
         </script>
     """
-    engine_name = 'mako'
-    params = {
-            "data"    : "An array of data series",
-            "options" : "Plot options",
-            "height"  : "The height of the graph",
-            "width"   : "The width of the graph",
-            "label"   : "Label for the graph",
-            "id"      : "An optional ID for the graph",
-            "tooltips": "Enable onhover tooltips",
-    }
-    javascript = [jquery_js, flot_js, excanvas_js]
-    css = [flot_css]
-    height = '300px'
-    width = '600px'
-    label = ''
-    tooltips = False
+    inline_engine_name = 'mako'
+    data = twc.Param("An array of data series", default=None)
+    options = twc.Param("Plot options", default=None)
+    height = twc.Param("The height of the graph", default='300px')
+    width = twc.Param("The width of the graph", default='600px')
+    label = twc.Param("Label for the graph", default='')
+    tooltips = twc.Param("Enable onhover tooltips", default=False)
 
-    def update_params(self, d):
-        super(FlotWidget, self).update_params(d)
-        if not d.get('id'):
-            d['id'] = 'flot_%s' % str(int(random() * 999))
-        data = d.get('data') or []
-        options = d.get('options') or {}
-        return d
+    resources = [jquery_js, flot_js, excanvas_js, flot_css]
+
+    def prepare(self):
+        super(FlotWidget, self).prepare
+
+        if not self.id:
+            self.id = 'flot_%s' % str(int(random() * 999))
+
+        if not self.data:
+            self.data = []
+
+        if not self.options:
+            self.options = {}

@@ -1,4 +1,3 @@
-
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2010  Red Hat, Inc.
 #
@@ -15,11 +14,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from moksha.connector import IConnector, ICall, IQuery, ISearch, ParamFilter
-from pylons import config, cache
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ISearch, ParamFilter
+from tg import config
 from fedora.client import ProxyClient, ServerError
 from fedora.client.fas2 import AccountSystem
-from moksha.lib.helpers import DateTimeDisplay
+from moksha.common.lib.dates import DateTimeDisplay
 import time
 
 USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
@@ -135,7 +134,7 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         if not isinstance(user, basestring):
             return None
 
-        fas_cache = cache.get_cache('fas')
+        fas_cache = self._request.environ['beaker.cache'].get_cache('fas')
 
         key = '_fas_user_info_' + user
         if invalidate:

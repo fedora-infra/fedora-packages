@@ -1,0 +1,19 @@
+#!/bin/bash -e
+export LOG=logs/paster.log
+
+echo "-------------- Trying to start up --------------" >> $LOG
+if test -z "$1"
+then
+        echo "No virtualenv argument supplied.  Aborting." >> $LOG
+        exit 1
+else
+        echo "Using virtualenv $1" >> $LOG
+fi
+
+if test -z "$VIRTUAL_ENV"
+then
+        source $WORKON_HOME/$1/bin/activate
+fi
+paster serve development.ini >> $LOG 2>&1 < /dev/null &
+echo $! > paster.pid
+exit 0

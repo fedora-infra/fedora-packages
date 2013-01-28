@@ -17,19 +17,18 @@
 import time
 import logging
 
-from tg import url
 from paste.deploy.converters import asbool
-from pylons import config, cache
+from tg import config
 from fedora.client import ProxyClient
 from datetime import datetime, timedelta
 from webhelpers.date import distance_of_time_in_words
 from webhelpers.html import HTML
 
-from moksha.api.connectors import get_connector
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
-from moksha.lib.helpers import DateTimeDisplay
+from fedoracommunity.connectors.api import get_connector
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
+from moksha.common.lib.dates import DateTimeDisplay
 
-from fedoracommunity.lib.helpers import parse_build
+from fedoracommunity.lib.utils import parse_build
 
 log = logging.getLogger(__name__)
 
@@ -39,6 +38,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def __init__(self, environ, request):
         super(BodhiConnector, self).__init__(environ, request)
+        self._prod_url = config.get('fedoracommunity.connector.bodhi.produrl', 'https://admin.fedoraproject.org/updates')
         self._bodhi_client = ProxyClient(self._base_url,
                                          session_as_cookie=False,
                                          insecure = self._insecure)
@@ -348,7 +348,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         if update['status'] == 'stable':
             if update.get('updateid'):
                 details += HTML.tag('a', c=update['updateid'], href='%s/%s' % (
-                                    self._base_url, update['updateid']))
+                                    self._prod_url, update['updateid']))
             if update.get('date_pushed'):
                 details += HTML.tag('br') + update['date_pushed']
             else:
@@ -357,14 +357,14 @@ class BodhiConnector(IConnector, ICall, IQuery):
             details += 'Pending push to %s' % update['request']
             details += HTML.tag('br')
             details += HTML.tag('a', c="View update details >",
-                                href="%s/%s" % (self._base_url,
+                                href="%s/%s" % (self._prod_url,
                                                 update['title']))
         elif update['status'] == 'obsolete':
             for comment in update['comments']:
                 if comment['author'] == 'bodhi':
                     if comment['text'].startswith('This update has been obsoleted by '):
                         details += 'Obsoleted by %s' % HTML.tag('a',
-                                href='%s/%s' % (self._base_url,update['title']),
+                                href='%s/%s' % (self._prod_url,update['title']),
                                 c=comment['text'].split()[-1])
         return details
 
@@ -436,7 +436,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         return result
 
     def get_dashboard_stats(self, username=None):
-        bodhi_cache = cache.get_cache('bodhi')
+        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
         return bodhi_cache.get_value(key='dashboard_%s' % username,
                 createfunc=lambda: self._get_dashboard_stats(username),
                 expiretime=300)
@@ -461,7 +461,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def query_updates_count(self, status, username=None,
                             before=None, after=None):
-        bodhi_cache = cache.get_cache('bodhi')
+        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
         return bodhi_cache.get_value(key='count_%s_%s_%s_%s' % (
                 status, username, str(before).split('.')[0],
                 str(after).split('.')[0]), expiretime=300,
@@ -524,12 +524,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
                 details += HTML.tag('br')
                 details += HTML.tag('a', c="View update details >",
-                                    href="%s/%s" % (self._base_url,
+                                    href="%s/%s" % (self._prod_url,
                                                     build['update']['title']))
             else:
                 details = HTML.tag('a', c='Push to updates >',
                                    href='%s/new?builds.text=%s' % (
-                                       self._base_url, build['nvr']))
+                                       self._prod_url, build['nvr']))
 
             build['update_details'] = details
 
@@ -562,108 +562,114 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
     def query_active_releases(self, filters=None, **params):
         releases = []
-        if not filters:
-            filters = {}
-
+        queries = []
+        release_tag = {} # Mapping of tag -> release
+        testing_builds = [] # List of testing builds to query bodhi for
+        testing_builds_row = {} # nvr -> release lookup table
+        if not filters: filters = {}
         filters = self._query_updates_filter.filter(filters, conn=self)
         package = filters.get('package')
-
         pkgdb = get_connector('pkgdb')
         koji = get_connector('koji')._koji_client
-
-        # TODO:
-        # Multicall attempt...
-        #koji.multicall = True
-        #for release in pkgdb.get_fedora_releases():
-        #    tag = release[0]
-        #    name = release[1]
-        #    releases.append({'release': name, 'stable_version': 'None',
-        #                     'testing_version': 'None' })
-        #    if tag == 'dist-rawhide':
-        #        koji.listTagged(tag, package=package, latest=True, inherit=True)
-        #    else:
-        #        koji.listTagged(tag + '-updates', package=package,
-        #                        latest=True, inherit=True)
-        #        koji.listTagged(tag + '-updates-testing', package=package, latest=True)
-
-        #results = koji.multiCall()
-
-        # Ok, parsing this result is going to be fun...
-        #for i, release in enumerate(releases):
-        #    release = results[i][0]
-        #    if len(release):
-        #        build = release[0]
-        #        print build['nvr']
+        koji.multicall = True
 
         for release in pkgdb.get_fedora_releases():
             #Tag is really koji_name in this context, not disttag
             tag = release[2]
             name = release[1]
-            row = {'release': name, 'stable_version': 'None',
-                   'testing_version': 'None' }
+            r = {'release': name, 'stable_version': 'None',
+                 'testing_version': 'None'}
             if tag == 'rawhide':
-                rawhide_builds = koji.listTagged(tag, package=package,
-                                                 latest=True, inherit=True)
-                if rawhide_builds:
-                    nvr = parse_build(rawhide_builds[0]['nvr'])
-                    row['stable_version'] = '%(version)s-%(release)s' % nvr
-                else:
-                    row['stable_version'] = 'No builds tagged with %s' % tag
-                row['testing_version'] = HTML.tag('i', c='Not Applicable')
+                koji.listTagged(tag, package=package, latest=True, inherit=True)
+                queries.append(tag)
+                release_tag[tag] = r
             else:
-                # FIXME: Hack around EPEL tags
                 if tag.endswith('epel'):
                     stable_tag = tag
+                    testing_tag = tag + '-testing'
                 else:
                     stable_tag = tag + '-updates'
+                    testing_tag = stable_tag + '-testing'
+                koji.listTagged(stable_tag, package=package,
+                                latest=True, inherit=True)
+                queries.append(stable_tag)
+                release_tag[stable_tag] = r
+                koji.listTagged(testing_tag, package=package, latest=True)
+                queries.append(testing_tag)
+                release_tag[testing_tag] = r
+            releases.append(r)
 
-                stable_updates = koji.listTagged(stable_tag,
-                                                 package=package,
-                                                 latest=True,
-                                                 inherit=True)
-                if stable_updates:
-                    nvr = parse_build(stable_updates[0]['nvr'])
-                    if stable_updates[0]['tag_name'].endswith('-updates') or \
-                       stable_updates[0]['tag_name'].endswith('-epel'):
-                        row['stable_version'] = HTML.tag('a',
-                                c='%(version)s-%(release)s' % nvr,
-                                href='%s/%s' % (self._base_url, nvr['nvr']))
-                    else:
+        results = koji.multiCall()
+
+        for i, result in enumerate(results):
+            if isinstance(result, dict):
+                if 'faultString' in result:
+                    log.error("FAULT: %s" % result['faultString'])
+                else:
+                    log.error("Can't find fault string in result: %s" % result)
+            else:
+                query = queries[i]
+                row = release_tag[query]
+                release = result[0]
+
+                if query == 'dist-rawhide':
+                    if release:
+                        nvr = parse_build(release[0]['nvr'])
                         row['stable_version'] = '%(version)s-%(release)s' % nvr
-
-                testing_updates = koji.listTagged(stable_tag + '-testing',
-                                                  package=package, latest=True)
-                if testing_updates:
-                    nvr = parse_build(testing_updates[0]['nvr'])
-                    if testing_updates[0]['tag_name'].endswith('-testing'):
+                    else:
+                        row['stable_version'] = 'No builds tagged with %s' % tag
+                    row['testing_version'] = HTML.tag('i', c='Not Applicable')
+                    continue
+                if release:
+                    release = release[0]
+                    if query.endswith('-testing'):
+                        nvr = parse_build(release['nvr'])
                         row['testing_version'] = HTML.tag('a',
                                 c='%(version)s-%(release)s' % nvr,
-                                href='%s/%s' % (self._base_url, nvr['nvr']))
-                        updates = self.call('list', {'package': nvr['nvr']})
-                        if updates[1].get('num_items') == 1:
-                            up = updates[1]['updates'][0]
-                            if up['karma'] > 1:
-                                up['karma_icon'] = 'good'
-                            elif up['karma'] < 0:
-                                up['karma_icon'] = 'bad'
-                            else:
-                                up['karma_icon'] = 'meh'
-                            row['testing_version'] += HTML.tag('div',
-                                    c=HTML.tag('a', href="%s/%s" % (
-                                        self._base_url, up['title']),
-                                        c=HTML.tag('img',
-                                            src=url('/images/16_karma-%s.png' %
-                                            up['karma_icon'])) +
-                                        HTML.tag('span', c='%s karma' %
-                                            up['karma'])),
-                                        **{'class': 'karma'})
+                                href='%s/%s' % (self._prod_url, nvr['nvr']))
+                        testing_builds.append(release['nvr'])
+                        testing_builds_row[release['nvr']] = row
+                    else: # stable
+                        nvr = parse_build(release['nvr'])
+                        if release['tag_name'].endswith('-updates'):
+                            row['stable_version'] = HTML.tag('a',
+                                    c='%(version)s-%(release)s' % nvr,
+                                    href='%s/%s' % (self._prod_url, nvr['nvr']))
+                        else:
+                            row['stable_version'] = '%(version)s-%(release)s' % nvr
 
-            releases.append(row)
+        # If there are updates in testing, then query bodhi with a single call
+        if testing_builds:
+            updates = self.call('get_updates_from_builds', {
+                'builds': ' '.join(testing_builds)
+                })
+            if updates[1]:
+                for build in updates[1]:
+                    if build == 'tg_flash':
+                        continue
+                    up = updates[1][build]
+                    if up.karma > 1:
+                        up.karma_icon = 'good'
+                    elif up.karma < 0:
+                        up.karma_icon = 'bad'
+                    else:
+                        up.karma_icon = 'meh'
+                    karma_icon_url = self._request.environ['SCRIPT_NAME'] + \
+				'/images/16_karma-%s.png' % up.karma_icon
+                    row = testing_builds_row[build]
+                    row['testing_version'] += HTML.tag('div',
+                            c=HTML.tag('a', href="%s/%s" % (
+                                self._prod_url, up.title),
+                                c=HTML.tag('img',
+                                    src=karma_icon_url) +
+                                HTML.tag('span', c='%s karma' %
+                                    up.karma)),
+                                **{'class': 'karma'})
 
         return (len(releases), releases)
 
     def get_metrics(self):
-        bodhi_cache = cache.get_cache('bodhi')
+        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
         return bodhi_cache.get_value(key='bodhi_metrics',
                 createfunc=self._get_metrics,
                 expiretime=300)

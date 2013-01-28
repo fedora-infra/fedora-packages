@@ -1,9 +1,10 @@
-#recursive-include production *
-#recursive-include fedoracommunity *.mak
-#recursive-include fedoracommunity *.js
-#recursive-include fedoracommunity/mokshaapps/demos/js/ *.js
-
-graft fedoracommunity
+recursive-include production *
+recursive-include fedoracommunity *.mak
+recursive-include fedoracommunity *.js
+recursive-include fedoracommunity *.png *.gif *.svg
+recursive-include fedoracommunity/public/css *.css *.ttf *.png *.gif *.svg *.eot *.woff
+recursive-include initsys *
+include logrotate
 
 include fedoracommunity_makeyumcache
 include fedoracommunity.spec
@@ -11,3 +12,6 @@ include orbited.cfg
 include README.txt
 include AUTHORS
 include COPYING
+include build.ini
+include bin/fcomm-index-packages
+include bin/fcomm-index-latest-builds

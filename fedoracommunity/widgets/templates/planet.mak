@@ -1,5 +1,5 @@
-<div id="${id}" class="list">
-    % for entry in entries[:limit]:
+<div id="${w.id}" class="list">
+    % for entry in w.entries[:limit]:
         <div class="entry">
             <div id="${entry['uid']}">
                 <div id="${entry['uid']}_person" class="person-info">
@@ -49,8 +49,8 @@
                 slicePoint: 300,
                 widow: 1,
                 userCollapse: true,
-                expandText: '<strong>Show more</strong> <img src="${tmpl_context.get_url('/images/arrow_down.png')}">',
-                userCollapseText: '<strong>Hide full post content</strong> <img src="${tmpl_context.get_url('/images/arrow_up.png')}">'
+                expandText: '<strong>Show more</strong> <img src="${w.tmpl_context.get_url('/images/arrow_down.png')}">',
+                userCollapseText: '<strong>Hide full post content</strong> <img src="${w.tmpl_context.get_url('/images/arrow_up.png')}">'
             });
 
         </script>

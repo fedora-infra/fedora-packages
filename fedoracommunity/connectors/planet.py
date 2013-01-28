@@ -33,7 +33,7 @@ socket.setdefaulttimeout(10) # Prevent socket buildups when a service goes down
 from StringIO import StringIO
 from ConfigParser import RawConfigParser
 from beaker.cache import Cache
-from moksha.connector import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
 
 planet_cache = Cache('planet')
 

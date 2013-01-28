@@ -16,13 +16,29 @@
 
 from fedoracommunity.config.app_cfg import base_config
 from fedoracommunity.config.environment import load_environment
-from paste.cascade import Cascade
+
+import tg
+try:
+    tg_version_tuple = tuple(map(int, tg.__version__.split('.')))
+except ValueError:
+    tg_version_tuple = tg.__version__.split('.')
 
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
 def make_app(global_conf, full_stack=True, **app_conf):
-    from moksha.middleware import make_moksha_middleware
-    app = make_base_app(global_conf, wrap_app=make_moksha_middleware,
+    from moksha.wsgi.middleware import make_moksha_middleware
+    from fedoracommunity.connectors.api.mw import FCommConnectorMiddleware
+
+    def make_middleware(app):
+        if tg_version_tuple < (2, 1):
+            app = base_config.add_tosca2_middleware(app)
+
+        app = FCommConnectorMiddleware(app)
+        app = make_moksha_middleware(app, tg.config)
+        return app
+
+    app = make_base_app(global_conf,
+                        wrap_app=make_middleware,
                         full_stack=full_stack,
                         **app_conf)
 

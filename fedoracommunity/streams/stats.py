@@ -26,11 +26,11 @@ application automatic.
 
 from fedora.client import AuthError
 from fedora.client.wiki import Wiki
-from moksha.api.streams import PollingDataStream
+from moksha.hub.api.streams import PollingDataStream
 from shove import Shove
 from pylons import config
 from datetime import timedelta, datetime
-from moksha.api.connectors import get_connector
+from fedoracommunity.connectors.api import get_connector
 
 class ClaDoneDataStream(PollingDataStream):
     now = True

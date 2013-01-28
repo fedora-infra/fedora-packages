@@ -1,0 +1,585 @@
+body, p, a, li, div, input, button {
+	font-family: Cantarell, sans-serif;
+}
+
+a, a:visited, a:active, a:link {
+  color: #3C6EB4;
+}
+
+body {
+  background: white;
+  color: black;
+  font-size: 12pt;
+  height: auto;
+  padding-bottom: 20px;
+}
+
+#header-main {
+  color: #3c6eb4; 
+}
+
+#header-main h1 {
+	margin-top: -14px;
+	margin-bottom: 0px !important;
+	height: 62px;
+	width: 155px;
+	display: block;
+	text-indent: -9999px;
+        background: url(../images/fedora-packges_logo-white.png) no-repeat;
+}
+
+#header-main h1 a {
+	height: 62px;
+	width: 155px;
+	display: block;
+}
+
+#header-search h1 span#logo {
+	margin-top: 1.6em;
+	height: 45px;
+	width: 155px;
+	display: block;
+	text-indent: -9999px;
+	background:transparent url("http://fedoraproject.org/static/css/../images/fedora-logo.png") no-repeat scroll 0px 0px;
+}
+#header-search h1 a {
+ 	font-family: "ComfortaaRegular", "sans-serif" !important;
+	text-transform: lowercase;
+	color: #8c8c8c;
+	font-size: 25pt;
+	font-weight: normal;
+        line-height: 88%;
+	text-decoration: none;
+        display: block;
+	width: 155px;
+	margin-top: 0px !important;
+	margin-bottom: 1.6em;
+}
+
+#lang-select {
+  float: right;
+}
+
+#searchbar {
+	font-size: 10pt;
+  width: 100%;
+  color: white;
+	padding-top: 1.6em;
+	padding-bottom: 12px;
+	margin-bottom: 1em;
+ background: #3c6eb4 url("../images/repeater.png") repeat-x !important
+}
+
+#searchbar input[type="text"] {
+  width: 98%;
+  height: 32px !important;
+	padding-left: 5px;
+	font-size: 15pt;
+}
+
+#searchbar button {
+  height: 40px !important;
+	text-transform: uppercase;
+	font-size: 13pt;
+}
+
+#searchbar a,
+#searchbar a:link,
+#searchbar a:active,
+#searchbar a:visited {
+  text-decoration: none;
+	color: #bbb;
+	font-size: 13pt;
+	padding: 0 2px 0 2px;
+	line-height: 32px;
+  font-weight: 700;
+}
+
+#searchbar a.active {
+	color: white;
+}
+
+
+h1#logo {
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+.lang-dropdown {
+  padding-top: 1em;
+}
+
+#search-notes {
+	font-size: 11pt;
+	font-style: italic;
+	color: #aaa;
+  margin-top: 5px;
+}
+
+#search-results-table table {
+	margin-top: 1em;
+	border-collapse:collapse;
+	width:100%;
+	padding:3px 7px 2px 7px;
+}
+
+#search-results-table table td {
+  color: #9a9fa6;
+	font-style: italic;
+	padding: .33em .33em;
+	font-size: 11pt;
+	vertical-align: middle;
+}
+
+#search-results-table table td:first-child {
+  color: #444 !important;
+	font-style: normal !important;
+	font-size: 14pt !important;
+}
+
+#search-results-table a {
+  color: #3c6eb4;
+	text-decoration: none;
+}
+
+#search-results-table .match {
+  font-weight: 900;
+	color: #666;
+}
+
+#search-results-table a .match {
+  color: #3c6eb4;
+}
+
+#search-results-table .subpackage td {
+	padding-left: 2em;
+}
+
+#search-results-table .priority1 td {
+  background-color: #fef7bf;
+}
+
+#search-results-table .priority4 td {
+  background-color: #e8eff8;
+}
+
+
+/* Grid Stuff */
+
+.grid_filter {
+  margin-top: 12px;
+}
+
+#grid-controls {
+  margin-bottom: 16px;
+}
+
+.grid_filter h4 {
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: .8em;
+  color: #777;
+}
+
+table {
+  font-size: 10pt !important;
+}
+
+/* Tree stuff */
+
+#tree_content li a {
+  height: 26px;
+}
+
+/* Patches stuff */
+
+.patches pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+ /* white-space: -o-pre-wrap: */
+  word-wrap: break-word;
+}
+
+.patches a {
+  text-decoration: none;
+  font-size: 11pt;
+}
+
+.patches .highlight pre {
+  margin-top: -7px;
+  padding-left: 7px;
+  border-bottom: 1px solid #DB347A !important;
+}
+
+.patches table tr#patch table td {
+  padding-left: 15px;
+}
+
+
+.patches {
+  display: table;
+  background-color: #ddd;
+  border: 1px solid #ddd;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.patches table {
+  background-color: white;
+  width: 100%;
+  border: 10px solid #ddd;
+  border-top: 5px solid #ddd;
+  border-collapse: collapse;
+}
+
+.patches td {
+  border-bottom: 1px solid #ededed;
+  padding: 3px 5px;
+}
+
+.patches table table {
+  width: 100%;
+  border: none !important;
+  background-color: none;
+}
+
+.patches table table td {
+  border: white !important;
+}
+
+.patches table tr#patch table td {
+  border: none;
+}
+
+.patches .patch_footer {
+  background-color:  #efefef;
+}
+
+.patches .patch_footer a {
+  text-decoration: none;
+  padding-left: 5px;
+}
+
+.patches .frame_link {
+  display: block;
+  text-align: center;
+  padding-top: 3px;
+}
+
+.patches .changelog {
+  background-color: #f3f3f3;
+  width: 100%;
+  font-size: small;
+}
+
+.patches h4 {
+  color: #666;
+  font-size: small;
+  padding-top: 5px;
+  padding-bottom: 3px;
+  background-color: #f9f9f9;
+  padding-left: 8px;
+}
+
+.patches .diffstat {
+  background-color: #f3f3f3;
+  font-size: small;
+}
+
+.patches .diffstat th {
+  font-size: x-small;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-left: 5px;
+  color: black;
+}
+
+.patches .diffstat .split {
+  font-size: x-small;
+  font-weight: bold;
+}
+
+#patches table td.age {
+  text-align: right;
+  font-size: 90%;
+  min-width: 30%;
+}
+
+#patches table td.age .date {
+  color: #999;
+}
+
+#patches .changelog .author {
+  font-weight: bold;
+}
+
+#patch > td {
+  padding-top: 0px !important;
+}
+
+#patches table {
+ border-collapse: separate;
+}
+
+#patches .active-patch td {
+  border-bottom: 0px !important; 
+  border-top: 1px solid #DB347A !important;
+  background: #FCFCFC;
+  margin-top: 0px;
+}
+
+#patches .active-patch td:first-child,
+#patches .changelog td:first-child,
+#patches .diffstat td:first-child,
+#patches .diffstat th:first-child,
+#patches div.highlight {
+  border-left: 1px solid #DB347A !important;
+}
+
+#patches .active-patch td:last-child,
+#patches .changelog td:last-child,
+#patches .diffstat td:last-child,
+#patches .diffstat th:last-child,
+#patches div.highlight {
+  border-right: 1px solid #DB347A !important;
+}
+
+#patches .highlight pre {
+  margin-top: -19px !important;
+  padding-top: 10px;
+}
+
+#patches .patch_raw {
+  border-left: 1px solid #DB347A !important;
+  border-right: 1px solid #DB347A !important;
+  background-color: #F3F3F3;
+  padding-left: 4px;
+}
+
+.patches td {
+  padding: 0px !important;
+}
+
+.patches td > table td {
+  padding: 3px 5px !important;
+}
+
+.changelog td {
+  padding-right: 0px;
+}
+
+.patches .patch-name td:first-child { 
+  padding-left: 7px !important; 
+  border-left: 1px solid #ccc;
+}
+
+.patches .patch-name td:last-child { 
+  padding-right: 7px !important; 
+  border-right: 1px solid #ccc;
+}
+
+#patches .diffstat-all .diffstat th:first-child,
+#patches .diffstat-all .diffstat td:first-child { border-left: 0px !important; padding-left: 7px !important;}
+#patches .diffstat-all .diffstat th:last-child,
+#patches .diffstat-all .diffstat td:last-child { border-right: 0px !important; padding-right: 7px !important;}
+
+#patches .diffstat-all { display: none; }
+
+tr.patch-name:hover td {
+  background-color: #eef6ff;
+}
+
+tr.patch-name:hover a {
+  display: inline;
+}
+
+#patches .active-patch a {
+  display: block;
+  color: white !important;
+}
+
+#patches .diffstat-all table.diffstat td {
+  border-bottom: 0px;
+  padding-bottom: 3px !important;
+}
+
+#patches .diffstat-all table.diffstat .split {
+  padding-top: 5px !important;
+}
+
+.patches .patch-name td {
+  border-bottom: 1px solid #ccc;
+}
+
+.patches .patch-name:first-child td {
+  border-top: 1px solid #ccc;
+}
+
+.patches .patch-name td { padding-top: 4px !important; padding-bottom: 4px !important;}
+
+.patches .frame_link { text-decoration: underline; color: #a07cbc; }
+
+#patches .diffstat-all .diffstat th:last-child {
+  padding-left: 0px;
+}
+
+.active-patch td,
+.patch td {
+  background-color: #888 !important;
+}
+
+#patches .active-patch td a,
+#patches .active-patch td,
+#patches .active-patch td span {
+  color: white;
+}
+
+.patch-content .changelog tr:last-child td {
+  padding-bottom: 10px !important;
+}
+
+.patch-name td:first-child a {
+  font-weight: 700;
+  font-size: 100%;
+}
+
+#patches .active-patch td .date {
+  display: none;
+}
+
+/* Specfile stuff */
+
+#specfile .code .highlight {
+  margin-left: 1em;
+}
+
+#specfile {
+  margin-top: 1em;
+}
+
+/* AGPL Stuff */
+
+
+#bottom {
+  padding-top: 8em;
+}
+
+#bottom ul {
+  list-style-type: none;
+}
+
+#bottom li {
+  float: left;
+  padding-right: 2em;
+}
+
+#bottom,
+#bottom ul li,
+#bottom ul li a {
+  color: #ccc;
+  font-size: small;
+}
+
+#bottom ul li a {
+  color: #bbb !important;
+}
+
+/* Relationships */
+
+#grid-controls .message {
+  width: 100%;
+  font-size: small;
+  text-align: right;
+}
+
+.list table {
+  clear: both;
+}
+
+/* Footer Stuff */
+
+
+#main_app { /* compensation for footer not displaying right now */
+  padding-bottom: 75px !important;
+}
+
+#bottom {
+    /*border-top: 5px #4B9EDE solid; // this is an alternative */
+    padding: 30px 0px 0px 0px;
+    /* may not be needed */
+    margin:0;
+    width:100%;
+}
+
+#bottom a {
+    font-weight: normal;
+}
+
+#bottom a:hover {
+  color: black !important;
+  background-color: #fcf7d5;
+}
+
+#footer .rh-logo {
+	width: 100px;
+}
+
+#footer {
+		margin-top: 2em;
+    background-image: none;
+    color: #4d4d4d;
+    padding-bottom: 15px;
+    font-size: .65em;
+}
+
+#footer a {
+    color: #3771c8;
+}
+
+#footer .rh-logo {
+    float: left;
+    margin-right: 15px;
+}
+
+#footer p {
+    margin: 0px;
+}
+
+#footer .disclaimer {
+    font-style: italic;
+}
+
+#footer ul {
+    list-style-image:none;
+    list-style-position:outside;
+    list-style-type:none;
+    margin-bottom:0.8em;
+		margin-top: 1em;
+}
+
+#footer li.first {
+    border-left:medium none;
+    padding-left: 1px;
+}
+
+#footer li {
+    border-left:1px solid #AAAAAA;
+    display:inline;
+    margin-left:-1px;
+    padding:0 0.75ex;
+}
+
+.sitelinks {
+    line-height: 1.6;
+    color: #808080;
+}
+
+.sitelinks a {
+    color: #808080;
+    text-decoration: none;
+}
+
+.sitelinks dt {
+    font-weight: bold;
+}

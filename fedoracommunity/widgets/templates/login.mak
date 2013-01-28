@@ -1,6 +1,6 @@
 <% import tg %>
 <div
-     id="${id}"
+     id="${w.id}"
      class="login panel">
 
     <h3>Log In</h3>
@@ -8,8 +8,8 @@
           onSubmit="moksha.add_hidden_form_field(this, 'came_from', document.location, false)"
           method="POST">
 
-        % if not came_from is UNDEFINED:
-            <input type="hidden" name="came_from" value="${came_from}"></input>
+        % if not w.came_from is UNDEFINED:
+            <input type="hidden" name="came_from" value="${w.came_from}"></input>
         % endif
         <div>
             <span>
