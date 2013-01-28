@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # This file is part of Fedora Community.
-# Copyright (C) 2008-2010  Red Hat, Inc.
+# Copyright (C) 2008-2013  Red Hat, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -51,7 +51,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='2.0.4',
+    version='2.0.5',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',

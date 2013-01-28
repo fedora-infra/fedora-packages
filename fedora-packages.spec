@@ -4,8 +4,8 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.4
-Release:        6.20130114git6c5b194%{?dist}
+Version:        2.0.5
+Release:        6%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -33,7 +33,8 @@ BuildRequires: TurboGears2
 BuildRequires: python-moksha-wsgi
 BuildRequires: python-tw2-jqplugins-ui
 BuildRequires: python-bunch
-BuildRequires: python-dogpile-cache
+BuildRequires: python-dogpile-core > 0.4.0
+BuildRequires: python-dogpile-cache > 0.4.1
 BuildRequires: python-retask
 BuildRequires: python-daemon
 
@@ -64,7 +65,8 @@ Requires: python-tw2-jqplugins-ui
 Requires: python-bugzilla
 Requires: xapian-bindings-python
 Requires: python-xappy
-Requires: python-dogpile-cache
+Requires: python-dogpile-core > 0.4.0
+Requires: python-dogpile-cache > 0.4.1
 Requires: python-memcached
 Requires: python-retask
 # For spectool
@@ -129,6 +131,10 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{__mkdir_p} %{buildroot}%{_sbindir}
 %{__mv} %{buildroot}%{_bindir}/fcomm-cache-worker %{buildroot}%{_sbindir}/fcomm-cache-worker
 
+# Logrotate configuration (for the cache-worker daemon)
+%{__mkdir_p} %{buildroot}/%{_sysconfdir}/logrotate.d
+%{__install} logrotate %{buildroot}/%{_sysconfdir}/logrotate.d/%{oldname}
+
 %clean
 %{__rm} -rf %{buildroot}
 
@@ -148,10 +154,15 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-packages
 %{_bindir}/fcomm-index-latest-builds
 %{_sbindir}/fcomm-cache-worker
-%{_sysconfdir}/init.d/fedmsg-hub
+%{_sysconfdir}/init.d/fcomm-cache-worker
+%config(noreplace) %{_sysconfdir}/logrotate.d/%{oldname}
 
 
 %changelog
+* Thu Jan 24 2013 Ralph Bean <rbean@redhat.com> - 2.0.5-6
+- Include an fcomm-cache-worker daemon which picks tasks off a redis queue and
+  does work to refresh the values in memcached.
+
 * Mon Jan 14 2013 Ralph Bean <rbean@redhat.com> - 2.0.4-6.20130114git6c5b194
 - Fix bug where /packages/qt returned a 404
 - Fix bug where /packages/python-webob1.2 returned a 404
