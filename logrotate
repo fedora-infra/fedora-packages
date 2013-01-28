@@ -1,0 +1,8 @@
+/var/log/fedoracommunity/*.log {
+    weekly
+    missingok
+    compress
+    delaycompress
+    copytruncate
+    minsize 100k
+}
