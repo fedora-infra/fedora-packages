@@ -98,6 +98,10 @@ class Thread(threading.Thread):
             log.info("Mutex released.")
             mc.delete(str(data['mutex_key']))
 
+            # I thought this was automatic.. but just to be safe.
+            mc.disconnect_all()
+            del mc
+
     def run(self):
         self.init()
         while not self.die:
