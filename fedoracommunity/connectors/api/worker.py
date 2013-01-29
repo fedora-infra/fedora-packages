@@ -51,6 +51,9 @@ class Thread(threading.Thread):
         from fedoracommunity.connectors.api.mw import FCommConnectorMiddleware
         self.mw_obj = FCommConnectorMiddleware(lambda *args, **kw: None)
 
+        # Set up one memcached connection when we start.
+        self.mc = memcache.Client([config['cache.connectors.arguments.url']])
+
     def iteration(self):
         if self.queue.length == 0:
             log.info("No tasks found in the queue.  Sleeping for 2 seconds.")
@@ -59,8 +62,6 @@ class Thread(threading.Thread):
         log.info("Picking up a task from the queue.")
         task = self.queue.dequeue()
         data = json.loads(task.data)
-
-        mc = memcache.Client(data['memcached_addrs'])
 
         try:
             # Here are those three attribute that we hung
@@ -92,15 +93,11 @@ class Thread(threading.Thread):
             })
             cache_key = str(data['cache_key'])
             log.debug("Value Recorded at " + cache_key)
-            mc.set(cache_key, value)
+            self.mc.set(cache_key, value)
         finally:
             # Release the kraken!
             log.info("Mutex released.")
-            mc.delete(str(data['mutex_key']))
-
-            # I thought this was automatic.. but just to be safe.
-            mc.disconnect_all()
-            del mc
+            self.mc.delete(str(data['mutex_key']))
 
     def run(self):
         self.init()
@@ -116,9 +113,17 @@ class Thread(threading.Thread):
             sys.stdout.flush()
         log.info("Thread exiting.")
 
-
     def kill(self):
         self.die = True
+
+    def __del__(self):
+        try:
+            # I thought this was automatic.. but just to be safe.
+            self.mc.disconnect_all()
+            del self.mc
+        except Exception:
+            pass
+
 
 def find_config_file():
     locations = (
