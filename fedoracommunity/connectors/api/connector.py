@@ -72,7 +72,6 @@ def async_creation_runner(cache, somekey, creator, mutex):
         kw=freevar_dict['kw'],
         mutex_key=mutex.key,
         cache_key=somekey,
-        memcached_addrs=cache.backend.url,
     )))
     # fire-and-forget
     queue.enqueue(task)

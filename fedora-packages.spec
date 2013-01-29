@@ -4,8 +4,8 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.5
-Release:        6%{?dist}
+Version:        2.0.6
+Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -159,6 +159,9 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Tue Jan 29 2013 Ralph Bean <rbean@redhat.com> - 2.0.6-1
+- Include explicit memcached cleanup in the cache worker.
+
 * Thu Jan 24 2013 Ralph Bean <rbean@redhat.com> - 2.0.5-6
 - Include an fcomm-cache-worker daemon which picks tasks off a redis queue and
   does work to refresh the values in memcached.
