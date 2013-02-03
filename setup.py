@@ -65,6 +65,7 @@ setup(
         "TurboGears2",
         "dogpile.cache",
         "retask",
+        "python-memcached",
         #"PyOpenSSL",
         #"SQLAlchemy>=0.5",
         #"xappy",
