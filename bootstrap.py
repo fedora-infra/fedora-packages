@@ -64,7 +64,7 @@ def link_external_libs():
     for lib in ['koji', 'rpm', 'rpmUtils', 'fedora', 'kitchen', 'pycurl',
                 'yum', 'urlgrabber', 'sqlitecachec', '_sqlitecache',
                 'bugzilla', 'xapian', 'xappy',
-                'dogpile',
+                'dogpile', 'memcache'
                ]:
         for libdir in ('lib64', 'lib'):
             for ext in ('.py', '.so', ''):
