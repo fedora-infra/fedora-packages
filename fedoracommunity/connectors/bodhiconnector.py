@@ -653,7 +653,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         up.karma_icon = 'bad'
                     else:
                         up.karma_icon = 'meh'
-                    karma_icon_url = self._request.environ['SCRIPT_NAME'] + \
+                    karma_icon_url = self._request.environ.get('SCRIPT_NAME', '') + \
 				'/images/16_karma-%s.png' % up.karma_icon
                     row = testing_builds_row[build]
                     row['testing_version'] += HTML.tag('div',
