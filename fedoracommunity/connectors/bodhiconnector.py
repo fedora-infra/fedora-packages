@@ -655,6 +655,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         up.karma_icon = 'meh'
                     karma_icon_url = self._request.environ['SCRIPT_NAME'] + \
 				'/images/16_karma-%s.png' % up.karma_icon
+                    karma = 'karma_%s' % up.karma_icon
                     row = testing_builds_row[build]
                     row['testing_version'] += HTML.tag('div',
                             c=HTML.tag('a', href="%s/%s" % (
@@ -663,7 +664,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                                     src=karma_icon_url) +
                                 HTML.tag('span', c='%s karma' %
                                     up.karma)),
-                                **{'class': 'karma'})
+                                **{'class': '%s' %karma})
 
         return (len(releases), releases)
 
