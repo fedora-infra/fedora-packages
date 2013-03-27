@@ -45,8 +45,14 @@ def hotpatch_bugzilla():
                 )
                 return self._connection[1]
 
-        bugzilla.base.SafeCookieTransport.make_connection = \
-            patched_make_connection
+        # In bugzilla-0.8.0 this transport class got renamed out from under us.
+        if bugzilla.version == '0.7.0':
+            bugzilla.base.SafeCookieTransport.make_connection = \
+                patched_make_connection
+        else:
+            bugzilla.base._CookieTransport.make_connection = \
+                patched_make_connection
+
     else:
         # In the case of python2.6, we have to do something different and apply
         # a hot patch to the stdlib's httplib since xmlrpclib is written
