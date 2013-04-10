@@ -22,7 +22,10 @@ import warnings
 from datetime import datetime
 from UserDict import DictMixin
 
-from moksha.common.lib.helpers import odict
+try:
+    from collections import OrderedDict as odict
+except ImportError:
+    from ordereddict import OrderedDict as odcit
 
 class DateTimeDisplay(object):
     """DateTimeDisplay is an object which takes any number of datetime objects
