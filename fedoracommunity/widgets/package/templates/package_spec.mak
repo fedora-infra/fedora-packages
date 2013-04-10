@@ -7,12 +7,12 @@ function on_change(self) {
 }
 </script>
 
-${w.children[0].display(on_change='on_change', package=w.package_name)}
+${w.children[0].display(on_change='on_change', package=w.package_name) | n}
 
 <br/>
 
 <div id="specfile_container">
 <div id="specfile">
-${w.text}
+${w.text | n}
 </div>
 </div>
