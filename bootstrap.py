@@ -35,7 +35,7 @@ def install_deps():
             'python-dogpile-cache', 'python-dogpile-core',
             'python-retask', 'python-memcached', 'memcached'
         ]
-        run('sudo yum install -q -y --enablerepo=updates-testing ' + ' '.join(reqs))
+        run('sudo yum install -q -y ' + ' '.join(reqs))
 
 
 snapshot_url = 'http://lmacken.fedorapeople.org/fedora-packages'
