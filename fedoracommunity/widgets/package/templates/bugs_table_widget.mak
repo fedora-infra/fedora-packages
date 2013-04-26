@@ -50,17 +50,22 @@
                 </tr>
             </tbody>
     </table>
+    <div id="grid-controls" if="total_rows == -1">
+        <div class="message template" id="info_display" >
+            Loading bugs... please hold on.
+        </div>
+    </div>
     <div id="grid-controls" if="total_rows == 0">
         <div class="message template" id="info_display" >
             This package has no bugs - go file some!!!
         </div>
     </div>
-    <div id="grid-controls" if="visible_rows >= total_rows && total_rows != 0">
+    <div id="grid-controls" if="visible_rows >= total_rows && total_rows > 0">
         <div class="message template" id="info_display" >
            Viewing all bugs for this package
         </div>
     </div>
-    <div id="grid-controls" if="visible_rows < total_rows && total_rows != 0">
+    <div id="grid-controls" if="visible_rows < total_rows && total_rows > 0">
         <div class="message template" id="info_display" >
            Viewing ${'${first_visible_row}'}-${'${last_visible_row}'} of ${'${total_rows}'} bugs
         </div>

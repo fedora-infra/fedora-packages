@@ -58,6 +58,10 @@ class BugsGrid(Grid):
     template = "mako:fedoracommunity.widgets.package.templates.bugs_table_widget"
 
     def prepare(self):
+
+        # Signify that we haven't loaded any bugs yet.
+        self.total_rows = -1
+
         releases = []
         self.filters = {'package': self.package}
         pkgdb = get_connector('pkgdb')
