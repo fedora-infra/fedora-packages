@@ -44,9 +44,17 @@ import retask.task
 import retask.queue
 import json
 
-# Initialize an outgoing redis queue right off the bat.
-queue = retask.queue.Queue('fedora-packages')
-queue.connect()
+_queue = None
+
+
+def get_redis_queue():
+    global _queue
+    if not _queue:
+        # Initialize an outgoing redis queue right off the bat.
+        _queue = retask.queue.Queue('fedora-packages')
+        _queue.connect()
+
+    return _queue
 
 
 def async_creation_runner(cache, somekey, creator, mutex):
@@ -73,8 +81,9 @@ def async_creation_runner(cache, somekey, creator, mutex):
         mutex_key=mutex.key,
         cache_key=somekey,
     )))
+
     # fire-and-forget
-    queue.enqueue(task)
+    get_redis_queue().enqueue(task)
 
 
 def cache_key_generator(namespace, fn):

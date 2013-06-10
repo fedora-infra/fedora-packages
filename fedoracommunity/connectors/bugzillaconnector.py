@@ -304,12 +304,15 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                 if self._is_security_bug(bug):
                     bug_class += 'security-bug '
 
+                bug_version = bug.version
+                if isinstance(bug_version, (list, tuple)):
+                    bug_version = bug_version[0]
                 d = {
                     'id': bug.bug_id,
                     'status': bug.bug_status.title(),
                     'description': bug.summary,
                     'last_modified': modified.age(),
-                    'release': '%s %s' % (collection, bug.version[0]),
+                    'release': '%s %s' % (collection, bug_version),
                     'bug_class': bug_class.strip(),
                 }
                 dicts.append(d)

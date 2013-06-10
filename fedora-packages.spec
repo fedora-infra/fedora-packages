@@ -4,8 +4,8 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.6
-Release:        1%{?dist}
+Version:        2.0.7
+Release:        2%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -35,6 +35,7 @@ BuildRequires: python-tw2-jqplugins-ui
 BuildRequires: python-bunch
 BuildRequires: python-dogpile-core > 0.4.0
 BuildRequires: python-dogpile-cache > 0.4.1
+BuildRequires: python-memcached
 BuildRequires: python-retask
 BuildRequires: python-daemon
 
@@ -54,7 +55,6 @@ Requires: python-feedparser
 Requires: python-iniparse
 Requires: pytz
 Requires: pyOpenSSL
-Requires: python-memcached
 Requires: httpd
 Requires: mod_wsgi
 Requires: diffstat
@@ -159,6 +159,15 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Mon Jun 10 2013 Ralph Bean <rbean@redhat.com> - 2.0.7-2
+- Emergency bugfix release.
+- Get off of the old moksha.common.lib.helpers stuff.
+- Fix bugs release from pingou.
+- Fix misleading text in bugs widget.
+- Don't escape the spec file widget.
+- Support bugzilla 0.8.0
+- Added buildrequires on python-memcached.
+
 * Tue Jan 29 2013 Ralph Bean <rbean@redhat.com> - 2.0.6-1
 - Include explicit memcached cleanup in the cache worker.
 

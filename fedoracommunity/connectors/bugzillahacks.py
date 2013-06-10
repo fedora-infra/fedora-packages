@@ -1,6 +1,8 @@
 """ Crazy hacks to make bugzilla work without throwing SSL timeouts. """
 
 import sys
+import urllib2
+import xmlrpclib
 
 
 # If we're not on python2.7, we assume we're on python2.6.
@@ -18,35 +20,64 @@ def hotpatch_bugzilla():
     import httplib
     import bugzilla.base
 
-    # This is in seconds.  120 seconds is two minutes.
-    longer_timeout = 120
+    # This is in seconds.
+    longer_timeout = 300
 
     if PY27:
-        # In the case of python2.7 we apply a hot patch to python-bugzilla's
-        # SafeCookieTransport and have it pass in an SSL timeout to xmlrpclib.
-        def patched_make_connection(self, host):
-            if self._connection and host == self._connection[0]:
-                return self._connection[1]
-            # create a HTTPS connection object from a host descriptor
-            # host may be a string, or a (host, x509-dict) tuple
-            try:
-                HTTPS = httplib.HTTPSConnection
-            except AttributeError:
-                raise NotImplementedError(
-                    "your version of httplib doesn't support HTTPS"
-                )
-            else:
-                chost, self._extra_headers, x509 = self.get_host_info(host)
-                self._connection = host, HTTPS(
-                    chost,
-                    None,
-                    timeout=longer_timeout,
-                    **(x509 or {})
-                )
-                return self._connection[1]
+        if bugzilla.version == '0.7.0':
+            # In the case of python2.7 we apply a hot patch to python-bugzilla's
+            # SafeCookieTransport and have it pass in an SSL timeout to xmlrpclib.
+            def patched_make_connection(self, host):
+                if self._connection and host == self._connection[0]:
+                    return self._connection[1]
+                # create a HTTPS connection object from a host descriptor
+                # host may be a string, or a (host, x509-dict) tuple
+                try:
+                    HTTPS = httplib.HTTPSConnection
+                except AttributeError:
+                    raise NotImplementedError(
+                        "your version of httplib doesn't support HTTPS"
+                    )
+                else:
+                    chost, self._extra_headers, x509 = self.get_host_info(host)
+                    self._connection = host, HTTPS(
+                        chost,
+                        None,
+                        timeout=longer_timeout,
+                        **(x509 or {})
+                    )
+                    return self._connection[1]
 
-        bugzilla.base.SafeCookieTransport.make_connection = \
-            patched_make_connection
+            bugzilla.base.SafeCookieTransport.make_connection = \
+                patched_make_connection
+        else:
+            # In bugzilla-0.8.0 this transport class got renamed and rewritten.
+            def patched_request(self, host, handler, request_body, verbose=0):
+                req = urllib2.Request(self.uri)
+                req.add_header('User-Agent', self.user_agent)
+                req.add_header('Content-Type', 'text/xml')
+
+                if hasattr(self, 'accept_gzip_encoding') and self.accept_gzip_encoding:
+                    req.add_header('Accept-Encoding', 'gzip')
+                req.add_data(request_body)
+
+                resp = self.opener.open(req, timeout=longer_timeout)
+
+                # In Python 2, resp is a urllib.addinfourl instance, which does not
+                # have the getheader method that parse_response expects.
+                if not hasattr(resp, 'getheader'):
+                    resp.getheader = resp.headers.getheader
+
+                if resp.code == 200:
+                    self.verbose = verbose
+                    return self.parse_response(resp)
+
+                resp.close()
+                raise xmlrpclib.ProtocolError(self.uri, resp.status,
+                                              resp.reason, resp.msg)
+
+            bugzilla.base._CookieTransport.request = patched_request
+
     else:
         # In the case of python2.6, we have to do something different and apply
         # a hot patch to the stdlib's httplib since xmlrpclib is written

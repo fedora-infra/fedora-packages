@@ -33,9 +33,9 @@ def install_deps():
             'xapian-bindings-python', 'diffstat', 'fedpkg', 'svn', 'wget',
             'python-xappy', 'python-webob', 'moksha', 'TurboGears2',
             'python-dogpile-cache', 'python-dogpile-core',
-            'python-retask',
+            'python-retask', 'python-memcached', 'memcached'
         ]
-        run('sudo yum install -q -y --enablerepo=updates-testing ' + ' '.join(reqs))
+        run('sudo yum install -q -y ' + ' '.join(reqs))
 
 
 snapshot_url = 'http://lmacken.fedorapeople.org/fedora-packages'
@@ -64,8 +64,7 @@ def link_external_libs():
     for lib in ['koji', 'rpm', 'rpmUtils', 'fedora', 'kitchen', 'pycurl',
                 'yum', 'urlgrabber', 'sqlitecachec', '_sqlitecache',
                 'bugzilla', 'xapian', 'xappy',
-                #'dogpile',  # Not actually available in F18 yet.
-                # http://bit.ly/VQPlIo
+                'dogpile', 'memcache'
                ]:
         for libdir in ('lib64', 'lib'):
             for ext in ('.py', '.so', ''):
