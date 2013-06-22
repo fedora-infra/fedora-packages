@@ -13,7 +13,7 @@
                     %>
 
                     var $grid = null;
-                    var repo_arch_tasks = ${json_repo_arch_tasks};
+                    var repo_arch_tasks = ${json_repo_arch_tasks|n};
 
                     function update_grid() {
                         if ($grid == null)
