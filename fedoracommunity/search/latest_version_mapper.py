@@ -342,3 +342,6 @@ def run(cache_path, action=None, timestamp=None, koji_url=None):
     mapper = Mapper(versionmap_path, koji_url=koji_url)
     action(mapper, timestamp)
     mapper.cleanup()
+
+if __name__ == '__main__':
+    run(cache_path=os.getcwd())
