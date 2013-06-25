@@ -156,10 +156,8 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         except yum.Errors.DepError:
             # might be a noarch subpackage so try again
             # FIXME: we should list individual subpackages with archs in latest build db
-            try:
-                pkg = self._yum_client.getPackageObject((package, 'noarch', None, None, None))
-            except yum.Errors.DepError:
-                return {'error': "This package does not exist in binary form.  Like shadows cast on a wall which only appear when an observer steps infront of a light source, it is only an illusion floating in the ether of the Interwebs.  Move along, there is nothing to see here."}
+            pkg = self._yum_client.getPackageObject((package, 'noarch', None, None, None))
+
         return pkg
 
     def _pkgtuples_to_rows(self, pkgtuples, _eq='=', _gt='>', _lt='<', _ge='>=', _le='<=', find_provided_by=False):
