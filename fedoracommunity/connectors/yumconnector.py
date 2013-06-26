@@ -599,10 +599,16 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
     def call_get_file_tree(self, resource_path=None, _cookies=None, package=None, repo=None, arch=None):
         try:
-            pkg = self._get_pkg_object(package, repo, arch)
-
-            if type(pkg) is dict and 'error' in pkg:
-                return pkg
+            try:
+                pkg = self._get_pkg_object(package, repo, arch)
+            except yum.Errors.DepError:
+                return {
+                    'error': "This package does not exist in binary form.  "
+                    "Like shadows cast on a wall which only appear when an "
+                    "observer steps infront of a light source, it is only an "
+                    "illusion floating in the ether of the Interwebs.  Move "
+                    "along, there is nothing to see here.",
+                }
 
             return self._process_files(pkg)
         except Exception as e:
