@@ -50,7 +50,7 @@ def hotpatch_bugzilla():
 
             bugzilla.base.SafeCookieTransport.make_connection = \
                 patched_make_connection
-        else:
+        elif bugzilla.version == '0.8.0':
             # In bugzilla-0.8.0 this transport class got renamed and rewritten.
             def patched_request(self, host, handler, request_body, verbose=0):
                 req = urllib2.Request(self.uri)
@@ -77,7 +77,10 @@ def hotpatch_bugzilla():
                                               resp.reason, resp.msg)
 
             bugzilla.base._CookieTransport.request = patched_request
-
+        else:
+            # In python-bugzilla-0.9.0 we don't have to do anything, because a
+            # timeout is set by default in bugzilla.base._CURLTransport.
+            pass
     else:
         # In the case of python2.6, we have to do something different and apply
         # a hot patch to the stdlib's httplib since xmlrpclib is written
