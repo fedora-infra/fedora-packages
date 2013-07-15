@@ -4,8 +4,8 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.7
-Release:        2%{?dist}
+Version:        2.0.8
+Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -159,6 +159,12 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Mon Jul 15 2013 Ralph Bean <rbean@redhat.com> - 2.0.8-1
+- Unescape JSON so the relationships tab (and other things) work.
+- Move exception handling into call_get_file_tree for consistency.
+- Fix karma_level css on the updates page.
+- Some fixes for f19/tg2-2.3.0 compatibility.
+
 * Mon Jun 10 2013 Ralph Bean <rbean@redhat.com> - 2.0.7-2
 - Emergency bugfix release.
 - Get off of the old moksha.common.lib.helpers stuff.
