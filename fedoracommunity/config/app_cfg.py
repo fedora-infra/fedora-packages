@@ -122,3 +122,5 @@ base_config.profile = False
 
 # Enable squeeze middlware
 base_config.squeeze = False
+
+base_config.disable_request_extensions = True
