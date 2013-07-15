@@ -33,3 +33,4 @@ icons
 fedoracommunity/templates/home/
 var
 *.dbm*
+versionmap

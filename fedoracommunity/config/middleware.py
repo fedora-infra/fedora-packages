@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2010  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -19,9 +19,9 @@ from fedoracommunity.config.environment import load_environment
 
 import tg
 try:
-    tg_version_tuple = tuple(map(int, tg.__version__.split('.')))
+    tg_version_tuple = tuple(map(int, tg.__version__.split('.')[:2]))
 except ValueError:
-    tg_version_tuple = tg.__version__.split('.')
+    tg_version_tuple = tuple(tg.__version__.split('.')[:2])
 
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 

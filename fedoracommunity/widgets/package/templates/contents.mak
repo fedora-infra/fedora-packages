@@ -11,7 +11,7 @@
                     import tg
                     json_repo_arch_tasks = json.dumps(w.repo_to_archtask_map)
                     %>
-                      var repo_arch_tasks = ${json_repo_arch_tasks};
+                      var repo_arch_tasks = ${json_repo_arch_tasks|n};
 
                       function on_repo_change(self) {
                           var archs = repo_arch_tasks[self.value];

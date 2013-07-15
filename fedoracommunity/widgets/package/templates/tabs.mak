@@ -17,7 +17,7 @@
             <script type="text/javascript">
               function ${key}_tab_selected(tab) {
                 var widget_url = "/_w/" + '${value['widget_key']}';
-                return tab_selected(tab, widget_url, "${w.base_url}${key}", "#tab_content_${w._uuid}", ${json_kwds});
+                return tab_selected(tab, widget_url, "${w.base_url}${key}", "#tab_content_${w._uuid}", ${json_kwds|n});
               }
             </script>
             <a class="${selected}" href="${w.base_url}${key}" onMouseOver="set_tabs_hover(this, True)" onMouseOut="set_tabs_hover(this, False)" onClick='return ${key}_tab_selected(this);'>
