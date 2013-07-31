@@ -4,7 +4,7 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.8
+Version:        2.0.9
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
@@ -159,6 +159,10 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Wed Jul 31 2013 Ralph Bean <rbean@redhat.com> - 2.0.9-1
+- Bugfix - import refactored code from python-moksha-wsgi.
+  The tabbedcontainer and the dashboardcontainer.
+
 * Mon Jul 15 2013 Ralph Bean <rbean@redhat.com> - 2.0.8-1
 - Unescape JSON so the relationships tab (and other things) work.
 - Move exception handling into call_get_file_tree for consistency.
