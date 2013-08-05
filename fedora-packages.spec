@@ -4,7 +4,7 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.9
+Version:        2.0.10
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
@@ -159,6 +159,9 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Mon Aug 05 2013 Ralph Bean <rbean@redhat.com> - 2.0.10-1
+- Bugfix - allow bugzilla cookiefile to be configurable.
+
 * Wed Jul 31 2013 Ralph Bean <rbean@redhat.com> - 2.0.9-1
 - Bugfix - import refactored code from python-moksha-wsgi.
   The tabbedcontainer and the dashboardcontainer.
