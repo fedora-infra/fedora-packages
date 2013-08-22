@@ -1,5 +1,9 @@
 # Global list of koji tags we care about
-tags = ({'name': 'Rawhide', 'tag': 'f20'},
+tags = ({'name': 'Rawhide', 'tag': 'f21'},
+
+        {'name': 'Fedora 20', 'tag': 'f20-updates'},
+        {'name': 'Fedora 20', 'tag': 'f20'},
+        {'name': 'Fedora 20 Testing', 'tag': 'f20-updates-testing'},
 
         {'name': 'Fedora 19', 'tag': 'f19-updates'},
         {'name': 'Fedora 19', 'tag': 'f19'},
@@ -8,10 +12,6 @@ tags = ({'name': 'Rawhide', 'tag': 'f20'},
         {'name': 'Fedora 18', 'tag': 'f18-updates'},
         {'name': 'Fedora 18', 'tag': 'f18'},
         {'name': 'Fedora 18 Testing', 'tag': 'f18-updates-testing'},
-
-        {'name': 'Fedora 17', 'tag': 'f17-updates'},
-        {'name': 'Fedora 17', 'tag': 'f17'},
-        {'name': 'Fedora 17 Testing', 'tag': 'f17-updates-testing'},
 
         {'name': 'EPEL 6', 'tag': 'dist-6E-epel'},
         {'name': 'EPEL 6', 'tag': 'dist-6E-epel-testing'},
