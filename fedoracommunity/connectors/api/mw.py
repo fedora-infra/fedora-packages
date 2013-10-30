@@ -267,7 +267,7 @@ def _get_connector(name, request=None):
                 cls = conn_class
 
     if request is None:
-        from pylons import request
+        from tg import request
 
     if cls:
         try:
