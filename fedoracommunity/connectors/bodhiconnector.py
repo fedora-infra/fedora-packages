@@ -657,7 +657,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 				'/images/16_karma-%s.png' % up.karma_icon
                     karma = 'karma_%s' % up.karma_icon
                     row = testing_builds_row[build]
-                    row['testing_version'] += HTML.tag('div',
+                    row['testing_version'] += " " + HTML.tag('div',
                             c=HTML.tag('a', href="%s/%s" % (
                                 self._prod_url, up.title),
                                 c=HTML.tag('img',
