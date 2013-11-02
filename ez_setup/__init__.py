@@ -187,7 +187,7 @@ def main(argv, version=DEFAULT_VERSION):
             # tell the user to uninstall obsolete version
             use_setuptools(version)
 
-    req = "setuptools>="+version
+    req = "setuptools>=" + version
     import pkg_resources
     try:
         pkg_resources.require(req)
@@ -204,8 +204,8 @@ def main(argv, version=DEFAULT_VERSION):
             from setuptools.command.easy_install import main
             main(argv)
         else:
-            print "Setuptools version", version,
-            "or greater has been installed."
+            print "Setuptools version {0} or greater has been installed.".\
+                format(version)
             print '(Run "ez_setup.py -U setuptools" to reinstall or upgrade.)'
 
 
