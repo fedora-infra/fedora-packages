@@ -7,4 +7,3 @@ fcomm_js = twc.JSLink(
     filename="static/js/fcomm.js",
     resources=[moksha_js],
 )
-

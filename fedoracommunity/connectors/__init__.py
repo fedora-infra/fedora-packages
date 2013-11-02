@@ -9,3 +9,7 @@ from wikiconnector import WikiConnector
 from torrentconnector import TorrentConnector
 from jsonconnector import SimpleJsonConnector
 from xapianconnector import XapianConnector
+
+__all__ = [KojiConnector, BodhiConnector, PkgdbConnector, YumConnector,
+           FasConnector, BugzillaConnector, PlanetConnector, WikiConnector,
+           TorrentConnector, SimpleJsonConnector, XapianConnector]
