@@ -25,6 +25,7 @@ except ValueError:
 
 make_base_app = base_config.setup_tg_wsgi_app(load_environment)
 
+
 def make_app(global_conf, full_stack=True, **app_conf):
     from moksha.wsgi.middleware import make_moksha_middleware
     from fedoracommunity.connectors.api.mw import FCommConnectorMiddleware
@@ -45,20 +46,20 @@ def make_app(global_conf, full_stack=True, **app_conf):
     if base_config.squeeze:
         from repoze.squeeze.processor import ResourceSqueezingMiddleware
         app = ResourceSqueezingMiddleware(
-                app,
-                cache_dir='public/cache',
-                url_prefix='/cache/',
-                )
+            app,
+            cache_dir='public/cache',
+            url_prefix='/cache/',
+        )
 
     if base_config.profile:
         from repoze.profile.profiler import AccumulatingProfileMiddleware
         app = AccumulatingProfileMiddleware(
-                app,
-                log_filename='profile.log',
-                discard_first_request=True,
-                cachegrind_filename='./cachegrind.out',
-                flush_at_shutdown=True,
-                path='/__profile__'
-                )
+            app,
+            log_filename='profile.log',
+            discard_first_request=True,
+            cachegrind_filename='./cachegrind.out',
+            flush_at_shutdown=True,
+            path='/__profile__'
+        )
 
     return app
