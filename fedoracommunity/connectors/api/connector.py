@@ -31,7 +31,7 @@ which is not implemented (e.g. sorting in the ITable interface) must raise
 NotImplementedError if the value is set to anything but None
 """
 
-from utils import QueryPath, QueryCol, ParamFilter, WeightedSearch
+from utils import QueryPath, ParamFilter, WeightedSearch
 from tg import config
 from dogpile.cache import make_region
 # TODO -- phase out beaker cache in favor of dogpile.
@@ -170,7 +170,7 @@ class IConnector(object):
 
         cls._method_paths[method_path] = method
 
-    def _dispatch(self, op, resource_path, params, _cookies = None, **kwds):
+    def _dispatch(self, op, resource_path, params, _cookies=None, **kwds):
         """ This method is for dispatching to the correct interface which
         is mostly used by the connector engine
 
@@ -193,7 +193,8 @@ class IConnector(object):
         if op in ('request_data', 'call', 'query', 'query_model'):
             return getattr(self, op)(resource_path, params, _cookies, **kwds)
         elif op in self._method_paths:
-            return self._method_paths[op](self, resource_path, _cookies, **params)
+            return self._method_paths[op](
+                self, resource_path, _cookies, **params)
 
         return None
 
@@ -246,6 +247,7 @@ class IConnector(object):
 
         raise NotImplementedError
 
+
 class ICall(object):
     """ Method calling interface for resources that return structured data
 
@@ -280,7 +282,6 @@ class ICall(object):
         raise NotImplementedError
 
 
-
 class IQuery(object):
     """ Query interface for data destined for a table or data grid
 
@@ -295,12 +296,11 @@ class IQuery(object):
 
     _query_paths = {}
 
-    def query(self, resource_path, params, _cookies,
-        start_row = 0,
-        rows_per_page = 10,
-        sort_col = None,
-        sort_order = None,
-        filters = {}):
+    def query(self, resource_path, params, _cookies, start_row=0,
+              rows_per_page=10,
+              sort_col=None,
+              sort_order=None,
+              filters=dict()):
 
         """ Implement this method if the resource provides a query interface.
         The URL should be set in register and should never change.
@@ -360,11 +360,11 @@ class IQuery(object):
 
         results = None
         r = {
-              "total_rows": 0,
-              "rows_per_page": 0,
-              "start_row": 0,
-              "rows": None
-            }
+            "total_rows": 0,
+            "rows_per_page": 0,
+            "start_row": 0,
+            "rows": None
+        }
 
         if not sort_col:
             sort_col = self.get_default_sort_col(resource_path)
@@ -372,19 +372,15 @@ class IQuery(object):
         if not sort_order:
             sort_order = self.get_default_sort_order(resource_path)
 
-        if params == None:
-            params = {}
+        if not params:
+            params = dict()
 
         query_func = self.query_model(resource_path).get_query()
 
-        (total_rows, rows_or_error) = query_func(self,
-                                        start_row = start_row,
-                                        rows_per_page = rows_per_page,
-                                        order = sort_order,
-                                        sort_col = sort_col,
-                                        filters = filters,
-                                        **params)
-
+        (total_rows, rows_or_error) = query_func(
+            self, start_row=start_row, rows_per_page=rows_per_page,
+            order=sort_order, sort_col=sort_col, filters=filters,
+            **params)
 
         r['total_rows'] = total_rows
         r['rows_per_page'] = rows_per_page
@@ -392,7 +388,8 @@ class IQuery(object):
         if start_row:
             r['start_row'] = start_row
 
-        if total_rows == -1: # there has been an error
+        # there has been an error
+        if total_rows == -1:
             r['error'] = rows_or_error
         else:
             r['visible_rows'] = len(rows_or_error)
@@ -408,23 +405,23 @@ class IQuery(object):
             :Returns:
                 The path's model
         """
-        return self._query_paths[resource_path];
+        return self._query_paths[resource_path]
 
     @classmethod
     def register_query(cls,
-                      path,
-                      query_func,
-                      primary_key_col = None,
-                      default_sort_col = None,
-                      default_sort_order = None,
-                      can_paginate = False):
+                       path,
+                       query_func,
+                       primary_key_col=None,
+                       default_sort_col=None,
+                       default_sort_order=None,
+                       can_paginate=False):
 
-        qpath = QueryPath(path = path,
-                          query_func = query_func,
-                          primary_key_col = primary_key_col,
-                          default_sort_col = default_sort_col,
-                          default_sort_order = default_sort_order,
-                          can_paginate = can_paginate)
+        qpath = QueryPath(path=path,
+                          query_func=query_func,
+                          primary_key_col=primary_key_col,
+                          default_sort_col=default_sort_col,
+                          default_sort_order=default_sort_order,
+                          can_paginate=can_paginate)
 
         # Attach an attribute so the worker can look us up later.
         qpath['query_func'].__dict__['_path'] = path
@@ -434,7 +431,7 @@ class IQuery(object):
         # Wrap every query in our dogpile cache.
         if cls._cache():
             qpath['query_func'] = \
-                    cls._cache().cache_on_arguments(path)(qpath['query_func'])
+                cls._cache().cache_on_arguments(path)(qpath['query_func'])
 
         cls._query_paths[path] = qpath
         return qpath
@@ -456,14 +453,17 @@ class IQuery(object):
 
         return None
 
+
 # TODO: Implement these two interfaces
 class IFeed(object):
     def request_feed(self, **params):
         pass
 
+
 class INotify(object):
     def register_listener(self, listener_cb):
         pass
+
 
 class ISearch(IQuery):
     filters = ParamFilter()
@@ -473,17 +473,18 @@ class ISearch(IQuery):
     def register_search_path(cls,
                              path,
                              search_func,
-                             primary_key_col = None,
-                             default_sort_col = None,
-                             default_sort_order = None,
-                             can_paginate = True):
+                             primary_key_col=None,
+                             default_sort_col=None,
+                             default_sort_order=None,
+                             can_paginate=True):
 
         # TODO --
-        # We should phase this out in favor of dogpile.cache.. but I'm not quite
+        # We should phase this out in favor of dogpile.cache. but I'm not quite
         # sure how it is or isnot integrated with WeightedSearch and other
         # stuff.  If someone has time to investigate this down the road, please
         # do so and remove it.
-        cls._search_cache = Cache('moksha_search_cache_%s_%s ' %( cls.__name__, path))
+        cls._search_cache = Cache('moksha_search_cache_%s_%s ' %
+                                  (cls.__name__, path))
 
         def query_func(conn=None,
                        start_row=0,
@@ -493,20 +494,21 @@ class ISearch(IQuery):
                        filters={},
                        **params):
 
-            s = WeightedSearch(lambda search_term: search_func(conn, search_term),
-                               cls._query_paths[path]['columns'],
-                               cls._search_cache)
+            s = WeightedSearch(
+                lambda search_term: search_func(conn, search_term),
+                cls._query_paths[path]['columns'],
+                cls._search_cache)
             search_string = cls.filters.filter(filters).get('search')
-            results = s.search(search_string, primary_key_col, start_row, rows_per_page)
-
+            results = s.search(
+                search_string, primary_key_col, start_row, rows_per_page)
 
             return results
 
-        qpath = cls.register_query(path = path,
-                          query_func = query_func,
-                          primary_key_col = primary_key_col,
-                          default_sort_col = default_sort_col,
-                          default_sort_order = default_sort_order,
-                          can_paginate = can_paginate)
+        qpath = cls.register_query(path=path,
+                                   query_func=query_func,
+                                   primary_key_col=primary_key_col,
+                                   default_sort_col=default_sort_col,
+                                   default_sort_order=default_sort_order,
+                                   can_paginate=can_paginate)
 
         return qpath

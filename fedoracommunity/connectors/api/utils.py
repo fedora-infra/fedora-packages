@@ -20,20 +20,21 @@ import bisect
 import warnings
 
 from datetime import datetime
-from UserDict import DictMixin
 
 try:
     from collections import OrderedDict as odict
 except ImportError:
     from ordereddict import OrderedDict as odict
 
+
 class DateTimeDisplay(object):
     """DateTimeDisplay is an object which takes any number of datetime objects
     and process them for display.
     """
     def __init__(self, *datetime_args):
-        warnings.warn("fedoracommunity.connectors.api.utils.DateTimeDisplay has been "
-                      "deprecated, use moksha.common.lib.helpers.DateTimeDisplay "
+        warnings.warn("fedoracommunity.connectors.api.utils.DateTimeDisplay "
+                      "has been deprecated, use "
+                      "moksha.common.lib.helpers.DateTimeDisplay "
                       "instead.", DeprecationWarning)
 
         # All dates are sorted from latest to earliest
@@ -55,7 +56,7 @@ class DateTimeDisplay(object):
     def time_elapsed(self, start_time_index, finish_time_index=None):
         startt = self._datetime_ordered_list[start_time_index]
         finisht = datetime.utcnow()
-        if finish_time_index != None:
+        if finish_time_index:
             finisht = self._datetime_ordered_list[finish_time_index]
 
         deltat = finisht - startt
@@ -73,7 +74,6 @@ class DateTimeDisplay(object):
             display = '%d m' % minutes
         else:
             display = '%d s' % seconds
-
 
         return ({'days': days, 'minutes': minutes,
                  'seconds': seconds, 'display': display})
@@ -100,11 +100,17 @@ class DateTimeDisplay(object):
             if el['days'] < 7:
                 when = "%d %s ago" % plural(el['days'], 'day', 'days')
             elif el['days'] < 365:
-                when = "%d %s ago" % plural(int(el['days'] / 7), 'week', 'weeks')
+                when = "%d %s ago" % plural(int(el['days'] / 7),
+                       'week', 'weeks')
             else:
-                when = "%d %s ago" % plural(int(el['days'] / 365), 'year', 'years')
+                when = "%d %s ago" % plural(int(el['days'] / 365),
+                       'year', 'years')
 
-        return {'time':time, 'date':date , 'when':when, 'should_hide_time':should_hide_time}
+        return {'time': time,
+                'date': date,
+                'when': when,
+                'should_hide_time': should_hide_time}
+
 
 class QueryCol(dict):
     def __init__(self,
@@ -112,10 +118,12 @@ class QueryCol(dict):
                  default_visible,
                  can_sort,
                  can_filter_wildcards):
-        super(QueryCol, self).__init__(column = column,
-                                       default_visible = default_visible,
-                                       can_sort = can_sort,
-                                       can_filter_wildcards = can_filter_wildcards)
+        super(QueryCol, self).__init__(
+            column=column,
+            default_visible=default_visible,
+            can_sort=can_sort,
+            can_filter_wildcards=can_filter_wildcards)
+
 
 class QueryPath(dict):
     def __init__(self,
@@ -126,29 +134,30 @@ class QueryPath(dict):
                  default_sort_order,
                  can_paginate):
         super(QueryPath, self).__init__(
-                         path = path,
-                         query_func = query_func,
-                         primary_key_col = primary_key_col,
-                         default_sort_col = default_sort_col,
-                         default_sort_order = default_sort_order,
-                         can_paginate = can_paginate,
-                         columns=odict())
+            path=path,
+            query_func=query_func,
+            primary_key_col=primary_key_col,
+            default_sort_col=default_sort_col,
+            default_sort_order=default_sort_order,
+            can_paginate=can_paginate,
+            columns=odict())
 
     def register_column(self,
                         column,
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False):
+                        default_visible=True,
+                        can_sort=False,
+                        can_filter_wildcards=False):
 
         self["columns"][column] = QueryCol(
-                column = column,
-                default_visible = default_visible,
-                can_sort = can_sort,
-                can_filter_wildcards = can_filter_wildcards
-              )
+            column=column,
+            default_visible=default_visible,
+            can_sort=can_sort,
+            can_filter_wildcards=can_filter_wildcards
+        )
 
     def get_query(self):
         return self['query_func']
+
 
 class ParamFilter(object):
     """Helper class for filtering query arguments"""
@@ -157,14 +166,16 @@ class ParamFilter(object):
         self._translation_table = {}
         self._param_table = {}
 
-    def add_filter(self, param, args=None, cast=None, allow_none=True, filter_func=None):
-        if args == None:
-            args = []
+    def add_filter(self, param, args=None, cast=None, allow_none=True,
+                   filter_func=None):
+        if not args:
+            args = list()
 
-        pf = {}
+        pf = dict()
         if cast:
             assert(isinstance(cast, type),
-                   "cast should be of type <type> not cast %s" % str(type(cast)))
+                   "cast should be of type <type> not cast %s" %
+                   str(type(cast)))
 
             pf['cast'] = cast
 
@@ -211,10 +222,11 @@ class ParamFilter(object):
                         ff(conn, results, k, v, allow_none)
                         assign = False
 
-                    if (allow_none or (v != None)) and assign:
+                    if (allow_none or v) and assign:
                         results[param] = v
 
         return results
+
 
 class WeightedSearch(object):
     # FIXME: Need to dial in the weighting algorithm
@@ -242,7 +254,7 @@ class WeightedSearch(object):
             x = col_count - i
             weight_factor = float(x) * factor
 
-            col_value = item.get(col_label,'')
+            col_value = item.get(col_label, '')
 
             if not isinstance(col_value, basestring):
                 col_value = ''
@@ -275,7 +287,8 @@ class WeightedSearch(object):
 
         result = -cmp(a_weight, b_weight)
         if result == 0:
-            result = cmp(a_val[self.cols.key_index(0)], b_val[self.cols.key_index(0)])
+            result = cmp(
+                a_val[self.cols.key_index(0)], b_val[self.cols.key_index(0)])
         return result
 
     def search(self, search_string, primary_key_col, start_row, rows_per_page):
@@ -290,10 +303,11 @@ class WeightedSearch(object):
         weighted_results = {}
         raw_search = []
         for s in search:
-            results = self.cache.get_value(key = s,
-                               createfunc=lambda : self.search_func(s),
-                               type="memory",
-                               expiretime=self.CACHE_EXPIRE_TIME)
+            results = self.cache.get_value(
+                key=s,
+                createfunc=lambda: self.search_func(s),
+                type="memory",
+                expiretime=self.CACHE_EXPIRE_TIME)
             if results:
                 raw_search.extend(results)
 
@@ -318,10 +332,5 @@ class WeightedSearch(object):
             if v[0] > 0:
                 sorted_list[i] = v[0]
 
-        return (len(sorted_list), sorted_list[start_row:start_row + rows_per_page])
-
-
-
-
-
-
+        return (
+            len(sorted_list), sorted_list[start_row:start_row + rows_per_page])
