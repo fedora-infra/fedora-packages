@@ -14,19 +14,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ISearch, ParamFilter
+from fedoracommunity.connectors.api import \
+    IConnector, ICall, IQuery, ISearch, ParamFilter
 from tg import config
 from fedora.client import ProxyClient, ServerError
 from fedora.client.fas2 import AccountSystem
 from moksha.common.lib.dates import DateTimeDisplay
 import time
 
-USERINFO_CACHE_TIMEOUT= 60 * 5 # s * m = 5 minutes
-_fas_minimal_user = config.get('fedoracommunity.connector.fas.minimal_user_name')
-_fas_minimal_pass = config.get('fedoracommunity.connector.fas.minimal_user_password')
+# s * m = 5 minutes
+USERINFO_CACHE_TIMEOUT = 60 * 5
+_fas_minimal_user = config.get('fedoracommunity.connector.'
+                               'fas.minimal_user_name')
+_fas_minimal_pass = config.get('fedoracommunity.connector.fas.'
+                               'minimal_user_password')
+
 
 class UserNotFoundError(LookupError):
     pass
+
 
 class FasConnector(IConnector, ICall, ISearch, IQuery):
     _method_paths = {}
@@ -36,7 +42,7 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         super(FasConnector, self).__init__(environ, request)
         self._fas_client = ProxyClient(self._base_url,
                                        session_as_cookie=False,
-                                       insecure = self._insecure)
+                                       insecure=self._insecure)
 
     # IConnector
     @classmethod
@@ -61,19 +67,21 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
     def request_data(self, resource_path, params, _cookies):
         if self._environ:
             identity = self._environ.get('repoze.who.identity')
-            auth_params={}
+            auth_params = dict()
         else:
             identity = None
         if identity:
             session_id = identity.get('session_id')
-            auth_params={'session_id': session_id}
+            auth_params = {'session_id': session_id}
         else:
             # use the minimal login if available
-            auth_params={'username': _fas_minimal_user, 'password': _fas_minimal_pass}
+            auth_params = {
+                'username': _fas_minimal_user,
+                'password': _fas_minimal_pass}
 
         return self._fas_client.send_request(resource_path,
-                                             auth_params = auth_params,
-                                             req_params = params)
+                                             auth_params=auth_params,
+                                             req_params=params)
 
     def introspect(self):
         # FIXME: return introspection data
@@ -103,29 +111,28 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
     def request_user_view(self, user):
         try:
             view = self.call('user/view', {'username': user})
-        except ServerError, e:
+        except ServerError:
             raise UserNotFoundError('User %s can not be found.' % user)
 
         if not view:
             return None
 
         view = view[1]
-        extra = {'cla':view['cla'],
-                 'admin':view['admin'],
-                 'personal':view['personal']
+        extra = {'cla': view['cla'],
+                 'admin': view['admin'],
+                 'personal': view['personal']
                  }
 
         view = view['person']
         view.update(extra)
-
-
         # Check to see if this user has enabled VOIP for their account
-        #config = self._fas_client.send_request('config/list/%s/asterisk/enabled'
-        #                                       % user, req_params={},
-        #                                       auth_params={
-        #                                          'username': _fas_minimal_user,
-        #                                          'password': _fas_minimal_pass
-        #                                          })
+        # config = \
+        #     self._fas_client.send_request('config/list/%s/asterisk/enabled'
+        #                                   % user, req_params={},
+        #                                   auth_params={
+        #                                       'username': _fas_minimal_user,
+        #                                       'password': _fas_minimal_pass
+        #                                   })
         #print config
 
         return view
@@ -140,10 +147,11 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         if invalidate:
             fas_cache.remove_value(key)
         try:
-             info = fas_cache.get_value(key = key ,
-                                   createfunc=lambda : self.request_user_view(user),
-                                   type="memory",
-                                   expiretime=USERINFO_CACHE_TIMEOUT)
+            info = fas_cache.get_value(
+                key=key,
+                createfunc=lambda: self.request_user_view(user),
+                type="memory",
+                expiretime=USERINFO_CACHE_TIMEOUT)
         except UserNotFoundError, e:
             return {'error_type': e.__class__.__name__,
                     'error': str(e)
@@ -155,23 +163,25 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
     @classmethod
     def register_search_people(cls):
         path = cls.register_search_path(
-                      'search_people',
-                      cls.search_people,
-                      primary_key_col = 'username',
-                      default_sort_col = 'username',
-                      default_sort_order = -1,
-                      can_paginate = True)
+            'search_people',
+            cls.search_people,
+            primary_key_col='username',
+            default_sort_col='username',
+            default_sort_order=-1,
+            can_paginate=True)
 
         # make human name weighted more
-        path.register_column('human_name',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'human_name',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
 
-        path.register_column('username',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'username',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
 
     def search_people(self, search_term):
         result = self.call('user/list',
@@ -182,46 +192,46 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
     @classmethod
     def register_query_people(cls):
         path = cls.register_query(
-                      'query_people',
-                      cls.query_people,
-                      primary_key_col = 'username',
-                      default_sort_col = 'username',
-                      default_sort_order = -1,
-                      can_paginate = True)
+            'query_people',
+            cls.query_people,
+            primary_key_col='username',
+            default_sort_col='username',
+            default_sort_order=-1,
+            can_paginate=True)
 
-        path.register_column('username',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
-        path.register_column('human_name',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'username',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
+        path.register_column(
+            'human_name',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
 
         f = ParamFilter()
-        f.add_filter('prefix',
-                     allow_none = False)
+        f.add_filter('prefix', allow_none=False)
 
         cls._query_people_filter = f
 
     def query_people(self, start_row=None,
-                           rows_per_page=None,
-                           order=-1,
-                           sort_col=None,
-                           filters = None,
-                           **params):
+                     rows_per_page=None,
+                     order=-1,
+                     sort_col=None,
+                     filters=None,
+                     **params):
 
         if not filters:
-            filters = {}
+            filters = dict()
         filters = self._query_people_filter.filter(filters, conn=self)
-        f = {}
-        p = filters.get('prefix','a').lower()
+        f = dict()
+        p = filters.get('prefix', 'a').lower()
         p.replace('*', '')
         p += '*'
         f['search'] = p
         result = self.call('user/list',
                            params=f)
-
 
         people = result[1]['people']
         return (len(people), people[start_row:rows_per_page + start_row])
@@ -229,103 +239,103 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
     @classmethod
     def register_query_usermemberships(cls):
         path = cls.register_query(
-                      'query_usermemberships',
-                      cls.query_usermemberships,
-                      primary_key_col = 'id',
-                      default_sort_col = 'name',
-                      default_sort_order = -1,
-                      can_paginate = True)
+            'query_usermemberships',
+            cls.query_usermemberships,
+            primary_key_col='id',
+            default_sort_col='name',
+            default_sort_order=-1,
+            can_paginate=True)
 
         path.register_column('id',
-                        default_visible = False,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=False,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('name',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('display_name',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('group_type',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('irc_channel',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('irc_network',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('joinmsg',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('mailing_list',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('mailing_list_url',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('needs_sponsor',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('owner_id',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('prerequisite_id',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False),
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False),
         path.register_column('url',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('user_can_remove',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('apply_rules',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('creation',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
 
         f = ParamFilter()
-        f.add_filter('username',['u', 'user', 'name'], allow_none = False)
-        f.add_filter('profile',[], allow_none=True)
-        f.add_filter('show_approved',['approved', 'a'], allow_none = True)
-        f.add_filter('show_unapproved',['unapproved', 'un'], allow_none = True)
+        f.add_filter('username', ['u', 'user', 'name'], allow_none=False)
+        f.add_filter('profile', list(), allow_none=True)
+        f.add_filter('show_approved', ['approved', 'a'], allow_none=True)
+        f.add_filter('show_unapproved', ['unapproved', 'un'], allow_none=True)
         cls._query_usermemberships_filter = f
 
     @classmethod
     def register_query_userinfo(cls):
-        path = cls.register_query(
-                      'query_userinfo',
-                      cls.query_userinfo,
-                      can_paginate = False)
+        cls.register_query(
+            'query_userinfo',
+            cls.query_userinfo,
+            can_paginate=False)
 
         f = ParamFilter()
-        f.add_filter('username',['u', 'user', 'name'], allow_none = False)
-        f.add_filter('profile',[], allow_none=True)
+        f.add_filter('username', ['u', 'user', 'name'], allow_none=False)
+        f.add_filter('profile', list(), allow_none=True)
         cls._query_userinfo_filter = f
 
     def query_userinfo(self, start_row=None,
-                             rows_per_page=None,
-                             order=-1,
-                             sort_col=None,
-                             filters = {},
-                             **params):
+                       rows_per_page=None,
+                       order=-1,
+                       sort_col=None,
+                       filters=dict(),
+                       **params):
 
         filters = self._query_userinfo_filter.filter(filters)
 
@@ -360,11 +370,11 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         return (1, [view])
 
     def query_usermemberships(self, start_row=None,
-                                    rows_per_page=None,
-                                    order=-1,
-                                    sort_col=None,
-                                    filters = {},
-                                    **params):
+                              rows_per_page=None,
+                              order=-1,
+                              sort_col=None,
+                              filters=dict(),
+                              **params):
 
         filters = self._query_usermemberships_filter.filter(filters)
 
@@ -421,7 +431,7 @@ class FasConnector(IConnector, ICall, ISearch, IQuery):
         approval = {}
 
         for row in group:
-            if row['role_approval'] == None:
+            if not row['role_approval']:
                 continue
             timeobject = DateTimeDisplay(row['role_approval'].split('+')[0])
             timetuple = timeobject.datetime.timetuple()
