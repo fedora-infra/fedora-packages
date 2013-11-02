@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2010  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -31,6 +31,7 @@ from shove import Shove
 from pylons import config
 from datetime import timedelta, datetime
 from fedoracommunity.connectors.api import get_connector
+
 
 class ClaDoneDataStream(PollingDataStream):
     now = True
@@ -72,6 +73,7 @@ class WikiAllRevisionsDataStream(PollingDataStream):
             data = {'revs': {}, 'last_rev_checked': 0}
         starttime = datetime.now()
         self.log.info("Caching wiki revisions now... this could take a while")
+
         def callback(all_revs, revs_to_get):
             if len(all_revs) > 0:
                 data['revs'].update(all_revs)
@@ -80,20 +82,20 @@ class WikiAllRevisionsDataStream(PollingDataStream):
                 data['last_rev_checked'] = revids[-1]
                 stats_cache['wiki_all_revisions'] = data
                 stats_cache.sync()
-            self.log.debug('%d/%d wiki revisions cached' % \
-                    (len(all_revs), len(revs_to_get)))
-        wiki.fetch_all_revisions(
-                start = data['last_rev_checked']+1,
-                flags = False,
-                timestamp = True,
-                user = True,
-                size = False,
-                comment = False,
-                content = False,
-                title = True,
-                ignore_imported_revs = True,
-                callback = lambda x, y: callback(x, y)
-        )
-        self.log.info("Cached wiki revisions, took %s seconds" % \
-                 (datetime.now() - starttime))
+            self.log.debug('%d/%d wiki revisions cached' %
+                          (len(all_revs), len(revs_to_get)))
+            wiki.fetch_all_revisions(
+                start=data['last_rev_checked']+1,
+                flags=False,
+                timestamp=True,
+                user=True,
+                size=False,
+                comment=False,
+                content=False,
+                title=True,
+                ignore_imported_revs=True,
+                callback=lambda x, y: callback(x, y)
+            )
+        self.log.info("Cached wiki revisions, took %s seconds" %
+                     (datetime.now() - starttime))
         return True
