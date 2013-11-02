@@ -23,7 +23,7 @@ import pkg_resources
 
 from beaker.cache import Cache
 from fedora.client import ProxyClient, AuthError
-from paste.httpexceptions import HTTPUnauthorized, HTTPFound
+from paste.httpexceptions import HTTPFound
 from repoze.who.middleware import PluggableAuthenticationMiddleware
 from repoze.who.plugins.form import RedirectingFormPlugin
 from repoze.who.classifiers import default_request_classifier
@@ -34,31 +34,35 @@ from paste.request import parse_dict_querystring, parse_formvars
 from urllib import quote_plus
 
 from moksha.wsgi.middleware.csrf import CSRFMetadataProvider
-from moksha.wsgi.lib.helpers import replace_app_header
 from fedoracommunity.lib.errorcodes import login_error
 
 log = logging.getLogger(__name__)
 
 #FAS_CACHE_TIMEOUT=20 #in seconds
-FAS_CACHE_TIMEOUT=900 # 15 minutes (FAS visits timeout after 20)
+# 15 minutes (FAS visits timeout after 20)
+FAS_CACHE_TIMEOUT = 900
 
 fasurl = tg.config.get('fedoracommunity.connector.fas.baseurl')
 fas_cache = Cache('fas_repozewho_cache', type="memory")
 
+
 def fas_make_who_middleware(app, log_stream):
     faswho = FASWhoPlugin(fasurl)
     csrf_mdprovider = CSRFMetadataProvider(
-            login_handler=tg.config.get('moksha.csrf.login_handler', '/login_handler'))
+        login_handler=tg.config.get(
+            'moksha.csrf.login_handler', '/login_handler'))
 
-    form = RedirectingFormPlugin('/community/login', '/login_handler', '/logout',
-                                 rememberer_name='fasident',
-                                 reason_param='ec')
-    form.classifications = { IIdentifier:['browser'],
-                             IChallenger:['browser'] } # only for browser
+    form = RedirectingFormPlugin(
+        '/community/login', '/login_handler', '/logout',
+        rememberer_name='fasident',
+        reason_param='ec')
+    # only for browser
+    form.classifications = {IIdentifier: ['browser'],
+                            IChallenger: ['browser']}
 
-    identifiers = [('form', form),('fasident', faswho)]
+    identifiers = [('form', form), ('fasident', faswho)]
     authenticators = [('fasauth', faswho)]
-    challengers = [('form',form)]
+    challengers = [('form', form)]
     mdproviders = [('fasmd', faswho), ('csrfmd', csrf_mdprovider)]
 
     if os.environ.get('FAS_WHO_LOG'):
@@ -72,15 +76,17 @@ def fas_make_who_middleware(app, log_stream):
         mdproviders,
         default_request_classifier,
         default_challenge_decider,
-        log_stream = log_stream
+        log_stream=log_stream
         )
 
     return app
 
+
 class FasClient(ProxyClient):
 
     def __init__(self, baseURL):
-        check_certs = tg.config.get('fedora.clients.check_certs', 'True').lower()
+        check_certs = tg.config.get(
+            'fedora.clients.check_certs', 'True').lower()
         if check_certs in ('false', '0', 'no'):
             insecure = True
         else:
@@ -101,12 +107,12 @@ class FasClient(ProxyClient):
     def login(self, login, password):
         return self.send_request("login",
                                  auth_params={'username': login,
-                                              'password':password})
+                                              'password': password})
 
     def logout(self, session_id):
         auth_params = {'session_id': session_id}
 
-        return self.send_request("logout", auth_params = auth_params)
+        return self.send_request("logout", auth_params=auth_params)
 
     def keep_alive(self, session_id, get_user_info):
         if not session_id:
@@ -120,7 +126,7 @@ class FasClient(ProxyClient):
 
         result = None
         try:
-            result = self.send_request(method, auth_params = auth_params)
+            result = self.send_request(method, auth_params=auth_params)
         except AuthError, e:
             log.warning(e)
 
@@ -131,16 +137,17 @@ class FasClient(ProxyClient):
 
         return result
 
+
 class FASWhoPlugin(object):
     def __init__(self, url, session_cookie='authtkt'):
         self.url = url
         self.session_cookie = session_cookie
-        self._session_cache = {}
-        self._metadata_plugins = []
+        self._session_cache = dict()
+        self._metadata_plugins = list()
 
-        for entry in pkg_resources.iter_entry_points('fas.repoze.who.metadata_plugins'):
+        entry_point = 'fas.repoze.who.metadata_plugins'
+        for entry in pkg_resources.iter_entry_points(entry_point):
             self._metadata_plugins.append(entry.load())
-
 
     def keep_alive(self, session_id):
         log.info("Keep alive cache miss")
@@ -174,7 +181,7 @@ class FASWhoPlugin(object):
 
         try:
             me = linfo[1]
-            me.update({'repoze.who.userid':me['person']['username']})
+            me.update({'repoze.who.userid': me['person']['username']})
             environ['FAS_LOGIN_INFO'] = linfo
 
             return me
@@ -186,7 +193,7 @@ class FASWhoPlugin(object):
         log.info('Remeber')
 
         result = []
-        req = webob.Request(environ)
+        webob.Request(environ)
 
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
@@ -199,7 +206,7 @@ class FASWhoPlugin(object):
     def forget(self, environ, identity):
         log.info("Forget")
         # return a expires Set-Cookie header
-        req = webob.Request(environ)
+        webob.Request(environ)
 
         linfo = environ.get('FAS_LOGIN_INFO')
         if isinstance(linfo, tuple):
@@ -211,7 +218,8 @@ class FASWhoPlugin(object):
 
             result = []
             fas_cache.remove_value(key=session_id + "_identity")
-            expired = '%s=""; Path=/; Expires=Sun, 10-May-1971 11:59:00 GMT' % self.session_cookie
+            expired = ('%s=""; Path=/; Expires=Sun, 10-May-1971'
+                       ' 11:59:00 GMT' % self.session_cookie)
             result.append(('Set-Cookie', expired))
             environ['FAS_LOGIN_INFO'] = None
             return result
@@ -249,9 +257,10 @@ class FASWhoPlugin(object):
             err = 1
             environ['FAS_AUTH_ERROR'] = err
 
-            err_app = HTTPFound(err_goto + '?' +
-                                'came_from=' + quote_plus(came_from) +
-                                '&ec=' + login_err.USERNAME_PASSWORD_ERROR.code)
+            err_app = HTTPFound(
+                err_goto + '?' +
+                'came_from=' + quote_plus(came_from) +
+                '&ec=' + login_error.USERNAME_PASSWORD_ERROR.code)
 
             environ['repoze.who.application'] = err_app
 
@@ -259,17 +268,18 @@ class FASWhoPlugin(object):
 
         if user_data:
             if isinstance(user_data, tuple):
-                environ['FAS_LOGIN_INFO']=fas.keep_alive(user_data[0], True)
+                environ['FAS_LOGIN_INFO'] = fas.keep_alive(user_data[0], True)
                 # let the csrf plugin know we just authenticated and it needs
                 # to rewrite the redirection app
                 environ['CSRF_AUTH_SESSION_ID'] = environ['FAS_LOGIN_INFO'][0]
                 return login
 
-        err = 'An unknown error happened when trying to log you in.  Please try again.'
+        err = ('An unknown error happened when trying to log you in.  '
+               'Please try again.')
         environ['FAS_AUTH_ERROR'] = err
         err_app = HTTPFound(err_goto + '?' +
-                                'came_from=' + came_from +
-                                '&ec=' + login_err.UNKNOWN_AUTH_ERROR.code)
+                            'came_from=' + came_from +
+                            '&ec=' + login_error.UNKNOWN_AUTH_ERROR.code)
 
         environ['repoze.who.application'] = err_app
 
@@ -291,7 +301,7 @@ class FASWhoPlugin(object):
         # have any peruser data though other services
         # may wish to add another metadata plugin to do so
 
-        if not identity.has_key('permissions'):
+        if 'permissions' in identity:
             identity['permissions'] = set()
 
         # we keep the approved_memberships list because there is also an
@@ -322,9 +332,10 @@ class FASWhoPlugin(object):
             return None
 
         log.info('Request metadata for cookie %s' % (cookie))
-        info = fas_cache.get_value(key=cookie + '_metadata',
-                                   createfunc=lambda: self.get_metadata(environ),
-                                   expiretime=FAS_CACHE_TIMEOUT)
+        info = fas_cache.get_value(
+            key=cookie + '_metadata',
+            createfunc=lambda: self.get_metadata(environ),
+            expiretime=FAS_CACHE_TIMEOUT)
 
         identity.update(info)
 
