@@ -18,7 +18,7 @@ tags = ({'name': 'Rawhide', 'tag': 'f21'},
 
         {'name': 'EPEL 5', 'tag': 'dist-5E-epel'},
         {'name': 'EPEL 5', 'tag': 'dist-5E-epel-testing'},
-       )
+        )
 
 tags_to_name_map = {}
 for t in tags:
