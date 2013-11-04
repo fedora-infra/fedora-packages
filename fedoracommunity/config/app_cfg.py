@@ -14,12 +14,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from fedoracommunity.lib import app_globals
 import fedoracommunity
 import fedoracommunity.lib
 
 from tg.configuration import AppConfig
-from bunch import Bunch
 from paste.deploy.converters import asbool
 try:
     # TG-2.3
@@ -27,6 +25,7 @@ try:
 except ImportError:
     # Earlier TG2
     from pylons.i18n import ugettext
+
 
 class FedoraCommunityConfig(AppConfig):
     tw2_initialized = False
@@ -36,11 +35,13 @@ class FedoraCommunityConfig(AppConfig):
             return app
 
         from tg import config
-        from tw2.core.middleware import Config, TwMiddleware
-        default_tw2_config = dict( default_engine=self.default_renderer,
-                                   translator=ugettext,
-                                   auto_reload_templates=asbool(self.get('templating.mako.reloadfromdisk', 'false'))
-                                   )
+        from tw2.core.middleware import TwMiddleware
+        default_tw2_config = dict(
+            default_engine=self.default_renderer,
+            translator=ugettext,
+            auto_reload_templates=asbool(
+                self.get('templating.mako.reloadfromdisk', 'false'))
+        )
         res_prefix = config.get('fedoracommunity.resource_path_prefix')
         if res_prefix:
             default_tw2_config['res_prefix'] = res_prefix
@@ -55,12 +56,13 @@ class FedoraCommunityConfig(AppConfig):
 
 #    def add_auth_middleware(self, app, *args):
 #        """ Add our FAS authentication middleware """
-#        from fedoracommunity.connectors.faswhoplugin import fas_make_who_middleware
+#        from fedoracommunity.connectors.faswhoplugin import \
+#            fas_make_who_middleware
 #        #from repoze.what.plugins.pylonshq import booleanize_predicates
 #        from copy import copy
 #        import logging
 #
-#        # TODO: go through moksha.lib.helpers and clean up the Predicate usage.
+#        # TODO: go through moksha.lib.helpers and clean up the Predicate usage
 #        # Eventually we want to be using this, because this is how TG2/Pylons
 #        # does it, however it currently breaks things for us...
 #        #booleanize_predicates()
@@ -93,7 +95,8 @@ base_config.auto_reload_templates = True
 base_config.use_legacy_renderer = False
 
 # Configure the base SQLALchemy Setup
-base_config.use_sqlalchemy = False # fix this later
+# fix this later
+base_config.use_sqlalchemy = False
 # base_config.model = myfedora.model
 # base_config.DBSession = myfedora.model.DBSession
 

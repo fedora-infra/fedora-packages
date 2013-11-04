@@ -35,6 +35,7 @@ from tg import config
 
 log = logging.getLogger(__name__)
 
+
 class FCommConnectorMiddleware(object):
     """
     A layer of WSGI middleware that is responsible for handling every
@@ -81,8 +82,10 @@ class FCommConnectorMiddleware(object):
             # output profiling data
             file_name = os.path.join(directory, prof_file_name)
             f = open(file_name, 'w')
-            f.write('{"id": "%s", "start_time": %s, "callback_start_time": %s, "end_time": %s}'
-                    % (profile_id, p['start_time'], p['callback_start_time'], p['end_time']))
+            f.write('{"id": "%s", "start_time": %s, "callback_start_time": %s,'
+                    ' "end_time": %s}'
+                    % (profile_id, p['start_time'], p['callback_start_time'],
+                       p['end_time']))
             f.close()
             return Response('{}')(environ, start_response)
 
@@ -98,7 +101,8 @@ class FCommConnectorMiddleware(object):
 
             if len(s) < 2:
                 log.info('Invalid connector path: %s' % path)
-                return Response(status='404 Not Found')(environ, start_response)
+                return Response(status='404 Not Found')(
+                    environ, start_response)
 
             # check to see if we need to hand this off to the profile collector
             if s[0] == 'prof_collector':
@@ -125,7 +129,8 @@ class FCommConnectorMiddleware(object):
                                                **params)
             except IndexError, e:
                 log.info('Invalid connector path: %r %s' % (path, str(e)))
-                return Response(status='404 Not Found')(environ, start_response)
+                return Response(status='404 Not Found')(
+                    environ, start_response)
         else:
             response = request.get_response(self.application)
 
@@ -136,7 +141,7 @@ class FCommConnectorMiddleware(object):
                        **remote_params):
         response = None
         # check last part of path to see if it is json data
-        dispatch_params = {};
+        dispatch_params = dict()
 
         if len(path) > 0:
             p = urllib.unquote_plus(path[-1].lstrip())
@@ -148,7 +153,8 @@ class FCommConnectorMiddleware(object):
                     dp['filters'] = json.loads(f)
                 path = path[:-1]
 
-                # scrub dispatch_params keys of unicode so we can pass as keywords
+                # scrub dispatch_params keys of unicode
+                # so we can pass as keywords
                 for (k, v) in dp.iteritems():
                     dispatch_params[str(k)] = v
 
@@ -189,7 +195,8 @@ class FCommConnectorMiddleware(object):
                 ip = request.remote_addr
                 timestamp = time.time()
 
-                profile_id = "%s_%f_%s_%i" % (conn_name, timestamp, ip, prof_id_counter)
+                profile_id = "%s_%f_%s_%i" % (
+                    conn_name, timestamp, ip, prof_id_counter)
                 self.outstanding_profile_ids[profile_id] = True
                 prof_file_name = "connector_%s.prof" % profile_id
                 info_file_name = "connector_%s.info" % profile_id
@@ -197,8 +204,12 @@ class FCommConnectorMiddleware(object):
                 # output call info
                 file_name = os.path.join(directory, info_file_name)
                 f = open(file_name, 'w')
-                f.write('{"name": "%s", "op": "%s", "path": "%s", "remote_params": %s, "ip": "%s", "timestamp": %f, "id_counter": %i, "id": "%s"}'
-                    % (conn_name, op, path, json.dumps(remote_params), ip, timestamp, prof_id_counter, profile_id))
+                f.write('{"name": "%s", "op": "%s", "path": "%s", '
+                        '"remote_params": %s, "ip": "%s", "timestamp": '
+                        '%f, "id_counter": %i, "id": "%s"}'
+                        % (conn_name, op, path,
+                           json.dumps(remote_params), ip, timestamp,
+                           prof_id_counter, profile_id))
                 f.close()
 
                 # in order to get the results back we need to pass an object
@@ -207,27 +218,29 @@ class FCommConnectorMiddleware(object):
 
                 # profile call
                 file_name = os.path.join(directory, prof_file_name)
-                profile.runctx("result['r'] = conn_obj._dispatch(op, path, remote_params, **dispatch_params)",
-                                None,
-                                {'conn_obj': conn_obj,
-                                 'op': op,
-                                 'path': path,
-                                 'remote_params': remote_params,
-                                 'dispatch_params': dispatch_params,
-                                 'result': result},
-                                file_name)
+                profile.runctx("result['r'] = conn_obj._dispatch(op, path, "
+                               "remote_params, **dispatch_params)",
+                               None,
+                               {'conn_obj': conn_obj,
+                                'op': op,
+                                'path': path,
+                                'remote_params': remote_params,
+                                'dispatch_params': dispatch_params,
+                                'result': result},
+                               file_name)
 
                 r = result['r']
 
                 # add profile id to results
                 r['moksha_profile_id'] = profile_id
             else:
-                r = conn_obj._dispatch(op, path, remote_params, **dispatch_params)
+                r = conn_obj._dispatch(
+                    op, path, remote_params, **dispatch_params)
 
             if pretty_print:
                 r = '<pre>' + pformat(r) + '</pre>'
             elif not isinstance(r, basestring):
-                r = json.dumps(r, separators=(',',':'))
+                r = json.dumps(r, separators=(',', ':'))
 
             if isinstance(r, unicode):
                 r = r.encode('utf-8', 'replace')
@@ -248,10 +261,11 @@ class FCommConnectorMiddleware(object):
             conn_class.register()
             conn_path = conn_entry.dist.location
             self._connectors[conn_entry.name] = {
-                    'name': conn_entry.name,
-                    'connector_class': conn_class,
-                    'path': conn_path,
-                    }
+                'name': conn_entry.name,
+                'connector_class': conn_class,
+                'path': conn_path,
+            }
+
 
 def _get_connector(name, request=None):
     # TODO: having a connection pool might be nice

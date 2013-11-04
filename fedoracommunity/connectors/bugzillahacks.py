@@ -25,8 +25,10 @@ def hotpatch_bugzilla():
 
     if PY27:
         if bugzilla.version == '0.7.0':
-            # In the case of python2.7 we apply a hot patch to python-bugzilla's
-            # SafeCookieTransport and have it pass in an SSL timeout to xmlrpclib.
+            # In the case of python2.7 we apply a hot patch to
+            # python-bugzilla's
+            # SafeCookieTransport and have it pass in an SSL timeout
+            # to xmlrpclib.
             def patched_make_connection(self, host):
                 if self._connection and host == self._connection[0]:
                     return self._connection[1]
@@ -57,13 +59,15 @@ def hotpatch_bugzilla():
                 req.add_header('User-Agent', self.user_agent)
                 req.add_header('Content-Type', 'text/xml')
 
-                if hasattr(self, 'accept_gzip_encoding') and self.accept_gzip_encoding:
+                if hasattr(self, 'accept_gzip_encoding') and \
+                   self.accept_gzip_encoding:
                     req.add_header('Accept-Encoding', 'gzip')
                 req.add_data(request_body)
 
                 resp = self.opener.open(req, timeout=longer_timeout)
 
-                # In Python 2, resp is a urllib.addinfourl instance, which does not
+                # In Python 2, resp is a urllib.addinfourl instance,
+                # which does not
                 # have the getheader method that parse_response expects.
                 if not hasattr(resp, 'getheader'):
                     resp.getheader = resp.headers.getheader

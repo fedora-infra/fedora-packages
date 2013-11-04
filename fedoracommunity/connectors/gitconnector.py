@@ -26,6 +26,7 @@ from moksha.common.lib.dates import DateTimeDisplay
 
 log = logging.getLogger(__name__)
 
+
 class FedoraGitRepo(object):
     """ An abstraction for working with packages in the Fedora Git repos """
 
@@ -51,8 +52,10 @@ class FedoraGitRepo(object):
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, **kw)
         out, err = p.communicate()
-        if out: log.debug(out)
-        if err: log.error(err)
+        if out:
+            log.debug(out)
+        if err:
+            log.error(err)
         return out
 
     def clone_repo(self):
@@ -63,8 +66,10 @@ class FedoraGitRepo(object):
     def get_spec(self):
         """ Return the contents of this package's RPM spec file """
         if os.path.exists(os.path.join(self.repo_path, 'dead.package')):
-            return to_unicode(self.repo.tree()['dead.package'].data_stream.read())
-        return to_unicode(self.repo.tree()[self.package + '.spec'].data_stream.read())
+            return to_unicode(
+                self.repo.tree()['dead.package'].data_stream.read())
+        return to_unicode(
+            self.repo.tree()[self.package + '.spec'].data_stream.read())
 
     def get_patches(self):
         """ Return a dictionary of all patches for this package """
@@ -79,8 +84,8 @@ class FedoraGitRepo(object):
                 'age': DateTimeDisplay(created).age(granularity='day',
                                                     general=True),
                 })
-        return sorted(patches,
-                cmp=lambda x, y: cmp(x['datetime'], y['datetime']))
+        return sorted(
+            patches, cmp=lambda x, y: cmp(x['datetime'], y['datetime']))
 
     def get_patch(self, patch):
         """ Return the contents of a specific patch """
@@ -104,7 +109,7 @@ class FedoraGitRepo(object):
                         ' '.join(chunks[1:-1]),
                         format='%a %b %d %H:%M:%S %Y').datetime
                 else:
-                        current['msg'] += to_unicode('%s\n' %' '.join(chunks))
+                        current['msg'] += to_unicode('%s\n' % ' '.join(chunks))
         commits.append(current)
         self.inject_links(commits)
         return commits
@@ -113,20 +118,21 @@ class FedoraGitRepo(object):
         """
         Iterate over all of the commits and link up bug numbers and CVEs.
         """
-        bug_url = '<a href="https://bugzilla.redhat.com/show_bug.cgi?id=%s" target="_blank">%s</a>'
-        cve_url = '<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=%s" target="_blank">%s</a>'
+        bug_url = ('<a href="https://bugzilla.redhat.com/show_bug.cgi?id=%s'
+                   '" target="_blank">%s</a>')
+        cve_url = ('<a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=%s"'
+                   ' target="_blank">%s</a>')
         regexs = (r'#(\d+)', r'[rR][hH][bB][zZ]:? ?(\d+)',
                   r'[bB][zZ]:? ?(\d+)', r'[Bb]ug:? ?(\d+)')
         for commit in commits:
             for regex in regexs:
                 for bug in re.findall(regex, commit['msg']):
-                    commit['msg'] = commit['msg'].replace(bug,
-                            bug_url % (bug, bug))
+                    commit['msg'] = commit['msg'].replace(
+                        bug, bug_url % (bug, bug))
             # Link up CVE IDs
             for cve in re.findall(r'(CVE-\d\d\d\d-\d\d\d\d)', commit['msg']):
-                commit['msg'] = commit['msg'].replace(cve,
-                        cve_url % (cve, cve))
-
+                commit['msg'] = commit['msg'].replace(
+                    cve, cve_url % (cve, cve))
 
     def get_diffstat(self, patch='*.patch'):
         """ Return the output of diffstat on a given patch, or all patches """
@@ -134,7 +140,9 @@ class FedoraGitRepo(object):
 
     def get_creation_time(self, filename):
         """ Return a datetime object for the date a given file was created """
-        date = ' '.join(self.repo.git.log(filename, reverse=True).split('\n')[2].split()[1:-1])
+        date = ' '.join(
+            self.repo.git.log(
+                filename, reverse=True).split('\n')[2].split()[1:-1])
         return DateTimeDisplay(date, format='%a %b %d %H:%M:%S %Y').datetime
 
     def get_source_url(self):
@@ -143,7 +151,8 @@ class FedoraGitRepo(object):
             return source.split()[1]
 
     def get_fedora_source(self):
-        url = config.get('fedora_lookaside', 'http://pkgs.fedoraproject.org/repo/pkgs')
+        url = config.get(
+            'fedora_lookaside', 'http://pkgs.fedoraproject.org/repo/pkgs')
         source = self.get_source_url()
         if source:
             tarball = source.split('/')[-1]

@@ -1,6 +1,6 @@
 # This file is part of Moksha.
 # Copyright (C) 2008-2010  Red Hat, Inc.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -17,3 +17,6 @@ from connector import IConnector, ICall, IQuery, IFeed, INotify, ISearch
 from utils import ParamFilter
 
 from mw import _get_connector as get_connector
+
+__all__ = [IConnector, ICall, IQuery, IFeed, INotify, ISearch, ParamFilter,
+           get_connector]
