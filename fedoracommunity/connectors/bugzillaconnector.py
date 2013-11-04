@@ -236,7 +236,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             filters = {}
 
         filters = self._query_bugs_filter.filter(filters, conn=self)
-        collection = filters.get('collection', 'Fedora')
+        collection = filters.get('collection', PRODUCTS)
         version = filters.get('version', '')
 
         package = filters['package']
@@ -262,11 +262,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         # Paginate
         bugs = bugs[start_row:start_row + rows_per_page]
         # Get bug details
-        bugs = self.get_bugs(bugs, collection=collection)
+        bugs = self.get_bugs(bugs)
         return (total_count, bugs)
 
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
-                    sort_col='number', filters=None, collection='Fedora',
+                    sort_col='number', filters=None, collection=PRODUCTS,
                     **params):
         """ Make bugzilla queries but only grab up to 200 bugs at a time,
         otherwise we might drop due to SSL timeout.  :/
@@ -288,7 +288,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             for bug in results
         ]
 
-    def get_bugs(self, bugids, collection='Fedora'):
+    def get_bugs(self, bugids):
 
         def _bugids_to_dicts(chunk_of_bugids):
 
@@ -311,7 +311,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                     'status': bug.bug_status.title(),
                     'description': bug.summary,
                     'last_modified': modified.age(),
-                    'release': '%s %s' % (collection, bug_version),
+                    'release': '%s %s' % (bug.product, bug_version),
                     'bug_class': bug_class.strip(),
                 }
                 dicts.append(d)
