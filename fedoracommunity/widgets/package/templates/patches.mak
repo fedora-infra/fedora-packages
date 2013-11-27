@@ -7,7 +7,7 @@ $(document).ready(function(){
 });
 
 function on_change(self) {
-	$('#patches_container').load(moksha.url('/_w/package.sources.patches #patches'), {
+	$('#patches_container').load(moksha.url('/_w/package_sources_patches #patches'), {
 		'package_name': '${w.package}',
 		'subpackage_of': '${w.subpackage_of}',
 		'branch': self.value,
@@ -57,7 +57,7 @@ function toggle_patch(patch) {
 	}
 
 	$.ajax({
-		url: moksha.url('/_w/package.sources.patch'),
+		url: moksha.url('/_w/package_sources_patch'),
 		data: {
 			package: '${w.package}',
 			subpackage_of: '${w.subpackage_of}',

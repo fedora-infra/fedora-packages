@@ -7,11 +7,11 @@ from fedoracommunity.connectors.api import get_connector
 from fedoracommunity.widgets.grid import Grid
 
 class RelationshipsNavWidget(TabWidget):
-    tabs = OrderedDict([('Requires', 'package.relationships.requires'),
-                        ('Required By', 'package.relationships.requiredby'),
-                        ('Provides', 'package.relationships.provides'),
-                        ('Obsoletes', 'package.relationships.obsoletes'),
-                        ('Conflicts', 'package.relationships.conflicts')])
+    tabs = OrderedDict([('Requires', 'package_relationships_requires'),
+                        ('Required By', 'package_relationships_requiredby'),
+                        ('Provides', 'package_relationships_provides'),
+                        ('Obsoletes', 'package_relationships_obsoletes'),
+                        ('Conflicts', 'package_relationships_conflicts')])
     base_url = Template(text='/${kwds["package_name"]}/relationships/')
     default_tab = 'Requires'
 

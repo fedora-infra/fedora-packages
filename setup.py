@@ -109,21 +109,21 @@ setup(
     moksha_widgets = moksha.wsgi.widgets.api
     bodhi_js = fedoracommunity.widgets.package.updates:bodhi_js
 
-    fedoracommunity.bodhi_js = fedoracommunity.widgets.package.updates:bodhi_js
-    fedoracommunity.updates = fedoracommunity.widgets.package.updates:Updates
+    fedoracommunity_bodhi_js = fedoracommunity.widgets.package.updates:bodhi_js
+    fedoracommunity_updates = fedoracommunity.widgets.package.updates:Updates
 
     packages = fedoracommunity.widgets.package
 
-    package.overview = fedoracommunity.widgets.package.overview
-    package.updates = fedoracommunity.widgets.package.updates
-    package.builds = fedoracommunity.widgets.package.builds
+    package_overview = fedoracommunity.widgets.package.overview
+    package_updates = fedoracommunity.widgets.package.updates
+    package_builds = fedoracommunity.widgets.package.builds
 
-    package.bugs = fedoracommunity.widgets.package.bugs
-    package.contents = fedoracommunity.widgets.package.contents
-    package.changelog = fedoracommunity.widgets.package.changelog
-    package.sources = fedoracommunity.widgets.package.sources
+    package_bugs = fedoracommunity.widgets.package.bugs
+    package_contents = fedoracommunity.widgets.package.contents
+    package_changelog = fedoracommunity.widgets.package.changelog
+    package_sources = fedoracommunity.widgets.package.sources
 
-    package.relationships = fedoracommunity.widgets.package.relationships
+    package_relationships = fedoracommunity.widgets.package.relationships
 
     [moksha.global]
     #fedora_css = fedoracommunity.widgets:fedora_css
@@ -148,28 +148,28 @@ setup(
     fedoracommunity.bodhi = fedoracommunity.widgets.package.updates:Updates
     grid = fedoracommunity.widgets.grid:Grid
 
-    package.overview = fedoracommunity.widgets.package.overview:Details
+    package_overview = fedoracommunity.widgets.package.overview:Details
 
-    package.updates = fedoracommunity.widgets.package.updates:Updates
-    package.builds = fedoracommunity.widgets.package.builds:Builds
-    package.bugs = fedoracommunity.widgets.package.bugs:BugsWidget
-    package.contents = fedoracommunity.widgets.package.contents:ContentsWidget
-    package.changelog = fedoracommunity.widgets.package.changelog:ChangelogWidget
-    package.sources = fedoracommunity.widgets.package.sources:Sources
-    package.sources.spec = fedoracommunity.widgets.package.sources:Spec
-    package.sources.patches = fedoracommunity.widgets.package.sources:Patches
-    package.sources.patch = fedoracommunity.widgets.package.sources:Patch
-    package.sources.diffs = fedoracommunity.widgets.package.sources:Diffs
-    package.sources.tarballs = fedoracommunity.widgets.package.sources:Tarballs
-    package.sources.git = fedoracommunity.widgets.package.sources:GitRepo
+    package_updates = fedoracommunity.widgets.package.updates:Updates
+    package_builds = fedoracommunity.widgets.package.builds:Builds
+    package_bugs = fedoracommunity.widgets.package.bugs:BugsWidget
+    package_contents = fedoracommunity.widgets.package.contents:ContentsWidget
+    package_changelog = fedoracommunity.widgets.package.changelog:ChangelogWidget
+    package_sources = fedoracommunity.widgets.package.sources:Sources
+    package_sources_spec = fedoracommunity.widgets.package.sources:Spec
+    package_sources_patches = fedoracommunity.widgets.package.sources:Patches
+    package_sources_patch = fedoracommunity.widgets.package.sources:Patch
+    package_sources_diffs = fedoracommunity.widgets.package.sources:Diffs
+    package_sources_tarballs = fedoracommunity.widgets.package.sources:Tarballs
+    package_sources_git = fedoracommunity.widgets.package.sources:GitRepo
 
-    package.relationships = fedoracommunity.widgets.package.relationships:RelationshipsWidget
-    package.relationships.requires = fedoracommunity.widgets.package.relationships:RequiresWidget
-    package.relationships.requiredby = fedoracommunity.widgets.package.relationships:RequiredByWidget
-    package.relationships.depends = fedoracommunity.widgets.package.relationships:DependsWidget
-    package.relationships.provides = fedoracommunity.widgets.package.relationships:ProvidesWidget
-    package.relationships.obsoletes = fedoracommunity.widgets.package.relationships:ObsoletesWidget
-    package.relationships.conflicts = fedoracommunity.widgets.package.relationships:ConflictsWidget
+    package_relationships = fedoracommunity.widgets.package.relationships:RelationshipsWidget
+    package_relationships_requires = fedoracommunity.widgets.package.relationships:RequiresWidget
+    package_relationships_requiredby = fedoracommunity.widgets.package.relationships:RequiredByWidget
+    package_relationships_depends = fedoracommunity.widgets.package.relationships:DependsWidget
+    package_relationships_provides = fedoracommunity.widgets.package.relationships:ProvidesWidget
+    package_relationships_obsoletes = fedoracommunity.widgets.package.relationships:ObsoletesWidget
+    package_relationships_conflicts = fedoracommunity.widgets.package.relationships:ConflictsWidget
 
     [moksha.stream]
     stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream

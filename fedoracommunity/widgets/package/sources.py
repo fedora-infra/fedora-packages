@@ -31,8 +31,8 @@ from package import TabWidget
 
 class Sources(TabWidget):
     tabs = OrderedDict([
-        ('Patches', 'package.sources.patches'),
-        ('Spec', 'package.sources.spec'),
+        ('Patches', 'package_sources_patches'),
+        ('Spec', 'package_sources_spec'),
         #('Diffs', 'package.sources.diffs'),
         #('Tarballs', 'package.sources.tarballs'),
         #('Git', 'package.sources.git'),
