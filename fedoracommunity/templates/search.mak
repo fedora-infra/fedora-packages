@@ -55,7 +55,7 @@
                	</div>
                <script type="text/javascript">
                    function do_search(form) {
-                       var value = encodeURIComponent(form.search['value']);
+                       var value = encodeURIComponent(encodeURIComponent(form.search['value']));
                        window.history.pushState({search: value}, '',
                                                 form.action + '/' + value);
                        update_search_grid(value);
