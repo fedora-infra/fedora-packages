@@ -40,8 +40,11 @@
 
        function ready_search() {
            var search_term = "${w.filters['search']}";
-           if (search_term)
+           if (search_term) {
+               search_term = encodeURIComponent(encodeURIComponent(search_term));
                moksha.defer(this, update_search_grid, [search_term]);
+           }
+
        }
    </script>
 </div>
