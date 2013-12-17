@@ -108,7 +108,7 @@ class XapianConnector(IConnector, ICall, IQuery):
             t.strip() for t in search_string.split(' ') if t.strip()
         ]
 
-        search_string = utils.filter_search_string (search_string)
+        search_string = utils.filter_search_string(search_string)
         phrase = '"%s"' % search_string
 
         # add exact matchs
