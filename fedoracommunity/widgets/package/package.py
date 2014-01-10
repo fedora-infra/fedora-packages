@@ -61,14 +61,14 @@ class TabWidget(twc.Widget):
 
 
 class PackageNavWidget(TabWidget):
-    tabs = OrderedDict([('Overview', 'package.overview'),
-                        ('Builds', 'package.builds'),
-                        ('Updates', 'package.updates'),
-                        ('Bugs', 'package.bugs'),
-                        ('Contents', 'package.contents'),
-                        ('Changelog', 'package.changelog'),
-                        ('Sources', 'package.sources'),
-                        ('Relationships', 'package.relationships')])
+    tabs = OrderedDict([('Overview', 'package_overview'),
+                        ('Builds', 'package_builds'),
+                        ('Updates', 'package_updates'),
+                        ('Bugs', 'package_bugs'),
+                        ('Contents', 'package_contents'),
+                        ('Changelog', 'package_changelog'),
+                        ('Sources', 'package_sources'),
+                        ('Relationships', 'package_relationships')])
     base_url = Template(text='/${kwds["package_name"]}/');
     default_tab = 'Overview'
     args = twc.Param(default=None)

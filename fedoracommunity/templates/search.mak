@@ -55,9 +55,10 @@
                	</div>
                <script type="text/javascript">
                    function do_search(form) {
-                       window.history.pushState({search:form.search['value']}, '', 
-                                                 form.action + '/' + form.search['value']);
-                       update_search_grid(form.search['value']);
+                       var value = encodeURIComponent(encodeURIComponent(form.search['value']));
+                       window.history.pushState({search: value}, '',
+                                                form.action + '/' + value);
+                       update_search_grid(value);
                        return False;
                    }
                </script>

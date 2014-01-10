@@ -1,7 +1,11 @@
+import urllib
+
 words_translation = {'d-bus': 'dbus',
                      'gtk+': 'gtk'}
 
 reserved_chars = ['+', '-', '\'', '"']
+
+
 def filter_search_string (string):
     """Replaces xapian reserved characters with underscore, lowercases
        the string and replaces spelling of certain words/names with more
@@ -11,6 +15,7 @@ def filter_search_string (string):
            +, -, ', "
     """
     string = string.lower()
+    string = urllib.unquote_plus(string)
     for key, value in words_translation.items():
         string = string.replace(key, value)
 

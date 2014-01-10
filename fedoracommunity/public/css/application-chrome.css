@@ -1611,6 +1611,10 @@ em.note {
   font-size: 13pt;
   text-decoration: none;
 }
+#package-info-bar .other-app img {
+  width: 16px;
+  height: 16px;
+}
 
 #package-info-bar a:link.package-owner { color: #3c6eb4; text-decoration: underline; font-weight: bold;}
 #package-info-bar a:visited.package-owner { color: #3c6eb4; text-decoration: underline; font-weight: bold;}

@@ -20,7 +20,6 @@ import koji
 import rpm
 
 from tg import config
-from datetime import datetime
 from cgi import escape
 from urlgrabber import grabber
 
@@ -29,9 +28,11 @@ try:
 except ImportError:
     from lockfile import FileLock as LockFile
 
-from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import \
+    IConnector, ICall, IQuery, ParamFilter
 from fedoracommunity.connectors.api import get_connector
 from moksha.common.lib.dates import DateTimeDisplay
+
 
 class KojiConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -50,8 +51,9 @@ class KojiConnector(IConnector, ICall, IQuery):
         cls._koji_url = config.get('fedoracommunity.connector.koji.baseurl',
                                    'http://koji.fedoraproject.org/koji')
 
-        cls._koji_pkg_url = config.get('fedoracommunity.connector.koji.pkgurl',
-                                       'http://koji.fedoraproject.org/packages')
+        cls._koji_pkg_url = config.get(
+            'fedoracommunity.connector.koji.pkgurl',
+            'http://koji.fedoraproject.org/packages')
 
         cls._rpm_cache = config.get('fedoracommunity.rpm_cache',
                                     None)
@@ -68,7 +70,8 @@ class KojiConnector(IConnector, ICall, IQuery):
         cls.register_query_obsoletes()
 
         cls.register_method('get_error_log', cls.call_get_error_log)
-        cls.register_method('get_latest_changelog', cls.call_get_latest_changelog)
+        cls.register_method(
+            'get_latest_changelog', cls.call_get_latest_changelog)
         cls.register_method('get_file_tree', cls.call_get_file_tree)
 
     def request_data(self, resource_path, params, _cookies):
@@ -95,7 +98,12 @@ class KojiConnector(IConnector, ICall, IQuery):
         return log_file
 
     def _get_file_url(self, task_id, file_name):
-        return self._koji_url + '/getfile' + '?taskID=' + str(task_id) + '&name=' + file_name
+        return (self._koji_url +
+                '/getfile' +
+                '?taskID=' +
+                str(task_id) +
+                '&name=' +
+                file_name)
 
     def call_get_latest_changelog(self, resource_path, _cookies=None,
                                   build_id=None, task_id=None, state=None):
@@ -108,29 +116,25 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         if state != koji.BUILD_STATES['COMPLETE']:
             srpm_tasks = self.call('listTasks', {
-                'opts':{
-                    'parent': task_id,
-                    'method': 'buildSRPMFromSCM',
-                    }})
+                'opts': dict(parent=task_id, method='buildSRPMFromSCM')})
             if srpm_tasks:
                 srpm_task = srpm_tasks[0]
                 if srpm_task['state'] == koji.TASK_STATES['CLOSED']:
                     srpm_path = None
-                    for output in self.call('listTaskOutput', {
-                        'taskID': srpm_task['id'],
-                        }):
+                    for output in self.call('listTaskOutput',
+                                            {'taskID': srpm_task['id']}):
                         if output.endswith('.src.rpm'):
                             srpm_path = output
                             break
                     if srpm_path:
                         changelogs = self.call('getChangelogEntries', {
-                            'taskID':srpm_task['id'],
-                            'filepath':srpm_path,
+                            'taskID': srpm_task['id'],
+                            'filepath': srpm_path,
                             'queryOpts': queryOpts,
                             })
         else:
             changelogs = self.call('getChangelogEntries', {
-                'buildID':build_id,
+                'buildID': build_id,
                 'queryOpts': queryOpts
                 })
 
@@ -158,39 +162,42 @@ class KojiConnector(IConnector, ICall, IQuery):
         if path in path_cache:
             dir_info = path_cache[path]
             if data:
-               dir_info.append(data)
+                dir_info.append(data)
             return
 
         new_data = []
         if data:
-           new_data.append(data)
+            new_data.append(data)
         path_cache[path] = new_data
         (new_path, dir_name) = os.path.split(path)
-        self._add_to_path(new_path, path_cache, {'dirname': dir_name, 'content':new_data})
+        self._add_to_path(
+            new_path, path_cache, {'dirname': dir_name, 'content': new_data})
 
     def _rpm_list_files(self, file_path):
         fd = os.open(file_path, os.O_RDONLY)
         ts = rpm.TransactionSet()
         h = ts.hdrFromFdno(fd)
-        attr_names = []
-
         os.close(fd)
         fi = h.fiFromHeader()
         file_list = []
         links = {}
-        paths = {'/':[]}
-        result = {}
+        paths = {'/': list()}
         for f in fi:
             """
-            input: (full_path, size, mode, mtime, Fflags, rdev, inode, nlink, state, Vflags, user, group, digest)
-            output: (name, path, display_size, type, modestring, linked_to, user, group)
+            input: (full_path, size, mode, mtime, Fflags, rdev, inode, nlink,
+                    state, Vflags, user, group, digest)
+            output: (name, path, display_size, type, modestring, linked_to,
+                     user, group)
 
                 name - name of the file, link or directory
                 path - path to file, link or directory
-                display_size - size of file in human readable terms (e.g. 15.2K, 3.4M, 6.3G)
-                type - 'F', 'L' for file and link respectively. Directory info is discarded.
+                display_size - size of file in human readable terms
+                (e.g. 15.2K, 3.4M, 6.3G)
+                type - 'F', 'L' for file and link respectively. Directory info
+                is discarded.
                        Links and directories are guesses based on size.
-                modestring - the mode in human readable string format (e.g. xrwxr-xr-)
+                modestring - the mode in human readable string format
+                (e.g. xrwxr-xr-)
                 linked_to - guess based on files with the same name
                 user - user who owns this file
                 group - group who owns this file
@@ -217,15 +224,16 @@ class KojiConnector(IConnector, ICall, IQuery):
                 if size > 1024:
                     # if we are a directory check to see if it exists
                     self._add_to_path(path, paths, None)
-                    continue;
+                    continue
                 else:
                     output['type'] = 'L'
                     links[name] = output
                     # check to see if the file this links to has been seen
                     for file_info in file_list:
                         if file_info['name'] == name:
-                            output['linked_to'] = os.path.join(file_info['path'], name)
-                            break;
+                            output['linked_to'] = \
+                                os.path.join(file_info['path'], name)
+                            break
             else:
                 # check to see if we are linked to
                 link = links.get(name, None)
@@ -272,10 +280,13 @@ class KojiConnector(IConnector, ICall, IQuery):
             if not os.path.exists(self._rpm_cache):
                 os.mkdir(self._rpm_cache,)
 
-            url = '%s/%s/%s/%s/%s/%s' % (self._koji_pkg_url, info['name'], info['version'], info['release'], arch, filename)
+            url = '%s/%s/%s/%s/%s/%s' % (
+                self._koji_pkg_url, info['name'], info['version'],
+                info['release'], arch, filename)
 
             url_file = grabber.urlopen(url, text=filename)
-            out = os.open(rpm_file_path, os.O_WRONLY|os.O_CREAT|os.O_TRUNC, 0666)
+            out = os.open(
+                rpm_file_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0666)
             try:
                 while 1:
                     buf = url_file.read(4096)
@@ -292,7 +303,8 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         return rpm_file_path
 
-    def call_get_file_tree(self, resource_path, _cookies=None, nvr=None, arch=None):
+    def call_get_file_tree(self, resource_path, _cookies=None, nvr=None,
+                           arch=None):
         try:
             rpm_file_path = self._download_rpm(nvr, arch)
             return self._rpm_list_files(rpm_file_path)
@@ -300,11 +312,10 @@ class KojiConnector(IConnector, ICall, IQuery):
             return {'error': "Error: %s" % str(e)}
 
     def call_get_error_log(self, resource_path, _cookies=None, task_id=None):
-        results = {'log_url':'', 'log_name':'', 'task_id':''}
-        task_id = int(task_id);
+        results = {'log_url': '', 'log_name': '', 'task_id': ''}
+        task_id = int(task_id)
 
-        decendents = self.call('getTaskDescendents', {'task_id': task_id,
-        })
+        decendents = self.call('getTaskDescendents', {'task_id': task_id})
         for task in decendents.keys():
             task_children = decendents[task]
             for child in task_children:
@@ -314,14 +325,15 @@ class KojiConnector(IConnector, ICall, IQuery):
                     error_code = 0
                     try:
                         # this should throw an error
-                        child_result = self.call('getTaskResult', {'taskId': child_task_id})
+                        self.call('getTaskResult', {'taskId': child_task_id})
                     except koji.BuildError, e:
                         error = str(e)
                         r = re.compile('mock exited with status (\d*)')
                         s = r.search(error)
                         error_code = int(s.group(1))
 
-                    child_files = self.call('listTaskOutput', {'taskID': child_task_id})
+                    child_files = self.call(
+                        'listTaskOutput', {'taskID': child_task_id})
 
                     log_file = self._mock_error_code_to_log_file(error_code)
 
@@ -346,46 +358,50 @@ class KojiConnector(IConnector, ICall, IQuery):
     @classmethod
     def register_query_changelogs(cls):
         path = cls.register_query(
-                      'query_changelogs',
-                      cls.query_changelogs,
-                      primary_key_col = 'id',
-                      default_sort_col = 'date',
-                      default_sort_order = -1,
-                      can_paginate = True)
+            'query_changelogs',
+            cls.query_changelogs,
+            primary_key_col='id',
+            default_sort_col='date',
+            default_sort_order=-1,
+            can_paginate=True)
 
-        path.register_column('id',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'id',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('date',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'date',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('author',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'author',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('text',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'text',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
         f = ParamFilter()
-        f.add_filter('build_id',[], allow_none = False)
+        f.add_filter('build_id', list(), allow_none=False)
         cls._query_changelogs_filter = f
 
-        cls._changelog_version_extract_re = re.compile('(.*)\W*<(.*)>\W*-?\W*(.*)')
+        cls._changelog_version_extract_re = re.compile(
+            '(.*)\W*<(.*)>\W*-?\W*(.*)')
 
     def query_changelogs(self, start_row=None,
-                           rows_per_page=10,
-                           order=-1,
-                           sort_col=None,
-                           filters=None,
-                           **params):
-
+                         rows_per_page=10,
+                         order=-1,
+                         sort_col=None,
+                         filters=None,
+                         **params):
 
         if not filters:
             filters = {}
@@ -393,8 +409,8 @@ class KojiConnector(IConnector, ICall, IQuery):
         filters = self._query_changelogs_filter.filter(filters, conn=self)
 
         build_id = int(filters.get('build_id', None))
-        task_id = filters.get('task_id', None)
-        state = filters.get('state', None)
+        #task_id = filters.get('task_id', None)
+        #state = filters.get('state', None)
 
         if order < 0:
             order = '-' + sort_col
@@ -404,10 +420,10 @@ class KojiConnector(IConnector, ICall, IQuery):
         queryOpts = None
 
         qo = {}
-        if not (start_row == None):
-          qo['offset'] = int(start_row)
+        if start_row:
+            qo['offset'] = int(start_row)
 
-        if not (rows_per_page == None):
+        if rows_per_page:
             qo['limit'] = int(rows_per_page)
 
         if order:
@@ -440,7 +456,7 @@ class KojiConnector(IConnector, ICall, IQuery):
 
             # convert the date to a nicer format
             entry['display_date'] = \
-                    DateTimeDisplay(entry['date']).datetime.strftime("%d %b %Y")
+                DateTimeDisplay(entry['date']).datetime.strftime("%d %b %Y")
 
         total_count = results[0][0]
 
@@ -451,33 +467,35 @@ class KojiConnector(IConnector, ICall, IQuery):
     @classmethod
     def register_query_packages(cls):
         path = cls.register_query(
-                      'query_packages',
-                      cls.query_packages,
-                      primary_key_col = 'id',
-                      default_sort_col = 'name',
-                      default_sort_order = 1,
-                      can_paginate = True)
+            'query_packages',
+            cls.query_packages,
+            primary_key_col='id',
+            default_sort_col='name',
+            default_sort_order=1,
+            can_paginate=True)
 
-        path.register_column('id',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'id',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('name',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'name',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
         f = ParamFilter()
-        f.add_filter('prefix',[], allow_none = False)
+        f.add_filter('prefix', list(), allow_none=False)
         cls._query_packages_filter = f
 
     def query_packages(self, start_row=None,
-                           rows_per_page=10,
-                           order=1,
-                           sort_col=None,
-                           filters=None,
-                           **params):
+                       rows_per_page=10,
+                       order=1,
+                       sort_col=None,
+                       filters=None,
+                       **params):
 
         if not filters:
             filters = {}
@@ -494,16 +512,16 @@ class KojiConnector(IConnector, ICall, IQuery):
         else:
             order = sort_col
 
-        if start_row == None:
+        if not start_row:
             start_row = 0
 
         queryOpts = None
 
         qo = {}
-        if not (start_row == None):
-          qo['offset'] = int(start_row)
+        if not (start_row is None):
+            qo['offset'] = int(start_row)
 
-        if not (rows_per_page == None):
+        if not (rows_per_page is None):
             qo['limit'] = int(rows_per_page)
 
         if order:
@@ -511,7 +529,6 @@ class KojiConnector(IConnector, ICall, IQuery):
 
         if qo:
             queryOpts = qo
-
 
         countQueryOpts = {'countOnly': True}
 
@@ -522,9 +539,9 @@ class KojiConnector(IConnector, ICall, IQuery):
                                  queryOpts=countQueryOpts)
 
         self._koji_client.search(terms=terms,
-                                type='package',
-                                matchType='glob',
-                                queryOpts=queryOpts)
+                                 type='package',
+                                 matchType='glob',
+                                 queryOpts=queryOpts)
 
         results = self._koji_client.multiCall()
         pkgs = results[1][0]
@@ -535,29 +552,36 @@ class KojiConnector(IConnector, ICall, IQuery):
     @classmethod
     def register_query_builds(cls):
         path = cls.register_query(
-                      'query_builds',
-                      cls.query_builds,
-                      primary_key_col = 'build_id',
-                      default_sort_col = 'build_id',
-                      default_sort_order = -1,
-                      can_paginate = True)
+            'query_builds',
+            cls.query_builds,
+            primary_key_col='build_id',
+            default_sort_col='build_id',
+            default_sort_order=-1,
+            can_paginate=True)
 
-        path.register_column('build_id',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
-        path.register_column('nvr',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
-        path.register_column('owner_name',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
-        path.register_column('state',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'build_id',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
+
+        path.register_column(
+            'nvr',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
+
+        path.register_column(
+            'owner_name',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
+
+        path.register_column(
+            'state',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
         def _profile_user(conn, filter_dict, key, value, allow_none):
             d = filter_dict
@@ -573,21 +597,21 @@ class KojiConnector(IConnector, ICall, IQuery):
                     d['user'] = user
 
         f = ParamFilter()
-        f.add_filter('user',['u', 'username', 'name'], allow_none = False)
-        f.add_filter('profile',[], allow_none=False,
+        f.add_filter('user', ['u', 'username', 'name'], allow_none=False)
+        f.add_filter('profile', list(), allow_none=False,
                      filter_func=_profile_user,
                      cast=bool)
-        f.add_filter('package',['p'], allow_none = True)
-        f.add_filter('state',['s'], allow_none = True)
+        f.add_filter('package', ['p'], allow_none=True)
+        f.add_filter('state', ['s'], allow_none=True)
         f.add_filter('query_updates', allow_none=True, cast=bool)
         cls._query_builds_filter = f
 
     def query_builds(self, start_row=None,
-                           rows_per_page=10,
-                           order=-1,
-                           sort_col=None,
-                           filters=None,
-                           **params):
+                     rows_per_page=10,
+                     order=-1,
+                     sort_col=None,
+                     filters=None,
+                     **params):
 
         if not filters:
             filters = {}
@@ -643,10 +667,10 @@ class KojiConnector(IConnector, ICall, IQuery):
             state = None
 
         qo = {}
-        if not (start_row == None):
-          qo['offset'] = int(start_row)
+        if not (start_row is None):
+            qo['offset'] = int(start_row)
 
-        if not (rows_per_page == None):
+        if not (rows_per_page is None):
             qo['limit'] = int(rows_per_page)
 
         if order:
@@ -658,19 +682,21 @@ class KojiConnector(IConnector, ICall, IQuery):
         countQueryOpts = {'countOnly': True}
 
         self._koji_client.multicall = True
-        self._koji_client.listBuilds(packageID=pkg_id,
-                      userID=id,
-                      state=state,
-                      completeBefore = complete_before,
-                      completeAfter = complete_after,
-                      queryOpts=countQueryOpts)
+        self._koji_client.listBuilds(
+            packageID=pkg_id,
+            userID=id,
+            state=state,
+            completeBefore=complete_before,
+            completeAfter=complete_after,
+            queryOpts=countQueryOpts)
 
-        self._koji_client.listBuilds(packageID=pkg_id,
-                      userID=id,
-                      state=state,
-                      completeBefore = complete_before,
-                      completeAfter = complete_after,
-                      queryOpts=queryOpts)
+        self._koji_client.listBuilds(
+            packageID=pkg_id,
+            userID=id,
+            state=state,
+            completeBefore=complete_before,
+            completeAfter=complete_after,
+            queryOpts=queryOpts)
 
         results = self._koji_client.multiCall()
         builds_list = results[1][0]
@@ -683,28 +709,29 @@ class KojiConnector(IConnector, ICall, IQuery):
             completion_display = None
             if not complete:
                 completion_display = {
-                        'when': 'In progress...',
-                        'should_display_time': False,
-                        'time': '',
-                        }
+                    'when': 'In progress...',
+                    'should_display_time': False,
+                    'time': '',
+                    }
                 completion_display['elapsed'] = start.age(granularity='minute')
             else:
                 completion_display = {}
                 complete = DateTimeDisplay(b['completion_time'])
-                completion_display['elapsed'] = start.age(complete,
-                        granularity='minute')
+                completion_display['elapsed'] = start.age(
+                    complete,
+                    granularity='minute')
                 completion_display['when'] = complete.age(
-                        granularity='minute', general=True) + ' ago'
+                    granularity='minute', general=True) + ' ago'
 
                 ident = self._request.environ.get('repoze.who.identity')
                 if ident:
                     username = ident.get('repoze.who.userid')
                     tz = ident['person']['timezone']
                     completion_display['time'] = \
-                            complete.astimezone(tz).strftime('%I:%M %p %Z')
+                        complete.astimezone(tz).strftime('%I:%M %p %Z')
                 else:
                     completion_display['time'] = \
-                            complete.datetime.strftime('%I:%M %p') + ' UTC'
+                        complete.datetime.strftime('%I:%M %p') + ' UTC'
 
             b['completion_time_display'] = completion_display
 
@@ -720,43 +747,47 @@ class KojiConnector(IConnector, ICall, IQuery):
     @classmethod
     def register_query_provides(cls):
         path = cls.register_query(
-                      'query_provides',
-                      cls.query_provides,
-                      primary_key_col = 'name',
-                      default_sort_col = 'name',
-                      default_sort_order = -1,
-                      can_paginate = True)
+            'query_provides',
+            cls.query_provides,
+            primary_key_col='name',
+            default_sort_col='name',
+            default_sort_order=-1,
+            can_paginate=True)
 
-        path.register_column('name',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'name',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('flags',
-                        default_visible = False,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'flags',
+            default_visible=False,
+            can_sort=False,
+            can_filter_wildcards=False)
 
-        path.register_column('version',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
-        path.register_column('ops',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'version',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
+        path.register_column(
+            'ops',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
 
         f = ParamFilter()
-        f.add_filter('nvr',[], allow_none = False)
-        f.add_filter('arch',[], allow_none = False)
+        f.add_filter('nvr', list(), allow_none=False)
+        f.add_filter('arch', list(), allow_none=False)
         cls._query_provides_filter = f
 
     def query_provides(self, start_row=None,
-                            rows_per_page=10,
-                            order=-1,
-                            sort_col=None,
-                            filters=None,
-                            **params):
+                       rows_per_page=10,
+                       order=-1,
+                       sort_col=None,
+                       filters=None,
+                       **params):
 
         if not filters:
             filters = {}
@@ -794,50 +825,54 @@ class KojiConnector(IConnector, ICall, IQuery):
             rows.append({'name': provides_names[i],
                         'version': provides_versions[i],
                         'flags': provides_flags[i],
-                        'ops': provides_ops[i]
-                       })
+                        'ops': provides_ops[i]})
         return (total_rows, rows)
 
     @classmethod
     def register_query_requires(cls):
         path = cls.register_query(
-                      'query_requires',
-                      cls.query_requires,
-                      primary_key_col = 'name',
-                      default_sort_col = 'name',
-                      default_sort_order = -1,
-                      can_paginate = True)
+            'query_requires',
+            cls.query_requires,
+            primary_key_col='name',
+            default_sort_col='name',
+            default_sort_order=-1,
+            can_paginate=True)
 
-        path.register_column('name',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'name',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('flags',
-                        default_visible = False,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'flags',
+            default_visible=False,
+            can_sort=False,
+            can_filter_wildcards=False)
 
-        path.register_column('version',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
-        path.register_column('ops',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'version',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
+
+        path.register_column(
+            'ops',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
 
         f = ParamFilter()
-        f.add_filter('nvr',[], allow_none = False)
-        f.add_filter('arch',[], allow_none = False)
+        f.add_filter('nvr', list(), allow_none=False)
+        f.add_filter('arch', list(), allow_none=False)
         cls._query_requires_filter = f
 
     def query_requires(self, start_row=None,
-                            rows_per_page=10,
-                            order=-1,
-                            sort_col=None,
-                            filters=None,
-                            **params):
+                       rows_per_page=10,
+                       order=-1,
+                       sort_col=None,
+                       filters=None,
+                       **params):
 
         if not filters:
             filters = {}
@@ -877,51 +912,55 @@ class KojiConnector(IConnector, ICall, IQuery):
             rows.append({'name': requires_names[i],
                         'version': requires_versions[i],
                         'flags': requires_flags[i],
-                        'ops': requires_ops[i]
-                       })
+                        'ops': requires_ops[i]})
 
         return (total_rows, rows)
 
     @classmethod
     def register_query_obsoletes(cls):
         path = cls.register_query(
-                      'query_obsoletes',
-                      cls.query_obsoletes,
-                      primary_key_col = 'name',
-                      default_sort_col = 'name',
-                      default_sort_order = -1,
-                      can_paginate = True)
+            'query_obsoletes',
+            cls.query_obsoletes,
+            primary_key_col='name',
+            default_sort_col='name',
+            default_sort_order=-1,
+            can_paginate=True)
 
-        path.register_column('name',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'name',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('flags',
-                        default_visible = False,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'flags',
+            default_visible=False,
+            can_sort=False,
+            can_filter_wildcards=False)
 
-        path.register_column('version',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
-        path.register_column('ops',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'version',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
+
+        path.register_column(
+            'ops',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
 
         f = ParamFilter()
-        f.add_filter('nvr',[], allow_none = False)
-        f.add_filter('arch',[], allow_none = False)
+        f.add_filter('nvr', list(), allow_none=False)
+        f.add_filter('arch', list(), allow_none=False)
         cls._query_obsoletes_filter = f
 
     def query_obsoletes(self, start_row=None,
-                            rows_per_page=10,
-                            order=-1,
-                            sort_col=None,
-                            filters=None,
-                            **params):
+                        rows_per_page=10,
+                        order=-1,
+                        sort_col=None,
+                        filters=None,
+                        **params):
 
         if not filters:
             filters = {}
@@ -962,51 +1001,55 @@ class KojiConnector(IConnector, ICall, IQuery):
             rows.append({'name': obsoletes_names[i],
                         'version': obsoletes_versions[i],
                         'flags': obsoletes_flags[i],
-                        'ops': obsoletes_ops[i]
-                       })
+                        'ops': obsoletes_ops[i]})
 
         return (total_rows, rows)
 
     @classmethod
     def register_query_conflicts(cls):
         path = cls.register_query(
-                      'query_conflicts',
-                      cls.query_conflicts,
-                      primary_key_col = 'name',
-                      default_sort_col = 'name',
-                      default_sort_order = -1,
-                      can_paginate = True)
+            'query_conflicts',
+            cls.query_conflicts,
+            primary_key_col='name',
+            default_sort_col='name',
+            default_sort_order=-1,
+            can_paginate=True)
 
-        path.register_column('name',
-                        default_visible = True,
-                        can_sort = True,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'name',
+            default_visible=True,
+            can_sort=True,
+            can_filter_wildcards=False)
 
-        path.register_column('flags',
-                        default_visible = False,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'flags',
+            default_visible=False,
+            can_sort=False,
+            can_filter_wildcards=False)
 
-        path.register_column('version',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
-        path.register_column('ops',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+        path.register_column(
+            'version',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
+
+        path.register_column(
+            'ops',
+            default_visible=True,
+            can_sort=False,
+            can_filter_wildcards=False)
 
         f = ParamFilter()
-        f.add_filter('nvr',[], allow_none = False)
-        f.add_filter('arch',[], allow_none = False)
+        f.add_filter('nvr', list(), allow_none=False)
+        f.add_filter('arch', list(), allow_none=False)
         cls._query_conflicts_filter = f
 
     def query_conflicts(self, start_row=None,
-                            rows_per_page=10,
-                            order=-1,
-                            sort_col=None,
-                            filters=None,
-                            **params):
+                        rows_per_page=10,
+                        order=-1,
+                        sort_col=None,
+                        filters=None,
+                        **params):
 
         if not filters:
             filters = {}
@@ -1046,8 +1089,7 @@ class KojiConnector(IConnector, ICall, IQuery):
             rows.append({'name': conflict_names[i],
                         'version': conflict_versions[i],
                         'flags': conflict_flags[i],
-                        'ops': conflict_ops[i]
-                       })
+                        'ops': conflict_ops[i]})
 
         return (total_rows, rows)
 

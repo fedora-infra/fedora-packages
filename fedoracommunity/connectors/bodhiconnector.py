@@ -14,34 +14,36 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import time
 import logging
 
 from paste.deploy.converters import asbool
 from tg import config
 from fedora.client import ProxyClient
 from datetime import datetime, timedelta
-from webhelpers.date import distance_of_time_in_words
 from webhelpers.html import HTML
 
 from fedoracommunity.connectors.api import get_connector
-from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter
+from fedoracommunity.connectors.api import \
+    IConnector, ICall, IQuery, ParamFilter
 from moksha.common.lib.dates import DateTimeDisplay
 
 from fedoracommunity.lib.utils import parse_build
 
 log = logging.getLogger(__name__)
 
+
 class BodhiConnector(IConnector, ICall, IQuery):
-    _method_paths = {}
-    _query_paths = {}
+    _method_paths = dict()
+    _query_paths = dict()
 
     def __init__(self, environ, request):
         super(BodhiConnector, self).__init__(environ, request)
-        self._prod_url = config.get('fedoracommunity.connector.bodhi.produrl', 'https://admin.fedoraproject.org/updates')
+        self._prod_url = config.get(
+            'fedoracommunity.connector.bodhi.produrl',
+            'https://admin.fedoraproject.org/updates')
         self._bodhi_client = ProxyClient(self._base_url,
                                          session_as_cookie=False,
-                                         insecure = self._insecure)
+                                         insecure=self._insecure)
 
     # IConnector
     @classmethod
@@ -56,12 +58,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
         cls.register_query_active_releases()
 
     def request_data(self, resource_path, params, _cookies):
-        auth_params={}
+        auth_params = dict()
 
         fas_info = self._environ.get('FAS_LOGIN_INFO')
         if fas_info:
             session_id = fas_info[0]
-            auth_params={'session_id': session_id}
+            auth_params = {'session_id': session_id}
 
         return self._bodhi_client.send_request(resource_path,
                                                req_params=params,
@@ -82,89 +84,89 @@ class BodhiConnector(IConnector, ICall, IQuery):
     @classmethod
     def register_query_updates(cls):
         path = cls.register_query(
-                      'query_updates',
-                      cls.query_updates,
-                      primary_key_col = 'request_id',
-                      default_sort_col = 'request_id',
-                      default_sort_order = -1,
-                      can_paginate = True)
+            'query_updates',
+            cls.query_updates,
+            primary_key_col='request_id',
+            default_sort_col='request_id',
+            default_sort_order=-1,
+            can_paginate=True)
 
         path.register_column('request_id',
-                        default_visible = False,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=False,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('updateid',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('nvr',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('submitter',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('status',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('request',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('karma',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('nagged',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('type',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('approved',
-                        default_visible = True,
-                        can_sort = False,
-                     can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('date_submitted',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('date_pushed',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('date_modified',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('comments',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('bugs',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('builds',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('releases',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('release',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
         path.register_column('karma_level',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
 
         def _profile_user(conn, filter_dict, key, value, allow_none):
             if value:
@@ -177,22 +179,22 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
         f = ParamFilter()
         f.add_filter('package', ['nvr'], allow_none=False)
-        f.add_filter('user',['u', 'username', 'name'], allow_none = False)
-        f.add_filter('profile',[], allow_none=False,
+        f.add_filter('user', ['u', 'username', 'name'], allow_none=False)
+        f.add_filter('profile', list(), allow_none=False,
                      filter_func=_profile_user,
                      cast=bool)
-        f.add_filter('status',['status'], allow_none = True)
+        f.add_filter('status', ['status'], allow_none=True)
         f.add_filter('group_updates', allow_none=True, cast=bool)
         f.add_filter('granularity', allow_none=True)
         f.add_filter('release', allow_none=False)
         cls._query_updates_filter = f
 
     def query_updates(self, start_row=None,
-                            rows_per_page=None,
-                            order=-1,
-                            sort_col=None,
-                            filters=None,
-                            **params):
+                      rows_per_page=None,
+                      order=-1,
+                      sort_col=None,
+                      filters=None,
+                      **params):
         if not filters:
             filters = {}
 
@@ -239,7 +241,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 up['releases'] = releases
                 up['status'] = up['dist_updates'][0]['status']
                 up['nvr'] = up['dist_updates'][0]['title']
-                up['request_id'] = up['package_name'] + dist_update['version'].replace('.', '')
+                up['request_id'] = up['package_name'] + \
+                    dist_update['version'].replace('.', '')
             else:
                 chunks = up['title'].split('-')
                 up['name'] = '-'.join(chunks[:-2])
@@ -248,7 +251,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 up['releases'] = up['release']['long_name']
                 up['nvr'] = up['title']
                 up['request_id'] = up.get('updateid') or \
-                        up['nvr'].replace('.', '').replace(',', '')
+                    up['nvr'].replace('.', '').replace(',', '')
 
             up['id'] = up['nvr'].split(',')[0]
 
@@ -301,8 +304,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
                 # FIXME: Don't embed HTML
                 up['actions'] += """
-                    <button id="%s_%s" onclick="%s return false;">%s</button><br/>
-                    """ % (title.replace('.', ''), action[0], reqs, action[1])
+                <button id="%s_%s" onclick="%s return false;">%s</button><br/>
+                """ % (title.replace('.', ''), action[0], reqs, action[1])
 
             # Dates
             if group_updates:
@@ -330,9 +333,9 @@ class BodhiConnector(IConnector, ICall, IQuery):
             else:
                 k = up['karma']
             if k:
-                up['karma_str'] = "%+d"%k
+                up['karma_str'] = "%+d" % k
             else:
-                up['karma_str'] = " %d"%k
+                up['karma_str'] = " %d" % k
             up['karma_level'] = 'meh'
             if k > 0:
                 up['karma_level'] = 'good'
@@ -362,9 +365,12 @@ class BodhiConnector(IConnector, ICall, IQuery):
         elif update['status'] == 'obsolete':
             for comment in update['comments']:
                 if comment['author'] == 'bodhi':
-                    if comment['text'].startswith('This update has been obsoleted by '):
-                        details += 'Obsoleted by %s' % HTML.tag('a',
-                                href='%s/%s' % (self._prod_url,update['title']),
+                    if comment['text'].startswith('This update has been '
+                                                  'obsoleted by '):
+                        details += \
+                            'Obsoleted by %s' % HTML.tag(
+                                'a', href='%s/%s' % (
+                                    self._prod_url, update['title']),
                                 c=comment['text'].split()[-1])
         return details
 
@@ -403,22 +409,23 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         done = True
                         break
                     packages[pkg] = {
-                            'package_name' : pkg,
-                            'dist_updates': []
-                            }
+                        'package_name': pkg,
+                        'dist_updates': list()
+                    }
                     i += 1
                 else:
                     skip = False
                     for up in packages[pkg]['dist_updates']:
-                        if up['release_name'] == update['release']['long_name']:
+                        if up['release_name'] == \
+                           update['release']['long_name']:
                             skip = True
                             break
                     if skip:
                         break
                 packages[pkg]['dist_updates'].append({
-                        'release_name': update['release']['long_name'],
-                        'version': '-'.join(build['nvr'].split('-')[-2:])
-                        })
+                    'release_name': update['release']['long_name'],
+                    'version': '-'.join(build['nvr'].split('-')[-2:])
+                })
                 packages[pkg]['dist_updates'][-1].update(update)
             if done:
                 break
@@ -429,17 +436,20 @@ class BodhiConnector(IConnector, ICall, IQuery):
         if result[0]['dist_updates'][0]['status'] == 'stable':
             sort_col = 'date_pushed'
 
-        result = sorted(result, reverse=True, cmp=lambda x, y:
-                     cmp(x['dist_updates'][0][sort_col],
-                         y['dist_updates'][0][sort_col]))
+        result = sorted(result, reverse=True,
+                        cmp=lambda x, y: cmp(
+                            x['dist_updates'][0][sort_col],
+                            y['dist_updates'][0][sort_col])
+                        )
 
         return result
 
     def get_dashboard_stats(self, username=None):
         bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
-        return bodhi_cache.get_value(key='dashboard_%s' % username,
-                createfunc=lambda: self._get_dashboard_stats(username),
-                expiretime=300)
+        return bodhi_cache.get_value(
+            key='dashboard_%s' % username,
+            createfunc=lambda: self._get_dashboard_stats(username),
+            expiretime=300)
 
     def _get_dashboard_stats(self, username):
         options = {}
@@ -454,7 +464,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
         now = datetime.utcnow()
         options['status'] = 'stable'
-        options['after'] = week_start = now - timedelta(weeks=1)
+        options['after'] = now - timedelta(weeks=1)
         results['stable'] = self.query_updates_count(**options)['count']
 
         return results
@@ -462,11 +472,13 @@ class BodhiConnector(IConnector, ICall, IQuery):
     def query_updates_count(self, status, username=None,
                             before=None, after=None):
         bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
-        return bodhi_cache.get_value(key='count_%s_%s_%s_%s' % (
+        return bodhi_cache.get_value(
+            key='count_%s_%s_%s_%s' % (
                 status, username, str(before).split('.')[0],
-                str(after).split('.')[0]), expiretime=300,
-                createfunc=lambda: self._query_updates_count(status, username,
-                                                             before, after))
+                str(after).split('.')[0]),
+            expiretime=300,
+            createfunc=lambda: self._query_updates_count(status, username,
+                                                         before, after))
 
     def _query_updates_count(self, status, username, before, after):
         params = {'count_only': True}
@@ -533,7 +545,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
             build['update_details'] = details
 
-        log.debug("Queried bodhi for builds in: %s" %  (datetime.now() - start))
+        log.debug(
+            "Queried bodhi for builds in: %s" % (datetime.now() - start))
 
     @classmethod
     def register_query_active_releases(cls):
@@ -561,12 +574,16 @@ class BodhiConnector(IConnector, ICall, IQuery):
         cls._query_active_releases = f
 
     def query_active_releases(self, filters=None, **params):
-        releases = []
-        queries = []
-        release_tag = {} # Mapping of tag -> release
-        testing_builds = [] # List of testing builds to query bodhi for
-        testing_builds_row = {} # nvr -> release lookup table
-        if not filters: filters = {}
+        releases = list()
+        queries = list()
+        # Mapping of tag -> release
+        release_tag = dict()
+        # List of testing builds to query bodhi for
+        testing_builds = list()
+        # nvr -> release lookup table
+        testing_builds_row = dict()
+        if not filters:
+            filters = dict()
         filters = self._query_updates_filter.filter(filters, conn=self)
         package = filters.get('package')
         pkgdb = get_connector('pkgdb')
@@ -580,7 +597,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
             r = {'release': name, 'stable_version': 'None',
                  'testing_version': 'None'}
             if tag == 'rawhide':
-                koji.listTagged(tag, package=package, latest=True, inherit=True)
+                koji.listTagged(
+                    tag, package=package, latest=True, inherit=True)
                 queries.append(tag)
                 release_tag[tag] = r
             else:
@@ -617,26 +635,30 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         nvr = parse_build(release[0]['nvr'])
                         row['stable_version'] = '%(version)s-%(release)s' % nvr
                     else:
-                        row['stable_version'] = 'No builds tagged with %s' % tag
+                        row['stable_version'] = \
+                            'No builds tagged with %s' % tag
                     row['testing_version'] = HTML.tag('i', c='Not Applicable')
                     continue
                 if release:
                     release = release[0]
                     if query.endswith('-testing'):
                         nvr = parse_build(release['nvr'])
-                        row['testing_version'] = HTML.tag('a',
-                                c='%(version)s-%(release)s' % nvr,
-                                href='%s/%s' % (self._prod_url, nvr['nvr']))
+                        row['testing_version'] = HTML.tag(
+                            'a', c='%(version)s-%(release)s' % nvr,
+                            href='%s/%s' % (self._prod_url, nvr['nvr']))
                         testing_builds.append(release['nvr'])
                         testing_builds_row[release['nvr']] = row
-                    else: # stable
+                    else:
+                        # stable
                         nvr = parse_build(release['nvr'])
                         if release['tag_name'].endswith('-updates'):
-                            row['stable_version'] = HTML.tag('a',
-                                    c='%(version)s-%(release)s' % nvr,
-                                    href='%s/%s' % (self._prod_url, nvr['nvr']))
+                            row['stable_version'] = HTML.tag(
+                                'a',
+                                c='%(version)s-%(release)s' % nvr,
+                                href='%s/%s' % (self._prod_url, nvr['nvr']))
                         else:
-                            row['stable_version'] = '%(version)s-%(release)s' % nvr
+                            row['stable_version'] = \
+                                '%(version)s-%(release)s' % nvr
 
         # If there are updates in testing, then query bodhi with a single call
         if testing_builds:
@@ -654,26 +676,31 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         up.karma_icon = 'bad'
                     else:
                         up.karma_icon = 'meh'
-                    karma_icon_url = self._request.environ.get('SCRIPT_NAME', '') + \
-				'/images/16_karma-%s.png' % up.karma_icon
+                    karma_ico_16 = '/images/16_karma-%s.png' % up.karma_icon
+                    karma_icon_url = \
+                        self._request.environ.get('SCRIPT_NAME', '') + \
+                        karma_ico_16
                     karma = 'karma_%s' % up.karma_icon
                     row = testing_builds_row[build]
-                    row['testing_version'] += HTML.tag('div',
-                            c=HTML.tag('a', href="%s/%s" % (
+                    row['testing_version'] += " " + HTML.tag(
+                        'div',
+                        c=HTML.tag(
+                            'a', href="%s/%s" % (
                                 self._prod_url, up.title),
-                                c=HTML.tag('img',
-                                    src=karma_icon_url) +
-                                HTML.tag('span', c='%s karma' %
-                                    up.karma)),
-                                **{'class': '%s' %karma})
+                            c=HTML.tag(
+                                'img', src=karma_icon_url) + HTML.tag(
+                                'span',
+                                c='%s karma' % up.karma)),
+                            **{'class': '%s' % karma})
 
         return (len(releases), releases)
 
     def get_metrics(self):
         bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
-        return bodhi_cache.get_value(key='bodhi_metrics',
-                createfunc=self._get_metrics,
-                expiretime=300)
+        return bodhi_cache.get_value(
+            key='bodhi_metrics',
+            createfunc=self._get_metrics,
+            expiretime=300)
 
     def _get_metrics(self):
         return self._bodhi_client.send_request('metrics')[1]

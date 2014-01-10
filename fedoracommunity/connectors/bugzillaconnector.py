@@ -14,10 +14,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import ssl
-import time
-import hashlib
-
 from urllib import urlencode
 from datetime import datetime, timedelta
 from tg import config
@@ -79,7 +75,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         cls.register_query_bugs()
 
-        path = cls.register_method('get_bug_stats', cls.query_bug_stats)
+        cls.register_method('get_bug_stats', cls.query_bug_stats)
 
     #IQuery
     @classmethod
@@ -142,8 +138,8 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         # Multi-call support is broken in the latest Bugzilla upgrade
         #mc = self._bugzilla._multicall()
 
-        namespace = str(package) + "-" + str(collection)
-        results = []
+        # namespace = str(package) + "-" + str(collection)
+        results = list()
 
         # Open bugs - returns an int
         def open_bugs():
@@ -240,7 +236,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             filters = {}
 
         filters = self._query_bugs_filter.filter(filters, conn=self)
-        collection = filters.get('collection', 'Fedora')
+        collection = filters.get('collection', PRODUCTS)
         version = filters.get('version', '')
 
         package = filters['package']
@@ -266,11 +262,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         # Paginate
         bugs = bugs[start_row:start_row + rows_per_page]
         # Get bug details
-        bugs = self.get_bugs(bugs, collection=collection)
+        bugs = self.get_bugs(bugs)
         return (total_count, bugs)
 
     def _query_bugs(self, query, start_row=None, rows_per_page=10, order=-1,
-                    sort_col='number', filters=None, collection='Fedora',
+                    sort_col='number', filters=None, collection=PRODUCTS,
                     **params):
         """ Make bugzilla queries but only grab up to 200 bugs at a time,
         otherwise we might drop due to SSL timeout.  :/
@@ -292,7 +288,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
             for bug in results
         ]
 
-    def get_bugs(self, bugids, collection='Fedora'):
+    def get_bugs(self, bugids):
 
         def _bugids_to_dicts(chunk_of_bugids):
 
@@ -315,7 +311,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
                     'status': bug.bug_status.title(),
                     'description': bug.summary,
                     'last_modified': modified.age(),
-                    'release': '%s %s' % (collection, bug_version),
+                    'release': '%s %s' % (bug.product, bug_version),
                     'bug_class': bug_class.strip(),
                 }
                 dicts.append(d)
@@ -328,7 +324,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         # https://bugzilla.redhat.com/show_bug.cgi?id=824241 -- threebean
         for chunk in chunks(bugids, 20):
             chunk_of_bugids = [b['bug_id'] for b in chunk]
-            key = 'bug_details_' + ','.join(map(str, chunk_of_bugids))
+            #key = 'bug_details_' + ','.join(map(str, chunk_of_bugids))
             bugs_list.extend(_bugids_to_dicts(chunk_of_bugids))
 
         return bugs_list
@@ -365,7 +361,7 @@ def bug_sort(arg1, arg2):
             def status_to_index(val):
                 try:
                     return status_order.index(val)
-                except ValueError, e:
+                except ValueError:
                     return len(status_order)
 
             val1, val2 = status_to_index(val1), status_to_index(val2)

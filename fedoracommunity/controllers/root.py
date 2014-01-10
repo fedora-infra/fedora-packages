@@ -18,6 +18,8 @@
 
 from tg import expose, tmpl_context, redirect, flash, url, request, override_template, TGController
 
+import urllib
+
 import moksha.common.utils
 from moksha.wsgi.ext.turbogears import global_resources
 
@@ -63,6 +65,8 @@ class RootController(BaseController):
             search_str = args[0]
         else:
             search_str = kwds.get('search', '')
+
+        search_str = urllib.unquote_plus(search_str)
 
         tmpl_context.widget = XapianSearchGrid
         return {'title': 'Fedora Packages Search',

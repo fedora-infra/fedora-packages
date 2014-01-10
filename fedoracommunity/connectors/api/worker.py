@@ -144,7 +144,6 @@ def daemon():
         for thread in threads:
             thread.kill()
 
-    import signal
     from daemon import DaemonContext
     try:
         from daemon.pidfile import TimeoutPIDLockFile as PIDLockFile

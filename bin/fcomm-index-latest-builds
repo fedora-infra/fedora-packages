@@ -14,7 +14,7 @@ except:
 
 from optparse import OptionParser
 
-if __name__=="__main__":
+if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option("-p", "--path", dest="cache_path",
                       help="path to where we create or update the version map",
@@ -23,9 +23,14 @@ if __name__=="__main__":
                       default='http://koji.fedoraproject.org/kojihub',
                       help="the base url to get koji data from",
                       metavar="KOJIURL")
+    parser.add_option("--action", dest="action",
+                      default='update',
+                      help="what action to perform.  Either 'init' or 'update',
+                      metavar="ACTION")
 
     (options, args) = parser.parse_args()
-    lockfile = LockFile(os.path.join(options.cache_path, '.fcomm_version_mapper_lock'))
+    lockfile = LockFile(
+        os.path.join(options.cache_path, '.fcomm_version_mapper_lock'))
 
     try:
         lockfile.acquire(timeout=30)
@@ -34,6 +39,9 @@ if __name__=="__main__":
         exit(-1)
 
     try:
-        run(cache_path=options.cache_path, koji_url=options.koji_url)
+        run(
+            cache_path=options.cache_path,
+            action=options.action,
+            koji_url=options.koji_url)
     finally:
         lockfile.release()
