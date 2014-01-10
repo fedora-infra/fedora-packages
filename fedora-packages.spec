@@ -4,7 +4,7 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.10
+Version:        2.0.11
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
@@ -159,6 +159,13 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Fri Jan 10 2014 Ralph Bean <rbean@redhat.com> - 2.0.11-1
+- Added link to cgit.
+- Fix icon sizes.
+- Library compat updates.
+- Include epel bugs in bug list.
+- Search can now accept slashes.
+
 * Mon Aug 05 2013 Ralph Bean <rbean@redhat.com> - 2.0.10-1
 - Bugfix - allow bugzilla cookiefile to be configurable.
 
