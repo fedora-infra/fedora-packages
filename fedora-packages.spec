@@ -4,7 +4,7 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.11
+Version:        2.0.12
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
@@ -159,6 +159,9 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Fri Jan 10 2014 Ralph Bean <rbean@redhat.com> - 2.0.12-2
+- Small regression fix for older TG2.
+
 * Fri Jan 10 2014 Ralph Bean <rbean@redhat.com> - 2.0.11-1
 - Added link to cgit.
 - Fix icon sizes.
