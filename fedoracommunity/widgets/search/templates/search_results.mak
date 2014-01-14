@@ -14,7 +14,10 @@
         <tr class="priority4">
             <td>
                 <span>
-                    <a href="${tg.url('/${link}')}">${'{{html name}}'}</a>
+                    <a href="${tg.url('/${link}')}">${'{{html name}}'}</a>	
+                </span>
+                <span>
+                    <a href="${tg.url('http://localhost:5000/raw?package=${link}&order=desc&fedpkg=true')}"> message-cards</a>
                 </span>
             </td>
             <td>
@@ -23,7 +26,14 @@
         </tr>
           <!-- {{each(index, pkg) sub_pkgs}} -->
           <tr class="subpackage">
-              <td><a href="${tg.url('/') + '${pkg[\'link\']}'}">${'{{html pkg["name"]}}'}</a></td>
+              <td>
+                  <span>
+                      <a href="${tg.url('/') + '${pkg[\'link\']}'}">${'{{html pkg["name"]}}'}</a>
+                  </span>
+                  <span>
+                      <a href="${tg.url('http://localhost:5000/raw?package=${pkg[\'link\']}&order=desc&fedpkg=true')}"> message-cards </a>
+                  </span>
+              </td>
               <td>${'{{html pkg["summary"]}}'}</td>
           </tr>
           <!-- {{/each}} -->
