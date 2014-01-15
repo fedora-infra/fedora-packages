@@ -40,6 +40,13 @@ class Details(twc.Widget):
                     break
 
         self.package_info = result
-
+    
+    @property
+    def history(self):
+        # html cards link of datagrepper
+        datagrepper_link = "http://localhost:5000/raw?order=desc&rows_per_page=5&package="
+        pkg_name = self.kwds['package_name']
+        return str(datagrepper_link + pkg_name)
+    
     def __repr__(self):
         return "<Details %s>" % self.kwds
