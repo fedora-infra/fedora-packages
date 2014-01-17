@@ -1,3 +1,4 @@
+<% import tg %>
 <div id="package-overview">
   <div class="description-block">
         <h3>Description</h3>
@@ -10,7 +11,12 @@
     <div class="history-block">
         <h3>History</h3>
         <div class="history-cards">
-            <a href="${w.history | n}"> Message Cards </a>
+        <%
+            datagrepper_redirect_url = w.history
+        %>
+        % if datagrepper_redirect_url:
+            <a href="${tg.url(datagrepper_redirect_url)}">Message Cards</a>
+        % endif
         </div>
     </div>
     <%
