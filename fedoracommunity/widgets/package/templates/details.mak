@@ -11,12 +11,10 @@
     <div class="history-block">
         <h3>History</h3>
         <div class="history-cards">
-        <%
-            datagrepper_redirect_url = w.history
+        <% 
+            result = w.history
         %>
-        % if datagrepper_redirect_url:
-            <a href="${tg.url(datagrepper_redirect_url)}">Message Cards</a>
-        % endif
+        <div> ${result['text'] | n} </div>
         </div>
     </div>
     <%
