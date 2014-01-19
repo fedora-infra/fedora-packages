@@ -1,5 +1,6 @@
 import tw2.core as twc
 import tg
+import requests
 
 from fedoracommunity.connectors.api import get_connector
 from fedoracommunity.widgets.grid import Grid
@@ -44,10 +45,12 @@ class Details(twc.Widget):
 
     @property
     def history(self):
-        base_url = tg.config.get('datagrepper_url')
-        url_argument = "/raw?order=desc&rows_per_page=5&package="
-        return str(base_url + url_argument + self.kwds['package_name']) 
-
+        url = tg.config.get('datagrepper_url')
+        package = str(self.kwds['package_name'])
+        headers = dict(accept='text/html')
+        params = dict(order='desc', rows_per_page=5, package=package)
+        response = requests.get(url, headers=headers, params=params)
+        return {'status_code':response.status_code, 'headers': response.headers, 'text': response.text}
 
     def __repr__(self):
         return "<Details %s>" % self.kwds
