@@ -48,7 +48,7 @@ class Details(twc.Widget):
         url = tg.config.get('datagrepper_url')
         package = str(self.kwds['package_name'])
         headers = dict(accept='text/html')
-        params = dict(order='desc', rows_per_page=5, package=package)
+        params = dict(order='desc', rows_per_page=5, package=package, chrome='false')
         response = requests.get(url, headers=headers, params=params)
         return {'status_code':response.status_code, 'headers': response.headers, 'text': response.text}
 
