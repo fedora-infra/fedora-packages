@@ -1829,6 +1829,10 @@ word-break: break-all; /* for IE and friends */
   font-size: 1.25em;
 }
 
+.details-history {
+  margin-left: 110px;
+}
+
 .icon-history {
   width:140px;
   height:50px;
