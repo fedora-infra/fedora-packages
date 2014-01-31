@@ -55,12 +55,11 @@ class Thread(threading.Thread):
         self.mc = memcache.Client([config['cache.connectors.arguments.url']])
 
     def iteration(self):
-        if self.queue.length == 0:
+        task = self.queue.wait(2)
+        if task is False:
             log.info("No tasks found in the queue.  Sleeping for 2 seconds.")
             return
-
-        log.info("Picking up a task from the queue.")
-        task = self.queue.dequeue()
+        log.info("Picked up a task from the queue.")
         data = json.loads(task.data)
 
         try:
@@ -109,7 +108,6 @@ class Thread(threading.Thread):
             except Exception:
                 import traceback
                 log.error(traceback.format_exc())
-            time.sleep(2)
             sys.stdout.flush()
         log.info("Thread exiting.")
 
