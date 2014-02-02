@@ -1,3 +1,4 @@
+<!doctype html>
 <%namespace file="fedoracommunity.templates.header" import="*" />
 <%namespace file="fedoracommunity.templates.footer" import="*" />
 
