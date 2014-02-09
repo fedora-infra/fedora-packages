@@ -14,10 +14,13 @@ tags = ({'name': 'Rawhide', 'tag': 'f21'},
         {'name': 'Fedora 18 Testing', 'tag': 'f18-updates-testing'},
 
         {'name': 'EPEL 6', 'tag': 'dist-6E-epel'},
-        {'name': 'EPEL 6', 'tag': 'dist-6E-epel-testing'},
+        {'name': 'EPEL 6 Testing', 'tag': 'dist-6E-epel-testing'},
 
         {'name': 'EPEL 5', 'tag': 'dist-5E-epel'},
-        {'name': 'EPEL 5', 'tag': 'dist-5E-epel-testing'},
+        {'name': 'EPEL 5 Testing', 'tag': 'dist-5E-epel-testing'},
+
+        {'name': 'EPEL 7', 'tag': 'epel7'},
+        {'name': 'EPEL 7 Testing', 'tag': 'epel7-testing'},
         )
 
 tags_to_name_map = {}

@@ -1,7 +1,7 @@
 /* image margin override to override fedora.css */
 
 img {
-  margin: auto !important;
+  margin-top: -20px;
 }
 
 /* overrides for footer. edit these to make footer taller */
@@ -1829,3 +1829,20 @@ table#active-releases a {
 table#active-releases td.release {
   font-weight: bold;
 }
+
+/* history cards */
+
+.message-card {
+  min-height: 52px;
+}
+
+.history-cards img {
+  height: 25px;
+  width: 20px;
+  margin: 2px auto;
+}
+
+.history-cards p {
+  display: inline;
+}
+

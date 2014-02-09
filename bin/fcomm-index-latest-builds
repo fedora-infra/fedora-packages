@@ -25,7 +25,7 @@ if __name__ == "__main__":
                       metavar="KOJIURL")
     parser.add_option("--action", dest="action",
                       default='update',
-                      help="what action to perform.  Either 'init' or 'update',
+                      help="what action to perform.  Either 'init' or 'update'",
                       metavar="ACTION")
 
     (options, args) = parser.parse_args()

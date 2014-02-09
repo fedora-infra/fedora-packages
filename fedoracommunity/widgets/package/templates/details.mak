@@ -1,3 +1,4 @@
+<% import tg %>
 <div id="package-overview">
   <div class="description-block">
         <h3>Description</h3>
@@ -19,5 +20,14 @@
         </div>
     </div>
     % endif
+    <div class="history-block">
+        <h3>History</h3>
+        <div class="history-cards">
+        <%
+            result = w.history
+        %>
+        <div> ${result['text'] | n} </div>
+        </div>
+    </div>
 </div>
 
