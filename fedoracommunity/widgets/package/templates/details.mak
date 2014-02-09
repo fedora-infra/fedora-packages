@@ -8,15 +8,6 @@
         <h3>Active Releases Overview</h3>
         <div>${w.children[0].display(package_name=w.package_info['name'])}</div>
     </div>
-    <div class="history-block">
-        <h3>History</h3>
-        <div class="history-cards">
-        <% 
-            result = w.history
-        %>
-        <div> ${result['text'] | n} </div>
-        </div>
-    </div>
     <%
         homepage = w.package_info.get('upstream_url', 'Unknown')
     %>
@@ -29,5 +20,14 @@
         </div>
     </div>
     % endif
+    <div class="history-block">
+        <h3>History</h3>
+        <div class="history-cards">
+        <%
+            result = w.history
+        %>
+        <div> ${result['text'] | n} </div>
+        </div>
+    </div>
 </div>
 
