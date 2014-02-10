@@ -134,6 +134,8 @@ class FCommConnectorMiddleware(object):
         else:
             response = request.get_response(self.application)
 
+        response.headerlist.append(('Access-Control-Allow-Origin', '*'))
+
         return response(environ, start_response)
 
     def _run_connector(self, environ, request,

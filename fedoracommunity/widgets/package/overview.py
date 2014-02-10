@@ -26,10 +26,12 @@ class Details(twc.Widget):
     active_releases_widget = ActiveReleasesGrid
 
     def prepare(self):
-        super(Details, self).prepare()
         package_name = self.kwds['package_name']
         xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(package_name)
+        self.package_name = package_name
+        self.package_info = result
+        super(Details, self).prepare()
 
         if result['name'] == package_name:
             self.summary = result['summary']
