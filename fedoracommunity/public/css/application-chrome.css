@@ -1846,3 +1846,11 @@ table#active-releases td.release {
   display: inline;
 }
 
+.history-cards .datetime {
+    margin-left: 450px;
+    color: #999;
+    font-size: 13px;
+    margin-top:-20px;
+    margin-bottom: 5px;
+}
+
