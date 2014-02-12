@@ -93,10 +93,10 @@
                   % for (i, arch_task) in enumerate(w.latest_builds.values()[0]['arch_tasks']):
                     <%
                         selected=  ""
-                        if i == 0:
-                            selected = 'selected'
                         task_id = str(arch_task['id'])
                         arch = arch_task['label']
+                        if arch == 'x86_64' or arch == 'noarch':
+                            selected = 'selected'
                     %>
                     <option ${selected} value="${str(i)}">${arch}</option>
                   % endfor
