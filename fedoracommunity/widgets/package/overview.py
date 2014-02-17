@@ -50,7 +50,14 @@ class Details(twc.Widget):
         url = tg.config.get('datagrepper_url')
         package = str(self.kwds['package_name'])
         headers = dict(accept='text/html')
-        params = dict(order='desc', rows_per_page=5, package=package, chrome='false')
+        params = [
+            ('order', 'desc'),
+            ('rows_per_page', 5),
+            ('package', package),
+            ('chrome', 'false'),
+            ('not_topic', 'org.fedoraproject.prod.buildsys.tag'),
+            ('not_topic', 'org.fedoraproject.prod.buildsys.untag'),
+        ]
         try:
             response = requests.get(url, headers=headers, params=params)
             return {'text': response.text}
