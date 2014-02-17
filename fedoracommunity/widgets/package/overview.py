@@ -55,6 +55,8 @@ class Details(twc.Widget):
             ('rows_per_page', 5),
             ('package', package),
             ('chrome', 'false'),
+            ('not_topic', 'org.fedoraproject.prod.buildsys.tag'),
+            ('not_topic', 'org.fedoraproject.prod.buildsys.untag'),
         ]
         try:
             response = requests.get(url, headers=headers, params=params)
