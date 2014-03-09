@@ -1,27 +1,39 @@
 # This file is part of Fedora Community.
-# Copyright (C) 2008-2010  Red Hat, Inc.
-# 
+# Copyright (C) 2008-2014  Red Hat, Inc.
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter, ISearch
+from fedoracommunity.connectors.api import (
+    IConnector,
+    ICall,
+    IQuery,
+    ParamFilter,
+    ISearch,
+)
+
 from tg import config
 from urllib import quote
 
+import lockfile
 import os
 import sys
 import yum
 import re
+
+yumlock_file = config.get('yumlock', os.getcwd() + "/yumlock")
+yumlock = lockfile.FileLock(yumlock_file)
+
 
 class YumConnector(IConnector, ICall, ISearch, IQuery):
     _method_paths = {}
@@ -32,7 +44,11 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         super(YumConnector, self).__init__(environ, request)
         self._yum_client = yum.YumBase()
 
-        self._yum_client.doConfigSetup(fn = self._conf_file, root=os.getcwd())
+        with yumlock:
+            self._yum_client.doConfigSetup(
+                fn=self._conf_file,
+                root=os.getcwd(),
+            )
 
     # IConnector
     @classmethod
@@ -95,7 +111,10 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
         search_term = search_term.split()
 
-        search = self._yum_client.searchGenerator(searchlist, search_term, showdups = False)
+        with yumlock:
+            search = self._yum_client.searchGenerator(
+                searchlist, search_term, showdups=False)
+
         results = []
         seen = set()
         for (pkg, values) in search:
@@ -114,7 +133,9 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                 results.append(row)
                 seen.add(pkg.name)
 
-        self._yum_client.close()
+        with yumlock:
+            self._yum_client.close()
+
         return results
 
     def _setup_repo(self, repo, arch):
@@ -137,30 +158,42 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             enable_repos.append('%s-updates-%s' % (repo_id, arch_id))
 
         # enable repos we care about
-        for r in self._yum_client.repos.findRepos('*'):
-            if r.id in enable_repos:
-                r.enable()
-            else:
-                r.disable()
+        with yumlock:
+            for r in self._yum_client.repos.findRepos('*'):
+                if r.id in enable_repos:
+                    r.enable()
+                else:
+                    r.disable()
 
     def _get_required_by(self, package, repo, arch):
         self._setup_repo(repo, arch)
-        pkgs = self._yum_client.pkgSack.getRequires(package)
+        with yumlock:
+            pkgs = self._yum_client.pkgSack.getRequires(package)
         return pkgs
 
     def _get_pkg_object(self, package, repo, arch):
         self._setup_repo(repo, arch)
 
-        try:
-            pkg = self._yum_client.getPackageObject((package, arch, None, None, None))
-        except yum.Errors.DepError:
-            # might be a noarch subpackage so try again
-            # FIXME: we should list individual subpackages with archs in latest build db
-            pkg = self._yum_client.getPackageObject((package, 'noarch', None, None, None))
+        with yumlock:
+            try:
+                pkg = self._yum_client.getPackageObject(
+                    (package, arch, None, None, None))
+            except yum.Errors.DepError:
+                # might be a noarch subpackage so try again
+                # FIXME: we should list individual subpackages with archs in
+                # latest build db
+                pkg = self._yum_client.getPackageObject(
+                    (package, 'noarch', None, None, None))
 
         return pkg
 
-    def _pkgtuples_to_rows(self, pkgtuples, _eq='=', _gt='>', _lt='<', _ge='>=', _le='<=', find_provided_by=False):
+    def _pkgtuples_to_rows(self,
+                           pkgtuples,
+                           _eq='=',
+                           _gt='>', _lt='<',
+                           _ge='>=', _le='<=',
+                           find_provided_by=False):
+
         rows = []
 
         for pkg in pkgtuples:
@@ -189,9 +222,16 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
             provided_by = None
             if find_provided_by:
-                provided_by_pkg = self._yum_client.searchPackageProvides([pkg[0]])
+
+                with yumlock:
+                    p = [pkg[0]]
+                    provided_by_pkg = self._yum_client.searchPackageProvides(p)
+
                 if len(provided_by_pkg) > 0:
-                    provided_by = tuple(set(map(lambda p: p.name, provided_by_pkg.keys())))
+                    provided_by = tuple(set(map(
+                        lambda p: p.name,
+                        provided_by_pkg.keys()
+                    )))
 
             rows.append({'name': pkg[0],
                          'version': version,
