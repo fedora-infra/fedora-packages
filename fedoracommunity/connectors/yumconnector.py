@@ -31,9 +31,6 @@ import sys
 import yum
 import re
 
-yumlock_file = config.get('yumlock', os.getcwd() + "/yumlock")
-yumlock = lockfile.FileLock(yumlock_file)
-
 
 class YumConnector(IConnector, ICall, ISearch, IQuery):
     _method_paths = {}
@@ -44,7 +41,10 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         super(YumConnector, self).__init__(environ, request)
         self._yum_client = yum.YumBase()
 
-        with yumlock:
+        yumlock_file = config.get('yumlock', os.getcwd() + "/yumlock")
+        self.yumlock = lockfile.FileLock(yumlock_file)
+
+        with self.yumlock:
             self._yum_client.doConfigSetup(
                 fn=self._conf_file,
                 root=os.getcwd(),
@@ -111,7 +111,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
         search_term = search_term.split()
 
-        with yumlock:
+        with self.yumlock:
             search = self._yum_client.searchGenerator(
                 searchlist, search_term, showdups=False)
 
@@ -133,7 +133,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                 results.append(row)
                 seen.add(pkg.name)
 
-        with yumlock:
+        with self.yumlock:
             self._yum_client.close()
 
         return results
@@ -158,7 +158,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             enable_repos.append('%s-updates-%s' % (repo_id, arch_id))
 
         # enable repos we care about
-        with yumlock:
+        with self.yumlock:
             for r in self._yum_client.repos.findRepos('*'):
                 if r.id in enable_repos:
                     r.enable()
@@ -167,14 +167,14 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
     def _get_required_by(self, package, repo, arch):
         self._setup_repo(repo, arch)
-        with yumlock:
+        with self.yumlock:
             pkgs = self._yum_client.pkgSack.getRequires(package)
         return pkgs
 
     def _get_pkg_object(self, package, repo, arch):
         self._setup_repo(repo, arch)
 
-        with yumlock:
+        with self.yumlock:
             try:
                 pkg = self._yum_client.getPackageObject(
                     (package, arch, None, None, None))
@@ -223,7 +223,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             provided_by = None
             if find_provided_by:
 
-                with yumlock:
+                with self.yumlock:
                     p = [pkg[0]]
                     provided_by_pkg = self._yum_client.searchPackageProvides(p)
 
