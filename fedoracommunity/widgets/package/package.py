@@ -87,14 +87,15 @@ class PackageWidget(twc.Widget):
     navigation_widget = PackageNavWidget
 
     def prepare(self):
-        super(PackageWidget, self).prepare()
-
         name = self.args.pop(0)
         self.kwds['package_name'] = name
         self.kwds['subpackage_of'] = ""
+        self.package_name = name
         xapian_conn = get_connector('xapian')
         result = xapian_conn.get_package_info(name)
         self.package_info = result
+
+        super(PackageWidget, self).prepare()
 
         if not result:
             tg.redirect('/s/' + name)
