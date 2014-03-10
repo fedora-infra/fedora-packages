@@ -5,12 +5,14 @@
 
 Name:           fedora-packages
 Version:        2.0.14
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
 URL:            https://fedorahosted.org/fedoracommunity
 Source0:        fedoracommunity-%{version}.tar.gz
+# https://github.com/fedora-infra/fedora-packages/pull/73
+Patch0:         fedora-packages-yumlock-fix.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -85,6 +87,7 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 
 %prep
 %setup -q -n fedoracommunity-%{version}
+%patch0 -p1
 
 %if %{?rhel}%{!?rhel:0} >= 6
 # Make sure that epel/rhel picks up the correct version of webob
@@ -159,6 +162,9 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Mon Mar 10 2014 Ralph Bean <rbean@redhat.com> - 2.0.14-2
+- Patch to fix a bug with the new yumlock stuff.
+
 * Mon Mar 10 2014 Ralph Bean <rbean@redhat.com> - 2.0.14-1
 - Add typeahead plugin from relrod.
 - Make datagrepper icons square.
