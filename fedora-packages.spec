@@ -4,7 +4,7 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.13
+Version:        2.0.14
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
@@ -159,6 +159,13 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Mon Mar 10 2014 Ralph Bean <rbean@redhat.com> - 2.0.14-1
+- Add typeahead plugin from relrod.
+- Make datagrepper icons square.
+- Exclude some datagrepper spam.
+- Avoid default to armv7hl on relationships tab.
+- Experiment with yumlocking.
+
 * Sun Feb 09 2014 Ralph Bean <rbean@redhat.com> - 2.0.13-1
 - Add HTML cards from charulagrl.
 
