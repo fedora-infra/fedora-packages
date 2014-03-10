@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.13
+2.0.14
 ------
 
 - make the bz cookiefile location configurable. `b90adc962 <https://github.com/fedora-infra/fedora-packages/commit/b90adc96215c38e152fdffe20aa0f0eeef6a6434>`_
@@ -75,7 +75,26 @@ Changelog
 - Merge pull request #60 from fedora-infra/feature/async-worker `5f37d4fc4 <https://github.com/fedora-infra/fedora-packages/commit/5f37d4fc4e4063372419c7c9453822882e3a6a1c>`_
 - Fix a syntax error in the latest builds indexer `72e6f8631 <https://github.com/fedora-infra/fedora-packages/commit/72e6f8631b2da5059e7945bad900e7ffade22b55>`_
 - Update distmappings `6e288e276 <https://github.com/fedora-infra/fedora-packages/commit/6e288e276280b2f3a58ffd49d1f1aac3641f9600>`_
+- Needed this to develop locally... `3733ce7e9 <https://github.com/fedora-infra/fedora-packages/commit/3733ce7e98906d2a873a0b9592982fa35c8225c4>`_
+- Typeahead! `a954bf3c3 <https://github.com/fedora-infra/fedora-packages/commit/a954bf3c3ac4ea0faf51d24979c9ae9f90e1d17a>`_
+- fix width `82172db1c <https://github.com/fedora-infra/fedora-packages/commit/82172db1c5a7c307bd3ccf7eb558d7ebdd9011d8>`_
 - Move the history block down one. `a8055f2fb <https://github.com/fedora-infra/fedora-packages/commit/a8055f2fb0380b6ea52d53684787fb464cfb907e>`_
+- 2.0.13 `56c5c1d77 <https://github.com/fedora-infra/fedora-packages/commit/56c5c1d7741edc5d8171cc9a93b49bf963c25b99>`_
+- Spec bump. `b32fe1ce0 <https://github.com/fedora-infra/fedora-packages/commit/b32fe1ce06ca717024b45dbd06107c326b450ced>`_
+- Merge pull request #62 from fedora-infra/typeahead `b79814cd4 <https://github.com/fedora-infra/fedora-packages/commit/b79814cd48e49e8e0fdca0749f5d908e44033a99>`_
+- added css for datetime `b444faf6a <https://github.com/fedora-infra/fedora-packages/commit/b444faf6a77caa262e482776c76aec8953264e89>`_
+- Merge pull request #63 from charulagrl/develop `9dc9c2ec9 <https://github.com/fedora-infra/fedora-packages/commit/9dc9c2ec9049597ef30dbcb79d23a99b2d09f64f>`_
+- Avoid crashing if datagrepper is not available. `924de7f09 <https://github.com/fedora-infra/fedora-packages/commit/924de7f092e37edcbc68dc915afde4738bde18e9>`_
+- Avoid defaulting to armv7hl on relationships tabs. `93960cd67 <https://github.com/fedora-infra/fedora-packages/commit/93960cd675226c9e8f43062f6eef1c898e6552c2>`_
+- Merge pull request #65 from fedora-infra/feature/default-x86 `7a2864473 <https://github.com/fedora-infra/fedora-packages/commit/7a2864473ad878fb03dc2c707777dc1e56ebc509>`_
+- Merge pull request #64 from fedora-infra/feature/safe-datagrepper `49423d0a9 <https://github.com/fedora-infra/fedora-packages/commit/49423d0a93476fc6938bac1cd69e3760e9024d3f>`_
+- Reorganize the params argument for style. `eaec03b67 <https://github.com/fedora-infra/fedora-packages/commit/eaec03b67d0730665c1d38bf58ff86e65fd53226>`_
+- Add exclusive arguments to the datagrepper query. `18b80ba0c <https://github.com/fedora-infra/fedora-packages/commit/18b80ba0c90d9de1140bff0503ad98573d56b619>`_
+- Merge pull request #67 from fedora-infra/feature/exclude-datagrepper-spam `b9bdc647f <https://github.com/fedora-infra/fedora-packages/commit/b9bdc647f5a4e799ffa0881d82426c32406383d2>`_
+- Make datagrepper icons square. `a0bcfa41c <https://github.com/fedora-infra/fedora-packages/commit/a0bcfa41c52f3513e7bf6346f7b143f081d20e28>`_
+- Merge pull request #69 from fedora-infra/feature/square-icons `18f4a808e <https://github.com/fedora-infra/fedora-packages/commit/18f4a808e18cb4a35bdb5f717d9127da69a93399>`_
+- Use a lockfile for yum stuff. `45ca0f52b <https://github.com/fedora-infra/fedora-packages/commit/45ca0f52b2f50d27ca782d3095227c85b2bde864>`_
+- Merge pull request #70 from fedora-infra/feature/yumlock `3e3d91213 <https://github.com/fedora-infra/fedora-packages/commit/3e3d91213814cf9cb3c351cc9c7299cb4ce599d9>`_
 
 2.0.9
 -----
@@ -318,6 +337,59 @@ Changelog
 - 2.0.11 `f4cb9ca09 <https://github.com/fedora-infra/fedora-packages/commit/f4cb9ca09d0f160e8e3b1547249fb27646ed3db9>`_
 - Fix regression introduced in 62e65f7d0780eac2263cd72e60924abcd3ebc089. `67632cadd <https://github.com/fedora-infra/fedora-packages/commit/67632cadd3c5b1d3c58d73a3ac564164c2ce6806>`_
 - Merge pull request #54 from fedora-infra/feature/fix-config-regression `a0704a72c <https://github.com/fedora-infra/fedora-packages/commit/a0704a72ce729eeea855e9661ad2bbb3d2c6a308>`_
+- 2.0.12 `bb800cf09 <https://github.com/fedora-infra/fedora-packages/commit/bb800cf0982d62925566360f20f9fa9dfc0d36f2>`_
+- added message cards link at search results `e3afe3378 <https://github.com/fedora-infra/fedora-packages/commit/e3afe33781e267dc586c6e3eb08c35a049d8dfd5>`_
+- Fix "File a ticket" link `d40400cd8 <https://github.com/fedora-infra/fedora-packages/commit/d40400cd8314055a4b5bbe4771432e6966bef301>`_
+- Merge pull request #57 from nanonyme/patch-1 `4a3a1cad8 <https://github.com/fedora-infra/fedora-packages/commit/4a3a1cad89663392a549be36af80eb1240731196>`_
+- removed hardcoded message cards link `9c2947c90 <https://github.com/fedora-infra/fedora-packages/commit/9c2947c905f6ae3edd0b0e13bdb84ebd73e04c55>`_
+- added definition for message card's link `5e1485110 <https://github.com/fedora-infra/fedora-packages/commit/5e1485110b158575200c80a42e30abe9ed76c8a1>`_
+- added template to render message card's link `3a9801467 <https://github.com/fedora-infra/fedora-packages/commit/3a9801467c9cb89a61a8043090c8f11751572985>`_
+- added new line at the end of file `26d2a43f5 <https://github.com/fedora-infra/fedora-packages/commit/26d2a43f59ea693222620c17495f8d39adaabac3>`_
+- added a function to get datagrepper url and package name `ef3d9221d <https://github.com/fedora-infra/fedora-packages/commit/ef3d9221dbdc08be937ee28d2b4839417d76d73b>`_
+- added datagrepper base url i.e. http://localhost:5000 `66f5b48d5 <https://github.com/fedora-infra/fedora-packages/commit/66f5b48d5e9fdf52a1e648ba480f3bfe4bd438ac>`_
+- render message cards url `6c049f267 <https://github.com/fedora-infra/fedora-packages/commit/6c049f2670e1faf18eb04172b105c7e05580c709>`_
+- changed datagrepper_url `ea853310a <https://github.com/fedora-infra/fedora-packages/commit/ea853310ac8d016b130e349a3e05e187f6349d8c>`_
+- render message cards `25cc90073 <https://github.com/fedora-infra/fedora-packages/commit/25cc900734d217b39d925d437fd4f8dd895af0ab>`_
+- added function to retrieve message cards from datagrepper `9bd8f757d <https://github.com/fedora-infra/fedora-packages/commit/9bd8f757d1aa10a8a65fc28596568328bd02ee39>`_
+- added chrome as parameters `ff4f7644c <https://github.com/fedora-infra/fedora-packages/commit/ff4f7644cf21fbc6738872ccad8790a8cca9e906>`_
+- adding css for history cards `b0304f1ed <https://github.com/fedora-infra/fedora-packages/commit/b0304f1ed01191aee6ea70e2d143edd12fd199fb>`_
+- added definition for .details-history class to shift link to the right `f3f2f2def <https://github.com/fedora-infra/fedora-packages/commit/f3f2f2defafa784a1818344702b9f9e95b0c2e14>`_
+- added css for history-cards and message-card classes `d3e5037fe <https://github.com/fedora-infra/fedora-packages/commit/d3e5037feaee00f969eac7ff2679cc44f04acd7f>`_
+- added new line at the end of file `8eeec6aed <https://github.com/fedora-infra/fedora-packages/commit/8eeec6aed070ba713cc0b30476caa6613f6082cb>`_
+- Merge pull request #56 from charulagrl/develop `b894a035c <https://github.com/fedora-infra/fedora-packages/commit/b894a035c1ed71564c9636b0d9e2880a0392058e>`_
+- Use a blocking call to retask to improve cache worker performance.  Fixes #59. `4936da666 <https://github.com/fedora-infra/fedora-packages/commit/4936da666de46843e8bab3d06df9963108230035>`_
+- Merge pull request #60 from fedora-infra/feature/async-worker `5f37d4fc4 <https://github.com/fedora-infra/fedora-packages/commit/5f37d4fc4e4063372419c7c9453822882e3a6a1c>`_
+- Fix a syntax error in the latest builds indexer `72e6f8631 <https://github.com/fedora-infra/fedora-packages/commit/72e6f8631b2da5059e7945bad900e7ffade22b55>`_
+- Update distmappings `6e288e276 <https://github.com/fedora-infra/fedora-packages/commit/6e288e276280b2f3a58ffd49d1f1aac3641f9600>`_
+- Move the history block down one. `a8055f2fb <https://github.com/fedora-infra/fedora-packages/commit/a8055f2fb0380b6ea52d53684787fb464cfb907e>`_
+
+2.0.13
+------
+
+- added message cards link at search results `e3afe3378 <https://github.com/fedora-infra/fedora-packages/commit/e3afe33781e267dc586c6e3eb08c35a049d8dfd5>`_
+- Fix "File a ticket" link `d40400cd8 <https://github.com/fedora-infra/fedora-packages/commit/d40400cd8314055a4b5bbe4771432e6966bef301>`_
+- Merge pull request #57 from nanonyme/patch-1 `4a3a1cad8 <https://github.com/fedora-infra/fedora-packages/commit/4a3a1cad89663392a549be36af80eb1240731196>`_
+- removed hardcoded message cards link `9c2947c90 <https://github.com/fedora-infra/fedora-packages/commit/9c2947c905f6ae3edd0b0e13bdb84ebd73e04c55>`_
+- added definition for message card's link `5e1485110 <https://github.com/fedora-infra/fedora-packages/commit/5e1485110b158575200c80a42e30abe9ed76c8a1>`_
+- added template to render message card's link `3a9801467 <https://github.com/fedora-infra/fedora-packages/commit/3a9801467c9cb89a61a8043090c8f11751572985>`_
+- added new line at the end of file `26d2a43f5 <https://github.com/fedora-infra/fedora-packages/commit/26d2a43f59ea693222620c17495f8d39adaabac3>`_
+- added a function to get datagrepper url and package name `ef3d9221d <https://github.com/fedora-infra/fedora-packages/commit/ef3d9221dbdc08be937ee28d2b4839417d76d73b>`_
+- added datagrepper base url i.e. http://localhost:5000 `66f5b48d5 <https://github.com/fedora-infra/fedora-packages/commit/66f5b48d5e9fdf52a1e648ba480f3bfe4bd438ac>`_
+- render message cards url `6c049f267 <https://github.com/fedora-infra/fedora-packages/commit/6c049f2670e1faf18eb04172b105c7e05580c709>`_
+- changed datagrepper_url `ea853310a <https://github.com/fedora-infra/fedora-packages/commit/ea853310ac8d016b130e349a3e05e187f6349d8c>`_
+- render message cards `25cc90073 <https://github.com/fedora-infra/fedora-packages/commit/25cc900734d217b39d925d437fd4f8dd895af0ab>`_
+- added function to retrieve message cards from datagrepper `9bd8f757d <https://github.com/fedora-infra/fedora-packages/commit/9bd8f757d1aa10a8a65fc28596568328bd02ee39>`_
+- added chrome as parameters `ff4f7644c <https://github.com/fedora-infra/fedora-packages/commit/ff4f7644cf21fbc6738872ccad8790a8cca9e906>`_
+- adding css for history cards `b0304f1ed <https://github.com/fedora-infra/fedora-packages/commit/b0304f1ed01191aee6ea70e2d143edd12fd199fb>`_
+- added definition for .details-history class to shift link to the right `f3f2f2def <https://github.com/fedora-infra/fedora-packages/commit/f3f2f2defafa784a1818344702b9f9e95b0c2e14>`_
+- added css for history-cards and message-card classes `d3e5037fe <https://github.com/fedora-infra/fedora-packages/commit/d3e5037feaee00f969eac7ff2679cc44f04acd7f>`_
+- added new line at the end of file `8eeec6aed <https://github.com/fedora-infra/fedora-packages/commit/8eeec6aed070ba713cc0b30476caa6613f6082cb>`_
+- Merge pull request #56 from charulagrl/develop `b894a035c <https://github.com/fedora-infra/fedora-packages/commit/b894a035c1ed71564c9636b0d9e2880a0392058e>`_
+- Use a blocking call to retask to improve cache worker performance.  Fixes #59. `4936da666 <https://github.com/fedora-infra/fedora-packages/commit/4936da666de46843e8bab3d06df9963108230035>`_
+- Merge pull request #60 from fedora-infra/feature/async-worker `5f37d4fc4 <https://github.com/fedora-infra/fedora-packages/commit/5f37d4fc4e4063372419c7c9453822882e3a6a1c>`_
+- Fix a syntax error in the latest builds indexer `72e6f8631 <https://github.com/fedora-infra/fedora-packages/commit/72e6f8631b2da5059e7945bad900e7ffade22b55>`_
+- Update distmappings `6e288e276 <https://github.com/fedora-infra/fedora-packages/commit/6e288e276280b2f3a58ffd49d1f1aac3641f9600>`_
+- Move the history block down one. `a8055f2fb <https://github.com/fedora-infra/fedora-packages/commit/a8055f2fb0380b6ea52d53684787fb464cfb907e>`_
 
 2.0.12
 ------
