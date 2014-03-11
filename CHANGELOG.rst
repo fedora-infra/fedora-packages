@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.14
+2.0.15
 ------
 
 - make the bz cookiefile location configurable. `b90adc962 <https://github.com/fedora-infra/fedora-packages/commit/b90adc96215c38e152fdffe20aa0f0eeef6a6434>`_
@@ -95,6 +95,16 @@ Changelog
 - Merge pull request #69 from fedora-infra/feature/square-icons `18f4a808e <https://github.com/fedora-infra/fedora-packages/commit/18f4a808e18cb4a35bdb5f717d9127da69a93399>`_
 - Use a lockfile for yum stuff. `45ca0f52b <https://github.com/fedora-infra/fedora-packages/commit/45ca0f52b2f50d27ca782d3095227c85b2bde864>`_
 - Merge pull request #70 from fedora-infra/feature/yumlock `3e3d91213 <https://github.com/fedora-infra/fedora-packages/commit/3e3d91213814cf9cb3c351cc9c7299cb4ce599d9>`_
+- 2.0.14 `97a5496d7 <https://github.com/fedora-infra/fedora-packages/commit/97a5496d7e1f538f852e1369605f1f5ecc9e1e38>`_
+- Bump spec. `61577ecfb <https://github.com/fedora-infra/fedora-packages/commit/61577ecfb86934d6377e08ca072ec19162e4aead>`_
+- Defer yumlock creation until runtime. `1f354589b <https://github.com/fedora-infra/fedora-packages/commit/1f354589ba153a67eb344557b81b654059201894>`_
+- Quick release. `3ba73f9d9 <https://github.com/fedora-infra/fedora-packages/commit/3ba73f9d9000ff8c25076fad475fec39d8e5c772>`_
+- Merge pull request #73 from fedora-infra/feature/adjusted-yumlock `15b74ecf7 <https://github.com/fedora-infra/fedora-packages/commit/15b74ecf7d2bca110ab10b9e7ecda6285656e3e9>`_
+- Log exceptions. `5aee21231 <https://github.com/fedora-infra/fedora-packages/commit/5aee212312ef870632e80cb157a2887c21cfece5>`_
+- Merge pull request #74 from fedora-infra/feature/log-exceptions-plz `5d2940c78 <https://github.com/fedora-infra/fedora-packages/commit/5d2940c78e51cd6b577b6df76e2d1c2a6436c53e>`_
+- Try to be smarter with our locking. `3213aa794 <https://github.com/fedora-infra/fedora-packages/commit/3213aa7941bbccb1e62e5d9791b95e04a86b75d2>`_
+- Remove the locking stuff. `d5ca72b13 <https://github.com/fedora-infra/fedora-packages/commit/d5ca72b133d09ed861f4746ed6f8ed7bdecd2ed2>`_
+- Merge pull request #75 from fedora-infra/feature/roll-that-locking-stuff-back `6c85d3a53 <https://github.com/fedora-infra/fedora-packages/commit/6c85d3a53271e543dde641611bd75e0f011ea066>`_
 
 2.0.9
 -----
@@ -361,7 +371,48 @@ Changelog
 - Merge pull request #60 from fedora-infra/feature/async-worker `5f37d4fc4 <https://github.com/fedora-infra/fedora-packages/commit/5f37d4fc4e4063372419c7c9453822882e3a6a1c>`_
 - Fix a syntax error in the latest builds indexer `72e6f8631 <https://github.com/fedora-infra/fedora-packages/commit/72e6f8631b2da5059e7945bad900e7ffade22b55>`_
 - Update distmappings `6e288e276 <https://github.com/fedora-infra/fedora-packages/commit/6e288e276280b2f3a58ffd49d1f1aac3641f9600>`_
+- Needed this to develop locally... `3733ce7e9 <https://github.com/fedora-infra/fedora-packages/commit/3733ce7e98906d2a873a0b9592982fa35c8225c4>`_
+- Typeahead! `a954bf3c3 <https://github.com/fedora-infra/fedora-packages/commit/a954bf3c3ac4ea0faf51d24979c9ae9f90e1d17a>`_
+- fix width `82172db1c <https://github.com/fedora-infra/fedora-packages/commit/82172db1c5a7c307bd3ccf7eb558d7ebdd9011d8>`_
 - Move the history block down one. `a8055f2fb <https://github.com/fedora-infra/fedora-packages/commit/a8055f2fb0380b6ea52d53684787fb464cfb907e>`_
+- 2.0.13 `56c5c1d77 <https://github.com/fedora-infra/fedora-packages/commit/56c5c1d7741edc5d8171cc9a93b49bf963c25b99>`_
+- Spec bump. `b32fe1ce0 <https://github.com/fedora-infra/fedora-packages/commit/b32fe1ce06ca717024b45dbd06107c326b450ced>`_
+- Merge pull request #62 from fedora-infra/typeahead `b79814cd4 <https://github.com/fedora-infra/fedora-packages/commit/b79814cd48e49e8e0fdca0749f5d908e44033a99>`_
+- added css for datetime `b444faf6a <https://github.com/fedora-infra/fedora-packages/commit/b444faf6a77caa262e482776c76aec8953264e89>`_
+- Merge pull request #63 from charulagrl/develop `9dc9c2ec9 <https://github.com/fedora-infra/fedora-packages/commit/9dc9c2ec9049597ef30dbcb79d23a99b2d09f64f>`_
+- Avoid crashing if datagrepper is not available. `924de7f09 <https://github.com/fedora-infra/fedora-packages/commit/924de7f092e37edcbc68dc915afde4738bde18e9>`_
+- Avoid defaulting to armv7hl on relationships tabs. `93960cd67 <https://github.com/fedora-infra/fedora-packages/commit/93960cd675226c9e8f43062f6eef1c898e6552c2>`_
+- Merge pull request #65 from fedora-infra/feature/default-x86 `7a2864473 <https://github.com/fedora-infra/fedora-packages/commit/7a2864473ad878fb03dc2c707777dc1e56ebc509>`_
+- Merge pull request #64 from fedora-infra/feature/safe-datagrepper `49423d0a9 <https://github.com/fedora-infra/fedora-packages/commit/49423d0a93476fc6938bac1cd69e3760e9024d3f>`_
+- Reorganize the params argument for style. `eaec03b67 <https://github.com/fedora-infra/fedora-packages/commit/eaec03b67d0730665c1d38bf58ff86e65fd53226>`_
+- Add exclusive arguments to the datagrepper query. `18b80ba0c <https://github.com/fedora-infra/fedora-packages/commit/18b80ba0c90d9de1140bff0503ad98573d56b619>`_
+- Merge pull request #67 from fedora-infra/feature/exclude-datagrepper-spam `b9bdc647f <https://github.com/fedora-infra/fedora-packages/commit/b9bdc647f5a4e799ffa0881d82426c32406383d2>`_
+- Make datagrepper icons square. `a0bcfa41c <https://github.com/fedora-infra/fedora-packages/commit/a0bcfa41c52f3513e7bf6346f7b143f081d20e28>`_
+- Merge pull request #69 from fedora-infra/feature/square-icons `18f4a808e <https://github.com/fedora-infra/fedora-packages/commit/18f4a808e18cb4a35bdb5f717d9127da69a93399>`_
+- Use a lockfile for yum stuff. `45ca0f52b <https://github.com/fedora-infra/fedora-packages/commit/45ca0f52b2f50d27ca782d3095227c85b2bde864>`_
+- Merge pull request #70 from fedora-infra/feature/yumlock `3e3d91213 <https://github.com/fedora-infra/fedora-packages/commit/3e3d91213814cf9cb3c351cc9c7299cb4ce599d9>`_
+
+2.0.14
+------
+
+- Needed this to develop locally... `3733ce7e9 <https://github.com/fedora-infra/fedora-packages/commit/3733ce7e98906d2a873a0b9592982fa35c8225c4>`_
+- Typeahead! `a954bf3c3 <https://github.com/fedora-infra/fedora-packages/commit/a954bf3c3ac4ea0faf51d24979c9ae9f90e1d17a>`_
+- fix width `82172db1c <https://github.com/fedora-infra/fedora-packages/commit/82172db1c5a7c307bd3ccf7eb558d7ebdd9011d8>`_
+- Spec bump. `b32fe1ce0 <https://github.com/fedora-infra/fedora-packages/commit/b32fe1ce06ca717024b45dbd06107c326b450ced>`_
+- Merge pull request #62 from fedora-infra/typeahead `b79814cd4 <https://github.com/fedora-infra/fedora-packages/commit/b79814cd48e49e8e0fdca0749f5d908e44033a99>`_
+- added css for datetime `b444faf6a <https://github.com/fedora-infra/fedora-packages/commit/b444faf6a77caa262e482776c76aec8953264e89>`_
+- Merge pull request #63 from charulagrl/develop `9dc9c2ec9 <https://github.com/fedora-infra/fedora-packages/commit/9dc9c2ec9049597ef30dbcb79d23a99b2d09f64f>`_
+- Avoid crashing if datagrepper is not available. `924de7f09 <https://github.com/fedora-infra/fedora-packages/commit/924de7f092e37edcbc68dc915afde4738bde18e9>`_
+- Avoid defaulting to armv7hl on relationships tabs. `93960cd67 <https://github.com/fedora-infra/fedora-packages/commit/93960cd675226c9e8f43062f6eef1c898e6552c2>`_
+- Merge pull request #65 from fedora-infra/feature/default-x86 `7a2864473 <https://github.com/fedora-infra/fedora-packages/commit/7a2864473ad878fb03dc2c707777dc1e56ebc509>`_
+- Merge pull request #64 from fedora-infra/feature/safe-datagrepper `49423d0a9 <https://github.com/fedora-infra/fedora-packages/commit/49423d0a93476fc6938bac1cd69e3760e9024d3f>`_
+- Reorganize the params argument for style. `eaec03b67 <https://github.com/fedora-infra/fedora-packages/commit/eaec03b67d0730665c1d38bf58ff86e65fd53226>`_
+- Add exclusive arguments to the datagrepper query. `18b80ba0c <https://github.com/fedora-infra/fedora-packages/commit/18b80ba0c90d9de1140bff0503ad98573d56b619>`_
+- Merge pull request #67 from fedora-infra/feature/exclude-datagrepper-spam `b9bdc647f <https://github.com/fedora-infra/fedora-packages/commit/b9bdc647f5a4e799ffa0881d82426c32406383d2>`_
+- Make datagrepper icons square. `a0bcfa41c <https://github.com/fedora-infra/fedora-packages/commit/a0bcfa41c52f3513e7bf6346f7b143f081d20e28>`_
+- Merge pull request #69 from fedora-infra/feature/square-icons `18f4a808e <https://github.com/fedora-infra/fedora-packages/commit/18f4a808e18cb4a35bdb5f717d9127da69a93399>`_
+- Use a lockfile for yum stuff. `45ca0f52b <https://github.com/fedora-infra/fedora-packages/commit/45ca0f52b2f50d27ca782d3095227c85b2bde864>`_
+- Merge pull request #70 from fedora-infra/feature/yumlock `3e3d91213 <https://github.com/fedora-infra/fedora-packages/commit/3e3d91213814cf9cb3c351cc9c7299cb4ce599d9>`_
 
 2.0.13
 ------
