@@ -32,6 +32,18 @@ import yum
 import re
 
 
+def locking(method):
+    """ A decorator that makes a method lock on a yumlock object. """
+    def _inner(connector_object, *args, **kwargs):
+        print "* Acquiring %r" % connector_object.yumlock_file
+        with connector_object.yumlock:
+            print "* Got %r for %r" % (connector_object.yumlock_file, method)
+            result = method(connector_object, *args, **kwargs)
+            print "* Releasing %r" % connector_object.yumlock_file
+            return result
+    return _inner
+
+
 class YumConnector(IConnector, ICall, ISearch, IQuery):
     _method_paths = {}
     _query_paths = {}
@@ -41,14 +53,17 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         super(YumConnector, self).__init__(environ, request)
         self._yum_client = yum.YumBase()
 
-        yumlock_file = config.get('yumlock', os.getcwd() + "/yumlock")
-        self.yumlock = lockfile.FileLock(yumlock_file)
+        self.yumlock_file = config.get('yumlock', os.getcwd() + "/yumlock")
+        self.yumlock = lockfile.FileLock(self.yumlock_file)
 
+        print "* Acquiring %r" % self.yumlock_file
         with self.yumlock:
+            print "* Got %r for config setup" % self.yumlock_file
             self._yum_client.doConfigSetup(
                 fn=self._conf_file,
                 root=os.getcwd(),
             )
+            print "* Releasing %r" % self.yumlock_file
 
     # IConnector
     @classmethod
@@ -106,14 +121,14 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         for col in path['columns']:
             cls._package_search_field_list.append(col)
 
+    @locking
     def search_packages(self, search_term):
         searchlist = self._package_search_field_list
 
         search_term = search_term.split()
 
-        with self.yumlock:
-            search = self._yum_client.searchGenerator(
-                searchlist, search_term, showdups=False)
+        search = self._yum_client.searchGenerator(
+            searchlist, search_term, showdups=False)
 
         results = []
         seen = set()
@@ -133,8 +148,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                 results.append(row)
                 seen.add(pkg.name)
 
-        with self.yumlock:
-            self._yum_client.close()
+        self._yum_client.close()
 
         return results
 
@@ -158,32 +172,28 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             enable_repos.append('%s-updates-%s' % (repo_id, arch_id))
 
         # enable repos we care about
-        with self.yumlock:
-            for r in self._yum_client.repos.findRepos('*'):
-                if r.id in enable_repos:
-                    r.enable()
-                else:
-                    r.disable()
+        for r in self._yum_client.repos.findRepos('*'):
+            if r.id in enable_repos:
+                r.enable()
+            else:
+                r.disable()
 
     def _get_required_by(self, package, repo, arch):
         self._setup_repo(repo, arch)
-        with self.yumlock:
-            pkgs = self._yum_client.pkgSack.getRequires(package)
+        pkgs = self._yum_client.pkgSack.getRequires(package)
         return pkgs
 
     def _get_pkg_object(self, package, repo, arch):
         self._setup_repo(repo, arch)
-
-        with self.yumlock:
-            try:
-                pkg = self._yum_client.getPackageObject(
-                    (package, arch, None, None, None))
-            except yum.Errors.DepError:
-                # might be a noarch subpackage so try again
-                # FIXME: we should list individual subpackages with archs in
-                # latest build db
-                pkg = self._yum_client.getPackageObject(
-                    (package, 'noarch', None, None, None))
+        try:
+            pkg = self._yum_client.getPackageObject(
+                (package, arch, None, None, None))
+        except yum.Errors.DepError:
+            # might be a noarch subpackage so try again
+            # FIXME: we should list individual subpackages with archs in
+            # latest build db
+            pkg = self._yum_client.getPackageObject(
+                (package, 'noarch', None, None, None))
 
         return pkg
 
@@ -223,9 +233,8 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             provided_by = None
             if find_provided_by:
 
-                with self.yumlock:
-                    p = [pkg[0]]
-                    provided_by_pkg = self._yum_client.searchPackageProvides(p)
+                p = [pkg[0]]
+                provided_by_pkg = self._yum_client.searchPackageProvides(p)
 
                 if len(provided_by_pkg) > 0:
                     provided_by = tuple(set(map(
@@ -276,6 +285,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('arch',[], allow_none = False)
         cls._query_provides_filter = f
 
+    @locking
     def query_provides(self, start_row=None,
                             rows_per_page=10,
                             order=-1,
@@ -334,6 +344,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('arch',[], allow_none = False)
         cls._query_requires_filter = f
 
+    @locking
     def query_requires(self, start_row=None,
                             rows_per_page=10,
                             order=-1,
@@ -428,6 +439,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('arch',[], allow_none = False)
         cls._query_required_by_filter = f
 
+    @locking
     def query_required_by(self, start_row=None,
                                 rows_per_page=10,
                                 order=-1,
@@ -496,6 +508,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('arch',[], allow_none = False)
         cls._query_obsoletes_filter = f
 
+    @locking
     def query_obsoletes(self, start_row=None,
                             rows_per_page=10,
                             order=-1,
@@ -554,6 +567,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('arch',[], allow_none = False)
         cls._query_conflicts_filter = f
 
+    @locking
     def query_conflicts(self, start_row=None,
                             rows_per_page=10,
                             order=-1,
