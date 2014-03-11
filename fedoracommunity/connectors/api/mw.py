@@ -22,6 +22,7 @@ import urllib
 import time
 import os.path
 import threading
+import traceback
 
 try:
     import json
@@ -236,8 +237,14 @@ class FCommConnectorMiddleware(object):
                 # add profile id to results
                 r['moksha_profile_id'] = profile_id
             else:
-                r = conn_obj._dispatch(
-                    op, path, remote_params, **dispatch_params)
+                try:
+                    r = conn_obj._dispatch(
+                        op, path, remote_params, **dispatch_params)
+                except Exception:
+                    # Just print out the error so we can see it in /var/log/...
+                    traceback.print_exc()
+                    # But then re-raise the exception with its original context
+                    raise
 
             if pretty_print:
                 r = '<pre>' + pformat(r) + '</pre>'

@@ -25,14 +25,10 @@ from fedoracommunity.connectors.api import (
 from tg import config
 from urllib import quote
 
-import lockfile
 import os
 import sys
 import yum
 import re
-
-yumlock_file = config.get('yumlock', os.getcwd() + "/yumlock")
-yumlock = lockfile.FileLock(yumlock_file)
 
 
 class YumConnector(IConnector, ICall, ISearch, IQuery):
@@ -44,11 +40,10 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         super(YumConnector, self).__init__(environ, request)
         self._yum_client = yum.YumBase()
 
-        with yumlock:
-            self._yum_client.doConfigSetup(
-                fn=self._conf_file,
-                root=os.getcwd(),
-            )
+        self._yum_client.doConfigSetup(
+            fn=self._conf_file,
+            root=os.getcwd(),
+        )
 
     # IConnector
     @classmethod
@@ -111,9 +106,8 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
 
         search_term = search_term.split()
 
-        with yumlock:
-            search = self._yum_client.searchGenerator(
-                searchlist, search_term, showdups=False)
+        search = self._yum_client.searchGenerator(
+            searchlist, search_term, showdups=False)
 
         results = []
         seen = set()
@@ -133,8 +127,7 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
                 results.append(row)
                 seen.add(pkg.name)
 
-        with yumlock:
-            self._yum_client.close()
+        self._yum_client.close()
 
         return results
 
@@ -158,32 +151,28 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             enable_repos.append('%s-updates-%s' % (repo_id, arch_id))
 
         # enable repos we care about
-        with yumlock:
-            for r in self._yum_client.repos.findRepos('*'):
-                if r.id in enable_repos:
-                    r.enable()
-                else:
-                    r.disable()
+        for r in self._yum_client.repos.findRepos('*'):
+            if r.id in enable_repos:
+                r.enable()
+            else:
+                r.disable()
 
     def _get_required_by(self, package, repo, arch):
         self._setup_repo(repo, arch)
-        with yumlock:
-            pkgs = self._yum_client.pkgSack.getRequires(package)
+        pkgs = self._yum_client.pkgSack.getRequires(package)
         return pkgs
 
     def _get_pkg_object(self, package, repo, arch):
         self._setup_repo(repo, arch)
-
-        with yumlock:
-            try:
-                pkg = self._yum_client.getPackageObject(
-                    (package, arch, None, None, None))
-            except yum.Errors.DepError:
-                # might be a noarch subpackage so try again
-                # FIXME: we should list individual subpackages with archs in
-                # latest build db
-                pkg = self._yum_client.getPackageObject(
-                    (package, 'noarch', None, None, None))
+        try:
+            pkg = self._yum_client.getPackageObject(
+                (package, arch, None, None, None))
+        except yum.Errors.DepError:
+            # might be a noarch subpackage so try again
+            # FIXME: we should list individual subpackages with archs in
+            # latest build db
+            pkg = self._yum_client.getPackageObject(
+                (package, 'noarch', None, None, None))
 
         return pkg
 
@@ -223,9 +212,8 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
             provided_by = None
             if find_provided_by:
 
-                with yumlock:
-                    p = [pkg[0]]
-                    provided_by_pkg = self._yum_client.searchPackageProvides(p)
+                p = [pkg[0]]
+                provided_by_pkg = self._yum_client.searchPackageProvides(p)
 
                 if len(provided_by_pkg) > 0:
                     provided_by = tuple(set(map(
