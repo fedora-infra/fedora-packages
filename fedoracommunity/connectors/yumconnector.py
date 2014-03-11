@@ -25,23 +25,10 @@ from fedoracommunity.connectors.api import (
 from tg import config
 from urllib import quote
 
-import lockfile
 import os
 import sys
 import yum
 import re
-
-
-def locking(method):
-    """ A decorator that makes a method lock on a yumlock object. """
-    def _inner(connector_object, *args, **kwargs):
-        print "* Acquiring %r" % connector_object.yumlock_file
-        with connector_object.yumlock:
-            print "* Got %r for %r" % (connector_object.yumlock_file, method)
-            result = method(connector_object, *args, **kwargs)
-            print "* Releasing %r" % connector_object.yumlock_file
-            return result
-    return _inner
 
 
 class YumConnector(IConnector, ICall, ISearch, IQuery):
@@ -53,17 +40,10 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         super(YumConnector, self).__init__(environ, request)
         self._yum_client = yum.YumBase()
 
-        self.yumlock_file = config.get('yumlock', os.getcwd() + "/yumlock")
-        self.yumlock = lockfile.FileLock(self.yumlock_file)
-
-        print "* Acquiring %r" % self.yumlock_file
-        with self.yumlock:
-            print "* Got %r for config setup" % self.yumlock_file
-            self._yum_client.doConfigSetup(
-                fn=self._conf_file,
-                root=os.getcwd(),
-            )
-            print "* Releasing %r" % self.yumlock_file
+        self._yum_client.doConfigSetup(
+            fn=self._conf_file,
+            root=os.getcwd(),
+        )
 
     # IConnector
     @classmethod
@@ -121,7 +101,6 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         for col in path['columns']:
             cls._package_search_field_list.append(col)
 
-    @locking
     def search_packages(self, search_term):
         searchlist = self._package_search_field_list
 
@@ -285,7 +264,6 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('arch',[], allow_none = False)
         cls._query_provides_filter = f
 
-    @locking
     def query_provides(self, start_row=None,
                             rows_per_page=10,
                             order=-1,
@@ -344,7 +322,6 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('arch',[], allow_none = False)
         cls._query_requires_filter = f
 
-    @locking
     def query_requires(self, start_row=None,
                             rows_per_page=10,
                             order=-1,
@@ -439,7 +416,6 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('arch',[], allow_none = False)
         cls._query_required_by_filter = f
 
-    @locking
     def query_required_by(self, start_row=None,
                                 rows_per_page=10,
                                 order=-1,
@@ -508,7 +484,6 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('arch',[], allow_none = False)
         cls._query_obsoletes_filter = f
 
-    @locking
     def query_obsoletes(self, start_row=None,
                             rows_per_page=10,
                             order=-1,
@@ -567,7 +542,6 @@ class YumConnector(IConnector, ICall, ISearch, IQuery):
         f.add_filter('arch',[], allow_none = False)
         cls._query_conflicts_filter = f
 
-    @locking
     def query_conflicts(self, start_row=None,
                             rows_per_page=10,
                             order=-1,
