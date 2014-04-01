@@ -27,6 +27,9 @@ if __name__ == "__main__":
                       default='update',
                       help="what action to perform.  Either 'init' or 'update'",
                       metavar="ACTION")
+    parser.add_option("--timestamp", dest="timestamp",
+                      default=None,
+                      help="how far back to run the query.")
 
     (options, args) = parser.parse_args()
     lockfile = LockFile(
@@ -38,10 +41,14 @@ if __name__ == "__main__":
         print "Error acquiring lock file: %s" % str(e)
         exit(-1)
 
+    # None or an int
+    timestamp = options.timestamp and int(options.timestamp)
+
     try:
         run(
             cache_path=options.cache_path,
             action=options.action,
+            timestamp=timestamp,
             koji_url=options.koji_url)
     finally:
         lockfile.release()
