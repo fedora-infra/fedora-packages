@@ -56,7 +56,7 @@ class ReleaseFilter(twc.Widget):
             ver = collection['version']
             label = "%s %s" % (name, ver)
             value = ""
-            branchname = collection['gitbranchname']
+            branchname = collection['branchname']
             if branchname:
                 repo_path = os.path.join(top_repo, branchname)
                 if not os.path.isdir(repo_path):

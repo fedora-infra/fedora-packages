@@ -35,7 +35,7 @@ class Updates(Grid):
             name = collection['name']
             ver = collection['version']
             label = "%s %s" % (name, ver)
-            branchname = collection['gitbranchname']
+            branchname = collection['branchname']
             value = ""
             if branchname:
                 value = branchname
