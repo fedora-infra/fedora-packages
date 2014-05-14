@@ -69,6 +69,7 @@ Requires: python-dogpile-core > 0.4.0
 Requires: python-dogpile-cache > 0.4.1
 Requires: python-memcached
 Requires: python-retask
+Requires: packagedb-cli
 # For spectool
 Requires: rpmdevtools
 Requires: python-daemon
