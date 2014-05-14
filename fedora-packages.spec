@@ -4,15 +4,13 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.14
+Version:        2.0.16
 Release:        2%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
 URL:            https://fedorahosted.org/fedoracommunity
 Source0:        fedoracommunity-%{version}.tar.gz
-# https://github.com/fedora-infra/fedora-packages/pull/73
-Patch0:         fedora-packages-yumlock-fix.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -71,6 +69,7 @@ Requires: python-dogpile-core > 0.4.0
 Requires: python-dogpile-cache > 0.4.1
 Requires: python-memcached
 Requires: python-retask
+Requires: packagedb-cli
 # For spectool
 Requires: rpmdevtools
 Requires: python-daemon
@@ -87,7 +86,6 @@ Fedora Community is a set of web applications for consolidating Fedora Infrastru
 
 %prep
 %setup -q -n fedoracommunity-%{version}
-%patch0 -p1
 
 %if %{?rhel}%{!?rhel:0} >= 6
 # Make sure that epel/rhel picks up the correct version of webob
@@ -162,6 +160,15 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Wed May 14 2014 Ralph Bean <rbean@redhat.com> - 2.0.16-2
+- Further pkgdb2 updates.
+
+* Wed May 14 2014 Ralph Bean <rbean@redhat.com> - 2.0.16-1
+- Updates for pkgdb2 compatibility.
+
+* Tue Mar 11 2014 Ralph Bean <rbean@redhat.com> - 2.0.15-1
+- Roll back the yumlock stuff in a rich blossom of hatred.
+
 * Mon Mar 10 2014 Ralph Bean <rbean@redhat.com> - 2.0.14-2
 - Patch to fix a bug with the new yumlock stuff.
 

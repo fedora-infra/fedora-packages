@@ -16,7 +16,7 @@
 
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery, ParamFilter, ISearch
 from tg import config
-from fedora.client import ProxyClient, PackageDB
+import pkgdb2client
 from beaker.cache import Cache
 
 COLLECTION_TABLE_CACHE_TIMEOUT= 60 * 60 * 6 # s * m * h = 6 hours
@@ -37,12 +37,6 @@ class PackageNameError(LookupError):
 class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
     _method_paths = {}
     _query_paths = {}
-
-    def __init__(self, environ=None, request=None):
-        super(PkgdbConnector, self).__init__(environ, request)
-        self._pkgdb_client = ProxyClient(self._base_url,
-                                         session_as_cookie=False,
-                                         insecure = self._insecure)
 
     # IConnector
     @classmethod
@@ -65,28 +59,13 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         cls.register_query_acls()
         cls.register_query_owners()
 
-    def request_data(self, resource_path, params, _cookies):
-        identity = self._environ.get('repoze.who.identity')
-        auth_params={}
-        if identity:
-            session_id = identity.get('session_id')
-            auth_params={'session_id': session_id}
-
-        return self._pkgdb_client.send_request(resource_path,
-                                               req_params = params,
-                                               auth_params=auth_params)
-
     def introspect(self):
         # FIXME: return introspection data
         return None
 
     #ICall
     def call(self, resource_path, params=None, _cookies=None):
-        # proxy client only returns structured data so we can pass
-        # this off to request_data but we should fix that in ProxyClient
-        if not params:
-            params = {}
-        return self.request_data(resource_path, params, _cookies)
+        raise NotImplementError()
 
     def request_collection_table(self, eol=False):
         session_id = None
@@ -96,10 +75,15 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                 session_id = identity.get('session_id')
 
         table = {}
-        pkgdb = PackageDB(self._base_url, insecure=self._insecure, session_id=session_id)
-        co = pkgdb.get_collection_list(eol=eol)
-        for c, num in co:
-            table[c['id']] = c
+        pkgdb = pkgdb2client.PkgDB(self._base_url)
+        if eol:
+            active = ['Active', 'Under Development']
+            co = pkgdb.get_collections(clt_status=active)
+        else:
+            co = pkgdb.get_collections()
+
+        for c in co['collections']:
+            table[c['branchname']] = c
 
         return table
 
@@ -608,7 +592,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
         return releases
 
     def get_pkgdb(self):
-        return PackageDB(self._base_url, insecure=self._insecure)
+        return pkgdb2client.PkgDB(self._base_url)
 
     def get_num_pkgs_per_collection(self, name='Fedora'):
         """ Get the number of packages per collection in a flot-friendly format """
@@ -619,7 +603,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
                              'points': {'show': True}},
                   'grid': {'hoverable': True, 'clickable': True}}
 
-        collections = self.get_pkgdb().get_collection_list(eol=True)
+        collections = self.get_pkgdb().get_collections()
         for collection, num_pkgs in collections:
             if collection['name'] == name:
                 if collection['version'] == 'devel':

@@ -3,6 +3,7 @@ Creates our search index and its field structure,
 and then populates it with packages from yum repositories
 """
 import os
+import requests
 import sys
 import shutil
 import urllib2
@@ -12,7 +13,6 @@ import xappy
 from os.path import join, dirname
 
 from utils import filter_search_string
-from fedora.client import PackageDB, ServerError
 from rpmcache import RPMCache
 from parsers import DesktopParser, SimpleSpecfileParser
 from iconcache import IconCache
@@ -37,10 +37,7 @@ class Indexer(object):
         self._owners_cache = None
         self.default_icon = 'package_128x128'
         self.tagger_url = tagger_url
-        if pkgdb_url:
-            self.pkgdb_client = PackageDB(base_url=pkgdb_url)
-        else:
-            self.pkgdb_client = PackageDB()
+        self.pkgdb_url = pkgdb_url or "https://admin.fedoraproject.org/pkgdb"
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
@@ -76,7 +73,9 @@ class Indexer(object):
         if self._owners_cache == None:
             print "Caching the owners list from PackageDB"
 
-            self._owners_cache = self.pkgdb_client.get_bugzilla_acls()
+            url = self.pkgdb_url + "/api/bugzilla?format=json"
+            response = requests.get(url)
+            self._owners_cache = response.json()['bugzillaAcls']
 
         try:
             mainowner = self._owners_cache['Fedora'][pkg_name]['owner']
