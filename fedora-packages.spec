@@ -4,8 +4,8 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.15
-Release:        1%{?dist}
+Version:        2.0.16
+Release:        2%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -160,6 +160,12 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Wed May 14 2014 Ralph Bean <rbean@redhat.com> - 2.0.16-2
+- Further pkgdb2 updates.
+
+* Wed May 14 2014 Ralph Bean <rbean@redhat.com> - 2.0.16-1
+- Updates for pkgdb2 compatibility.
+
 * Tue Mar 11 2014 Ralph Bean <rbean@redhat.com> - 2.0.15-1
 - Roll back the yumlock stuff in a rich blossom of hatred.
 
