@@ -85,7 +85,7 @@ function get_menu_links(nvr) {
        )
     ).append(
        $('<li/>').append(
-         $('<a/>').attr('href', 'https://admin.fedoraproject.org/pkgdb/acls/name/' + nvr.name).append(
+         $('<a/>').attr('href', 'https://admin.fedoraproject.org/pkgdb/package/' + nvr.name).append(
            $('<img/>').attr('src', moksha.url('/images/16_pkgdb.png'))
          ).append(
            $('<span/>')
