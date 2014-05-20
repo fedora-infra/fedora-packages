@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.15
+2.0.17
 ------
 
 - make the bz cookiefile location configurable. `b90adc962 <https://github.com/fedora-infra/fedora-packages/commit/b90adc96215c38e152fdffe20aa0f0eeef6a6434>`_
@@ -105,6 +105,24 @@ Changelog
 - Try to be smarter with our locking. `3213aa794 <https://github.com/fedora-infra/fedora-packages/commit/3213aa7941bbccb1e62e5d9791b95e04a86b75d2>`_
 - Remove the locking stuff. `d5ca72b13 <https://github.com/fedora-infra/fedora-packages/commit/d5ca72b133d09ed861f4746ed6f8ed7bdecd2ed2>`_
 - Merge pull request #75 from fedora-infra/feature/roll-that-locking-stuff-back `6c85d3a53 <https://github.com/fedora-infra/fedora-packages/commit/6c85d3a53271e543dde641611bd75e0f011ea066>`_
+- 2.0.15 `17a8905ff <https://github.com/fedora-infra/fedora-packages/commit/17a8905ff85bd56a115421f3a1ad640888c9a900>`_
+- A blossom of hatred. `9f00d1bf8 <https://github.com/fedora-infra/fedora-packages/commit/9f00d1bf84aa152863d370c1a1edef5c347335de>`_
+- Add a configurable timestamp to this tool. `ce7efe680 <https://github.com/fedora-infra/fedora-packages/commit/ce7efe680dd536d36f0e9594350c67b9aad084d9>`_
+- Merge pull request #78 from fedora-infra/feature/configurable-timestamp `b8901cfb8 <https://github.com/fedora-infra/fedora-packages/commit/b8901cfb871479b4f872f9fccb096eff3d548a58>`_
+- Remove the relationships tab from the UI. `a9893b61d <https://github.com/fedora-infra/fedora-packages/commit/a9893b61d9fbac3c726a7dd048b05063b8c4f067>`_
+- Merge pull request #84 from fedora-infra/feature/all-good-things `1506dc97e <https://github.com/fedora-infra/fedora-packages/commit/1506dc97efb1018970c617ab67cac639d627f2c0>`_
+- :fire: Do the pkgdb2 thing :fire: `732be9a8a <https://github.com/fedora-infra/fedora-packages/commit/732be9a8aedaf7721da569f5b52d6abc149ea5b1>`_
+- Also, require this lib. `12da36cbd <https://github.com/fedora-infra/fedora-packages/commit/12da36cbdb0978a5b74a5d4112dc6c8d4dece99f>`_
+- Switch to pkgdb2 api in the indexer. `a06c97e0d <https://github.com/fedora-infra/fedora-packages/commit/a06c97e0d23c6324875e1d8464490a686b80614f>`_
+- Merge pull request #85 from fedora-infra/feature/pkgdb2 `b301a677a <https://github.com/fedora-infra/fedora-packages/commit/b301a677ad1d7dca1bc4745dc46167cb58a4fb54>`_
+- gitbranchname -> branchname. `3f659e20b <https://github.com/fedora-infra/fedora-packages/commit/3f659e20bd5b960c5d775bef49fb47adf6227279>`_
+- 2.0.16 `82ac17951 <https://github.com/fedora-infra/fedora-packages/commit/82ac1795149c944b55ecaf62d8c73e32659a9159>`_
+- Update links to pkgdb2. `2f5cbffcf <https://github.com/fedora-infra/fedora-packages/commit/2f5cbffcfd97c5a68ee7132c1f13184ca5a9e6a3>`_
+- Merge pull request #86 from fedora-infra/feature/pkgdb2-link `8991633b6 <https://github.com/fedora-infra/fedora-packages/commit/8991633b66bb86f6fd8b71c2499c6a3b897603d8>`_
+- Protocol agnosticism.  Fixes #79. `0c1ff2c07 <https://github.com/fedora-infra/fedora-packages/commit/0c1ff2c07137f55eca34d69d8fb4fed1135318d5>`_
+- Fix logic. `8af096df3 <https://github.com/fedora-infra/fedora-packages/commit/8af096df33cee5866b26297accf00f737ecdafe4>`_
+- Merge pull request #90 from fedora-infra/feature/ssl `89d33dfac <https://github.com/fedora-infra/fedora-packages/commit/89d33dfaca30993acaf22d7596e80980a4ba73f1>`_
+- Merge pull request #91 from fedora-infra/feature/pkgdb2-fix `7a6ea8a27 <https://github.com/fedora-infra/fedora-packages/commit/7a6ea8a277c113b5d2dc8f6dd27ad8fd5f1dbb9f>`_
 
 2.0.9
 -----
@@ -391,6 +409,54 @@ Changelog
 - Merge pull request #69 from fedora-infra/feature/square-icons `18f4a808e <https://github.com/fedora-infra/fedora-packages/commit/18f4a808e18cb4a35bdb5f717d9127da69a93399>`_
 - Use a lockfile for yum stuff. `45ca0f52b <https://github.com/fedora-infra/fedora-packages/commit/45ca0f52b2f50d27ca782d3095227c85b2bde864>`_
 - Merge pull request #70 from fedora-infra/feature/yumlock `3e3d91213 <https://github.com/fedora-infra/fedora-packages/commit/3e3d91213814cf9cb3c351cc9c7299cb4ce599d9>`_
+- 2.0.14 `97a5496d7 <https://github.com/fedora-infra/fedora-packages/commit/97a5496d7e1f538f852e1369605f1f5ecc9e1e38>`_
+- Bump spec. `61577ecfb <https://github.com/fedora-infra/fedora-packages/commit/61577ecfb86934d6377e08ca072ec19162e4aead>`_
+- Defer yumlock creation until runtime. `1f354589b <https://github.com/fedora-infra/fedora-packages/commit/1f354589ba153a67eb344557b81b654059201894>`_
+- Quick release. `3ba73f9d9 <https://github.com/fedora-infra/fedora-packages/commit/3ba73f9d9000ff8c25076fad475fec39d8e5c772>`_
+- Merge pull request #73 from fedora-infra/feature/adjusted-yumlock `15b74ecf7 <https://github.com/fedora-infra/fedora-packages/commit/15b74ecf7d2bca110ab10b9e7ecda6285656e3e9>`_
+- Log exceptions. `5aee21231 <https://github.com/fedora-infra/fedora-packages/commit/5aee212312ef870632e80cb157a2887c21cfece5>`_
+- Merge pull request #74 from fedora-infra/feature/log-exceptions-plz `5d2940c78 <https://github.com/fedora-infra/fedora-packages/commit/5d2940c78e51cd6b577b6df76e2d1c2a6436c53e>`_
+- Try to be smarter with our locking. `3213aa794 <https://github.com/fedora-infra/fedora-packages/commit/3213aa7941bbccb1e62e5d9791b95e04a86b75d2>`_
+- Remove the locking stuff. `d5ca72b13 <https://github.com/fedora-infra/fedora-packages/commit/d5ca72b133d09ed861f4746ed6f8ed7bdecd2ed2>`_
+- Merge pull request #75 from fedora-infra/feature/roll-that-locking-stuff-back `6c85d3a53 <https://github.com/fedora-infra/fedora-packages/commit/6c85d3a53271e543dde641611bd75e0f011ea066>`_
+- 2.0.15 `17a8905ff <https://github.com/fedora-infra/fedora-packages/commit/17a8905ff85bd56a115421f3a1ad640888c9a900>`_
+- A blossom of hatred. `9f00d1bf8 <https://github.com/fedora-infra/fedora-packages/commit/9f00d1bf84aa152863d370c1a1edef5c347335de>`_
+- Add a configurable timestamp to this tool. `ce7efe680 <https://github.com/fedora-infra/fedora-packages/commit/ce7efe680dd536d36f0e9594350c67b9aad084d9>`_
+- Merge pull request #78 from fedora-infra/feature/configurable-timestamp `b8901cfb8 <https://github.com/fedora-infra/fedora-packages/commit/b8901cfb871479b4f872f9fccb096eff3d548a58>`_
+- Remove the relationships tab from the UI. `a9893b61d <https://github.com/fedora-infra/fedora-packages/commit/a9893b61d9fbac3c726a7dd048b05063b8c4f067>`_
+- Merge pull request #84 from fedora-infra/feature/all-good-things `1506dc97e <https://github.com/fedora-infra/fedora-packages/commit/1506dc97efb1018970c617ab67cac639d627f2c0>`_
+- :fire: Do the pkgdb2 thing :fire: `732be9a8a <https://github.com/fedora-infra/fedora-packages/commit/732be9a8aedaf7721da569f5b52d6abc149ea5b1>`_
+- Also, require this lib. `12da36cbd <https://github.com/fedora-infra/fedora-packages/commit/12da36cbdb0978a5b74a5d4112dc6c8d4dece99f>`_
+- Switch to pkgdb2 api in the indexer. `a06c97e0d <https://github.com/fedora-infra/fedora-packages/commit/a06c97e0d23c6324875e1d8464490a686b80614f>`_
+- Merge pull request #85 from fedora-infra/feature/pkgdb2 `b301a677a <https://github.com/fedora-infra/fedora-packages/commit/b301a677ad1d7dca1bc4745dc46167cb58a4fb54>`_
+- gitbranchname -> branchname. `3f659e20b <https://github.com/fedora-infra/fedora-packages/commit/3f659e20bd5b960c5d775bef49fb47adf6227279>`_
+
+2.0.16
+------
+
+- A blossom of hatred. `9f00d1bf8 <https://github.com/fedora-infra/fedora-packages/commit/9f00d1bf84aa152863d370c1a1edef5c347335de>`_
+- Add a configurable timestamp to this tool. `ce7efe680 <https://github.com/fedora-infra/fedora-packages/commit/ce7efe680dd536d36f0e9594350c67b9aad084d9>`_
+- Merge pull request #78 from fedora-infra/feature/configurable-timestamp `b8901cfb8 <https://github.com/fedora-infra/fedora-packages/commit/b8901cfb871479b4f872f9fccb096eff3d548a58>`_
+- Remove the relationships tab from the UI. `a9893b61d <https://github.com/fedora-infra/fedora-packages/commit/a9893b61d9fbac3c726a7dd048b05063b8c4f067>`_
+- Merge pull request #84 from fedora-infra/feature/all-good-things `1506dc97e <https://github.com/fedora-infra/fedora-packages/commit/1506dc97efb1018970c617ab67cac639d627f2c0>`_
+- :fire: Do the pkgdb2 thing :fire: `732be9a8a <https://github.com/fedora-infra/fedora-packages/commit/732be9a8aedaf7721da569f5b52d6abc149ea5b1>`_
+- Also, require this lib. `12da36cbd <https://github.com/fedora-infra/fedora-packages/commit/12da36cbdb0978a5b74a5d4112dc6c8d4dece99f>`_
+- Switch to pkgdb2 api in the indexer. `a06c97e0d <https://github.com/fedora-infra/fedora-packages/commit/a06c97e0d23c6324875e1d8464490a686b80614f>`_
+- Merge pull request #85 from fedora-infra/feature/pkgdb2 `b301a677a <https://github.com/fedora-infra/fedora-packages/commit/b301a677ad1d7dca1bc4745dc46167cb58a4fb54>`_
+- gitbranchname -> branchname. `3f659e20b <https://github.com/fedora-infra/fedora-packages/commit/3f659e20bd5b960c5d775bef49fb47adf6227279>`_
+
+2.0.15
+------
+
+- Bump spec. `61577ecfb <https://github.com/fedora-infra/fedora-packages/commit/61577ecfb86934d6377e08ca072ec19162e4aead>`_
+- Defer yumlock creation until runtime. `1f354589b <https://github.com/fedora-infra/fedora-packages/commit/1f354589ba153a67eb344557b81b654059201894>`_
+- Quick release. `3ba73f9d9 <https://github.com/fedora-infra/fedora-packages/commit/3ba73f9d9000ff8c25076fad475fec39d8e5c772>`_
+- Merge pull request #73 from fedora-infra/feature/adjusted-yumlock `15b74ecf7 <https://github.com/fedora-infra/fedora-packages/commit/15b74ecf7d2bca110ab10b9e7ecda6285656e3e9>`_
+- Log exceptions. `5aee21231 <https://github.com/fedora-infra/fedora-packages/commit/5aee212312ef870632e80cb157a2887c21cfece5>`_
+- Merge pull request #74 from fedora-infra/feature/log-exceptions-plz `5d2940c78 <https://github.com/fedora-infra/fedora-packages/commit/5d2940c78e51cd6b577b6df76e2d1c2a6436c53e>`_
+- Try to be smarter with our locking. `3213aa794 <https://github.com/fedora-infra/fedora-packages/commit/3213aa7941bbccb1e62e5d9791b95e04a86b75d2>`_
+- Remove the locking stuff. `d5ca72b13 <https://github.com/fedora-infra/fedora-packages/commit/d5ca72b133d09ed861f4746ed6f8ed7bdecd2ed2>`_
+- Merge pull request #75 from fedora-infra/feature/roll-that-locking-stuff-back `6c85d3a53 <https://github.com/fedora-infra/fedora-packages/commit/6c85d3a53271e543dde641611bd75e0f011ea066>`_
 
 2.0.14
 ------
