@@ -40,7 +40,7 @@ body {
 	width: 155px;
 	display: block;
 	text-indent: -9999px;
-	background:transparent url("http://fedoraproject.org/static/css/../images/fedora-logo.png") no-repeat scroll 0px 0px;
+	background:transparent url("//fedoraproject.org/static/css/../images/fedora-logo.png") no-repeat scroll 0px 0px;
 }
 #header-search h1 a {
  	font-family: "ComfortaaRegular", "sans-serif" !important;
