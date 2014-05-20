@@ -4,8 +4,8 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.16
-Release:        2%{?dist}
+Version:        2.0.17
+Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -160,6 +160,9 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 
 %changelog
+* Tue May 20 2014 Ralph Bean <rbean@redhat.com> - 2.0.17-1
+- Further pkgdb2 updates.
+
 * Wed May 14 2014 Ralph Bean <rbean@redhat.com> - 2.0.16-2
 - Further pkgdb2 updates.
 
