@@ -32,7 +32,7 @@
   run: function (data) {
     var burl = moksha.get_page_base_url();
     var PROXY_URL = burl + 'proxy/fas/get_todo_list_page';
-    var FAS_URL = 'http://admin.fedoraproject.org/accounts/';
+    var FAS_URL = '//admin.fedoraproject.org/accounts/';
     var self = this;
     var hidden_parent = undefined;
 
