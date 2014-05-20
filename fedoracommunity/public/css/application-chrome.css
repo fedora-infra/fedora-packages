@@ -207,7 +207,7 @@ img {
   border-bottom: 1px solid #eee;
   padding: 0px;
   padding-bottom: 24px;
-  background: #FFFFFF url('http://fedoraproject.org/static/images/line.png') repeat-x scroll 0pt 100%;
+  background: #FFFFFF url('//fedoraproject.org/static/images/line.png') repeat-x scroll 0pt 100%;
 /* 22px because #content padding is 22px */
   margin-left: -22px;
   padding-left: 22px;
