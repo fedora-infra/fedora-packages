@@ -76,7 +76,7 @@ class PkgdbConnector(IConnector, ICall, ISearch, IQuery):
 
         table = {}
         pkgdb = pkgdb2client.PkgDB(self._base_url)
-        if eol:
+        if not eol:
             active = ['Active', 'Under Development']
             co = pkgdb.get_collections(clt_status=active)
         else:
