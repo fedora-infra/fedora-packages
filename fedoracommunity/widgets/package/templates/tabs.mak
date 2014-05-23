@@ -52,7 +52,11 @@
         </script>
     </div>
     <div id="tab_content_${w._uuid}">
+      % if w.widget:
         ${w.widget.display(args=w.args, kwds=w.kwds) | n }
+      % else:
+        <span class="error">Unable to render ${w.active_tab} tab.</span>
+      % endif
     <div>
   </div>
 <!-- end tabs -->
