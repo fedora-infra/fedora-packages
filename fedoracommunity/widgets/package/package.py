@@ -52,7 +52,11 @@ class TabWidget(twc.Widget):
         else:
             active_tab = self.default_tab.lower()
 
-        self.widget = moksha.common.utils.get_widget(self._expanded_tabs[active_tab]['widget_key'])
+        try:
+            self.widget = moksha.common.utils.get_widget(self._expanded_tabs[active_tab]['widget_key'])
+        except KeyError:
+            self.widget = None
+
         self.tabs = self._expanded_tabs
         self.active_tab = active_tab
 
