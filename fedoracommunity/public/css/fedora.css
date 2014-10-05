@@ -512,12 +512,12 @@ tr.patch-name:hover a {
 #bottom,
 #bottom ul li,
 #bottom ul li a {
-  color: #ccc;
+  color: #aaa;
   font-size: small;
 }
 
 #bottom ul li a {
-  color: #bbb !important;
+  color: #aaa !important;
 }
 
 /* Relationships */
