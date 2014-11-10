@@ -2,6 +2,8 @@ import tw2.core as twc
 import tg
 import requests
 
+from kitchen.text.converters import to_bytes
+
 from fedoracommunity.connectors.api import get_connector
 from fedoracommunity.widgets.grid import Grid
 
@@ -42,6 +44,11 @@ class Details(twc.Widget):
                     self.summary = subpkg['summary']
                     self.description = subpkg['description']
                     break
+
+        # Be careful of tw2's weak encoding handling. For unknown reasons some
+        # combination of it and mako are defaulting to ascii.
+        self.summary = to_bytes(self.summary, 'ascii')
+        self.description = to_bytes(self.description, 'ascii')
 
         self.package_info = result
 
