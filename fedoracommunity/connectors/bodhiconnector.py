@@ -601,7 +601,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 queries.append(tag)
                 release_tag[tag] = r
             else:
-                if tag.endswith('epel'):
+                if 'epel' in tag:
                     stable_tag = tag
                     testing_tag = tag + '-testing'
                 else:
