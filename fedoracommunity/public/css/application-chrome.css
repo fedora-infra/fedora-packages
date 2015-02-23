@@ -1650,6 +1650,7 @@ em.note {
 
 #package-info-bar .build div {
   font-size: 11pt;
+  word-wrap: break-word;
 }
 
 #package-info-bar .package-owner {
