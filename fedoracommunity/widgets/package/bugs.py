@@ -12,7 +12,6 @@ class BugStatsWidget(twc.Widget):
     product = twc.Param(default='Fedora')
     version = twc.Param(default='rawhide')
     epel_version = twc.Param(default='el6')
-    package = twc.Param(default=None)
     num_open = twc.Param(default='-')
     num_new_this_week = twc.Param(default='')
     num_closed_this_week = twc.Param(default='')
@@ -54,7 +53,6 @@ class BugsGrid(Grid):
     resource = 'bugzilla'
     resource_path = 'query_bugs'
     release_table = twc.Param()
-    package = twc.Param()
     template = "mako:fedoracommunity.widgets.package.templates.bugs_table_widget"
 
     def prepare(self):
@@ -94,7 +92,6 @@ class BugsWidget(twc.Widget):
     bug_stats = BugStatsWidget
     bug_grid = BugsGrid
     kwds = twc.Param()
-    package = twc.Param()
     template = "mako:fedoracommunity.widgets.package.templates.bugs"
 
     def prepare(self):
