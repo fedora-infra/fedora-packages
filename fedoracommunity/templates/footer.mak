@@ -18,7 +18,6 @@
         </div>
 
         % if 'fedmenu.url' in config:
-        <script src="${config['fedmenu.url']}/js/fedora-libravatar.js"></script>
         <script src="${config['fedmenu.url']}/js/fedmenu.js"></script>
         <script>
           fedmenu({
