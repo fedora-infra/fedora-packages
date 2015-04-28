@@ -40,6 +40,6 @@
            ${tmpl_context.widget.display(**options) | n}
         </div>
     </div>
-    ${footer()}
+    ${footer(options['kwds']['package_name'])}
 </body>
 </html>
