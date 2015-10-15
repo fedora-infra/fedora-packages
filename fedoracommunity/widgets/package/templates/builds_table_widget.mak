@@ -35,8 +35,7 @@
                           <div id="menu_${'${build_id}'}" class="menu" panel="menu_panel_${'${build_id}'}">
                             <span class="package-name">
                                 <% icon = tg.url("/images/16_build_state_${state}.png") %>
-                                <img src="${icon}"></img>
-                                <a href="/package_maintenance/tools/builds?package=${'${package_name}'}" moksha_url="dynamic">${'${package_name}'} </a>
+                                <img src="${icon}"></img>&nbsp;${'${package_name}'}
                             </span>
                             <br/>${'${version}'}-${'${release}'}&nbsp;
                             <div id="menu_panel_${'${build_id}'}" class="menu_panel" >
