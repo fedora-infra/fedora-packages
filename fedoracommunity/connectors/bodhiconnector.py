@@ -18,7 +18,7 @@ import logging
 
 from paste.deploy.converters import asbool
 from tg import config
-from fedora.client import ProxyClient
+from fedora.client import BodhiClient
 from datetime import datetime, timedelta
 from webhelpers.html import HTML
 
@@ -40,16 +40,15 @@ class BodhiConnector(IConnector, ICall, IQuery):
         super(BodhiConnector, self).__init__(environ, request)
         self._prod_url = config.get(
             'fedoracommunity.connector.bodhi.produrl',
-            'https://admin.fedoraproject.org/updates')
-        self._bodhi_client = ProxyClient(self._base_url,
-                                         session_as_cookie=False,
+            'https://bodhi.fedoraproject.org')
+        self._bodhi_client = BodhiClient(self._base_url,
                                          insecure=self._insecure)
 
     # IConnector
     @classmethod
     def register(cls):
         cls._base_url = config.get('fedoracommunity.connector.bodhi.baseurl',
-                                   'https://admin.fedoraproject.org/updates')
+                                   'https://bodhi.fedoraproject.org/')
 
         check_certs = asbool(config.get('fedora.clients.check_certs', True))
         cls._insecure = not check_certs
@@ -57,28 +56,19 @@ class BodhiConnector(IConnector, ICall, IQuery):
         cls.register_query_updates()
         cls.register_query_active_releases()
 
-    def request_data(self, resource_path, params, _cookies):
-        auth_params = dict()
-
-        fas_info = self._environ.get('FAS_LOGIN_INFO')
-        if fas_info:
-            session_id = fas_info[0]
-            auth_params = {'session_id': session_id}
-
-        return self._bodhi_client.send_request(resource_path,
-                                               req_params=params,
-                                               auth_params=auth_params)
+    def request_data(self, path, params):
+        return self._bodhi_client.send_request(path, auth=False, params=params)
 
     def introspect(self):
         # FIXME: return introspection data
         return None
 
     #ICall
-    def call(self, resource_path, params, _cookies=None):
+    def call(self, resource_path, params):
         log.debug('BodhiConnector.call(%s)' % locals())
         # proxy client only returns structured data so we can pass
         # this off to request_data but we should fix that in ProxyClient
-        return self.request_data(resource_path, params, _cookies)
+        return self.request_data(resource_path, params)
 
     #IQuery
     @classmethod
@@ -350,8 +340,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
         details = ''
         if update['status'] == 'stable':
             if update.get('updateid'):
-                details += HTML.tag('a', c=update['updateid'], href='%s/%s' % (
-                                    self._prod_url, update['updateid']))
+                details += HTML.tag('a', c=update['updateid'], href='%s/updates/%s' % (
+                                    self._prod_url, update['alias']))
             if update.get('date_pushed'):
                 details += HTML.tag('br') + update['date_pushed']
             else:
@@ -360,8 +350,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
             details += 'Pending push to %s' % update['request']
             details += HTML.tag('br')
             details += HTML.tag('a', c="View update details >",
-                                href="%s/%s" % (self._prod_url,
-                                                update['title']))
+                                href="%s/updates/%s" % (self._prod_url,
+                                                update['alias']))
         elif update['status'] == 'obsolete':
             for comment in update['comments']:
                 if comment['author'] == 'bodhi':
@@ -369,8 +359,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
                                                   'obsoleted by '):
                         details += \
                             'Obsoleted by %s' % HTML.tag(
-                                'a', href='%s/%s' % (
-                                    self._prod_url, update['title']),
+                                'a', href='%s/updates/%s' % (
+                                    self._prod_url, update['alias']),
                                 c=comment['text'].split()[-1])
         return details
 
@@ -536,8 +526,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
                 details += HTML.tag('br')
                 details += HTML.tag('a', c="View update details >",
-                                    href="%s/%s" % (self._prod_url,
-                                                    build['update']['title']))
+                                    href="%s/updates/%s" % (self._prod_url,
+                                                    build['update']['alias']))
             else:
                 details = HTML.tag('a', c='Push to updates >',
                                    href='%s/new?builds.text=%s' % (
@@ -644,7 +634,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         nvr = parse_build(release['nvr'])
                         row['testing_version'] = HTML.tag(
                             'a', c='%(version)s-%(release)s' % nvr,
-                            href='%s/%s' % (self._prod_url, nvr['nvr']))
+                            href='%s/updates/%s' % (self._prod_url, nvr['nvr']))
                         testing_builds.append(release['nvr'])
                         testing_builds_row[release['nvr']] = row
                     else:
@@ -654,43 +644,48 @@ class BodhiConnector(IConnector, ICall, IQuery):
                             row['stable_version'] = HTML.tag(
                                 'a',
                                 c='%(version)s-%(release)s' % nvr,
-                                href='%s/%s' % (self._prod_url, nvr['nvr']))
+                                href='%s/updates/%s' % (self._prod_url, nvr['nvr']))
                         else:
                             row['stable_version'] = \
                                 '%(version)s-%(release)s' % nvr
 
         # If there are updates in testing, then query bodhi with a single call
         if testing_builds:
-            updates = self.call('get_updates_from_builds', {
+            data = self.call('updates', {
                 'builds': ' '.join(testing_builds)
-                })
-            if updates[1]:
-                for build in updates[1]:
-                    if build == 'tg_flash':
-                        continue
-                    up = updates[1][build]
-                    if up.karma > 1:
-                        up.karma_icon = 'good'
-                    elif up.karma < 0:
-                        up.karma_icon = 'bad'
-                    else:
-                        up.karma_icon = 'meh'
-                    karma_ico_16 = '/images/16_karma-%s.png' % up.karma_icon
-                    karma_icon_url = \
-                        self._request.environ.get('SCRIPT_NAME', '') + \
-                        karma_ico_16
-                    karma = 'karma_%s' % up.karma_icon
-                    row = testing_builds_row[build]
-                    row['testing_version'] += " " + HTML.tag(
-                        'div',
+            })
+            updates = data['updates']
+            for up in updates:
+
+                for build in up['builds']:
+                    if build['nvr'] in testing_builds:
+                        break
+                else:
+                    continue
+                build = build['nvr']
+
+                if up.karma > 1:
+                    up.karma_icon = 'good'
+                elif up.karma < 0:
+                    up.karma_icon = 'bad'
+                else:
+                    up.karma_icon = 'meh'
+                karma_ico_16 = '/images/16_karma-%s.png' % up.karma_icon
+                karma_icon_url = \
+                    self._request.environ.get('SCRIPT_NAME', '') + \
+                    karma_ico_16
+                karma = 'karma_%s' % up.karma_icon
+                row = testing_builds_row[build]
+                row['testing_version'] += " " + HTML.tag(
+                    'div',
+                    c=HTML.tag(
+                        'a', href="%s/updates/%s" % (
+                            self._prod_url, up.alias),
                         c=HTML.tag(
-                            'a', href="%s/%s" % (
-                                self._prod_url, up.title),
-                            c=HTML.tag(
-                                'img', src=karma_icon_url) + HTML.tag(
-                                'span',
-                                c='%s karma' % up.karma)),
-                            **{'class': '%s' % karma})
+                            'img', src=karma_icon_url) + HTML.tag(
+                            'span',
+                            c='%s karma' % up.karma)),
+                        **{'class': '%s' % karma})
 
         return (len(releases), releases)
 
