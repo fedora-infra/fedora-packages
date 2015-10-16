@@ -45,11 +45,6 @@ class Details(twc.Widget):
                     self.description = subpkg['description']
                     break
 
-        # Be careful of tw2's weak encoding handling. For unknown reasons some
-        # combination of it and mako are defaulting to ascii.
-        self.summary = to_bytes(self.summary, 'ascii')
-        self.description = to_bytes(self.description, 'ascii')
-
         self.package_info = result
 
     @property
