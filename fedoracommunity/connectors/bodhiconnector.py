@@ -22,6 +22,8 @@ from fedora.client import BodhiClient
 from datetime import datetime, timedelta
 from webhelpers.html import HTML
 
+import markdown
+
 from fedoracommunity.connectors.api import get_connector
 from fedoracommunity.connectors.api import \
     IConnector, ICall, IQuery, ParamFilter
@@ -192,7 +194,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         group_updates = filters.get('group_updates', True)
 
         params.update(filters)
-        params['tg_paginate_no'] = int(start_row/rows_per_page) + 1
+        params['page'] = int(start_row/rows_per_page) + 1
 
         # If we're grouping updates, ask for twice as much.  This is so we can
         # handle the case where there are two updates for each package, one for
@@ -200,19 +202,25 @@ class BodhiConnector(IConnector, ICall, IQuery):
         # for, but this allows us to do *much* more efficient database calls on
         # the server.
         if group_updates:
-            params['tg_paginate_limit'] = rows_per_page * 2
+            params['rows_per_page'] = rows_per_page * 2
         else:
-            params['tg_paginate_limit'] = rows_per_page
+            params['rows_per_page'] = rows_per_page
 
-        results = self._bodhi_client.send_request('list', req_params=params)
+        # Convert bodhi1 query format to bodhi2.
+        if 'package' in params:
+            params['packages'] = params.pop('package')
+        if 'release' in params:
+            params['releases'] = params.pop('release')
 
-        total_count = results[1]['num_items']
+        results = self._bodhi_client.send_request('updates', auth=False, params=params)
+
+        total_count = results['total']
 
         if group_updates:
-            updates_list = self._group_updates(results[1]['updates'],
+            updates_list = self._group_updates(results['updates'],
                                                num_packages=rows_per_page)
         else:
-            updates_list = results[1]['updates']
+            updates_list = results['updates']
 
         for up in updates_list:
             versions = []
@@ -354,14 +362,13 @@ class BodhiConnector(IConnector, ICall, IQuery):
                                                 update['alias']))
         elif update['status'] == 'obsolete':
             for comment in update['comments']:
-                if comment['author'] == 'bodhi':
+                if comment['user']['name'] == 'bodhi':
                     if comment['text'].startswith('This update has been '
                                                   'obsoleted by '):
-                        details += \
-                            'Obsoleted by %s' % HTML.tag(
-                                'a', href='%s/updates/%s' % (
-                                    self._prod_url, update['alias']),
-                                c=comment['text'].split()[-1])
+                        details += markdown.markdown(
+                            comment['text'],
+                            safe_mode="replace",
+                            html_replacement_text="--RAW HTML NOT ALLOWED--")
         return details
 
     def _get_update_actions(self, update):
@@ -393,7 +400,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
         for update in updates:
             for build in update['builds']:
-                pkg = build['package']['name']
+                pkg = build['nvr'].rsplit('-', 2)[0]
                 if pkg not in packages:
                     if num_packages and i >= num_packages:
                         done = True

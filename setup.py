@@ -66,6 +66,7 @@ setup(
         "dogpile.cache",
         "retask",
         "python-memcached",
+        "markdown",
         #"PyOpenSSL",
         #"SQLAlchemy>=0.5",
         #"xappy",

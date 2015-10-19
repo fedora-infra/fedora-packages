@@ -21,6 +21,7 @@
                 <option value="pending">Pending</option>
                 <option value="obsolete">Obsolete</option>
             </select>
+            <input type="hidden" name="group_updates" value="False"/>
           </div>
         </form>
     </div>

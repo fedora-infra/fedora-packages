@@ -37,6 +37,7 @@ BuildRequires: python-dogpile-core > 0.4.0
 BuildRequires: python-dogpile-cache > 0.4.1
 BuildRequires: python-memcached
 BuildRequires: python-retask
+BuildRequires: python-markdown
 BuildRequires: python-daemon
 
 %if 0%{?el6} || 0%{?el5}
@@ -70,6 +71,7 @@ Requires: python-dogpile-cache > 0.4.1
 Requires: python-memcached
 Requires: python-retask
 Requires: packagedb-cli
+Requires: python-markdown
 # For spectool
 Requires: rpmdevtools
 Requires: python-daemon
