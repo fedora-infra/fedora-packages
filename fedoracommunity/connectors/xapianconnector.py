@@ -106,6 +106,8 @@ class XapianConnector(IConnector, ICall, IQuery):
             t.strip() for t in search_string.split(' ') if t.strip()
         ]
 
+        search_string = urllib.unquote_plus(search_string)
+
         search_string = utils.filter_search_string(search_string)
         phrase = '"%s"' % search_string
 
