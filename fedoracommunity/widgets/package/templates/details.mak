@@ -62,7 +62,7 @@ $(document).ready(function() {
           if (msg.link != null) {
             line = line + '</a>';
           }
-          line = line + '<span class="datetime">' + msg['human_time'] + '</span>';
+          line = line + ' <span class="datetime">' + msg['human_time'] + '</span>';
           line = line + '</span>';
           $('.history-cards').append(line + '<hr/>');
       });
