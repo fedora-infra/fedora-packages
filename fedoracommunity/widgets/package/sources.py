@@ -75,7 +75,7 @@ class ReleaseFilter(twc.Widget):
 
 class Spec(twc.Widget):
     kwds = twc.Param(default=None)
-    text = twc.Param('The text of the specfile')
+    text = twc.Variable('The text of the specfile')
     template = 'mako:fedoracommunity.widgets.package.templates.package_spec'
     releases = ReleaseFilter
 
