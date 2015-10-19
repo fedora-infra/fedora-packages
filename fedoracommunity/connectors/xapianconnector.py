@@ -72,6 +72,9 @@ class XapianConnector(IConnector, ICall, IQuery):
         return regex.sub(r'<span class="match">\1</span>', string)
 
     def _highlight_matches(self, row_data, term):
+
+        term = [re.escape(item) for item in term]
+
         # make link from name before we potentially rewrite it
         # if we haven't already
         if 'link' not in row_data:
@@ -102,11 +105,11 @@ class XapianConnector(IConnector, ICall, IQuery):
         if not search_string:
             return (0, [])
 
+        search_string = urllib.unquote_plus(search_string)
+
         unfiltered_search_terms = [
             t.strip() for t in search_string.split(' ') if t.strip()
         ]
-
-        search_string = urllib.unquote_plus(search_string)
 
         search_string = utils.filter_search_string(search_string)
         phrase = '"%s"' % search_string
