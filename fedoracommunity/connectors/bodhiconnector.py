@@ -366,9 +366,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                     if comment['text'].startswith('This update has been '
                                                   'obsoleted by '):
                         details += markdown.markdown(
-                            comment['text'],
-                            safe_mode="replace",
-                            html_replacement_text="--RAW HTML NOT ALLOWED--")
+                            comment['text'], safe_mode="replace")
         return details
 
     def _get_update_actions(self, update):
