@@ -61,7 +61,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
     @property
     def _bugzilla(self):
-        return Bugzilla(url=self._base_url, cookiefile=self._cookiefile)
+        return Bugzilla(url=self._base_url, cookiefile=None, tokenfile=None)
 
     # IConnector
     @classmethod
@@ -69,9 +69,6 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         cls._base_url = config.get(
             'fedoracommunity.connector.bugzilla.baseurl',
             'https://bugzilla.redhat.com/xmlrpc.cgi')
-        cls._cookiefile = config.get(
-            'fedoracommunity.connector.bugzilla.cookiefile',
-            -1)
 
         cls.register_query_bugs()
 
