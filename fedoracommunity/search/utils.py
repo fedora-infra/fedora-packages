@@ -14,8 +14,8 @@ def filter_search_string (string):
        Reserved Characters:
            +, -, ', "
     """
+
     string = string.lower()
-    string = urllib.unquote_plus(string)
     for key, value in words_translation.items():
         string = string.replace(key, value)
 

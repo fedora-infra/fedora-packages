@@ -21,13 +21,54 @@
     </div>
     % endif
     <div class="history-block">
-        <h3>History</h3>
+        <h3>Recent History</h3>
         <div class="history-cards">
-        <%
-            result = w.history
-        %>
-        <div> ${result['text'] | n} </div>
+          <div class="overlay"> <div class="message"></div> </div>
         </div>
     </div>
 </div>
+<script>
+$(document).ready(function() {
+    var url = 'https://apps.fedoraproject.org/datagrepper/raw';
+    var params = {
+      'order': 'desc',
+      'meta': ['subtitle', 'link', 'icon', 'secondary_icon'],
+      'package': "${w.package_info['name']}",
+      'grouped': true,
+      'not_topic': [
+        'org.fedoraproject.prod.buildsys.rpm.sign',
+        'org.fedoraproject.prod.buildsys.tag',
+        'org.fedoraproject.prod.buildsys.untag',
+        'org.fedoraproject.prod.buildsys.package.list.change',
+      ],
+      'rows_per_page': 20,
+    };
+    url = url + '?' + $.param(params, traditional=true);
+    var callback = function(whatever) {
+      $.each(whatever.raw_messages, function(i, msg) {
+          var line = '<span class="message-card">';
+          if (msg.link != null) {
+            line = line + '<a href="' + msg.link + '">';
+          }
+          if (msg.icon != null) {
+            line = line + '<img src="' + msg.icon + '"/>'
+          }
+          if (msg.secondary_icon != null) {
+            line = line + '<img src="' + msg.secondary_icon + '"/>'
+          }
+          if (msg.subtitle != null) {
+            line = line + ' ' + msg.subtitle;
+          }
+          if (msg.link != null) {
+            line = line + '</a>';
+          }
+          line = line + ' <span class="datetime">' + msg['human_time'] + '</span>';
+          line = line + '</span>';
+          $('.history-cards').append(line + '<hr/>');
+      });
+    }
+    var overlay = $('.history-cards .overlay');
+    moksha.ajax_load(url, {}, callback, overlay, 'jsonp');
+});
+</script>
 

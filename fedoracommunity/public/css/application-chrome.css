@@ -1650,6 +1650,7 @@ em.note {
 
 #package-info-bar .build div {
   font-size: 11pt;
+  word-wrap: break-word;
 }
 
 #package-info-bar .package-owner {
@@ -1836,21 +1837,25 @@ table#active-releases td.release {
   min-height: 52px;
 }
 
-.history-cards img {
+
+.history-cards .message-card img {
   height: 25px;
   width: 25px;
   margin: 2px auto;
 }
+
 
 .history-cards p {
   display: inline;
 }
 
 .history-cards .datetime {
-    margin-left: 450px;
     color: #999;
     font-size: 13px;
     margin-top:-20px;
     margin-bottom: 5px;
 }
 
+.pull-right {
+    float: right;
+}

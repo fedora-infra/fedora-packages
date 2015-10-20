@@ -2,6 +2,8 @@ import tw2.core as twc
 import tg
 import requests
 
+from kitchen.text.converters import to_bytes
+
 from fedoracommunity.connectors.api import get_connector
 from fedoracommunity.widgets.grid import Grid
 
@@ -44,25 +46,6 @@ class Details(twc.Widget):
                     break
 
         self.package_info = result
-
-    @property
-    def history(self):
-        url = tg.config.get('datagrepper_url')
-        package = str(self.kwds['package_name'])
-        headers = dict(accept='text/html')
-        params = [
-            ('order', 'desc'),
-            ('rows_per_page', 5),
-            ('package', package),
-            ('chrome', 'false'),
-            ('not_topic', 'org.fedoraproject.prod.buildsys.tag'),
-            ('not_topic', 'org.fedoraproject.prod.buildsys.untag'),
-        ]
-        try:
-            response = requests.get(url, headers=headers, params=params)
-            return {'text': response.text}
-        except:
-            return {'text': '<p>Could not connect to datagrepper</p>'}
 
     def __repr__(self):
         return "<Details %s>" % self.kwds

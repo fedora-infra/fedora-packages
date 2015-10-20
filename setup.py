@@ -51,7 +51,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='2.0.17',
+    version='2.0.20',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',
@@ -66,6 +66,7 @@ setup(
         "dogpile.cache",
         "retask",
         "python-memcached",
+        "markdown",
         #"PyOpenSSL",
         #"SQLAlchemy>=0.5",
         #"xappy",

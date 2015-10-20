@@ -1,5 +1,6 @@
 import tw2.core as twc
 import datetime
+import urllib
 
 from fedoracommunity.widgets.grid import Grid
 from fedoracommunity.connectors.api import get_connector
@@ -12,7 +13,6 @@ class BugStatsWidget(twc.Widget):
     product = twc.Param(default='Fedora')
     version = twc.Param(default='rawhide')
     epel_version = twc.Param(default='el6')
-    package = twc.Param(default=None)
     num_open = twc.Param(default='-')
     num_new_this_week = twc.Param(default='')
     num_closed_this_week = twc.Param(default='')
@@ -27,22 +27,17 @@ class BugStatsWidget(twc.Widget):
 
     def prepare(self):
         super(BugStatsWidget, self).prepare()
-        def to_query_string(query):
-            return "&".join([
-                "{key}={value}".format(key=key, value=value)
-                for key, value in query.items()
-            ])
-        self.base_query_string = to_query_string({
+        self.base_query_string = urllib.urlencode({
             "query_format": "advanced",
             "product": self.product,
             "component": self.package,
         })
-        self.open_query_string = to_query_string({
+        self.open_query_string = urllib.urlencode({
             "chfieldto": "Now",
             "chfield": "[Bug creation]",
             "chfieldfrom": datetime.datetime.now().isoformat().split('T')[0],
         })
-        self.closed_query_string = to_query_string({
+        self.closed_query_string = urllib.urlencode({
             "chfieldto": "Now",
             "chfield": "bug_status",
             "chfieldvalue": "CLOSED",
@@ -54,7 +49,6 @@ class BugsGrid(Grid):
     resource = 'bugzilla'
     resource_path = 'query_bugs'
     release_table = twc.Param()
-    package = twc.Param()
     template = "mako:fedoracommunity.widgets.package.templates.bugs_table_widget"
 
     def prepare(self):
@@ -94,7 +88,6 @@ class BugsWidget(twc.Widget):
     bug_stats = BugStatsWidget
     bug_grid = BugsGrid
     kwds = twc.Param()
-    package = twc.Param()
     template = "mako:fedoracommunity.widgets.package.templates.bugs"
 
     def prepare(self):

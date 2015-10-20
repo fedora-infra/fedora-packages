@@ -147,7 +147,7 @@ class FCommConnectorMiddleware(object):
         dispatch_params = dict()
 
         if len(path) > 0:
-            p = urllib.unquote_plus(path[-1].lstrip())
+            p = urllib.unquote(path[-1].lstrip())
             if p.startswith('{'):
                 dp = json.loads(p)
 

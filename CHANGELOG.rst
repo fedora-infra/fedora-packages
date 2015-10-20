@@ -1,5 +1,104 @@
-Changelog
-=========
+
+2.0.20
+------
+
+Pull Requests
+
+- (@lmacken)        #94, Gracefully handle requests for invalid tabs
+  https://github.com/fedora-infra/fedora-packages/pull/94
+- (@relrod)         #115, darken footer text slightly, fix #114
+  https://github.com/fedora-infra/fedora-packages/pull/115
+- (@ralphbean)      #121, Force stuff down to ascii in the overview widget.
+  https://github.com/fedora-infra/fedora-packages/pull/121
+- (@ralphbean)      #123, Get epel7 releases working.
+  https://github.com/fedora-infra/fedora-packages/pull/123
+- (@Fale)           #120, Fix broken urls
+  https://github.com/fedora-infra/fedora-packages/pull/120
+- (@jasontibbitts)  #137, Wrap "LATEST BUILD" field.
+  https://github.com/fedora-infra/fedora-packages/pull/137
+- (@ralphbean)      #148, Add fedmenu.
+  https://github.com/fedora-infra/fedora-packages/pull/148
+- (@ralphbean)      #149, Fix bugzilla + tw2.
+  https://github.com/fedora-infra/fedora-packages/pull/149
+- (@genodeftest)    #165, Use HTTPS where possible
+  https://github.com/fedora-infra/fedora-packages/pull/165
+- (@pypingou)       #166, Use the same approach as elsewhere to include the bodhi image
+  https://github.com/fedora-infra/fedora-packages/pull/166
+- (@ralphbean)      #179, Get fedora-packages working with bodhi2.
+  https://github.com/fedora-infra/fedora-packages/pull/179
+- (@ralphbean)      #180, Remove broken link from the builds tab.
+  https://github.com/fedora-infra/fedora-packages/pull/180
+- (@ralphbean)      #182, Fix koji search links.
+  https://github.com/fedora-infra/fedora-packages/pull/182
+- (@ralphbean)      #181, Fix the spec widget.
+  https://github.com/fedora-infra/fedora-packages/pull/181
+- (@ralphbean)      #183, Move datagrepper query to the client side.
+  https://github.com/fedora-infra/fedora-packages/pull/183
+- (@ralphbean)      #184, Lots of quoting/escapery fixes.
+  https://github.com/fedora-infra/fedora-packages/pull/184
+- (@ralphbean)      #185, Handle more bodhi2 cases.
+  https://github.com/fedora-infra/fedora-packages/pull/185
+- (@ralphbean)      #186, Tell python-bugzilla that we don't want to cache cookies or tokens.
+  https://github.com/fedora-infra/fedora-packages/pull/186
+- (@ralphbean)      #187, Add a search field to the bugs table.
+  https://github.com/fedora-infra/fedora-packages/pull/187
+
+Commits
+
+- af09bf509 Gracefully handle requests for invalid tabs
+  https://github.com/fedora-infra/fedora-packages/commit/af09bf509
+- 9067ca35e darken footer test slightly, fix #114
+  https://github.com/fedora-infra/fedora-packages/commit/9067ca35e
+- 2635e08d0 Fix broken urls
+  https://github.com/fedora-infra/fedora-packages/commit/2635e08d0
+- 7e03df8c1 Force stuff down to ascii in the overview widget.
+  https://github.com/fedora-infra/fedora-packages/commit/7e03df8c1
+- 8c0ba0b98 Get epel7 releases working.
+  https://github.com/fedora-infra/fedora-packages/commit/8c0ba0b98
+- 564ee475f Wrap "LATEST BUILD" field.
+  https://github.com/fedora-infra/fedora-packages/commit/564ee475f
+- db0cb2852 Add fedmenu.
+  https://github.com/fedora-infra/fedora-packages/commit/db0cb2852
+- ef9e6743f Fix bugzilla + tw2.
+  https://github.com/fedora-infra/fedora-packages/commit/ef9e6743f
+- e3a95d63f Remove libravatar.
+  https://github.com/fedora-infra/fedora-packages/commit/e3a95d63f
+- ddb935e4c Use HTTPS where possible
+  https://github.com/fedora-infra/fedora-packages/commit/ddb935e4c
+- 8ae822bc2 Use the same approach as elsewhere to include the bodhi image
+  https://github.com/fedora-infra/fedora-packages/commit/8ae822bc2
+- 1cf29d4c3 Fix busted change from #166.
+  https://github.com/fedora-infra/fedora-packages/commit/1cf29d4c3
+- aa237e8ce Get fedora-packages working with bodhi2.
+  https://github.com/fedora-infra/fedora-packages/commit/aa237e8ce
+- bcc145b07 Remove broken link from the builds tab.
+  https://github.com/fedora-infra/fedora-packages/commit/bcc145b07
+- 9981a9880 Remove ascii encoding bit now that tw2.core uses render_unicode.
+  https://github.com/fedora-infra/fedora-packages/commit/9981a9880
+- 4a962f34f Fix the spec widget.
+  https://github.com/fedora-infra/fedora-packages/commit/4a962f34f
+- b9b69dc5c Fix koji search links.
+  https://github.com/fedora-infra/fedora-packages/commit/b9b69dc5c
+- 0d13f4b6a Move datagrepper query to the client side.
+  https://github.com/fedora-infra/fedora-packages/commit/0d13f4b6a
+- d6e157fb4 Add a space.
+  https://github.com/fedora-infra/fedora-packages/commit/d6e157fb4
+- 4d1d15e74 Imports.
+  https://github.com/fedora-infra/fedora-packages/commit/4d1d15e74
+- 84ba8633b Move unquoting out of the search filter util and into the search connector.
+  https://github.com/fedora-infra/fedora-packages/commit/84ba8633b
+- fcf3ecd9f Move this to the right place, but escape before applying regexes.
+  https://github.com/fedora-infra/fedora-packages/commit/fcf3ecd9f
+- 9c8b77189 Don't unquote so aggressively in the connector middleware.
+  https://github.com/fedora-infra/fedora-packages/commit/9c8b77189
+- ccb306cea Handle more bodhi2 cases.
+  https://github.com/fedora-infra/fedora-packages/commit/ccb306cea
+- 218e5b4bd Tell python-bugzilla that we don't want to cache cookies or tokens.
+  https://github.com/fedora-infra/fedora-packages/commit/218e5b4bd
+- ba3c82e10 Add a search field to the bugs table.
+  https://github.com/fedora-infra/fedora-packages/commit/ba3c82e10
+- 7fe64a9c9 Remove changelog header.
+  https://github.com/fedora-infra/fedora-packages/commit/7fe64a9c9
 
 2.0.17
 ------
