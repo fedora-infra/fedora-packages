@@ -1856,3 +1856,6 @@ table#active-releases td.release {
     margin-bottom: 5px;
 }
 
+.pull-right {
+    float: right;
+}

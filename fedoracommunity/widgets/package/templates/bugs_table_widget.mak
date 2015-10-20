@@ -12,6 +12,22 @@
 
             return results.html();
         }
+
+        $(document).ready(function() {
+          $("#bug_search").keypress(function(e) {
+            if (e.which == 13) {
+              window.location = 'https://bugzilla.redhat.com/buglist.cgi?' + $.param({
+                bug_status: ['NEW', 'ASSIGNED', 'REOPENED'],
+                short_desc: $(this).val(),
+                short_desc_type: 'allwords',
+                component: '${w.package}',
+                product: ['Fedora', 'Fedora EPEL'],
+                query_format: 'advanced',
+              }, traditional=true);
+              return false;
+            }
+          });
+        });
     </script>
     <div id='grid-controls'>
     <form>
@@ -23,6 +39,11 @@
                     <option value="${rel['value']}">${rel['label']}</option>
                 % endfor
             </select>
+
+            <span class="pull-right">
+                <label for="version">Search:</label>
+                <input id="bug_search" type="text" name="search" placeholder="Bugzilla..."/>
+            </span>
         </div>
     </form>
     </div>
