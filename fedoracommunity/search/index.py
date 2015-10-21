@@ -17,6 +17,8 @@ from rpmcache import RPMCache
 from parsers import DesktopParser, SimpleSpecfileParser
 #from iconcache import IconCache
 
+import koji as kojilib
+
 http = requests.session()
 log = logging.getLogger()
 
@@ -29,7 +31,7 @@ except ImportError:
     import simplejson as json
 
 class Indexer(object):
-    def __init__(self, cache_path, yum_conf, tagger_url=None, pkgdb_url=None):
+    def __init__(self, cache_path, yum_conf, tagger_url=None, pkgdb_url=None, koji_url=None):
         self.cache_path = cache_path
         self.dbpath = join(cache_path, 'search')
         self.yum_cache_path = join(cache_path, 'yum-cache')
@@ -40,6 +42,8 @@ class Indexer(object):
         self.default_icon = 'package_128x128'
         self.tagger_url = tagger_url
         self.pkgdb_url = pkgdb_url or "https://admin.fedoraproject.org/pkgdb"
+        koji_url = koji_url or 'http://koji.fedoraproject.org/kojihub'
+        self.koji = kojilib.ClientSession(koji_url)
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
@@ -112,7 +116,7 @@ class Indexer(object):
                                 'description': base_package_summary,
                                 'devel_owner': owner,
                                 'icon': icon_name,
-                                'package': package,
+                                'package': None,
                                 'upstream_url': url,
                                 'src_package': src_package,
                                 'sub_pkgs': [{'name': sub_package_name,
@@ -126,26 +130,91 @@ class Indexer(object):
 
         name = package['name']
 
+        ###
         # Get some more detailed pkgdb info for this package (in rawhide)
+        ###
         url = self.pkgdb_url + "/api/package/" + name
         params = dict(branches='master')
         pkgdb_info = http.get(url, params=params).json()
-        import pprint; pprint.pprint(pkgdb_info)
         pkgdb_info = pkgdb_info['packages'][0]
 
-        import pprint; pprint.pprint(package)
-        package['icon'] = self.default_icon
         package['summary'] = pkgdb_info['package']['summary'] or \
             '(no summary in pkgdb)'
         package['description'] = pkgdb_info['package']['description'] or \
             '(no description in pkgdb)'
         package['devel_owner'] = pkgdb_info['point_of_contact']
         package['status'] = pkgdb_info['package']['status']
-        package['src_package'] = 'TODO .. fill this in from koji'
-        package['sub_pkgs'] = []  # TODO -- this too
-        package['package'] = 'wtf is this?'
+
+        ###
+        # Get some further detailed information from koji.
+        ###
+        package['koji_id'] = self.get_koji_id(name)
+        package['sub_pkgs'] = self.get_sub_packages(name, package['koji_id'])
+
+        # This is a "parent" reference.  the base packages always have "none"
+        # for it, but the sub packages have the name of their parent package in
+        # it.
+        package['package'] = None
+
+        # TODO -- get this icon for real
+        package['icon'] = self.default_icon
+
+        # Is this important?  I think maybe not..
+        # TODO - try deleting it and see if everything still works..
+        package['src_package'] = 'is this important?'
+
         return package
 
+    def get_koji_id(self, name):
+        glob_matches = self.koji.search(name, 'package', 'glob')
+        exact_matches = [r for r in glob_matches if r['name'] == name]
+
+        if not exact_matches:
+            log.warn("%r has never been built in koji...")
+            return None
+
+        if len(exact_matches) > 1:
+            log.warn("search for %r gave %r!" % (name, exact_matches))
+
+        return exact_matches[0]['id']
+
+    def get_sub_packages(self, name, koji_id):
+        if koji_id is None:
+            return []
+
+        builds = self.koji.listBuilds(
+            packageID=koji_id,
+            state=kojilib.BUILD_STATES['COMPLETE'],
+            queryOpts=dict(limit=1),
+        )
+
+        if not builds:
+            log.error("Unable to find a build for %r, %r" % (name, koji_id))
+            return []
+
+        build = builds[0]
+        children = self.koji.getTaskChildren(build['task_id'])
+        build_tasks = [c for c in children if c['method'] == 'buildArch']
+
+        if not build_tasks:
+            log.error("Unable to find buildArch task for %r" % build)
+            return []
+
+        build_task = build_tasks[0]
+        results = self.koji.getTaskResult(build_task['id'])
+        rpms = results['rpms']
+        rpms = [rpm.split('/')[-1] for rpm in rpms]
+        all_packages = ['-'.join(rpm.split('-')[:-2]) for rpm in rpms]
+        sub_packages = sorted([p for p in all_packages if p != name])
+
+        log.warn('TODO -- still need to get the summary and description of subpackages from somewhere...')
+        return [{
+            'name': sub_package,
+            'summary': 'wat',
+            'description': 'wat2',
+            'icon': 'wat3',
+            'package': name,
+        } for sub_package in sub_packages]
 
     def index_yum_packages(self):
         """
