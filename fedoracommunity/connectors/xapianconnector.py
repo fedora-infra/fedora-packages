@@ -34,8 +34,10 @@ class XapianConnector(IConnector, ICall, IQuery):
 
     def __init__(self, environ=None, request=None):
         super(XapianConnector, self).__init__(environ, request)
-        self._search_db = xapian.Database(config.get('fedoracommunity.connector.xapian.package-search.db', 'xapian/search'))
-        self._versionmap_db = xapian.Database(config.get('fedoracommunity.connector.xapian.versionmap.db', 'xapian/versionmap'))
+        self._search_db = xapian.Database(
+            config.get('fedoracommunity.connector.xapian.package-search.db', 'xapian/search'))
+        #self._versionmap_db = xapian.Database(
+        #    config.get('fedoracommunity.connector.xapian.versionmap.db', 'xapian/versionmap'))
 
     # IConnector
     @classmethod

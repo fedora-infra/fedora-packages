@@ -2,12 +2,12 @@
 Creates our search index and its field structure,
 and then populates it with packages from yum repositories
 """
+
+import copy
 import os
+import logging
 import requests
-import sys
-import shutil
 import urllib2
-import tempfile
 import xappy
 
 from os.path import join, dirname
@@ -15,8 +15,10 @@ from os.path import join, dirname
 from utils import filter_search_string
 from rpmcache import RPMCache
 from parsers import DesktopParser, SimpleSpecfileParser
-from iconcache import IconCache
+#from iconcache import IconCache
 
+http = requests.session()
+log = logging.getLogger()
 
 # how many time to retry a downed server
 MAX_RETRY = 10
@@ -41,53 +43,113 @@ class Indexer(object):
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
-        iconn = xappy.IndexerConnection(self.dbpath)
+        indexer = xappy.IndexerConnection(self.dbpath)
 
-        iconn.add_field_action('exact_name', xappy.FieldActions.INDEX_FREETEXT)
-        iconn.add_field_action('name', xappy.FieldActions.INDEX_FREETEXT,
+        indexer.add_field_action('exact_name', xappy.FieldActions.INDEX_FREETEXT)
+        indexer.add_field_action('name', xappy.FieldActions.INDEX_FREETEXT,
                                language='en', spell=True)
 
-        iconn.add_field_action('summary', xappy.FieldActions.INDEX_FREETEXT,
+        indexer.add_field_action('summary', xappy.FieldActions.INDEX_FREETEXT,
                                language='en')
 
-        iconn.add_field_action('description', xappy.FieldActions.INDEX_FREETEXT,
+        indexer.add_field_action('description', xappy.FieldActions.INDEX_FREETEXT,
                                language='en')
 
-        iconn.add_field_action('subpackages',xappy.FieldActions.INDEX_FREETEXT,
+        indexer.add_field_action('subpackages',xappy.FieldActions.INDEX_FREETEXT,
                                language='en', spell=True)
 
-        iconn.add_field_action('category_tags', xappy.FieldActions.INDEX_FREETEXT,
+        indexer.add_field_action('category_tags', xappy.FieldActions.INDEX_FREETEXT,
                                language='en', spell=True)
 
-        iconn.add_field_action('cmd', xappy.FieldActions.INDEX_FREETEXT, spell=True)
+        indexer.add_field_action('cmd', xappy.FieldActions.INDEX_FREETEXT, spell=True)
         # FieldActions.TAG not currently supported in F15 xapian (1.2.7)
-        #iconn.add_field_action('tags', xappy.FieldActions.TAG)
-        iconn.add_field_action('tag', xappy.FieldActions.INDEX_FREETEXT, spell=True)
+        #indexer.add_field_action('tags', xappy.FieldActions.TAG)
+        indexer.add_field_action('tag', xappy.FieldActions.INDEX_FREETEXT, spell=True)
 
-        #iconn.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
-        #iconn.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
+        #indexer.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
+        #indexer.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
 
-        self.iconn = iconn
+        self.indexer = indexer
 
-    def find_devel_owner(self, pkg_name, retry=0):
+    def find_devel_owner(self, package_name, retry=0):
         if self._owners_cache == None:
-            print "Caching the owners list from PackageDB"
+            print "Caching the owners list from pkgdb"
 
             url = self.pkgdb_url + "/api/bugzilla?format=json"
-            response = requests.get(url)
+            response = http.get(url)
             self._owners_cache = response.json()['bugzillaAcls']
 
         try:
-            mainowner = self._owners_cache['Fedora'][pkg_name]['owner']
+            mainowner = self._owners_cache['Fedora'][package_name]['owner']
             print 'Owner: %s' % mainowner
             return mainowner
         except KeyError:
             print 'Owner: None'
             return ''
 
-    def index_yum_pkgs(self):
+    def gather_pkgdb_packages(self):
+        response = http.get(self.pkgdb_url + '/api/packages/')
+        if not bool(response):
+            raise IOError("Failed to talk to pkgdb: %r" % response)
+
+        pages = response.json()['page_total']
+
+        for i in range(pages):
+            log.info("Requesting pkgdb page %i of %i" % (i + 1, pages))
+            response = http.get(self.pkgdb_url + '/api/packages/')
+            if not bool(response):
+                raise IOError("Failed to talk to pkgdb: %r" % response)
+            for package in response.json()['packages']:
+                yield package
+
+    def construct_package_dictionary(self, package):
+        """ Return structured package dictionary from a pkgdb package.
+
+        Result looks like this::
+
+           {base_package_name: {'name': base_package_name,
+                                'summary': base_package_summary,
+                                'description': base_package_summary,
+                                'devel_owner': owner,
+                                'icon': icon_name,
+                                'package': package,
+                                'upstream_url': url,
+                                'src_package': src_package,
+                                'sub_pkgs': [{'name': sub_package_name,
+                                              'summary': sub_package_summary,
+                                              'description': sub_package_description,
+                                              'icon': icon_name,
+                                              'package': package},
+                                             ...]},
         """
-        index_yum_pkgs
+        package = copy.deepcopy(package)
+
+        name = package['name']
+
+        # Get some more detailed pkgdb info for this package (in rawhide)
+        url = self.pkgdb_url + "/api/package/" + name
+        params = dict(branches='master')
+        pkgdb_info = http.get(url, params=params).json()
+        import pprint; pprint.pprint(pkgdb_info)
+        pkgdb_info = pkgdb_info['packages'][0]
+
+        import pprint; pprint.pprint(package)
+        package['icon'] = self.default_icon
+        package['summary'] = pkgdb_info['package']['summary'] or \
+            '(no summary in pkgdb)'
+        package['description'] = pkgdb_info['package']['description'] or \
+            '(no description in pkgdb)'
+        package['devel_owner'] = pkgdb_info['point_of_contact']
+        package['status'] = pkgdb_info['package']['status']
+        package['src_package'] = 'TODO .. fill this in from koji'
+        package['sub_pkgs'] = []  # TODO -- this too
+        package['package'] = 'wtf is this?'
+        return package
+
+
+    def index_yum_packages(self):
+        """
+        index_yum_packages
 
         Index the packages from yum into this format:
 
@@ -96,14 +158,14 @@ class Indexer(object):
                                 'description': base_package_summary,
                                 'devel_owner': owner,
                                 'icon': icon_name,
-                                'pkg': pkg,
+                                'package': package,
                                 'upstream_url': url,
-                                'src_pkg': src_pkg,
-                                'sub_pkgs': [{'name': sub_pkg_name,
-                                              'summary': sub_pkg_summary,
-                                              'description': sub_pkg_description,
+                                'src_package': src_package,
+                                'sub_pkgs': [{'name': sub_package_name,
+                                              'summary': sub_package_summary,
+                                              'description': sub_package_description,
                                               'icon': icon_name,
-                                              'pkg': pkg},
+                                              'package': package},
                                              ...]},
             ...
            }
@@ -138,9 +200,9 @@ class Indexer(object):
 
         self.icon_cache = IconCache(yb, ['gnome-icon-theme', 'oxygen-icon-theme'], self.icons_path, self.cache_path)
 
-        pkgs = yb.pkgSack.returnPackages()
-        base_pkgs = {}
-        seen_pkg_names = []
+        packages = yb.packageSack.returnPackages()
+        base_packages = {}
+        seen_package_names = []
 
         # get the tagger data
         self.tagger_cache = None
@@ -150,76 +212,76 @@ class Indexer(object):
             html = response.read()
             tagger_data = json.loads(html)
             self.tagger_cache = {}
-            for pkg_tag_info in tagger_data['packages']:
-                for pkg_name in pkg_tag_info.keys():
-                    self.tagger_cache[pkg_name] = pkg_tag_info[pkg_name]
+            for package_tag_info in tagger_data['packages']:
+                for package_name in package_tag_info.keys():
+                    self.tagger_cache[package_name] = package_tag_info[package_name]
 
-        pkg_count = 0
-        for pkg in pkgs:
+        package_count = 0
+        for package in packages:
             # precache the icon themes for later extraction and matching
-            if pkg.ui_from_repo != 'rawhide-source':
-                self.icon_cache.check_pkg(pkg)
+            if package.ui_from_repo != 'rawhide-source':
+                self.icon_cache.check_package(package)
 
-            if not pkg.base_package_name in base_pkgs:
+            if not package.base_package_name in base_packages:
                 # we haven't seen this base package yet so add it
-                base_pkgs[pkg.base_package_name] = {'name': pkg.base_package_name,
+                base_packages[package.base_package_name] = {'name': package.base_package_name,
                                                     'summary': '',
                                                     'description':'',
                                                     'devel_owner':'',
-                                                    'pkg': None,
-                                                    'src_pkg': None,
+                                                    'package': None,
+                                                    'src_package': None,
                                                     'icon': self.default_icon,
                                                     'upstream_url': None,
                                                     'sub_pkgs': []}
 
-            base_pkg = base_pkgs[pkg.base_package_name]
+            base_package = base_packages[package.base_package_name]
 
-            if pkg.ui_from_repo == 'rawhide-source':
-               pkg_count += 1
-               print "%d: pre-processing package '%s':" % (pkg_count, pkg['name'])
+            if package.ui_from_repo == 'rawhide-source':
+               package_count += 1
+               print "%d: pre-processing package '%s':" % (package_count, package['name'])
 
-               base_pkg['src_pkg'] = pkg
-               base_pkg['upstream_url'] = pkg.URL
+               base_package['src_package'] = package
+               base_package['upstream_url'] = package.URL
 
-               if not base_pkg['devel_owner']:
-                   base_pkg['devel_owner'] = self.find_devel_owner(pkg.name)
-               if not base_pkg['summary']:
-                   base_pkg['summary'] = pkg.summary
-               if not base_pkg['description']:
-                   base_pkg['description'] = pkg.description
+               if not base_package['devel_owner']:
+                   base_package['devel_owner'] = self.find_devel_owner(package.name)
+               if not base_package['summary']:
+                   base_package['summary'] = package.summary
+               if not base_package['description']:
+                   base_package['description'] = package.description
                continue
 
             # avoid duplicates
-            if pkg.name in seen_pkg_names:
+            if package.name in seen_package_names:
                 continue
 
-            seen_pkg_names.append(pkg.name)
+            seen_package_names.append(package.name)
 
-            if pkg.base_package_name == pkg.name:
+            if package.base_package_name == package.name:
                 # this is the main package
-                if not base_pkg['src_pkg']:
-                    pkg_count += 1
-                    print "%d: pre-processing package '%s':" % (pkg_count, pkg['name'])
+                if not base_package['src_package']:
+                    package_count += 1
+                    print "%d: pre-processing package '%s':" % (package_count, package['name'])
 
-                base_pkg['summary'] = pkg.summary
-                base_pkg['description'] = pkg.description
-                base_pkg['pkg'] = pkg
-                base_pkg['devel_owner'] = self.find_devel_owner(pkg.name)
+                base_package['summary'] = package.summary
+                base_package['description'] = package.description
+                base_package['package'] = package
+                base_package['devel_owner'] = self.find_devel_owner(package.name)
             else:
                 # this is a sub package
-                pkg_count += 1
-                print "%d: pre-processing package '%s':" % (pkg_count, pkg['name'])
+                package_count += 1
+                print "%d: pre-processing package '%s':" % (package_count, package['name'])
 
-                subpkgs = base_pkg['sub_pkgs']
-                subpkgs.append({'name': pkg.name,
-                                'summary': pkg.summary,
-                                'description': pkg.description,
+                subpackages = base_package['sub_pkgs']
+                subpackages.append({'name': package.name,
+                                'summary': package.summary,
+                                'description': package.description,
                                 'icon': self.default_icon,
-                                'pkg': pkg})
+                                'package': package})
 
-        return base_pkgs
+        return base_packages
 
-    def index_desktop_file(self, doc, desktop_file, pkg_dict, desktop_file_cache):
+    def index_desktop_file(self, doc, desktop_file, package_dict, desktop_file_cache):
         doc.fields.append(xappy.Field('tag', 'desktop'))
 
         dp = DesktopParser(desktop_file)
@@ -237,14 +299,14 @@ class Indexer(object):
             print "Icon %s" % icon
             generated_icon = self.icon_cache.generate_icon(icon, desktop_file_cache)
             if generated_icon != None:
-                pkg_dict['icon'] = icon
+                package_dict['icon'] = icon
 
-    def index_files(self, doc, pkg_dict):
-        yum_pkg = pkg_dict['pkg']
-        if yum_pkg != None:
-            desktop_file_cache = RPMCache(yum_pkg, self.yum_base, self.cache_path)
+    def index_files(self, doc, package_dict):
+        yum_package = package_dict['package']
+        if yum_package != None:
+            desktop_file_cache = RPMCache(yum_package, self.yum_base, self.cache_path)
             desktop_file_cache.open()
-            for filename in yum_pkg.filelist:
+            for filename in yum_package.filelist:
                 if filename.endswith('.desktop'):
                     # index apps
                     print "        indexing desktop file %s" % os.path.basename(filename)
@@ -253,7 +315,7 @@ class Indexer(object):
                         print "could not open desktop file"
                         continue
 
-                    self.index_desktop_file(doc, f, pkg_dict, desktop_file_cache)
+                    self.index_desktop_file(doc, f, package_dict, desktop_file_cache)
                     f.close()
                 if filename.startswith('/usr/bin'):
                     # index executables
@@ -263,10 +325,10 @@ class Indexer(object):
 
             desktop_file_cache.close()
 
-    def index_spec(self, doc, pkg, src_rpm_cache):
+    def index_spec(self, doc, package, src_rpm_cache):
         # don't use this but keep it here if we need to index spec files
         # again
-        for filename in pkg['src_pkg'].filelist:
+        for filename in package['src_package'].filelist:
             if filename.endswith('.spec'):
                 break;
 
@@ -275,17 +337,17 @@ class Indexer(object):
         if f:
             try:
                 spec_parse = SimpleSpecfileParser(f)
-                pkg['upstream_url'] = spec_parse.get('url')
+                package['upstream_url'] = spec_parse.get('url')
             except ValueError as e:
                 print e
                 print "    Setting upstream_url to empty string for now"
-                pkg['upstream_url'] = ''
+                package['upstream_url'] = ''
 
-    def index_tags(self, doc, pkg):
+    def index_tags(self, doc, package):
         if not self.tagger_cache:
             return
 
-        name = pkg['name']
+        name = package['name']
         tags = self.tagger_cache.get(name, [])
         for tag_info in tags:
             tag_name = tag_info['tag']
@@ -295,87 +357,95 @@ class Indexer(object):
             for i in range(total):
                 doc.fields.append(xappy.Field('tag', tag_name))
 
-    def index_pkgs(self):
-        yum_pkgs = self.index_yum_pkgs()
-        pkg_count = 0
+    def index_packages(self):
+        # This is a generator that yields dicts of package info that we index
+        packages = self.gather_pkgdb_packages()
 
-        for pkg in yum_pkgs.values():
-            pkg_count += 1
+        # XXX - Only grab the first N for dev purposes
+        packages = [packages.next() for i in range(5)]
 
-            doc = xappy.UnprocessedDocument()
-            filtered_name = filter_search_string(pkg['name'])
-            filtered_summary = filter_search_string(pkg['summary'])
-            filtered_description = filter_search_string(pkg['description'])
+        packages = (self.construct_package_dictionary(p) for p in packages)
 
-            if pkg['name'] != filtered_name:
-                print("%d: indexing %s as %s" % (pkg_count, pkg['name'], filtered_name) )
-            else:
-                print("%d: indexing %s" % (pkg_count, pkg['name']))
+        for i, package in enumerate(packages):
+            print("%d: indexing %s" % (i, package['name']))
+            document = self._create_document(package)
+            processed = self._process_document(package, document)
+            self.indexer.add(processed)
 
-            doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_name + '__EX', weight=10.0))
+        self.indexer.close()
+        return i + 1
 
-            name_parts = filtered_name.split('_')
-            for i in range(20):
-                if len(name_parts) > 1:
-                    for part in name_parts:
-                        doc.fields.append(xappy.Field('name', part, weight=1.0))
-                doc.fields.append(xappy.Field('name', filtered_name, weight=10.0))
+    def _process_document(self, package, document):
+        processed = self.indexer.process(document, False)
+        processed._doc.set_data(json.dumps(package))
+        # preempt xappy's processing of data
+        processed._data = None
+        return processed
 
-            for i in range(4):
-                doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
-            doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
+    def _create_document(self, package):
+        doc = xappy.UnprocessedDocument()
+        filtered_name = filter_search_string(package['name'])
+        filtered_summary = filter_search_string(package['summary'])
+        filtered_description = filter_search_string(package['description'])
 
-            self.index_files(doc, pkg)
-            self.index_tags(doc, pkg)
+        doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_name + '__EX', weight=10.0))
 
-            for sub_pkg in pkg['sub_pkgs']:
-                pkg_count += 1
-                filtered_sub_pkg_name = filter_search_string(sub_pkg['name'])
-                if filtered_sub_pkg_name != sub_pkg['name']:
-                    print("%d:    indexing subpkg %s as %s" % (pkg_count, sub_pkg['name'], filtered_sub_pkg_name))
-                else:
-                    print("%d:    indexing subpkg %s" % (pkg_count, sub_pkg['name']))
+        name_parts = filtered_name.split('_')
+        for i in range(20):
+            if len(name_parts) > 1:
+                for part in name_parts:
+                    doc.fields.append(xappy.Field('name', part, weight=1.0))
+            doc.fields.append(xappy.Field('name', filtered_name, weight=10.0))
 
-                doc.fields.append(xappy.Field('subpackages', filtered_sub_pkg_name, weight=1.0))
-                doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_pkg_name + '__EX', weight=10.0))
+        for i in range(4):
+            doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
+        doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
 
-                self.index_files(doc, sub_pkg)
-                self.index_tags(doc, sub_pkg)
-                if sub_pkg['icon'] != self.default_icon and pkg['icon'] == self.default_icon:
-                    pkg['icon'] = sub_pkg['icon']
+        log.warn("TODO -- add indexing files back in...")
+        #self.index_files(doc, package)
+        log.warn("TODO -- add indexing tags back in...")
+        #self.index_tags(doc, package)
 
-                # remove anything we don't want to store
-                del sub_pkg['pkg']
+        for sub_package in package['sub_pkgs']:
+            filtered_sub_package_name = filter_search_string(sub_package['name'])
+            print("       indexing subpackage %s" % sub_package['name'])
 
-            # @@: Right now we're only indexing the first part of the
-            # provides/requires, and not boolean comparison or version
-            #for requires in pkg.requires:
-            #    print requires[0]
-            #    doc.fields.append(xappy.Field('requires', requires[0]))
-            #for provides in pkg.provides:
-            #    doc.fields.append(xappy.Field('provides', provides[0]))
+            doc.fields.append(xappy.Field('subpackages', filtered_sub_package_name, weight=1.0))
+            doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_package_name + '__EX', weight=10.0))
+
+            log.warn("TODO -- add indexing files back in...")
+            #self.index_files(doc, sub_package)
+            log.warn("TODO -- add indexing tags back in...")
+            #self.index_tags(doc, sub_package)
+
+            if sub_package['icon'] != self.default_icon and package['icon'] == self.default_icon:
+                package['icon'] = sub_package['icon']
+
+            # remove anything we don't want to store
+            del sub_package['package']
+
+        # @@: Right now we're only indexing the first part of the
+        # provides/requires, and not boolean comparison or version
+        #for requires in package.requires:
+        #    print requires[0]
+        #    doc.fields.append(xappy.Field('requires', requires[0]))
+        #for provides in package.provides:
+        #    doc.fields.append(xappy.Field('provides', provides[0]))
 
 
-            # remove anything we don't want to store and then store data in
-            # json format
-            del pkg['pkg']
-            del pkg['src_pkg']
+        # remove anything we don't want to store and then store data in
+        # json format
+        del package['package']
+        del package['src_package']
 
-            processed_doc = self.iconn.process(doc, False)
-            processed_doc._doc.set_data(json.dumps(pkg))
-            # preempt xappy's processing of data
-            processed_doc._data = None
-            self.iconn.add(processed_doc)
+        return doc
 
-        self.icon_cache.close()
-
-        return pkg_count
 
 def run(cache_path, yum_conf, tagger_url=None, pkgdb_url=None):
     indexer = Indexer(cache_path, yum_conf, tagger_url, pkgdb_url)
 
-    print "Indexing packages from Yum..."
-    count = indexer.index_pkgs()
+    print "Indexing packages."
+    count = indexer.index_packages()
     print "Indexed %d packages." % count
 
 if __name__ == '__main__':
