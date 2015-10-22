@@ -18,7 +18,7 @@ import logging
 
 from paste.deploy.converters import asbool
 from tg import config
-from fedora.client import Bodhi2Client
+from fedora.client.bodhi import Bodhi2Client
 from datetime import datetime, timedelta
 from webhelpers.html import HTML
 
