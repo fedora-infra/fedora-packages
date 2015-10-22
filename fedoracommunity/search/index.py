@@ -31,7 +31,7 @@ except ImportError:
     import simplejson as json
 
 class Indexer(object):
-    def __init__(self, cache_path, yum_conf, tagger_url=None, pkgdb_url=None, koji_url=None):
+    def __init__(self, cache_path, yum_conf, tagger_url=None, pkgdb_url=None, mdapi_url=None):
         self.cache_path = cache_path
         self.dbpath = join(cache_path, 'search')
         self.yum_cache_path = join(cache_path, 'yum-cache')
@@ -42,8 +42,7 @@ class Indexer(object):
         self.default_icon = 'package_128x128'
         self.tagger_url = tagger_url
         self.pkgdb_url = pkgdb_url or "https://admin.fedoraproject.org/pkgdb"
-        koji_url = koji_url or 'http://koji.fedoraproject.org/kojihub'
-        self.koji = kojilib.ClientSession(koji_url)
+        self.mdapi_url = mdapi_url or "http://209.132.184.236"  # dev instance
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
@@ -148,8 +147,7 @@ class Indexer(object):
         ###
         # Get some further detailed information from koji.
         ###
-        package['koji_id'] = self.get_koji_id(name)
-        package['sub_pkgs'] = self.get_sub_packages(name, package['koji_id'])
+        package['sub_pkgs'] = list(self.get_sub_packages(name))
 
         # This is a "parent" reference.  the base packages always have "none"
         # for it, but the sub packages have the name of their parent package in
@@ -165,56 +163,34 @@ class Indexer(object):
 
         return package
 
-    def get_koji_id(self, name):
-        glob_matches = self.koji.search(name, 'package', 'glob')
-        exact_matches = [r for r in glob_matches if r['name'] == name]
+    def get_sub_packages(self, name):
 
-        if not exact_matches:
-            log.warn("%r has never been built in koji...")
-            return None
+        response = http.get(self.mdapi_url + "/pkg/" + name)
 
-        if len(exact_matches) > 1:
-            log.warn("search for %r gave %r!" % (name, exact_matches))
+        if not bool(response):
+            # TODO -- don't always do this.
+            # if we get a 404, that's usually because the package is retired in
+            # rawhide... but that's okay.  we just queried pkgdb, so we should
+            # see if it is active in any other branches, and if it is, get the
+            # sub-packages from there.
+            raise StopIteration
 
-        return exact_matches[0]['id']
+        data = response.json()
+        sub_package_names = [p for p in data['co-packages'] if p != name]
 
-    def get_sub_packages(self, name, koji_id):
-        if koji_id is None:
-            return []
-
-        builds = self.koji.listBuilds(
-            packageID=koji_id,
-            state=kojilib.BUILD_STATES['COMPLETE'],
-            queryOpts=dict(limit=1),
-        )
-
-        if not builds:
-            log.error("Unable to find a build for %r, %r" % (name, koji_id))
-            return []
-
-        build = builds[0]
-        children = self.koji.getTaskChildren(build['task_id'])
-        build_tasks = [c for c in children if c['method'] == 'buildArch']
-
-        if not build_tasks:
-            log.error("Unable to find buildArch task for %r" % build)
-            return []
-
-        build_task = build_tasks[0]
-        results = self.koji.getTaskResult(build_task['id'])
-        rpms = results['rpms']
-        rpms = [rpm.split('/')[-1] for rpm in rpms]
-        all_packages = ['-'.join(rpm.split('-')[:-2]) for rpm in rpms]
-        sub_packages = sorted([p for p in all_packages if p != name])
-
-        log.warn('TODO -- still need to get the summary and description of subpackages from somewhere...')
-        return [{
-            'name': sub_package,
-            'summary': 'wat',
-            'description': 'wat2',
-            'icon': 'wat3',
-            'package': name,
-        } for sub_package in sub_packages]
+        for sub_package_name in sub_package_names:
+            response = http.get(self.mdapi_url + "/pkg/" + sub_package_name)
+            if not bool(response):
+                log.warn("Failed to get sub info for %r" % sub_package_name)
+                continue
+            data = response.json()
+            yield {
+                'name': sub_package_name,
+                'summary': data['summary'],
+                'description': data['description'],
+                'icon': 'wat3',  # inherit this from the parent
+                'package': name,
+            }
 
     def index_yum_packages(self):
         """
@@ -510,8 +486,8 @@ class Indexer(object):
         return doc
 
 
-def run(cache_path, yum_conf, tagger_url=None, pkgdb_url=None):
-    indexer = Indexer(cache_path, yum_conf, tagger_url, pkgdb_url)
+def run(cache_path, yum_conf, tagger_url=None, pkgdb_url=None, mdapi_url=None):
+    indexer = Indexer(cache_path, yum_conf, tagger_url, pkgdb_url, mdapi_url)
 
     print "Indexing packages."
     count = indexer.index_packages()
