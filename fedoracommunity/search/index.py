@@ -7,6 +7,8 @@ import copy
 import os
 import json
 import logging
+import threading
+
 import requests
 import xappy
 
@@ -14,7 +16,11 @@ from os.path import join, dirname
 
 from utils import filter_search_string
 
-http = requests.session()
+# It is on the roof.
+import fedoracommunity.pool
+
+local = threading.local()
+local.http = requests.session()
 log = logging.getLogger()
 
 # how many time to retry a downed server
@@ -23,7 +29,7 @@ MAX_RETRY = 10
 
 def download_file(url, dest):
     log.info("Downloading %s to %s" % (url, dest))
-    r = http.get(url, stream=True)
+    r = local.http.get(url, stream=True)
     with open(dest, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
             if not chunk:
@@ -84,7 +90,7 @@ class Indexer(object):
     @property
     def latest_release(self):
         if not self._latest_release:
-            response = http.get(self.pkgdb_url + "/api/collections")
+            response = local.http.get(self.pkgdb_url + "/api/collections")
             if not bool(response):
                 raise IOError("Unable to find latest release %r" % response)
             data = response.json()
@@ -115,7 +121,7 @@ class Indexer(object):
                 continue
 
             # Check the file to see if it is different
-            response = http.head(url)
+            response = local.http.head(url)
             remote_size = int(response.headers['content-length'])
             local_size = stats.st_size
             if remote_size == local_size:
@@ -135,7 +141,7 @@ class Indexer(object):
 
 
     def gather_pkgdb_packages(self):
-        response = http.get(self.pkgdb_url + '/api/packages/')
+        response = local.http.get(self.pkgdb_url + '/api/packages/')
         if not bool(response):
             raise IOError("Failed to talk to pkgdb: %r" % response)
 
@@ -143,7 +149,7 @@ class Indexer(object):
 
         for i in range(pages):
             log.info("Requesting pkgdb page %i of %i" % (i + 1, pages))
-            response = http.get(self.pkgdb_url + '/api/packages/')
+            response = local.http.get(self.pkgdb_url + '/api/packages/')
             if not bool(response):
                 raise IOError("Failed to talk to pkgdb: %r" % response)
             for package in response.json()['packages']:
@@ -177,7 +183,7 @@ class Indexer(object):
         ###
         url = self.pkgdb_url + "/api/package/" + name
         params = {}#dict(branches='master')
-        data = http.get(url, params=params).json()
+        data = local.http.get(url, params=params).json()
 
         # Figure out the latest active, non-retired branch
         by_version = lambda p: p['collection']['version']
@@ -216,7 +222,7 @@ class Indexer(object):
             branch = 'rawhide'
 
         url = "/".join([self.mdapi_url, branch, "pkg", name])
-        response = http.get(url)
+        response = local.http.get(url)
 
         if not bool(response):
             # TODO -- don't always do this.
@@ -233,7 +239,7 @@ class Indexer(object):
 
         for sub_package_name in sub_package_names:
             url = "/".join([self.mdapi_url, branch, "pkg", sub_package_name])
-            response = http.get(url)
+            response = local.http.get(url)
             if not bool(response):
                 log.warn("Failed to get sub info for %r, %r" % (sub_package_name, response))
                 continue
@@ -268,7 +274,7 @@ class Indexer(object):
             branch = 'rawhide'
 
         url = "/".join([self.mdapi_url, branch, "files", name])
-        response = http.get(url)
+        response = local.http.get(url)
         if not bool(response):
             log.warn("Failed to get file list for %r, %r" % (name, response))
             return
@@ -286,6 +292,7 @@ class Indexer(object):
                     # - fedora-23-icons.tar.gz there has the icons
                     # - fedora-23-xml.gz has the metadata
                     # - github.com/hughsie/python-appstream has a parser for the xml if we need it.
+                    # - some of this is written now in pull_icons and cache_icons
 
                     ## index apps
                     #log.info("        indexing desktop file %s" % os.path.basename(filename))
@@ -303,7 +310,7 @@ class Indexer(object):
 
     def index_tags(self, doc, package):
         name = package['name']
-        response = http.get(self.tagger_url + '/api/v1/' + name)
+        response = local.http.get(self.tagger_url + '/api/v1/' + name)
         if not bool(response):
             log.warn("Failed to get tagger info for %r, %r" % (name, response))
             return
@@ -322,18 +329,31 @@ class Indexer(object):
         packages = self.gather_pkgdb_packages()
 
         # XXX - Only grab the first N for dev purposes
-        packages = [packages.next() for i in range(15)]
+        packages = [packages.next() for i in range(50)]
 
-        packages = (self.construct_package_dictionary(p) for p in packages)
+        def io_work(package):
+            log.info("indexing %s" % (package['name']))
+            local.http = requests.session()
 
-        for i, package in enumerate(packages):
+            # Do all of the gathering...
+            package = self.construct_package_dictionary(package)
+
             # If the package is retired in all branches, it is None here..
             if package is None:
-                continue
-            log.info("%d: indexing %s" % (i, package['name']))
+                return None
+
+            # And then prepare everything for xapian
             document = self._create_document(package)
             processed = self._process_document(package, document)
-            self.indexer.add(processed)
+            return processed
+
+        pool = fedoracommunity.pool.ThreadPool(20)
+        documents = pool.map(io_work, packages)
+
+        for document in documents:
+            if document is None:
+                continue
+            self.indexer.add(document)
 
         self.indexer.close()
         return i + 1
@@ -369,7 +389,7 @@ class Indexer(object):
 
         for sub_package in package['sub_pkgs']:
             filtered_sub_package_name = filter_search_string(sub_package['name'])
-            print("       indexing subpackage %s" % sub_package['name'])
+            log.info("       indexing subpackage %s" % sub_package['name'])
 
             doc.fields.append(xappy.Field('subpackages', filtered_sub_package_name, weight=1.0))
             doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_package_name + '__EX', weight=10.0))
@@ -407,9 +427,9 @@ def run(cache_path, tagger_url=None, pkgdb_url=None, mdapi_url=None, icons_url=N
     indexer.pull_icons()
     indexer.cache_icons()
 
-    print "Indexing packages."
+    log.info("Indexing packages.")
     count = indexer.index_packages()
-    print "Indexed %d packages." % count
+    log.info("Indexed %d packages." % count)
 
 if __name__ == '__main__':
     run('index_cache', join(dirname(__file__), 'yum.conf'), 'http://apps.fedoraproject.org/tagger/dump')
