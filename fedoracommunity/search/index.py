@@ -13,7 +13,6 @@ import xappy
 from os.path import join, dirname
 
 from utils import filter_search_string
-from rpmcache import RPMCache
 from parsers import DesktopParser, SimpleSpecfileParser
 #from iconcache import IconCache
 
@@ -346,29 +345,32 @@ class Indexer(object):
             if generated_icon != None:
                 package_dict['icon'] = icon
 
-    def index_files(self, doc, package_dict):
-        yum_package = package_dict['package']
-        if yum_package != None:
-            desktop_file_cache = RPMCache(yum_package, self.yum_base, self.cache_path)
-            desktop_file_cache.open()
-            for filename in yum_package.filelist:
+    def index_files_of_interest(self, doc, package_dict):
+        name = package_dict['name']
+        response = http.get(self.mdapi_url + "/files/" + name)
+        if not bool(response):
+            log.warn("Failed to get file list for %r" % name)
+            return
+        data = response.json()
+        for entry in data:
+            filenames = entry['filenames'].split('/')
+            for filename in filenames:
                 if filename.endswith('.desktop'):
-                    # index apps
-                    print "        indexing desktop file %s" % os.path.basename(filename)
-                    f = desktop_file_cache.open_file(filename, decompress_filter='*.desktop')
-                    if f == None:
-                        print "could not open desktop file"
-                        continue
-
-                    self.index_desktop_file(doc, f, package_dict, desktop_file_cache)
-                    f.close()
+                    log.warn("TODO - indexing the content of desktop files is disabled for now")
+                    continue
+                    ## index apps
+                    #log.info("        indexing desktop file %s" % os.path.basename(filename))
+                    #f = desktop_file_cache.open_file(filename, decompress_filter='*.desktop')
+                    #if f == None:
+                    #    log.warn("could not open desktop file")
+                    #    continue
+                    #self.index_desktop_file(doc, f, package_dict, desktop_file_cache)
+                    #f.close()
                 if filename.startswith('/usr/bin'):
                     # index executables
-                    print ("        indexing exe file %s" % os.path.basename(filename))
+                    log.info("        indexing exe file %s" % os.path.basename(filename))
                     exe_name = filter_search_string(os.path.basename(filename))
                     doc.fields.append(xappy.Field('cmd', "EX__%s__EX" % exe_name))
-
-            desktop_file_cache.close()
 
     def index_spec(self, doc, package, src_rpm_cache):
         # don't use this but keep it here if we need to index spec files
@@ -446,8 +448,7 @@ class Indexer(object):
             doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
         doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
 
-        log.warn("TODO -- add indexing files back in...")
-        #self.index_files(doc, package)
+        self.index_files_of_interest(doc, package)
         log.warn("TODO -- add indexing tags back in...")
         #self.index_tags(doc, package)
 
@@ -458,8 +459,7 @@ class Indexer(object):
             doc.fields.append(xappy.Field('subpackages', filtered_sub_package_name, weight=1.0))
             doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_package_name + '__EX', weight=10.0))
 
-            log.warn("TODO -- add indexing files back in...")
-            #self.index_files(doc, sub_package)
+            self.index_files_of_interest(doc, sub_package)
             log.warn("TODO -- add indexing tags back in...")
             #self.index_tags(doc, sub_package)
 
