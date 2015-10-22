@@ -378,24 +378,6 @@ class Indexer(object):
                     exe_name = filter_search_string(os.path.basename(filename))
                     doc.fields.append(xappy.Field('cmd', "EX__%s__EX" % exe_name))
 
-    def index_spec(self, doc, package, src_rpm_cache):
-        # don't use this but keep it here if we need to index spec files
-        # again
-        for filename in package['src_package'].filelist:
-            if filename.endswith('.spec'):
-                break;
-
-        print "        Spec: %s" % filename
-        f = src_rpm_cache.open_file(filename)
-        if f:
-            try:
-                spec_parse = SimpleSpecfileParser(f)
-                package['upstream_url'] = spec_parse.get('url')
-            except ValueError as e:
-                print e
-                print "    Setting upstream_url to empty string for now"
-                package['upstream_url'] = ''
-
     def index_tags(self, doc, package):
         if not self.tagger_cache:
             return
@@ -415,7 +397,7 @@ class Indexer(object):
         packages = self.gather_pkgdb_packages()
 
         # XXX - Only grab the first N for dev purposes
-        packages = [packages.next() for i in range(5)]
+        packages = [packages.next() for i in range(15)]
 
         packages = (self.construct_package_dictionary(p) for p in packages)
 
