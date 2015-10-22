@@ -35,7 +35,7 @@ class Indexer(object):
         self.create_index()
         self._owners_cache = None
         self.default_icon = 'package_128x128'
-        self.tagger_url = tagger_url
+        self.tagger_url = tagger_url or "https://apps.fedoraproject.org/tagger"
         self.pkgdb_url = pkgdb_url or "https://admin.fedoraproject.org/pkgdb"
         self.mdapi_url = mdapi_url or "http://209.132.184.236"  # dev instance
 
@@ -243,16 +243,18 @@ class Indexer(object):
                     doc.fields.append(xappy.Field('cmd', "EX__%s__EX" % exe_name))
 
     def index_tags(self, doc, package):
-        if not self.tagger_cache:
-            return
-
         name = package['name']
-        tags = self.tagger_cache.get(name, [])
+        response = http.get(self.tagger_url + '/api/v1/' + name)
+        if not bool(response):
+            log.warn("Failed to get tagger info for %r" % name)
+            return
+        tags = response.json()['tags']
         for tag_info in tags:
             tag_name = tag_info['tag']
             total = tag_info['total']
             if total > 0:
-                print "    adding '%s' tag (%d)" % (tag_name.encode('utf-8'), total)
+                log.info("    adding '%s' tag (%d)" % (
+                    tag_name.encode('utf-8'), total))
             for i in range(total):
                 doc.fields.append(xappy.Field('tag', tag_name))
 
@@ -301,8 +303,7 @@ class Indexer(object):
         doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
 
         self.index_files_of_interest(doc, package)
-        log.warn("TODO -- add indexing tags back in...")
-        #self.index_tags(doc, package)
+        self.index_tags(doc, package)
 
         for sub_package in package['sub_pkgs']:
             filtered_sub_package_name = filter_search_string(sub_package['name'])
@@ -312,8 +313,7 @@ class Indexer(object):
             doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_package_name + '__EX', weight=10.0))
 
             self.index_files_of_interest(doc, sub_package)
-            log.warn("TODO -- add indexing tags back in...")
-            #self.index_tags(doc, sub_package)
+            self.index_tags(doc, sub_package)
 
             if sub_package['icon'] != self.default_icon and package['icon'] == self.default_icon:
                 package['icon'] = sub_package['icon']
