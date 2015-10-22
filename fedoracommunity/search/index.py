@@ -16,8 +16,6 @@ from utils import filter_search_string
 from parsers import DesktopParser, SimpleSpecfileParser
 #from iconcache import IconCache
 
-import koji as kojilib
-
 http = requests.session()
 log = logging.getLogger()
 
@@ -325,25 +323,25 @@ class Indexer(object):
 
         return base_packages
 
-    def index_desktop_file(self, doc, desktop_file, package_dict, desktop_file_cache):
-        doc.fields.append(xappy.Field('tag', 'desktop'))
+    #def index_desktop_file(self, doc, desktop_file, package_dict, desktop_file_cache):
+    #    doc.fields.append(xappy.Field('tag', 'desktop'))
 
-        dp = DesktopParser(desktop_file)
-        category = dp.get('Categories', '')
+    #    dp = DesktopParser(desktop_file)
+    #    category = dp.get('Categories', '')
 
-        for c in category.split(';'):
-            if c:
-                c = filter_search_string(c)
-                doc.fields.append(xappy.Field('category_tags', c))
-                # add exact match also
-                doc.fields.append(xappy.Field('category_tags', "EX__%s__EX" % c))
+    #    for c in category.split(';'):
+    #        if c:
+    #            c = filter_search_string(c)
+    #            doc.fields.append(xappy.Field('category_tags', c))
+    #            # add exact match also
+    #            doc.fields.append(xappy.Field('category_tags', "EX__%s__EX" % c))
 
-        icon = dp.get('Icon', '')
-        if icon:
-            print "Icon %s" % icon
-            generated_icon = self.icon_cache.generate_icon(icon, desktop_file_cache)
-            if generated_icon != None:
-                package_dict['icon'] = icon
+    #    icon = dp.get('Icon', '')
+    #    if icon:
+    #        print "Icon %s" % icon
+    #        generated_icon = self.icon_cache.generate_icon(icon, desktop_file_cache)
+    #        if generated_icon != None:
+    #            package_dict['icon'] = icon
 
     def index_files_of_interest(self, doc, package_dict):
         name = package_dict['name']
@@ -358,6 +356,14 @@ class Indexer(object):
                 if filename.endswith('.desktop'):
                     log.warn("TODO - indexing the content of desktop files is disabled for now")
                     continue
+                    # When we get back here, we should give up on parsing the .desktop file like this,
+                    # and we should instead use the appstream metadata that hughsie worked on
+                    # See:
+                    # - https://alt.fedoraproject.org/pub/alt/screenshots/f23/$a
+                    # - fedora-23-icons.tar.gz there has the icons
+                    # - fedora-23-xml.gz has the metadata
+                    # - github.com/hughsie/python-appstream has a parser for the xml if we need it.
+
                     ## index apps
                     #log.info("        indexing desktop file %s" % os.path.basename(filename))
                     #f = desktop_file_cache.open_file(filename, decompress_filter='*.desktop')
