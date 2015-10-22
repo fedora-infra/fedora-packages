@@ -22,8 +22,6 @@ if __name__=="__main__":
     parser.add_option("-p", "--path", dest="cache_path",
                       default='/var/tmp/fedoracommunity',
                       help="path to where we create the index caches", metavar="CACHEPATH")
-    parser.add_option("-y", "--yumconf", dest="yum_conf",
-                      help="path to the yum configuration", metavar="YUMCONF")
     parser.add_option("--icons-dest", dest="icons_dest", default=None,
                       help="directory to move the icons cache when we are done",
                       metavar="ICONSDEST")
@@ -61,7 +59,6 @@ if __name__=="__main__":
 
     try:
         run(cache_path=options.cache_path,
-            yum_conf=options.yum_conf,
             tagger_url=options.tagger_url,
             pkgdb_url=options.pkgdb_url)
 
