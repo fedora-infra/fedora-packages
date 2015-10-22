@@ -18,7 +18,7 @@ import logging
 
 from paste.deploy.converters import asbool
 from tg import config
-from fedora.client import BodhiClient
+from fedora.client import Bodhi2Client
 from datetime import datetime, timedelta
 from webhelpers.html import HTML
 
@@ -43,8 +43,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
         self._prod_url = config.get(
             'fedoracommunity.connector.bodhi.produrl',
             'https://bodhi.fedoraproject.org')
-        self._bodhi_client = BodhiClient(self._base_url,
-                                         insecure=self._insecure)
+        self._bodhi_client = Bodhi2Client(self._base_url,
+                                          insecure=self._insecure)
 
     # IConnector
     @classmethod
