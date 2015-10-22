@@ -181,7 +181,9 @@ class Indexer(object):
             raise StopIteration
 
         data = response.json()
-        sub_package_names = [p for p in data['co-packages'] if p != name]
+        sub_package_names = sorted(set([
+            p for p in data['co-packages'] if p != name
+        ]))
 
         for sub_package_name in sub_package_names:
             url = "/".join([self.mdapi_url, branch, "pkg", sub_package_name])
