@@ -7,7 +7,6 @@ import copy
 import os
 import logging
 import requests
-import urllib2
 import xappy
 
 from os.path import join, dirname
@@ -128,21 +127,28 @@ class Indexer(object):
         # Get some more detailed pkgdb info for this package (in rawhide)
         ###
         url = self.pkgdb_url + "/api/package/" + name
-        params = dict(branches='master')
-        pkgdb_info = http.get(url, params=params).json()
-        pkgdb_info = pkgdb_info['packages'][0]
+        params = {}#dict(branches='master')
+        data = http.get(url, params=params).json()
 
-        package['summary'] = pkgdb_info['package']['summary'] or \
+        # Figure out the latest active, non-retired branch
+        by_version = lambda p: p['collection']['version']
+        data['packages'].sort(key=by_version, reverse=True)
+        for info in data['packages']:
+            if info['status'] == 'Approved':
+                break
+        else:
+            log.warn("Couldn't find active pkgdb branch for %r" % name)
+            return None
+
+        package['summary'] = info['package']['summary'] or \
             '(no summary in pkgdb)'
-        package['description'] = pkgdb_info['package']['description'] or \
+        package['description'] = info['package']['description'] or \
             '(no description in pkgdb)'
-        package['devel_owner'] = pkgdb_info['point_of_contact']
-        package['status'] = pkgdb_info['package']['status']
+        package['devel_owner'] = info['point_of_contact']
+        package['status'] = info['package']['status']
 
-        ###
-        # Get some further detailed information from koji.
-        ###
-        package['sub_pkgs'] = list(self.get_sub_packages(name))
+        package['branch'] =  branch = info['collection']['branchname']
+        package['sub_pkgs'] = list(self.get_sub_packages(name, branch))
 
         # This is a "parent" reference.  the base packages always have "none"
         # for it, but the sub packages have the name of their parent package in
@@ -158,9 +164,13 @@ class Indexer(object):
 
         return package
 
-    def get_sub_packages(self, name):
+    def get_sub_packages(self, name, branch):
 
-        response = http.get(self.mdapi_url + "/pkg/" + name)
+        if branch == 'master':
+            branch = 'rawhide'
+
+        url = "/".join([self.mdapi_url, branch, "pkg", name])
+        response = http.get(url)
 
         if not bool(response):
             # TODO -- don't always do this.
@@ -174,9 +184,10 @@ class Indexer(object):
         sub_package_names = [p for p in data['co-packages'] if p != name]
 
         for sub_package_name in sub_package_names:
-            response = http.get(self.mdapi_url + "/pkg/" + sub_package_name)
+            url = "/".join([self.mdapi_url, branch, "pkg", sub_package_name])
+            response = http.get(url)
             if not bool(response):
-                log.warn("Failed to get sub info for %r" % sub_package_name)
+                log.warn("Failed to get sub info for %r, %r" % (sub_package_name, response))
                 continue
             data = response.json()
             yield {
@@ -185,6 +196,7 @@ class Indexer(object):
                 'description': data['description'],
                 'icon': 'wat3',  # inherit this from the parent
                 'package': name,
+                'branch': branch,
             }
 
     #def index_desktop_file(self, doc, desktop_file, package_dict, desktop_file_cache):
@@ -209,9 +221,15 @@ class Indexer(object):
 
     def index_files_of_interest(self, doc, package_dict):
         name = package_dict['name']
-        response = http.get(self.mdapi_url + "/files/" + name)
+        branch = package_dict['branch']
+
+        if branch == 'master':
+            branch = 'rawhide'
+
+        url = "/".join([self.mdapi_url, branch, "files", name])
+        response = http.get(url)
         if not bool(response):
-            log.warn("Failed to get file list for %r" % name)
+            log.warn("Failed to get file list for %r, %r" % (name, response))
             return
         data = response.json()
         for entry in data:
@@ -246,7 +264,7 @@ class Indexer(object):
         name = package['name']
         response = http.get(self.tagger_url + '/api/v1/' + name)
         if not bool(response):
-            log.warn("Failed to get tagger info for %r" % name)
+            log.warn("Failed to get tagger info for %r, %r" % (name, response))
             return
         tags = response.json()['tags']
         for tag_info in tags:
@@ -268,7 +286,10 @@ class Indexer(object):
         packages = (self.construct_package_dictionary(p) for p in packages)
 
         for i, package in enumerate(packages):
-            print("%d: indexing %s" % (i, package['name']))
+            # If the package is retired in all branches, it is None here..
+            if package is None:
+                continue
+            log.info("%d: indexing %s" % (i, package['name']))
             document = self._create_document(package)
             processed = self._process_document(package, document)
             self.indexer.add(processed)
@@ -313,7 +334,9 @@ class Indexer(object):
             doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_package_name + '__EX', weight=10.0))
 
             self.index_files_of_interest(doc, sub_package)
-            self.index_tags(doc, sub_package)
+
+            # fedora-tagger does not provide special tags for sub-packages...
+            #self.index_tags(doc, sub_package)
 
             if sub_package['icon'] != self.default_icon and package['icon'] == self.default_icon:
                 package['icon'] = sub_package['icon']
