@@ -19,7 +19,11 @@ import re
 import koji
 import rpm
 
-from tg import config
+from datetime import datetime
+
+import requests
+
+from tg import abort, config
 from cgi import escape
 from urlgrabber import grabber
 
@@ -60,6 +64,9 @@ class KojiConnector(IConnector, ICall, IQuery):
         if not cls._rpm_cache:
             print "You must specify fedoracommunity.rpm_cache in you .ini file"
             exit(-1)
+
+        cls._mdapi_url = config.get('fedoracommunity.connector.mdapi.url',
+                                    'http://209.132.184.236')  # dev instance
 
         cls.register_query_builds()
         cls.register_query_packages()
@@ -390,7 +397,8 @@ class KojiConnector(IConnector, ICall, IQuery):
             can_filter_wildcards=False)
 
         f = ParamFilter()
-        f.add_filter('build_id', list(), allow_none=False)
+        f.add_filter('package_name', list(), allow_none=False)
+        f.add_filter('release', list(), allow_none=False)
         cls._query_changelogs_filter = f
 
         cls._changelog_version_extract_re = re.compile(
@@ -406,46 +414,21 @@ class KojiConnector(IConnector, ICall, IQuery):
         if not filters:
             filters = {}
 
-        filters = self._query_changelogs_filter.filter(filters, conn=self)
+        if not filters.get('package_name'):
+            abort(400, '"package_name" is a required filter.')
 
-        build_id = int(filters.get('build_id', None))
-        #task_id = filters.get('task_id', None)
-        #state = filters.get('state', None)
+        package_name = filters['package_name']
+        release = filters.get('release', 'rawhide')
 
-        if order < 0:
-            order = '-' + sort_col
-        else:
-            order = sort_col
+        url = '/'.join([self._mdapi_url, release, 'changelog', package_name])
+        response = requests.get(url)
+        if not bool(response):
+            abort(502, "Failed to talk to mdapi, %r %r" % (url, response))
 
-        queryOpts = None
+        data = response.json()['files']
 
-        qo = {}
-        if start_row:
-            qo['offset'] = int(start_row)
-
-        if rows_per_page:
-            qo['limit'] = int(rows_per_page)
-
-        if order:
-            qo['order'] = order
-
-        if qo:
-            queryOpts = qo
-
-        countQueryOpts = {'countOnly': True}
-
-        self._koji_client.multicall = True
-        self._koji_client.getChangelogEntries(buildID=build_id,
-                                              queryOpts=countQueryOpts)
-        self._koji_client.getChangelogEntries(buildID=build_id,
-                                              queryOpts=queryOpts)
-
-        results = self._koji_client.multiCall()
-
-        changelog_list = results[1][0]
-
-        for entry in changelog_list:
-            # try to extract a version and e-mail from the authors field
+        for i, entry in enumerate(data):
+            entry['text'] = entry['changelog']
             m = self._changelog_version_extract_re.match(entry['author'])
             if m:
                 entry['author'] = escape(m.group(1))
@@ -455,14 +438,10 @@ class KojiConnector(IConnector, ICall, IQuery):
                 entry['author'] = escape(entry['author'])
 
             # convert the date to a nicer format
-            entry['display_date'] = \
-                DateTimeDisplay(entry['date']).datetime.strftime("%d %b %Y")
+            obj = DateTimeDisplay(datetime.fromtimestamp(entry['date']))
+            entry['display_date'] = obj.datetime.strftime("%d %b %Y")
 
-        total_count = results[0][0]
-
-        self._koji_client.multicall = False
-
-        return (total_count, changelog_list)
+        return len(data), data
 
     @classmethod
     def register_query_packages(cls):
