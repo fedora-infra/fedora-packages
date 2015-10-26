@@ -118,7 +118,7 @@ class YumConnector(IConnector, ICall, IQuery):
             }
 
         try:
-            result = self._process_files(response.json())
+            result = self._process_files(response.json()['files'])
         except Exception as e:
             result = {'error': "Error: %s" % str(e)}
 

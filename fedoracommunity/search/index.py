@@ -279,7 +279,7 @@ class Indexer(object):
             log.warn("Failed to get file list for %r, %r" % (name, response))
             return
         data = response.json()
-        for entry in data:
+        for entry in data['files']:
             filenames = entry['filenames'].split('/')
             for filename in filenames:
                 if filename.endswith('.desktop'):
