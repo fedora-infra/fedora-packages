@@ -6,13 +6,17 @@ and then populates it with packages from yum repositories
 import copy
 import os
 import json
+import gzip
 import logging
+import shutil
+import tarfile
 import threading
 
+import appstream
 import requests
 import xappy
 
-from os.path import join, dirname
+from os.path import join
 
 from utils import filter_search_string
 
@@ -28,6 +32,11 @@ MAX_RETRY = 10
 
 
 def download_file(url, dest):
+    dirname = os.path.dirname(dest)
+    if not os.path.isdir(dirname):
+        log.info("Creating directory %s" % dirname)
+        os.makedirs(dirname)
+
     log.info("Downloading %s to %s" % (url, dest))
     r = local.http.get(url, stream=True)
     with open(dest, 'wb') as f:
@@ -35,6 +44,13 @@ def download_file(url, dest):
             if not chunk:
                 continue
             f.write(chunk)
+
+    # Extract the big one.
+    if dest.endswith('.tar.gz'):
+        log.info("Extracting %s in %s" % (dest, dirname))
+        with tarfile.open(dest) as f:
+            f.extractall(path=dirname)
+
     return dest
 
 
@@ -54,6 +70,7 @@ class Indexer(object):
         self.mdapi_url = mdapi_url or "http://209.132.184.236"  # dev instance
         self.icons_url = icons_url or "https://alt.fedoraproject.org/pub/alt/screenshots"
         self._latest_release = None
+        self._active_fedora_releases = None
 
         self.create_index()
 
@@ -106,39 +123,114 @@ class Indexer(object):
             self._latest_release = int(data['collections'][0]['version'])
         return self._latest_release
 
+    @property
+    def active_fedora_releases(self):
+        if not self._active_fedora_releases:
+            response = local.http.get(self.pkgdb_url + "/api/collections")
+            if not bool(response):
+                raise IOError("Unable to find releases %r" % response)
+            data = response.json()
+
+            # Strip off rawhide
+            data['collections'] = [
+                c for c in data['collections']
+            ]
+
+            # Strip off rawhide, inactive releases, and epel
+            data['collections'] = [
+                c for c in data['collections'] if (
+                    c['version'] != 'devel' and
+                    c['status'] == 'Active' and
+                    c['name'] == 'Fedora'
+                )
+            ]
+
+            by_version = lambda c: int(c['version'])
+            data['collections'].sort(key=by_version, reverse=True)
+            self._active_fedora_releases = [
+                int(item['version']) for item in data['collections']
+            ]
+        return self._active_fedora_releases
+
     def pull_icons(self):
-        prefix = 'f%i' % self.latest_release
-        files = ['fedora-%i.xml.gz', 'fedora-%i-icons.tar.gz']
-        for fname in files:
-            fname = fname % self.latest_release
-            url = join(self.icons_url, prefix, fname)
-            target = join(self.icons_path, fname)
-            try:
-                stats = os.stat(target)
-            except OSError:
-                # Presumably no such file locally.  get it.
+        for release in reversed(self.active_fedora_releases):
+            prefix = 'f%i' % release
+            files = ['fedora-%i.xml.gz', 'fedora-%i-icons.tar.gz']
+            for fname in files:
+                fname = fname % release
+                url = join(self.icons_url, prefix, fname)
+                target = join(self.icons_path, 'tmp', str(release), fname)
+
+                try:
+                    stats = os.stat(target)
+                except OSError:
+                    # Presumably no such file locally.  get it.
+                    download_file(url, target)
+                    continue
+
+                # Check the file to see if it is different
+                response = local.http.head(url)
+                remote_size = int(response.headers['content-length'])
+                local_size = stats.st_size
+                if remote_size == local_size:
+                    log.debug("%r seems unchanged." % url)
+                    continue
+
+                # Otherwise, they differ.  So download.
                 download_file(url, target)
-                continue
-
-            # Check the file to see if it is different
-            response = local.http.head(url)
-            remote_size = int(response.headers['content-length'])
-            local_size = stats.st_size
-            if remote_size == local_size:
-                log.debug("%r seems unchanged." % url)
-                continue
-
-            # Otherwise, they differ.  So download.
-            download_file(url, target)
 
     def cache_icons(self):
-        fname = 'fedora-%i.xml.gz' % self.latest_release
-        target = join(self.icons_path, fname)
-        # Parse that file with python-appstream
-        # https://github.com/hughsie/python-appstream/issues/1
-        log.warn("parsing appstream metadata not yet supported..")
-        self.icon_cache = {}  # le sigh
+        self.icon_cache = {}
+        for release in self.active_fedora_releases:
+            fname = 'fedora-%i.xml.gz' % release
+            target = join(self.icons_path, 'tmp', str(release), fname)
 
+            metadata = appstream.Store()
+            with gzip.open(target, 'rb') as f:
+                metadata.parse(f.read())
+
+            for idx, component in metadata.components.items():
+                # Other types are 'stock' and 'unknown'
+                icons = component.icons.get('cached', [])
+
+                # Pick the biggest one..
+                icon = None
+                for candidate in icons:
+                    if not icon:
+                        icon = candidate
+                        continue
+                    if int(icon['width']) < int(candidate['width']):
+                        icon = candidate
+
+                if not icon:
+                    continue
+
+                # Some old F21 and F22 metadata entries have this weirdness.
+                prefix = '{width}x{height}'.format(**icon)
+                if icon['value'].startswith(prefix + '/'):
+                    icon['value'] = icon['value'].strip(prefix + '/')
+
+                # Move the file out of the temp dir and into place
+                s = join(self.icons_path, 'tmp', str(release),
+                         '{width}x{height}', '{value}')
+                d = join(self.icons_path, '{value}')
+                source = s.format(**icon)
+                destination = d.format(**icon)
+
+                # Furthermore, none of the F21 icons are namespaced
+                if release == 21:
+                    source = source.replace(prefix + '/', '')
+
+                try:
+                    shutil.copy(source, destination)
+
+                    # And hang the name in the dict for other code to find it
+                    # ... but only if we succeeded at placing the icon file.
+                    self.icon_cache[component.pkgname] = icon['value']
+                except IOError as e:
+                    log.warning("appstream metadata lied: %s %r" % (source, e))
+
+        shutil.rmtree(join(self.icons_path, 'tmp'))
 
     def gather_pkgdb_packages(self):
         response = local.http.get(self.pkgdb_url + '/api/packages/')
@@ -154,6 +246,24 @@ class Indexer(object):
                 raise IOError("Failed to talk to pkgdb: %r" % response)
             for package in response.json()['packages']:
                 yield package
+
+    def latest_active(self, name, ignore=None):
+        ignore = ignore or []
+        url = self.pkgdb_url + "/api/package/" + name
+        response = local.http.get(url)
+        if not bool(response):
+            raise IOError("Failed to talk to pkgdb: %s %r" % (url, response))
+        data = response.json()
+        # Figure out the latest active, non-retired branch
+        by_version = lambda p: p['collection']['version']
+        data['packages'].sort(key=by_version, reverse=True)
+        for info in data['packages']:
+            if info['collection']['version'] in ignore:
+                continue
+            if info['status'] == 'Approved':
+                return info
+
+        raise KeyError("Couldn't find active pkgdb branch for %r" % name)
 
     def construct_package_dictionary(self, package):
         """ Return structured package dictionary from a pkgdb package.
@@ -177,23 +287,11 @@ class Indexer(object):
         package = copy.deepcopy(package)
 
         name = package['name']
-
-        ###
-        # Get some more detailed pkgdb info for this package (in rawhide)
-        ###
-        url = self.pkgdb_url + "/api/package/" + name
-        params = {}#dict(branches='master')
-        data = local.http.get(url, params=params).json()
-
-        # Figure out the latest active, non-retired branch
-        by_version = lambda p: p['collection']['version']
-        data['packages'].sort(key=by_version, reverse=True)
-        for info in data['packages']:
-            if info['status'] == 'Approved':
-                break
-        else:
-            log.warn("Couldn't find active pkgdb branch for %r" % name)
-            return None
+        try:
+            info = self.latest_active(name)
+        except KeyError:
+            log.warning("Failed to get pkgdb info for %r" % name)
+            return
 
         package['summary'] = info['package']['summary'] or \
             '(no summary in pkgdb)'
@@ -253,19 +351,6 @@ class Indexer(object):
                 'branch': branch,
             }
 
-    #def index_desktop_file(self, doc, desktop_file, package_dict, desktop_file_cache):
-    #    doc.fields.append(xappy.Field('tag', 'desktop'))
-
-    #    dp = DesktopParser(desktop_file)
-    #    category = dp.get('Categories', '')
-
-    #    icon = dp.get('Icon', '')
-    #    if icon:
-    #        print "Icon %s" % icon
-    #        generated_icon = self.icon_cache.generate_icon(icon, desktop_file_cache)
-    #        if generated_icon != None:
-    #            package_dict['icon'] = icon
-
     def index_files_of_interest(self, doc, package_dict):
         name = package_dict['name']
         branch = package_dict['branch']
@@ -282,26 +367,6 @@ class Indexer(object):
         for entry in data['files']:
             filenames = entry['filenames'].split('/')
             for filename in filenames:
-                if filename.endswith('.desktop'):
-                    log.warn("TODO - indexing the content of desktop files is disabled for now")
-                    continue
-                    # When we get back here, we should give up on parsing the .desktop file like this,
-                    # and we should instead use the appstream metadata that hughsie worked on
-                    # See:
-                    # - https://alt.fedoraproject.org/pub/alt/screenshots/f23/$a
-                    # - fedora-23-icons.tar.gz there has the icons
-                    # - fedora-23-xml.gz has the metadata
-                    # - github.com/hughsie/python-appstream has a parser for the xml if we need it.
-                    # - some of this is written now in pull_icons and cache_icons
-
-                    ## index apps
-                    #log.info("        indexing desktop file %s" % os.path.basename(filename))
-                    #f = desktop_file_cache.open_file(filename, decompress_filter='*.desktop')
-                    #if f == None:
-                    #    log.warn("could not open desktop file")
-                    #    continue
-                    #self.index_desktop_file(doc, f, package_dict, desktop_file_cache)
-                    #f.close()
                 if filename.startswith('/usr/bin'):
                     # index executables
                     log.info("        indexing exe file %s" % os.path.basename(filename))
@@ -329,7 +394,7 @@ class Indexer(object):
         packages = self.gather_pkgdb_packages()
 
         # XXX - Only grab the first N for dev purposes
-        packages = [packages.next() for i in range(50)]
+        #packages = [packages.next() for i in range(50)]
 
         def io_work(package):
             log.info("indexing %s" % (package['name']))
@@ -399,7 +464,13 @@ class Indexer(object):
             # fedora-tagger does not provide special tags for sub-packages...
             #self.index_tags(doc, sub_package)
 
-            if sub_package['icon'] != self.default_icon and package['icon'] == self.default_icon:
+            # Set special sub-package icon if appstream has one
+            sub_package['icon'] = self.icon_cache.get(
+                sub_package['name'], self.default_icon)
+
+            # If the parent has a dull icon, give it ours!
+            if sub_package['icon'] != self.default_icon \
+                and package['icon'] == self.default_icon:
                 package['icon'] = sub_package['icon']
 
             # remove anything we don't want to store
@@ -432,4 +503,4 @@ def run(cache_path, tagger_url=None, pkgdb_url=None, mdapi_url=None, icons_url=N
     log.info("Indexed %d packages." % count)
 
 if __name__ == '__main__':
-    run('index_cache', join(dirname(__file__), 'yum.conf'), 'http://apps.fedoraproject.org/tagger/dump')
+    run('index_cache', join(os.path.dirname(__file__), 'yum.conf'), 'http://apps.fedoraproject.org/tagger/dump')
