@@ -1,6 +1,5 @@
 <div>
     <div class="tab-container">
-        <div>${w.children[0].display(build_id=w.default_build_id,
-                                     latest_builds=w.latest_builds)}</div>
+      <div>${w.children[0].display(package_name=w.kwds['package_name'])}</div>
     </div>
 </div>

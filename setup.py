@@ -67,6 +67,7 @@ setup(
         "retask",
         "python-memcached",
         "markdown",
+        "python-appstream",
         #"PyOpenSSL",
         #"SQLAlchemy>=0.5",
         #"xappy",

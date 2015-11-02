@@ -16,8 +16,7 @@
 
 from fedoracommunity.connectors.api import IConnector, ICall, IQuery
 from tg import config
-from fedoracommunity.search import utils, distmappings
-from fedoracommunity.lib.utils import OrderedDict
+from fedoracommunity.search import utils
 
 import re
 import urllib
@@ -34,8 +33,8 @@ class XapianConnector(IConnector, ICall, IQuery):
 
     def __init__(self, environ=None, request=None):
         super(XapianConnector, self).__init__(environ, request)
-        self._search_db = xapian.Database(config.get('fedoracommunity.connector.xapian.package-search.db', 'xapian/search'))
-        self._versionmap_db = xapian.Database(config.get('fedoracommunity.connector.xapian.versionmap.db', 'xapian/versionmap'))
+        self._search_db = xapian.Database(
+            config.get('fedoracommunity.connector.xapian.package-search.db', 'xapian/search'))
 
     # IConnector
     @classmethod
@@ -185,27 +184,3 @@ class XapianConnector(IConnector, ICall, IQuery):
         matches = enquire.get_mset(start_row, rows_per_page)
 
         return matches
-
-    def get_latest_builds(self, package_name):
-        enquire = xapian.Enquire(self._versionmap_db)
-        qp = xapian.QueryParser()
-        qp.set_database(self._versionmap_db)
-        qp.add_boolean_prefix('key', 'XA')
-        query = qp.parse_query('key:%s' % utils.filter_search_string(package_name))
-
-        enquire.set_query(query)
-        matches = enquire.get_mset(0, 1)
-        if len(matches) == 0:
-            return None
-        results = json.loads(matches[0].document.get_data())
-
-        latest_builds = OrderedDict()
-        lastdistname = ""
-
-        for dist in distmappings.tags:
-            distname = dist['name']
-            if lastdistname != distname and distname in results:
-                latest_builds[distname] = results[distname]
-                lastdistname = distname
-
-        return latest_builds
