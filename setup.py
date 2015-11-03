@@ -138,7 +138,6 @@ setup(
     koji = fedoracommunity.connectors:KojiConnector
     bodhi = fedoracommunity.connectors:BodhiConnector
     pkgdb = fedoracommunity.connectors:PkgdbConnector
-    fas = fedoracommunity.connectors:FasConnector
     bugzilla = fedoracommunity.connectors:BugzillaConnector
     planet = fedoracommunity.connectors:PlanetConnector
     yum = fedoracommunity.connectors:YumConnector
