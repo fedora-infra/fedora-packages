@@ -173,10 +173,6 @@ setup(
     package_relationships_obsoletes = fedoracommunity.widgets.package.relationships:ObsoletesWidget
     package_relationships_conflicts = fedoracommunity.widgets.package.relationships:ConflictsWidget
 
-    [moksha.stream]
-    stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
-    wiki_all_revisions = fedoracommunity.streams.stats:WikiAllRevisionsDataStream
-
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
 
