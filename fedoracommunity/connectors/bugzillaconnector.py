@@ -54,6 +54,7 @@ def chunks(l, n):
 class BugzillaConnector(IConnector, ICall, IQuery):
     _method_paths = {}
     _query_paths = {}
+    _cache_prompts = {}
 
     def __init__(self, environ=None, request=None):
         super(BugzillaConnector, self).__init__(environ, request)
@@ -62,6 +63,11 @@ class BugzillaConnector(IConnector, ICall, IQuery):
     @property
     def _bugzilla(self):
         return Bugzilla(url=self._base_url, cookiefile=None, tokenfile=None)
+
+    @classmethod
+    def cache_prompt(*args, **kwargs):
+        # TODO -- it will be awesome to handle bugzilla fedmsg messages here.
+        raise NotImplementedError
 
     # IConnector
     @classmethod
@@ -72,7 +78,10 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         cls.register_query_bugs()
 
-        cls.register_method('get_bug_stats', cls.query_bug_stats)
+        cls.register_method(
+            'get_bug_stats', cls.query_bug_stats,
+            cache_prompt=None, #cls.cache_prompt,
+        )
 
     #IQuery
     @classmethod
@@ -80,6 +89,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         path = cls.register_query(
             'query_bugs',
             cls.query_bugs,
+            cache_prompt=None, #cls.cache_prompt,
             primary_key_col='id',
             default_sort_col='date',
             default_sort_order=-1,

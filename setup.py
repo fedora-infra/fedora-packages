@@ -64,10 +64,10 @@ setup(
         "moksha.wsgi",
         "TurboGears2",
         "dogpile.cache",
-        "retask",
         "python-memcached",
         "markdown",
         "python-appstream",
+        "fedmsg",
         #"PyOpenSSL",
         #"SQLAlchemy>=0.5",
         #"xappy",
@@ -139,10 +139,8 @@ setup(
     bodhi = fedoracommunity.connectors:BodhiConnector
     pkgdb = fedoracommunity.connectors:PkgdbConnector
     bugzilla = fedoracommunity.connectors:BugzillaConnector
-    planet = fedoracommunity.connectors:PlanetConnector
     yum = fedoracommunity.connectors:YumConnector
     xapian = fedoracommunity.connectors:XapianConnector
-    torrent = fedoracommunity.connectors:TorrentConnector
 
     [moksha.widget]
     fedoracommunity.bodhi = fedoracommunity.widgets.package.updates:Updates
@@ -163,16 +161,11 @@ setup(
     package_sources_tarballs = fedoracommunity.widgets.package.sources:Tarballs
     package_sources_git = fedoracommunity.widgets.package.sources:GitRepo
 
-    package_relationships = fedoracommunity.widgets.package.relationships:RelationshipsWidget
-    package_relationships_requires = fedoracommunity.widgets.package.relationships:RequiresWidget
-    package_relationships_requiredby = fedoracommunity.widgets.package.relationships:RequiredByWidget
-    package_relationships_depends = fedoracommunity.widgets.package.relationships:DependsWidget
-    package_relationships_provides = fedoracommunity.widgets.package.relationships:ProvidesWidget
-    package_relationships_obsoletes = fedoracommunity.widgets.package.relationships:ObsoletesWidget
-    package_relationships_conflicts = fedoracommunity.widgets.package.relationships:ConflictsWidget
-
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
+
+    [moksha.consumer]
+    bug_filer = fedoracommunity.consumers:CacheInvalidator
 
     [distutils.commands]
     archive_fedoracommunity_resources = fedoracommunity.distutils.command:archive_fedoracommunity_resources

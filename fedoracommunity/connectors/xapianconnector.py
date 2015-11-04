@@ -30,6 +30,7 @@ except ImportError:
 class XapianConnector(IConnector, ICall, IQuery):
     _method_paths = {}
     _query_paths = {}
+    _cache_prompts = {}
 
     def __init__(self, environ=None, request=None):
         super(XapianConnector, self).__init__(environ, request)
@@ -50,6 +51,7 @@ class XapianConnector(IConnector, ICall, IQuery):
         path = cls.register_query(
                       'search_packages',
                       cls.search_packages,
+                      cache_prompt=None,  # This means "don't cache".
                       primary_key_col = 'name',
                       default_sort_col = 'name',
                       default_sort_order = -1,

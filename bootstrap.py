@@ -36,7 +36,7 @@ def install_deps():
             'python-retask', 'python-memcached', 'memcached',
             'python-markdown',
         ]
-        run('sudo yum install -q -y ' + ' '.join(reqs))
+        run('sudo dnf install -q -y ' + ' '.join(reqs))
 
 
 snapshot_url = 'http://lmacken.fedorapeople.org/fedora-packages'
@@ -63,7 +63,7 @@ def link_external_libs():
         major=sys.version_info.major, minor=sys.version_info.minor)
     template = 'ln -s /usr/{location}/{lib} {venv}/{location}/'
     for lib in ['koji', 'rpm', 'rpmUtils', 'fedora', 'kitchen', 'pycurl',
-                'yum', 'urlgrabber', 'sqlitecachec', '_sqlitecache',
+                'urlgrabber', 'sqlitecachec', '_sqlitecache',
                 'bugzilla', 'xapian', 'xappy',
                 'dogpile', 'memcache'
                ]:
