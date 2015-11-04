@@ -40,50 +40,8 @@ from kitchen.text.converters import to_bytes
 
 import hashlib
 import inspect
-import retask.task
-import retask.queue
-import json
 
 _queue = None
-
-
-def get_redis_queue():
-    global _queue
-    if not _queue:
-        # Initialize an outgoing redis queue right off the bat.
-        _queue = retask.queue.Queue('fedora-packages')
-        _queue.connect()
-
-    return _queue
-
-
-def async_creation_runner(cache, somekey, creator, mutex):
-    """ Used by dogpile.core:Lock when appropriate.
-
-    Instead of directly computing the value, this instead adds a task to
-    a redis queue with instructions for a worker on how to import and
-    invoke function that we want.
-
-    It also assumes the cache is backed by memcached and so provides the
-    worker both with the cache key for the new value as well as the
-    memcached key for the distributed mutex (so it can be released later).
-    """
-
-    # Re-use those artificial attributes that we stuck on the cached fns
-    fn = dict(path=creator._path, type=creator._type, name=creator._name)
-    freevar_dict = dict(zip(
-        creator.func_code.co_freevars,
-        [c.cell_contents for c in (creator.func_closure or [])]
-    ))
-    task = retask.task.Task(json.dumps(dict(
-        fn=fn,
-        kw=freevar_dict['kw'],
-        mutex_key=mutex.key,
-        cache_key=somekey,
-    )))
-
-    # fire-and-forget
-    get_redis_queue().enqueue(task)
 
 
 def cache_key_generator(namespace, fn):
@@ -122,6 +80,10 @@ def cache_key_generator(namespace, fn):
     return generate_key
 
 
+def cache_key_mangler(key):
+    return str(hashlib.sha1(key).hexdigest())
+
+
 class IConnector(object):
     """ Data connector interface
 
@@ -135,8 +97,7 @@ class IConnector(object):
         if not cls.__cache and any(['cache.connectors.' in k for k in config]):
             cls.__cache = make_region(
                 function_key_generator=cache_key_generator,
-                key_mangler=lambda key: hashlib.sha1(key).hexdigest(),
-                async_creation_runner=async_creation_runner,
+                key_mangler=cache_key_mangler,
             )
             cls.__cache.configure_from_config(config, 'cache.connectors.')
 
@@ -157,18 +118,24 @@ class IConnector(object):
         raise NotImplementedError
 
     @classmethod
-    def register_method(cls, method_path, method):
+    def register_method(cls, method_path, method, cache_prompt):
 
         # Attach an attribute so the worker can look us up later.
         method.__dict__['_path'] = method_path
         method.__dict__['_type'] = 'method'
         method.__dict__['_name'] = cls.__name__[:-9].lower()
 
-        # Wrap every query in our dogpile cache.
-        if cls._cache():
+        # Wrap every query in our dogpile cache, but only if we have a prompt
+        if cache_prompt and cls._cache():
             method = cls._cache().cache_on_arguments(method_path)(method)
 
         cls._method_paths[method_path] = method
+        if cache_prompt:
+            cls._cache_prompts[method_path] = dict(
+                prompt=cache_prompt,
+                namespace=method_path,
+                fn=method,
+            )
 
     def _dispatch(self, op, resource_path, params, _cookies=None, **kwds):
         """ This method is for dispatching to the correct interface which
@@ -411,6 +378,7 @@ class IQuery(object):
     def register_query(cls,
                        path,
                        query_func,
+                       cache_prompt,
                        primary_key_col=None,
                        default_sort_col=None,
                        default_sort_order=None,
@@ -428,12 +396,18 @@ class IQuery(object):
         qpath['query_func'].__dict__['_type'] = 'query'
         qpath['query_func'].__dict__['_name'] = cls.__name__[:-9].lower()
 
-        # Wrap every query in our dogpile cache.
-        if cls._cache():
+        # Wrap every query in our dogpile cache, but only if we have a prompt
+        if cache_prompt and cls._cache():
             qpath['query_func'] = \
                 cls._cache().cache_on_arguments(path)(qpath['query_func'])
 
         cls._query_paths[path] = qpath
+        if cache_prompt:
+            cls._cache_prompts[path] = dict(
+                prompt=cache_prompt,
+                namespace=path,
+                fn=qpath['query_func'],
+            )
         return qpath
 
     def get_capabilities(self):
@@ -473,6 +447,7 @@ class ISearch(IQuery):
     def register_search_path(cls,
                              path,
                              search_func,
+                             cache_prompt,
                              primary_key_col=None,
                              default_sort_col=None,
                              default_sort_order=None,
@@ -506,6 +481,7 @@ class ISearch(IQuery):
 
         qpath = cls.register_query(path=path,
                                    query_func=query_func,
+                                   cache_prompt=cache_prompt,
                                    primary_key_col=primary_key_col,
                                    default_sort_col=default_sort_col,
                                    default_sort_order=default_sort_order,

@@ -36,17 +36,33 @@ class YumConnector(IConnector, ICall, IQuery):
     """
     _method_paths = {}
     _query_paths = {}
+    _cache_prompts = {}
+
     fedora_base_repo_re = re.compile('Fedora ([0-9]+)$')
 
     def __init__(self, environ=None, request=None):
         super(YumConnector, self).__init__(environ, request)
+
+    @classmethod
+    def cache_prompt(cls, msg):
+        if not '.mdapi.repo.update' in msg['topic']:
+            return
+
+        repo = msg['msg']['name']
+        table = msg['msg']['differences'].get('filelist', {})
+        added = table.get('added', [])
+        removed = table.get('removed', [])
+        names = set([entry[0] for entry in added + removed])
+        for name in names:
+            yield {'repo': repo, 'package': name}
 
     # IConnector
     @classmethod
     def register(cls):
         cls._mdapi_url = config.get('fedoracommunity.connector.mdapi.url',
                                     'http://209.132.184.236')  # dev instance
-        cls.register_method('get_file_tree', cls.call_get_file_tree)
+        cls.register_method(
+            'get_file_tree', cls.call_get_file_tree, cls.cache_prompt)
 
     def introspect(self):
         # FIXME: return introspection data
@@ -108,7 +124,7 @@ class YumConnector(IConnector, ICall, IQuery):
 
         return paths_cache['/']['children']
 
-    def call_get_file_tree(self, resource_path=None, _cookies=None, package=None, repo='rawhide', arch=None):
+    def call_get_file_tree(self, resource_path=None, _cookies=None, package=None, repo='rawhide'):
         repo = repo.lower()
         url = '/'.join([self._mdapi_url, repo, 'files', package])
         response = requests.get(url)
