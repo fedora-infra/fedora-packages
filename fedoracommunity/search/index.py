@@ -71,6 +71,7 @@ class Indexer(object):
         self.icons_url = icons_url or "https://alt.fedoraproject.org/pub/alt/screenshots"
         self._latest_release = None
         self._active_fedora_releases = None
+        self.icon_cache = {}
 
         self.create_index()
 
@@ -180,7 +181,6 @@ class Indexer(object):
                 download_file(url, target)
 
     def cache_icons(self):
-        self.icon_cache = {}
         for release in self.active_fedora_releases:
             fname = 'fedora-%i.xml.gz' % release
             target = join(self.icons_path, 'tmp', str(release), fname)
@@ -421,7 +421,6 @@ class Indexer(object):
             self.indexer.add(document)
 
         self.indexer.close()
-        return i + 1
 
     def _process_document(self, package, document):
         processed = self.indexer.process(document, False)
@@ -499,8 +498,8 @@ def run(cache_path, tagger_url=None, pkgdb_url=None, mdapi_url=None, icons_url=N
     indexer.cache_icons()
 
     log.info("Indexing packages.")
-    count = indexer.index_packages()
-    log.info("Indexed %d packages." % count)
+    indexer.index_packages()
+    log.info("Indexed a ton of packages.")
 
 if __name__ == '__main__':
     run('index_cache', join(os.path.dirname(__file__), 'yum.conf'), 'http://apps.fedoraproject.org/tagger/dump')
