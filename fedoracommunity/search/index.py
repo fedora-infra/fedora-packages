@@ -48,8 +48,11 @@ def download_file(url, dest):
     # Extract the big one.
     if dest.endswith('.tar.gz'):
         log.info("Extracting %s in %s" % (dest, dirname))
-        with tarfile.open(dest) as f:
+        f = tarfile.open(dest)
+        try:
             f.extractall(path=dirname)
+        finally:
+            f.close()
 
     return dest
 
@@ -186,8 +189,11 @@ class Indexer(object):
             target = join(self.icons_path, 'tmp', str(release), fname)
 
             metadata = appstream.Store()
-            with gzip.open(target, 'rb') as f:
+            f = gzip.open(target, 'rb')
+            try:
                 metadata.parse(f.read())
+            finally:
+                f.close()
 
             for idx, component in metadata.components.items():
                 # Other types are 'stock' and 'unknown'
