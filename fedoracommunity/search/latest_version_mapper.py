@@ -63,7 +63,7 @@ class Mapper(object):
     def search(self, key):
         if self.sconn_needs_reload:
             self.sconn.reopen()
-        q = self.sconn.query_parse('key:%s' % filter_search_string(key)) 
+        q = self.sconn.query_parse('key:%s' % filter_search_string(key))
         results = self.sconn.search(q, 0, 1)
 
         return results
