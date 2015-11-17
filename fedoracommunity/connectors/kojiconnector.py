@@ -82,12 +82,6 @@ class KojiConnector(IConnector, IQuery):
             'fedoracommunity.connector.koji.pkgurl',
             'http://koji.fedoraproject.org/packages')
 
-        cls._rpm_cache = config.get('fedoracommunity.rpm_cache',
-                                    None)
-        if not cls._rpm_cache:
-            print "You must specify fedoracommunity.rpm_cache in you .ini file"
-            exit(-1)
-
         cls._mdapi_url = config.get('fedoracommunity.connector.mdapi.url',
                                     'https://apps.fedoraproject.org/mdapi')
 

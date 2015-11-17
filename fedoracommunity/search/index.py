@@ -500,6 +500,3 @@ def run(cache_path, tagger_url=None, pkgdb_url=None, mdapi_url=None, icons_url=N
     log.info("Indexing packages.")
     indexer.index_packages()
     log.info("Indexed a ton of packages.")
-
-if __name__ == '__main__':
-    run('index_cache', join(os.path.dirname(__file__), 'yum.conf'), 'http://apps.fedoraproject.org/tagger/dump')

@@ -78,9 +78,6 @@ Requires: fedmsg
 Requires: rpmdevtools
 Requires: python-daemon
 
-# Needs to be running so the wsgi process can share jobs with worker processes
-Requires: redis
-
 Obsoletes: myfedora
 Conflicts: fedoracommunity
 
@@ -130,19 +127,8 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{__install} production/apache/%{oldname}.wsgi %{buildroot}%{_datadir}/%{oldname}/production/apache/%{oldname}.wsgi
 %{__install} production/sample-production.ini %{buildroot}%{_datadir}/%{oldname}/production
 
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/init.d
-%{__install} initsys/sysv/fcomm-cache-worker.init %{buildroot}%{_sysconfdir}/init.d/fcomm-cache-worker
-
-%{__mkdir_p} %{buildroot}%{_sbindir}
-%{__mv} %{buildroot}%{_bindir}/fcomm-cache-worker %{buildroot}%{_sbindir}/fcomm-cache-worker
-
-# Logrotate configuration (for the cache-worker daemon)
-%{__mkdir_p} %{buildroot}/%{_sysconfdir}/logrotate.d
-%{__install} logrotate %{buildroot}/%{_sysconfdir}/logrotate.d/%{oldname}
-
 %clean
 %{__rm} -rf %{buildroot}
-
 
 %files
 %defattr(-,root,root,-)
@@ -155,13 +141,7 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{python_sitelib}/%{oldname}-%{version}-py%{pyver}.egg-info/
 #%{python_sitelib}/%{oldname}-%{version}-py%{pyver}-nspkg.pth
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/%{oldname}
-%{_bindir}/fedoracommunity_makeyumcache
 %{_bindir}/fcomm-index-packages
-%{_bindir}/fcomm-index-latest-builds
-%{_sbindir}/fcomm-cache-worker
-%{_sysconfdir}/init.d/fcomm-cache-worker
-%config(noreplace) %{_sysconfdir}/logrotate.d/%{oldname}
-
 
 %changelog
 * Tue Oct 20 2015 Ralph Bean <rbean@redhat.com> - 2.0.20-1

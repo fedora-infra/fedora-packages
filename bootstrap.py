@@ -33,7 +33,7 @@ def install_deps():
             'xapian-bindings-python', 'diffstat', 'fedpkg', 'svn', 'wget',
             'python-xappy', 'python-webob', 'moksha', 'TurboGears2',
             'python-dogpile-cache', 'python-dogpile-core',
-            'python-retask', 'python-memcached', 'memcached',
+            'python-memcached', 'memcached',
             'python-markdown',
         ]
         run('sudo dnf install -q -y ' + ' '.join(reqs))
