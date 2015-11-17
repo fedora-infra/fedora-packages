@@ -62,7 +62,7 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
             'https://apps.fedoraproject.org/tagger')
         self.mdapi_url = config.get(
             'fedoracommunity.connector.mdapi.baseurl',
-            'http://209.132.184.236')  # dev instance
+            'https://apps.fedoraproject.org/mdapi')
         self.pkgdb_url = config.get(
             'fedoracommunity.connector.pkgdb.baseurl',
             'https://admin.fedoraproject.org/pkgdb')

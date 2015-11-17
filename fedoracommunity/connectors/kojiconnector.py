@@ -89,7 +89,7 @@ class KojiConnector(IConnector, IQuery):
             exit(-1)
 
         cls._mdapi_url = config.get('fedoracommunity.connector.mdapi.url',
-                                    'http://209.132.184.236')  # dev instance
+                                    'https://apps.fedoraproject.org/mdapi')
 
         cls.register_query_builds()
         cls.register_query_changelogs()

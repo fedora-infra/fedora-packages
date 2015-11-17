@@ -67,7 +67,7 @@ class Indexer(object):
         self.default_icon = 'package_128x128'
         self.tagger_url = tagger_url or "https://apps.fedoraproject.org/tagger"
         self.pkgdb_url = pkgdb_url or "https://admin.fedoraproject.org/pkgdb"
-        self.mdapi_url = mdapi_url or "http://209.132.184.236"  # dev instance
+        self.mdapi_url = mdapi_url or "https://apps.fedoraproject.org/mdapi"
         self.icons_url = icons_url or "https://alt.fedoraproject.org/pub/alt/screenshots"
         self._latest_release = None
         self._active_fedora_releases = None
