@@ -59,7 +59,7 @@ class YumConnector(IConnector, ICall, IQuery):
     # IConnector
     @classmethod
     def register(cls):
-        cls._mdapi_url = config.get('fedoracommunity.connector.mdapi.url',
+        cls._mdapi_url = config.get('fedoracommunity.connector.mdapi.baseurl',
                                     'https://apps.fedoraproject.org/mdapi')
         cls.register_method(
             'get_file_tree', cls.call_get_file_tree, cls.cache_prompt)

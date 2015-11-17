@@ -82,7 +82,7 @@ class KojiConnector(IConnector, IQuery):
             'fedoracommunity.connector.koji.pkgurl',
             'http://koji.fedoraproject.org/packages')
 
-        cls._mdapi_url = config.get('fedoracommunity.connector.mdapi.url',
+        cls._mdapi_url = config.get('fedoracommunity.connector.mdapi.baseurl',
                                     'https://apps.fedoraproject.org/mdapi')
 
         cls.register_query_builds()
