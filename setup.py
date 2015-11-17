@@ -59,7 +59,7 @@ setup(
              'Máirín Duffy <duffy@redhat.com>',
              'Ralph Bean <rbean@redhat.com>',
              ),
-    url='http://fedoracommunity.fedorahosted.org',
+    url='https://github.com/fedora-infra/fedora-packages',
     install_requires=[
         "moksha.wsgi",
         "TurboGears2",
@@ -75,7 +75,7 @@ setup(
         #"GitPython",
         #"pytz",
         ],
-    scripts=['fedoracommunity_makeyumcache', 'bin/fcomm-index-packages', 'bin/fcomm-index-latest-builds'],
+    scripts=['bin/fcomm-index-packages'],
     packages=packages,
     include_package_data=True,
     test_suite='nose.collector',
@@ -169,9 +169,6 @@ setup(
 
     [distutils.commands]
     archive_fedoracommunity_resources = fedoracommunity.distutils.command:archive_fedoracommunity_resources
-
-    [console_scripts]
-    fcomm-cache-worker = fedoracommunity.connectors.api.worker:main
 
     """
 )
