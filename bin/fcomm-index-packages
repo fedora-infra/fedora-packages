@@ -34,6 +34,12 @@ if __name__=="__main__":
     parser.add_option("--pkgdb-url", dest="pkgdb_url", default=None,
                       help="the base url to get pkgdb data from",
                       metavar="PKGDBURL")
+    parser.add_option("--icons-url", dest="icons_url", default=None,
+                      help="the base url to get icons data from",
+                      metavar="ICONSURL")
+    parser.add_option("--mdapi-url", dest="mdapi_url", default=None,
+                      help="the base url to get mdapi data from",
+                      metavar="MDAPIURL")
     parser.add_option("--verbose", action="store_true", default=False,
                       help="Verbose output.")
     parser.add_option("--debug", action="store_true", default=False,
@@ -60,7 +66,10 @@ if __name__=="__main__":
     try:
         run(cache_path=options.cache_path,
             tagger_url=options.tagger_url,
-            pkgdb_url=options.pkgdb_url)
+            pkgdb_url=options.pkgdb_url,
+            icons_url=options.icons_url,
+            mdapi_url=options.mdapi_url,
+            )
 
         if options.icons_dest is None:
             log.warn("No icons_dest specified.  Skipping copy.")
