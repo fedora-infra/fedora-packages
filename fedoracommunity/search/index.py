@@ -247,7 +247,8 @@ class Indexer(object):
 
         for i in range(pages):
             log.info("Requesting pkgdb page %i of %i" % (i + 1, pages))
-            response = local.http.get(self.pkgdb_url + '/api/packages/')
+            response = local.http.get(self.pkgdb_url + '/api/packages/',
+                                      params=dict(page=i+1))
             if not bool(response):
                 raise IOError("Failed to talk to pkgdb: %r" % response)
             for package in response.json()['packages']:
