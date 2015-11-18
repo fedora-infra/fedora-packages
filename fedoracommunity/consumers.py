@@ -15,9 +15,6 @@ from fedoracommunity.connectors.api.connector import (
     cache_key_generator as generator_factory,
     cache_key_mangler as mangler,
 )
-from fedoracommunity.connectors.api.worker import (
-    find_config_file,
-)
 from fedoracommunity.search import utils
 
 import logging
@@ -26,6 +23,20 @@ log = logging.getLogger("fedmsg")
 
 class FakeTG2Request(object):
     environ = {}
+
+
+def find_config_file():
+    locations = (
+        '.',
+        '/etc/fedoracommunity/',
+        '/'.join(__file__.split('/') + ['..', '..', '..', '..']),
+    )
+    for config_path in locations:
+        for config_file in ('production.ini', 'development.ini'):
+            cfg = os.path.join(os.path.abspath(config_path), config_file)
+            if os.path.isfile(cfg):
+                return cfg
+    return None
 
 
 def make_kwargs(connector, path, info, filters):
