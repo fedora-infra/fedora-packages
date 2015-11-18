@@ -135,6 +135,7 @@ class IConnector(object):
                 prompt=cache_prompt,
                 namespace=method_path,
                 fn=method,
+                op='method',
             )
 
     def _dispatch(self, op, resource_path, params, _cookies=None, **kwds):
@@ -407,6 +408,7 @@ class IQuery(object):
                 prompt=cache_prompt,
                 namespace=path,
                 fn=qpath['query_func'],
+                op='query',
             )
         return qpath
 
