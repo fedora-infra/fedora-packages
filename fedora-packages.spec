@@ -4,8 +4,8 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.17
-Release:        1%{?dist}
+Version:        3.0.0
+Release:        3%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -36,8 +36,9 @@ BuildRequires: python-bunch
 BuildRequires: python-dogpile-core > 0.4.0
 BuildRequires: python-dogpile-cache > 0.4.1
 BuildRequires: python-memcached
-BuildRequires: python-retask
 BuildRequires: python-markdown
+BuildRequires: python-appstream
+BuildRequires: fedmsg
 BuildRequires: python-daemon
 
 %if 0%{?el6} || 0%{?el5}
@@ -69,15 +70,13 @@ Requires: python-xappy
 Requires: python-dogpile-core > 0.4.0
 Requires: python-dogpile-cache > 0.4.1
 Requires: python-memcached
-Requires: python-retask
 Requires: packagedb-cli
 Requires: python-markdown
+Requires: python-appstream
+Requires: fedmsg
 # For spectool
 Requires: rpmdevtools
 Requires: python-daemon
-
-# Needs to be running so the wsgi process can share jobs with worker processes
-Requires: redis
 
 Obsoletes: myfedora
 Conflicts: fedoracommunity
@@ -128,19 +127,8 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{__install} production/apache/%{oldname}.wsgi %{buildroot}%{_datadir}/%{oldname}/production/apache/%{oldname}.wsgi
 %{__install} production/sample-production.ini %{buildroot}%{_datadir}/%{oldname}/production
 
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/init.d
-%{__install} initsys/sysv/fcomm-cache-worker.init %{buildroot}%{_sysconfdir}/init.d/fcomm-cache-worker
-
-%{__mkdir_p} %{buildroot}%{_sbindir}
-%{__mv} %{buildroot}%{_bindir}/fcomm-cache-worker %{buildroot}%{_sbindir}/fcomm-cache-worker
-
-# Logrotate configuration (for the cache-worker daemon)
-%{__mkdir_p} %{buildroot}/%{_sysconfdir}/logrotate.d
-%{__install} logrotate %{buildroot}/%{_sysconfdir}/logrotate.d/%{oldname}
-
 %clean
 %{__rm} -rf %{buildroot}
-
 
 %files
 %defattr(-,root,root,-)
@@ -153,15 +141,18 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{python_sitelib}/%{oldname}-%{version}-py%{pyver}.egg-info/
 #%{python_sitelib}/%{oldname}-%{version}-py%{pyver}-nspkg.pth
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/%{oldname}
-%{_bindir}/fedoracommunity_makeyumcache
 %{_bindir}/fcomm-index-packages
-%{_bindir}/fcomm-index-latest-builds
-%{_sbindir}/fcomm-cache-worker
-%{_sysconfdir}/init.d/fcomm-cache-worker
-%config(noreplace) %{_sysconfdir}/logrotate.d/%{oldname}
-
 
 %changelog
+* Tue Nov 17 2015 Ralph Bean <rbean@redhat.com> - 3.0.0-3
+- Major rewrite of backend.
+- Removed all yum and rpm cache management.
+- Introduced new service dep on mdapi.
+- Replaced cronjobs with a fedmsg updater.
+
+* Tue Oct 20 2015 Ralph Bean <rbean@redhat.com> - 2.0.20-1
+- new version
+
 * Tue May 20 2014 Ralph Bean <rbean@redhat.com> - 2.0.17-1
 - Further pkgdb2 updates.
 

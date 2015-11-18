@@ -34,3 +34,4 @@ fedoracommunity/templates/home/
 var
 *.dbm*
 versionmap
+xapian-backup*

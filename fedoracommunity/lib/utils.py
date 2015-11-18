@@ -1,16 +1,16 @@
 # This file is part of Fedora Community.
 # Copyright (C) 2008-2010  Red Hat, Inc.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -71,16 +71,16 @@ def _print_map(map, depth):
         print tabstop + '\t' + str(k) + '=',
         if isinstance(v, dict):
             print ''
-            _print_map(v, depth + 1)  
+            _print_map(v, depth + 1)
         elif isinstance(v, list) or isinstance(v, tuple):
             print ''
             _print_array(v, depth + 1)
         else:
             print v
-            
-    print tabstop + '}'       
-        
-        
+
+    print tabstop + '}'
+
+
 def _print_array(array, depth):
     tabstop = ''
     for i in xrange(depth):
@@ -88,7 +88,7 @@ def _print_array(array, depth):
     print tabstop + '['
     for a in array:
         if isinstance(a, dict):
-            _print_map(a, depth + 1)  
+            _print_map(a, depth + 1)
         elif isinstance(a, list) or isinstance(a, tuple):
             _print_array(a, depth + 1)
         else:
@@ -99,31 +99,31 @@ pretty_print_map = lambda m : _print_map(m, 0)
 pretty_print_array = lambda a : _print_array(a, 0)
 
 class odict(DictMixin):
-    
+
     def __init__(self):
         self._keys = []
         self._data = {}
-        
+
     def __setitem__(self, key, value):
         if key not in self._data:
             self._keys.append(key)
-            
+
         self._data[key] = value
-        
+
     def __getitem__(self, key):
         return self._data[key]
-    
+
     def __delitem__(self, key):
         del self._data[key]
         self._keys.remove(key)
-        
+
     def __iter__(self):
         for key in self._keys:
             yield key
-        
+
     def keys(self):
         return list(self._keys)
-    
+
     def copy(self):
         copyDict = odict()
         copyDict._data = self._data.copy()
@@ -147,34 +147,34 @@ class HRElapsedTime(object):
         self.parse_format = '%Y-%m-%d %H:%M:%S'
 
     def set_parse_format(self, format):
-        self.parse_format = format 
-        
+        self.parse_format = format
+
     def set_output_format(self, format):
         self.output_format = format
-        
-    @staticmethod        
+
+    @staticmethod
     def time_from_string(timestr, parse_format = '%Y-%m-%d %H:%M:%S'):
-        timep = datetime(*time.strptime(timestr.split('.')[0], parse_format)[0:5])    
-            
+        timep = datetime(*time.strptime(timestr.split('.')[0], parse_format)[0:5])
+
         return timep
-    
+
     def set_start_timestr(self, timestr):
         self.start = self.time_from_string(timestr, self.parse_format)
-        
+
     def set_start_time(self, time):
         self.start = time
-        
+
     def set_end_timestr(self, timestr):
         self.end = self.time_from_string(timestr, self.parse_format)
-        
+
     def set_end_time(self, time):
         self.end = time
-        
+
     def set_end_time_to_now(self):
         self.end = datetime.utcnow()
-        
+
     def get_hr_elapsed_time(self):
-        
+
         delta = self.end - self.start
         if delta.days < 1 and self.start.day == self.end.day:
             dstr = 'Today'
@@ -202,15 +202,15 @@ class HRElapsedTime(object):
             if years > 1:
                 dstr += 's'
             dstr += ' ago'
-        
+
         return dstr
-            
+
     def get_hr_time(self, time):
         return datetime.strftime(time, self.output_format)
-        
+
     def get_hr_start_time(self):
         return self.get_hr_time(self.start)
-        
+
     def get_hr_end_time(self):
         return self.get_hr_time(self.end)
 
@@ -233,7 +233,7 @@ else:
     :copyright: 2006-2008 by Georg Brandl, Tim Hatch ,
                 Stou Sandalski, Paulo Moura, Clara Dimene,
                 Andreas Amann ,
-                Steve 'Ashcrow' Milner 
+                Steve 'Ashcrow' Milner
     :license: BSD, see LICENSE for more details.
 """
 
@@ -284,7 +284,7 @@ class RpmSpecLexer(RegexLexer):
              bygroups(Keyword, String, Keyword)),
             # Variables like %{my_item}
             (r'(\%{[a-zA-Z0-9]{1}[a-zA-Z0-9_\-]*})', Name.Variable),
-            # things like %doc 
+            # things like %doc
             (r'(\%[a-zA-Z0-9]*)(.*)', bygroups(Keyword.Reserved, String.Doc)),
 
             # Changelog related

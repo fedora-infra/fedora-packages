@@ -50,7 +50,7 @@ class Updates(Grid):
         def _sort(a,b):
             return cmp(int(b['version']), int(a['version']))
 
-        releases.sort(_sort) 
+        releases.sort(_sort)
         self.release_table = releases
 
         # Must do this last for our Grids

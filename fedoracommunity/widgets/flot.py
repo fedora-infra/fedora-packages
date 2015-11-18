@@ -26,7 +26,7 @@ class FlotWidget(twc.Widget):
     this widget produces client-side graphical plots of arbitrary datasets
     on-the-fly.
 
-    For detailed documentation on the flot API, visit the flot project 
+    For detailed documentation on the flot API, visit the flot project
     homepage: http://code.google.com/p/flot
     """
     template = u"""

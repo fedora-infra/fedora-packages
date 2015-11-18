@@ -16,10 +16,12 @@
 
 import logging
 
+from itertools import product
+
 from paste.deploy.converters import asbool
 from tg import config
-from fedora.client import BodhiClient
-from datetime import datetime, timedelta
+from fedora.client.bodhi import Bodhi2Client
+from datetime import datetime
 from webhelpers.html import HTML
 
 import markdown
@@ -37,14 +39,47 @@ log = logging.getLogger(__name__)
 class BodhiConnector(IConnector, ICall, IQuery):
     _method_paths = dict()
     _query_paths = dict()
+    _cache_prompts = dict()
 
     def __init__(self, environ, request):
         super(BodhiConnector, self).__init__(environ, request)
         self._prod_url = config.get(
             'fedoracommunity.connector.bodhi.produrl',
             'https://bodhi.fedoraproject.org')
-        self._bodhi_client = BodhiClient(self._base_url,
-                                         insecure=self._insecure)
+        self._bodhi_client = Bodhi2Client(self._base_url,
+                                          insecure=self._insecure)
+
+    @classmethod
+    def query_updates_cache_prompt(cls, msg):
+        if '.bodhi.' not in msg['topic']:
+            return
+
+        msg = msg['msg']
+        if 'update' in msg:
+            update = msg['update']
+            release = update['release']['name']
+            status = update['status']
+            nvrs = [build['nvr'] for build in update['builds']]
+            names = ['-'.join(nvr.split('-')[:-2]) for nvr in nvrs]
+            releases = [release, '']
+            statuses = [status, '']
+            groupings = [False]
+            headers = ['package', 'release', 'status', 'group_updates']
+            combinations = product(names, releases, statuses, groupings)
+            for values in combinations:
+                yield dict(zip(headers, values))
+
+    @classmethod
+    def query_active_releases_cache_prompt(cls, msg):
+        if '.bodhi.' not in msg['topic']:
+            return
+
+        msg = msg['msg']
+        if 'update' in msg:
+            nvrs = [build['nvr'] for build in msg['update']['builds']]
+            names = ['-'.join(nvr.split('-')[:-2]) for nvr in nvrs]
+            for name in names:
+                yield {'package': name}
 
     # IConnector
     @classmethod
@@ -78,6 +113,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
         path = cls.register_query(
             'query_updates',
             cls.query_updates,
+            cls.query_updates_cache_prompt,
             primary_key_col='request_id',
             default_sort_col='request_id',
             default_sort_order=-1,
@@ -160,21 +196,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
                              can_sort=False,
                              can_filter_wildcards=False)
 
-        def _profile_user(conn, filter_dict, key, value, allow_none):
-            if value:
-                user = None
-                ident = conn._environ.get('repoze.who.identity')
-                if ident:
-                    user = ident.get('repoze.who.userid')
-                if user or allow_none:
-                    filter_dict['username'] = user
-
         f = ParamFilter()
         f.add_filter('package', ['nvr'], allow_none=False)
-        f.add_filter('user', ['u', 'username', 'name'], allow_none=False)
-        f.add_filter('profile', list(), allow_none=False,
-                     filter_func=_profile_user,
-                     cast=bool)
         f.add_filter('status', ['status'], allow_none=True)
         f.add_filter('group_updates', allow_none=True, cast=bool)
         f.add_filter('granularity', allow_none=True)
@@ -259,34 +282,6 @@ class BodhiConnector(IConnector, ICall, IQuery):
 
             actions = []
 
-            # Right now we're making the assumption that if you're logged
-            # in, we query by your username, thus you should be able to
-            # modify these updates.  This way, we avoid the pkgdb calls.
-            # Ideally, we should get the real ACLs from the pkgdb connector's
-            # cache.
-            if filters.get('username'):
-                # If we have multiple updates that are all in the same state,
-                # then create a single set of action buttons to control all
-                # of them.  If not,then supply separate ones.
-                if 'dist_updates' in up and len(up['dist_updates']) > 1:
-                    if up['dist_updates'][0]['status'] != \
-                       up['dist_updates'][1]['status']:
-                        for update in up['dist_updates']:
-                            for action in self._get_update_actions(update):
-                                actions.append(action)
-                    else:
-                        for update in up['dist_updates']:
-                            for action in self._get_update_actions(update):
-                                actions.append(action)
-                else:
-                    # Create a single set of action buttons
-                    if 'dist_updates' in up:
-                        update = up['dist_updates'][0]
-                    else:
-                        update = up
-                    for action in self._get_update_actions(update):
-                        actions.append(action)
-
             up['actions'] = ''
             for action in actions:
                 reqs = ''
@@ -366,9 +361,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
                     if comment['text'].startswith('This update has been '
                                                   'obsoleted by '):
                         details += markdown.markdown(
-                            comment['text'],
-                            safe_mode="replace",
-                            html_replacement_text="--RAW HTML NOT ALLOWED--")
+                            comment['text'], safe_mode="replace")
         return details
 
     def _get_update_actions(self, update):
@@ -427,7 +420,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
             if done:
                 break
 
-        result = [packages[pkg] for pkg in packages]
+        result = [packages[p] for p in packages]
 
         sort_col = 'date_submitted'
         if result[0]['dist_updates'][0]['status'] == 'stable':
@@ -440,61 +433,6 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         )
 
         return result
-
-    def get_dashboard_stats(self, username=None):
-        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
-        return bodhi_cache.get_value(
-            key='dashboard_%s' % username,
-            createfunc=lambda: self._get_dashboard_stats(username),
-            expiretime=300)
-
-    def _get_dashboard_stats(self, username):
-        options = {}
-        results = {}
-
-        if username:
-            options['username'] = username
-
-        for status in ('pending', 'testing'):
-            options['status'] = status
-            results[status] = self.query_updates_count(**options)['count']
-
-        now = datetime.utcnow()
-        options['status'] = 'stable'
-        options['after'] = now - timedelta(weeks=1)
-        results['stable'] = self.query_updates_count(**options)['count']
-
-        return results
-
-    def query_updates_count(self, status, username=None,
-                            before=None, after=None):
-        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
-        return bodhi_cache.get_value(
-            key='count_%s_%s_%s_%s' % (
-                status, username, str(before).split('.')[0],
-                str(after).split('.')[0]),
-            expiretime=300,
-            createfunc=lambda: self._query_updates_count(status, username,
-                                                         before, after))
-
-    def _query_updates_count(self, status, username, before, after):
-        params = {'count_only': True}
-        label = status + ' updates pushed'
-
-        if username:
-            params['username'] = username
-        if status:
-            params['status'] = status
-        if before:
-            before = str(before)
-            params['end_date'] = before.split('.')[0]
-        if after:
-            after = str(after)
-            params['start_date'] = after.split('.')[0]
-
-        count = self.call('list', params)[1]['num_items']
-
-        return {'count': count, 'label': label, 'state': status}
 
     def add_updates_to_builds(self, builds):
         """Update a list of koji builds with the corresponding bodhi updates.
@@ -549,6 +487,7 @@ class BodhiConnector(IConnector, ICall, IQuery):
     def register_query_active_releases(cls):
         path = cls.register_query('query_active_releases',
                                   cls.query_active_releases,
+                                  cls.query_active_releases_cache_prompt,
                                   primary_key_col='release',
                                   default_sort_col='release',
                                   default_sort_order=-1,
@@ -696,13 +635,3 @@ class BodhiConnector(IConnector, ICall, IQuery):
                         **{'class': '%s' % karma})
 
         return (len(releases), releases)
-
-    def get_metrics(self):
-        bodhi_cache = self._request.environ['beaker.cache'].get_cache('bodhi')
-        return bodhi_cache.get_value(
-            key='bodhi_metrics',
-            createfunc=self._get_metrics,
-            expiretime=300)
-
-    def _get_metrics(self):
-        return self._bodhi_client.send_request('metrics')[1]

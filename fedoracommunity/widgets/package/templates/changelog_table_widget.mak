@@ -21,28 +21,14 @@
           <form>
             <div id="filter" class="grid_filter" name="build_filter">
               <label for="version"><h4>Release:</h4></label>
-                <select name="build_id">
-                  % for (i, build) in enumerate(w.latest_builds.keys()):
+                <select name="release">
+                  % for (i, release) in enumerate(w.all_releases):
                     <%
                         selected = ""
                         if i == 0:
                             selected = 'selected = "selected"'
-                        build_values = w.latest_builds[build]
-
-                        display_ver = ""
-                        # support both new format and legacy (remove legacy before commit)
-                        if 'release' in build_values:
-                            # new format
-                            epoch = build_values.get('epoch', None)
-                            if epoch is not None:
-                                display_ver = "%s:%s.%s" % (epoch, build_values['version'], build_values['release'])
-                            else:
-                                display_ver = "%s.%s" % (build_values['version'], build_values['release'])
-                        else:
-                            # legacy
-                            display_ver = build_values['version']
                     %>
-                    <option ${selected} value="${str(build_values['build_id'])}">${build} (${display_ver})</option>
+                    <option ${selected} value="${release}">${release}</option>
                   % endfor
                 </select>
             </div>

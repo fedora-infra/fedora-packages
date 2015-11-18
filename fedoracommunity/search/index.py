@@ -2,381 +2,508 @@
 Creates our search index and its field structure,
 and then populates it with packages from yum repositories
 """
+
+import copy
 import os
-import requests
-import sys
+import json
+import gzip
+import logging
 import shutil
-import urllib2
-import tempfile
+import tarfile
+import threading
+
+import appstream
+import requests
 import xappy
 
-from os.path import join, dirname
+from os.path import join
 
 from utils import filter_search_string
-from rpmcache import RPMCache
-from parsers import DesktopParser, SimpleSpecfileParser
-from iconcache import IconCache
 
+# It is on the roof.
+import fedoracommunity.pool
+
+local = threading.local()
+local.http = requests.session()
+log = logging.getLogger()
 
 # how many time to retry a downed server
 MAX_RETRY = 10
 
-try:
-    import json
-except ImportError:
-    import simplejson as json
+
+def download_file(url, dest):
+    dirname = os.path.dirname(dest)
+    if not os.path.isdir(dirname):
+        log.info("Creating directory %s" % dirname)
+        os.makedirs(dirname)
+
+    log.info("Downloading %s to %s" % (url, dest))
+    r = local.http.get(url, stream=True)
+    with open(dest, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if not chunk:
+                continue
+            f.write(chunk)
+
+    # Extract the big one.
+    if dest.endswith('.tar.gz'):
+        log.info("Extracting %s in %s" % (dest, dirname))
+        f = tarfile.open(dest)
+        try:
+            f.extractall(path=dirname)
+        finally:
+            f.close()
+
+    return dest
+
 
 class Indexer(object):
-    def __init__(self, cache_path, yum_conf, tagger_url=None, pkgdb_url=None):
+    def __init__(self, cache_path,
+                 tagger_url=None,
+                 pkgdb_url=None,
+                 mdapi_url=None,
+                 icons_url=None):
+
         self.cache_path = cache_path
         self.dbpath = join(cache_path, 'search')
-        self.yum_cache_path = join(cache_path, 'yum-cache')
         self.icons_path = join(cache_path, 'icons')
-        self.yum_conf = yum_conf
-        self.create_index()
-        self._owners_cache = None
         self.default_icon = 'package_128x128'
-        self.tagger_url = tagger_url
+        self.tagger_url = tagger_url or "https://apps.fedoraproject.org/tagger"
         self.pkgdb_url = pkgdb_url or "https://admin.fedoraproject.org/pkgdb"
+        self.mdapi_url = mdapi_url or "https://apps.fedoraproject.org/mdapi"
+        self.icons_url = icons_url or "https://alt.fedoraproject.org/pub/alt/screenshots"
+        self._latest_release = None
+        self._active_fedora_releases = None
+        self.icon_cache = {}
+
+        self.create_index()
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
-        iconn = xappy.IndexerConnection(self.dbpath)
+        indexer = xappy.IndexerConnection(self.dbpath)
 
-        iconn.add_field_action('exact_name', xappy.FieldActions.INDEX_FREETEXT)
-        iconn.add_field_action('name', xappy.FieldActions.INDEX_FREETEXT,
+        indexer.add_field_action('exact_name', xappy.FieldActions.INDEX_FREETEXT)
+        indexer.add_field_action('name', xappy.FieldActions.INDEX_FREETEXT,
                                language='en', spell=True)
 
-        iconn.add_field_action('summary', xappy.FieldActions.INDEX_FREETEXT,
+        indexer.add_field_action('summary', xappy.FieldActions.INDEX_FREETEXT,
                                language='en')
 
-        iconn.add_field_action('description', xappy.FieldActions.INDEX_FREETEXT,
+        indexer.add_field_action('description', xappy.FieldActions.INDEX_FREETEXT,
                                language='en')
 
-        iconn.add_field_action('subpackages',xappy.FieldActions.INDEX_FREETEXT,
+        indexer.add_field_action('subpackages',xappy.FieldActions.INDEX_FREETEXT,
                                language='en', spell=True)
 
-        iconn.add_field_action('category_tags', xappy.FieldActions.INDEX_FREETEXT,
+        indexer.add_field_action('category_tags', xappy.FieldActions.INDEX_FREETEXT,
                                language='en', spell=True)
 
-        iconn.add_field_action('cmd', xappy.FieldActions.INDEX_FREETEXT, spell=True)
+        indexer.add_field_action('cmd', xappy.FieldActions.INDEX_FREETEXT, spell=True)
         # FieldActions.TAG not currently supported in F15 xapian (1.2.7)
-        #iconn.add_field_action('tags', xappy.FieldActions.TAG)
-        iconn.add_field_action('tag', xappy.FieldActions.INDEX_FREETEXT, spell=True)
+        #indexer.add_field_action('tags', xappy.FieldActions.TAG)
+        indexer.add_field_action('tag', xappy.FieldActions.INDEX_FREETEXT, spell=True)
 
-        #iconn.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
-        #iconn.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
+        #indexer.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
+        #indexer.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
 
-        self.iconn = iconn
+        self.indexer = indexer
 
-    def find_devel_owner(self, pkg_name, retry=0):
-        if self._owners_cache == None:
-            print "Caching the owners list from PackageDB"
+    @property
+    def latest_release(self):
+        if not self._latest_release:
+            response = local.http.get(self.pkgdb_url + "/api/collections")
+            if not bool(response):
+                raise IOError("Unable to find latest release %r" % response)
+            data = response.json()
 
-            url = self.pkgdb_url + "/api/bugzilla?format=json"
-            response = requests.get(url)
-            self._owners_cache = response.json()['bugzillaAcls']
+            # Strip off rawhide
+            data['collections'] = [
+                c for c in data['collections'] if c['version'] != 'devel'
+            ]
 
-        try:
-            mainowner = self._owners_cache['Fedora'][pkg_name]['owner']
-            print 'Owner: %s' % mainowner
-            return mainowner
-        except KeyError:
-            print 'Owner: None'
-            return ''
+            # Find the latest
+            by_version = lambda c: int(c['version'])
+            data['collections'].sort(key=by_version, reverse=True)
+            self._latest_release = int(data['collections'][0]['version'])
+        return self._latest_release
 
-    def index_yum_pkgs(self):
-        """
-        index_yum_pkgs
+    @property
+    def active_fedora_releases(self):
+        if not self._active_fedora_releases:
+            response = local.http.get(self.pkgdb_url + "/api/collections")
+            if not bool(response):
+                raise IOError("Unable to find releases %r" % response)
+            data = response.json()
 
-        Index the packages from yum into this format:
+            # Strip off rawhide
+            data['collections'] = [
+                c for c in data['collections']
+            ]
+
+            # Strip off rawhide, inactive releases, and epel
+            data['collections'] = [
+                c for c in data['collections'] if (
+                    c['version'] != 'devel' and
+                    c['status'] == 'Active' and
+                    c['name'] == 'Fedora'
+                )
+            ]
+
+            by_version = lambda c: int(c['version'])
+            data['collections'].sort(key=by_version, reverse=True)
+            self._active_fedora_releases = [
+                int(item['version']) for item in data['collections']
+            ]
+        return self._active_fedora_releases
+
+    def pull_icons(self):
+        for release in reversed(self.active_fedora_releases):
+            prefix = 'f%i' % release
+            files = ['fedora-%i.xml.gz', 'fedora-%i-icons.tar.gz']
+            for fname in files:
+                fname = fname % release
+                url = join(self.icons_url, prefix, fname)
+                target = join(self.icons_path, 'tmp', str(release), fname)
+
+                try:
+                    stats = os.stat(target)
+                except OSError:
+                    # Presumably no such file locally.  get it.
+                    download_file(url, target)
+                    continue
+
+                # Check the file to see if it is different
+                response = local.http.head(url)
+                remote_size = int(response.headers['content-length'])
+                local_size = stats.st_size
+                if remote_size == local_size:
+                    log.debug("%r seems unchanged." % url)
+                    continue
+
+                # Otherwise, they differ.  So download.
+                download_file(url, target)
+
+    def cache_icons(self):
+        for release in self.active_fedora_releases:
+            fname = 'fedora-%i.xml.gz' % release
+            target = join(self.icons_path, 'tmp', str(release), fname)
+
+            metadata = appstream.Store()
+            f = gzip.open(target, 'rb')
+            try:
+                metadata.parse(f.read())
+            finally:
+                f.close()
+
+            for idx, component in metadata.components.items():
+                # Other types are 'stock' and 'unknown'
+                icons = component.icons.get('cached', [])
+
+                # Pick the biggest one..
+                icon = None
+                for candidate in icons:
+                    if not icon:
+                        icon = candidate
+                        continue
+                    if int(icon['width']) < int(candidate['width']):
+                        icon = candidate
+
+                if not icon:
+                    continue
+
+                # Some old F21 and F22 metadata entries have this weirdness.
+                prefix = '{width}x{height}'.format(**icon)
+                if icon['value'].startswith(prefix + '/'):
+                    icon['value'] = icon['value'].strip(prefix + '/')
+
+                # Move the file out of the temp dir and into place
+                s = join(self.icons_path, 'tmp', str(release),
+                         '{width}x{height}', '{value}')
+                d = join(self.icons_path, '{value}')
+                source = s.format(**icon)
+                destination = d.format(**icon)
+
+                # Furthermore, none of the F21 icons are namespaced
+                if release == 21:
+                    source = source.replace(prefix + '/', '')
+
+                try:
+                    shutil.copy(source, destination)
+
+                    # And hang the name in the dict for other code to find it
+                    # ... but only if we succeeded at placing the icon file.
+                    self.icon_cache[component.pkgname] = icon['value']
+                except IOError as e:
+                    log.warning("appstream metadata lied: %s %r" % (source, e))
+
+        shutil.rmtree(join(self.icons_path, 'tmp'))
+
+    def gather_pkgdb_packages(self):
+        response = local.http.get(self.pkgdb_url + '/api/packages/')
+        if not bool(response):
+            raise IOError("Failed to talk to pkgdb: %r" % response)
+
+        pages = response.json()['page_total']
+
+        for i in range(pages):
+            log.info("Requesting pkgdb page %i of %i" % (i + 1, pages))
+            response = local.http.get(self.pkgdb_url + '/api/packages/',
+                                      params=dict(page=i+1))
+            if not bool(response):
+                raise IOError("Failed to talk to pkgdb: %r" % response)
+            for package in response.json()['packages']:
+                yield package
+
+    def latest_active(self, name, ignore=None):
+        ignore = ignore or []
+        url = self.pkgdb_url + "/api/package/" + name
+        response = local.http.get(url)
+        if not bool(response):
+            raise IOError("Failed to talk to pkgdb: %s %r" % (url, response))
+        data = response.json()
+        # Figure out the latest active, non-retired branch
+        by_version = lambda p: p['collection']['version']
+        data['packages'].sort(key=by_version, reverse=True)
+        for info in data['packages']:
+            if info['collection']['version'] in ignore:
+                continue
+            if info['status'] == 'Approved':
+                return info
+
+        raise KeyError("Couldn't find active pkgdb branch for %r" % name)
+
+    def construct_package_dictionary(self, package):
+        """ Return structured package dictionary from a pkgdb package.
+
+        Result looks like this::
 
            {base_package_name: {'name': base_package_name,
                                 'summary': base_package_summary,
                                 'description': base_package_summary,
                                 'devel_owner': owner,
                                 'icon': icon_name,
-                                'pkg': pkg,
+                                'package': None,
                                 'upstream_url': url,
-                                'src_pkg': src_pkg,
-                                'sub_pkgs': [{'name': sub_pkg_name,
-                                              'summary': sub_pkg_summary,
-                                              'description': sub_pkg_description,
+                                'sub_pkgs': [{'name': sub_package_name,
+                                              'summary': sub_package_summary,
+                                              'description': sub_package_description,
                                               'icon': icon_name,
-                                              'pkg': pkg},
+                                              'package': package},
                                              ...]},
-            ...
-           }
         """
-        import yum
-        yb = yum.YumBase()
-        self.yum_base = yb
+        package = copy.deepcopy(package)
 
-        if not os.path.exists(self.yum_cache_path):
-            os.mkdir(self.yum_cache_path)
+        name = package['name']
+        try:
+            info = self.latest_active(name)
+        except KeyError:
+            log.warning("Failed to get pkgdb info for %r" % name)
+            return
 
-        if not os.path.exists(self.icons_path):
-            os.mkdir(self.icons_path)
+        package['summary'] = info['package']['summary'] or \
+            '(no summary in pkgdb)'
+        package['description'] = info['package']['description'] or \
+            '(no description in pkgdb)'
+        package['devel_owner'] = info['point_of_contact']
+        package['status'] = info['package']['status']
 
-        yb.doConfigSetup(self.yum_conf, root=os.getcwd(), init_plugins=False)
-        for r in yb.repos.findRepos('*'):
-            if r.id in ['rawhide-x86_64', 'rawhide-source']:
-                r.enable()
-            else:
-                r.disable()
+        package['icon'] = self.icon_cache.get(name, self.default_icon)
+        package['branch'] =  info['collection']['branchname']
+        package['sub_pkgs'] = list(self.get_sub_packages(package))
 
-        yb._getRepos(doSetup = True)
-        yb._getSacks(['x86_64', 'noarch', 'src'])
-        yb.doRepoSetup()
-        yb.doSackFilelistPopulate()
+        # This is a "parent" reference.  the base packages always have "none"
+        # for it, but the sub packages have the name of their parent package in
+        # it.
+        package['package'] = None
 
-        # Doesn't work right now due to a bug in yum.
-        # https://bugzilla.redhat.com/show_bug.cgi?id=750593
-        #yb.disablePlugins()
+        return package
 
-        yb.conf.cache = 1
+    def get_sub_packages(self, package):
+        name = package['name']
+        branch = package['branch']
+        icon = package['icon']
 
-        self.icon_cache = IconCache(yb, ['gnome-icon-theme', 'oxygen-icon-theme'], self.icons_path, self.cache_path)
+        if branch == 'master':
+            branch = 'rawhide'
 
-        pkgs = yb.pkgSack.returnPackages()
-        base_pkgs = {}
-        seen_pkg_names = []
+        url = "/".join([self.mdapi_url, branch, "pkg", name])
+        response = local.http.get(url)
 
-        # get the tagger data
-        self.tagger_cache = None
-        if self.tagger_url:
-            print "Caching tagger data"
-            response = urllib2.urlopen(self.tagger_url)
-            html = response.read()
-            tagger_data = json.loads(html)
-            self.tagger_cache = {}
-            for pkg_tag_info in tagger_data['packages']:
-                for pkg_name in pkg_tag_info.keys():
-                    self.tagger_cache[pkg_name] = pkg_tag_info[pkg_name]
+        if not bool(response):
+            # TODO -- don't always do this.
+            # if we get a 404, that's usually because the package is retired in
+            # rawhide... but that's okay.  we just queried pkgdb, so we should
+            # see if it is active in any other branches, and if it is, get the
+            # sub-packages from there.
+            raise StopIteration
 
-        pkg_count = 0
-        for pkg in pkgs:
-            # precache the icon themes for later extraction and matching
-            if pkg.ui_from_repo != 'rawhide-source':
-                self.icon_cache.check_pkg(pkg)
+        data = response.json()
+        sub_package_names = sorted(set([
+            p for p in data['co-packages'] if p != name
+        ]))
 
-            if not pkg.base_package_name in base_pkgs:
-                # we haven't seen this base package yet so add it
-                base_pkgs[pkg.base_package_name] = {'name': pkg.base_package_name,
-                                                    'summary': '',
-                                                    'description':'',
-                                                    'devel_owner':'',
-                                                    'pkg': None,
-                                                    'src_pkg': None,
-                                                    'icon': self.default_icon,
-                                                    'upstream_url': None,
-                                                    'sub_pkgs': []}
-
-            base_pkg = base_pkgs[pkg.base_package_name]
-
-            if pkg.ui_from_repo == 'rawhide-source':
-               pkg_count += 1
-               print "%d: pre-processing package '%s':" % (pkg_count, pkg['name'])
-
-               base_pkg['src_pkg'] = pkg
-               base_pkg['upstream_url'] = pkg.URL
-
-               if not base_pkg['devel_owner']:
-                   base_pkg['devel_owner'] = self.find_devel_owner(pkg.name)
-               if not base_pkg['summary']:
-                   base_pkg['summary'] = pkg.summary
-               if not base_pkg['description']:
-                   base_pkg['description'] = pkg.description
-               continue
-
-            # avoid duplicates
-            if pkg.name in seen_pkg_names:
+        for sub_package_name in sub_package_names:
+            url = "/".join([self.mdapi_url, branch, "pkg", sub_package_name])
+            response = local.http.get(url)
+            if not bool(response):
+                log.warn("Failed to get sub info for %r, %r" % (sub_package_name, response))
                 continue
+            data = response.json()
+            yield {
+                'name': sub_package_name,
+                'summary': data['summary'],
+                'description': data['description'],
+                'icon': icon,
+                'package': name,
+                'branch': branch,
+            }
 
-            seen_pkg_names.append(pkg.name)
+    def index_files_of_interest(self, doc, package_dict):
+        name = package_dict['name']
+        branch = package_dict['branch']
 
-            if pkg.base_package_name == pkg.name:
-                # this is the main package
-                if not base_pkg['src_pkg']:
-                    pkg_count += 1
-                    print "%d: pre-processing package '%s':" % (pkg_count, pkg['name'])
+        if branch == 'master':
+            branch = 'rawhide'
 
-                base_pkg['summary'] = pkg.summary
-                base_pkg['description'] = pkg.description
-                base_pkg['pkg'] = pkg
-                base_pkg['devel_owner'] = self.find_devel_owner(pkg.name)
-            else:
-                # this is a sub package
-                pkg_count += 1
-                print "%d: pre-processing package '%s':" % (pkg_count, pkg['name'])
-
-                subpkgs = base_pkg['sub_pkgs']
-                subpkgs.append({'name': pkg.name,
-                                'summary': pkg.summary,
-                                'description': pkg.description,
-                                'icon': self.default_icon,
-                                'pkg': pkg})
-
-        return base_pkgs
-
-    def index_desktop_file(self, doc, desktop_file, pkg_dict, desktop_file_cache):
-        doc.fields.append(xappy.Field('tag', 'desktop'))
-
-        dp = DesktopParser(desktop_file)
-        category = dp.get('Categories', '')
-
-        for c in category.split(';'):
-            if c:
-                c = filter_search_string(c)
-                doc.fields.append(xappy.Field('category_tags', c))
-                # add exact match also
-                doc.fields.append(xappy.Field('category_tags', "EX__%s__EX" % c))
-
-        icon = dp.get('Icon', '')
-        if icon:
-            print "Icon %s" % icon
-            generated_icon = self.icon_cache.generate_icon(icon, desktop_file_cache)
-            if generated_icon != None:
-                pkg_dict['icon'] = icon
-
-    def index_files(self, doc, pkg_dict):
-        yum_pkg = pkg_dict['pkg']
-        if yum_pkg != None:
-            desktop_file_cache = RPMCache(yum_pkg, self.yum_base, self.cache_path)
-            desktop_file_cache.open()
-            for filename in yum_pkg.filelist:
-                if filename.endswith('.desktop'):
-                    # index apps
-                    print "        indexing desktop file %s" % os.path.basename(filename)
-                    f = desktop_file_cache.open_file(filename, decompress_filter='*.desktop')
-                    if f == None:
-                        print "could not open desktop file"
-                        continue
-
-                    self.index_desktop_file(doc, f, pkg_dict, desktop_file_cache)
-                    f.close()
+        url = "/".join([self.mdapi_url, branch, "files", name])
+        response = local.http.get(url)
+        if not bool(response):
+            log.warn("Failed to get file list for %r, %r" % (name, response))
+            return
+        data = response.json()
+        for entry in data['files']:
+            filenames = entry['filenames'].split('/')
+            for filename in filenames:
                 if filename.startswith('/usr/bin'):
                     # index executables
-                    print ("        indexing exe file %s" % os.path.basename(filename))
+                    log.info("        indexing exe file %s" % os.path.basename(filename))
                     exe_name = filter_search_string(os.path.basename(filename))
                     doc.fields.append(xappy.Field('cmd', "EX__%s__EX" % exe_name))
 
-            desktop_file_cache.close()
-
-    def index_spec(self, doc, pkg, src_rpm_cache):
-        # don't use this but keep it here if we need to index spec files
-        # again
-        for filename in pkg['src_pkg'].filelist:
-            if filename.endswith('.spec'):
-                break;
-
-        print "        Spec: %s" % filename
-        f = src_rpm_cache.open_file(filename)
-        if f:
-            try:
-                spec_parse = SimpleSpecfileParser(f)
-                pkg['upstream_url'] = spec_parse.get('url')
-            except ValueError as e:
-                print e
-                print "    Setting upstream_url to empty string for now"
-                pkg['upstream_url'] = ''
-
-    def index_tags(self, doc, pkg):
-        if not self.tagger_cache:
+    def index_tags(self, doc, package):
+        name = package['name']
+        response = local.http.get(self.tagger_url + '/api/v1/' + name)
+        if not bool(response):
+            log.warn("Failed to get tagger info for %r, %r" % (name, response))
             return
-
-        name = pkg['name']
-        tags = self.tagger_cache.get(name, [])
+        tags = response.json()['tags']
         for tag_info in tags:
             tag_name = tag_info['tag']
             total = tag_info['total']
             if total > 0:
-                print "    adding '%s' tag (%d)" % (tag_name.encode('utf-8'), total)
+                log.debug("    adding '%s' tag (%d)" % (
+                    tag_name.encode('utf-8'), total))
             for i in range(total):
                 doc.fields.append(xappy.Field('tag', tag_name))
 
-    def index_pkgs(self):
-        yum_pkgs = self.index_yum_pkgs()
-        pkg_count = 0
+    def index_packages(self):
+        # This is a generator that yields dicts of package info that we index
+        packages = self.gather_pkgdb_packages()
 
-        for pkg in yum_pkgs.values():
-            pkg_count += 1
+        # XXX - Only grab the first N for dev purposes
+        #packages = [packages.next() for i in range(50)]
 
-            doc = xappy.UnprocessedDocument()
-            filtered_name = filter_search_string(pkg['name'])
-            filtered_summary = filter_search_string(pkg['summary'])
-            filtered_description = filter_search_string(pkg['description'])
+        def io_work(package):
+            log.info("indexing %s" % (package['name']))
+            local.http = requests.session()
 
-            if pkg['name'] != filtered_name:
-                print("%d: indexing %s as %s" % (pkg_count, pkg['name'], filtered_name) )
-            else:
-                print("%d: indexing %s" % (pkg_count, pkg['name']))
+            # Do all of the gathering...
+            package = self.construct_package_dictionary(package)
 
-            doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_name + '__EX', weight=10.0))
+            # If the package is retired in all branches, it is None here..
+            if package is None:
+                return None
 
-            name_parts = filtered_name.split('_')
-            for i in range(20):
-                if len(name_parts) > 1:
-                    for part in name_parts:
-                        doc.fields.append(xappy.Field('name', part, weight=1.0))
-                doc.fields.append(xappy.Field('name', filtered_name, weight=10.0))
+            # And then prepare everything for xapian
+            document = self._create_document(package)
+            processed = self._process_document(package, document)
+            return processed
 
-            for i in range(4):
-                doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
-            doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
+        pool = fedoracommunity.pool.ThreadPool(20)
+        documents = pool.map(io_work, packages)
 
-            self.index_files(doc, pkg)
-            self.index_tags(doc, pkg)
+        for document in documents:
+            if document is None:
+                continue
+            self.indexer.add(document)
 
-            for sub_pkg in pkg['sub_pkgs']:
-                pkg_count += 1
-                filtered_sub_pkg_name = filter_search_string(sub_pkg['name'])
-                if filtered_sub_pkg_name != sub_pkg['name']:
-                    print("%d:    indexing subpkg %s as %s" % (pkg_count, sub_pkg['name'], filtered_sub_pkg_name))
-                else:
-                    print("%d:    indexing subpkg %s" % (pkg_count, sub_pkg['name']))
+        self.indexer.close()
 
-                doc.fields.append(xappy.Field('subpackages', filtered_sub_pkg_name, weight=1.0))
-                doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_pkg_name + '__EX', weight=10.0))
+    def _process_document(self, package, document):
+        processed = self.indexer.process(document, False)
+        processed._doc.set_data(json.dumps(package))
+        # preempt xappy's processing of data
+        processed._data = None
+        return processed
 
-                self.index_files(doc, sub_pkg)
-                self.index_tags(doc, sub_pkg)
-                if sub_pkg['icon'] != self.default_icon and pkg['icon'] == self.default_icon:
-                    pkg['icon'] = sub_pkg['icon']
+    def _create_document(self, package):
+        doc = xappy.UnprocessedDocument()
+        filtered_name = filter_search_string(package['name'])
+        filtered_summary = filter_search_string(package['summary'])
+        filtered_description = filter_search_string(package['description'])
 
-                # remove anything we don't want to store
-                del sub_pkg['pkg']
+        doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_name + '__EX', weight=10.0))
 
-            # @@: Right now we're only indexing the first part of the
-            # provides/requires, and not boolean comparison or version
-            #for requires in pkg.requires:
-            #    print requires[0]
-            #    doc.fields.append(xappy.Field('requires', requires[0]))
-            #for provides in pkg.provides:
-            #    doc.fields.append(xappy.Field('provides', provides[0]))
+        name_parts = filtered_name.split('_')
+        for i in range(20):
+            if len(name_parts) > 1:
+                for part in name_parts:
+                    doc.fields.append(xappy.Field('name', part, weight=1.0))
+            doc.fields.append(xappy.Field('name', filtered_name, weight=10.0))
+
+        for i in range(4):
+            doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
+        doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
+
+        self.index_files_of_interest(doc, package)
+        self.index_tags(doc, package)
+
+        for sub_package in package['sub_pkgs']:
+            filtered_sub_package_name = filter_search_string(sub_package['name'])
+            log.info("       indexing subpackage %s" % sub_package['name'])
+
+            doc.fields.append(xappy.Field('subpackages', filtered_sub_package_name, weight=1.0))
+            doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_package_name + '__EX', weight=10.0))
+
+            self.index_files_of_interest(doc, sub_package)
+
+            # fedora-tagger does not provide special tags for sub-packages...
+            #self.index_tags(doc, sub_package)
+
+            # Set special sub-package icon if appstream has one
+            sub_package['icon'] = self.icon_cache.get(
+                sub_package['name'], self.default_icon)
+
+            # If the parent has a dull icon, give it ours!
+            if sub_package['icon'] != self.default_icon \
+                and package['icon'] == self.default_icon:
+                package['icon'] = sub_package['icon']
+
+            # remove anything we don't want to store
+            del sub_package['package']
+
+        # @@: Right now we're only indexing the first part of the
+        # provides/requires, and not boolean comparison or version
+        #for requires in package.requires:
+        #    print requires[0]
+        #    doc.fields.append(xappy.Field('requires', requires[0]))
+        #for provides in package.provides:
+        #    doc.fields.append(xappy.Field('provides', provides[0]))
 
 
-            # remove anything we don't want to store and then store data in
-            # json format
-            del pkg['pkg']
-            del pkg['src_pkg']
+        # remove anything we don't want to store and then store data in
+        # json format
+        del package['package']
 
-            processed_doc = self.iconn.process(doc, False)
-            processed_doc._doc.set_data(json.dumps(pkg))
-            # preempt xappy's processing of data
-            processed_doc._data = None
-            self.iconn.add(processed_doc)
+        return doc
 
-        self.icon_cache.close()
 
-        return pkg_count
+def run(cache_path, tagger_url=None, pkgdb_url=None, mdapi_url=None, icons_url=None):
+    indexer = Indexer(cache_path, tagger_url, pkgdb_url, mdapi_url, icons_url)
 
-def run(cache_path, yum_conf, tagger_url=None, pkgdb_url=None):
-    indexer = Indexer(cache_path, yum_conf, tagger_url, pkgdb_url)
+    indexer.pull_icons()
+    indexer.cache_icons()
 
-    print "Indexing packages from Yum..."
-    count = indexer.index_pkgs()
-    print "Indexed %d packages." % count
-
-if __name__ == '__main__':
-    run('index_cache', join(dirname(__file__), 'yum.conf'), 'http://apps.fedoraproject.org/tagger/dump')
+    log.info("Indexing packages.")
+    indexer.index_packages()
+    log.info("Indexed a ton of packages.")

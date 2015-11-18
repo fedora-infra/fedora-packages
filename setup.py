@@ -51,7 +51,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='2.0.20',
+    version='3.0.0',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',
@@ -59,14 +59,15 @@ setup(
              'Máirín Duffy <duffy@redhat.com>',
              'Ralph Bean <rbean@redhat.com>',
              ),
-    url='http://fedoracommunity.fedorahosted.org',
+    url='https://github.com/fedora-infra/fedora-packages',
     install_requires=[
         "moksha.wsgi",
         "TurboGears2",
         "dogpile.cache",
-        "retask",
         "python-memcached",
         "markdown",
+        "python-appstream",
+        "fedmsg",
         #"PyOpenSSL",
         #"SQLAlchemy>=0.5",
         #"xappy",
@@ -74,7 +75,7 @@ setup(
         #"GitPython",
         #"pytz",
         ],
-    scripts=['fedoracommunity_makeyumcache', 'bin/fcomm-index-packages', 'bin/fcomm-index-latest-builds'],
+    scripts=['bin/fcomm-index-packages'],
     packages=packages,
     include_package_data=True,
     test_suite='nose.collector',
@@ -137,13 +138,9 @@ setup(
     koji = fedoracommunity.connectors:KojiConnector
     bodhi = fedoracommunity.connectors:BodhiConnector
     pkgdb = fedoracommunity.connectors:PkgdbConnector
-    fas = fedoracommunity.connectors:FasConnector
     bugzilla = fedoracommunity.connectors:BugzillaConnector
-    planet = fedoracommunity.connectors:PlanetConnector
     yum = fedoracommunity.connectors:YumConnector
     xapian = fedoracommunity.connectors:XapianConnector
-    wiki = fedoracommunity.connectors:WikiConnector
-    torrent = fedoracommunity.connectors:TorrentConnector
 
     [moksha.widget]
     fedoracommunity.bodhi = fedoracommunity.widgets.package.updates:Updates
@@ -164,26 +161,14 @@ setup(
     package_sources_tarballs = fedoracommunity.widgets.package.sources:Tarballs
     package_sources_git = fedoracommunity.widgets.package.sources:GitRepo
 
-    package_relationships = fedoracommunity.widgets.package.relationships:RelationshipsWidget
-    package_relationships_requires = fedoracommunity.widgets.package.relationships:RequiresWidget
-    package_relationships_requiredby = fedoracommunity.widgets.package.relationships:RequiredByWidget
-    package_relationships_depends = fedoracommunity.widgets.package.relationships:DependsWidget
-    package_relationships_provides = fedoracommunity.widgets.package.relationships:ProvidesWidget
-    package_relationships_obsoletes = fedoracommunity.widgets.package.relationships:ObsoletesWidget
-    package_relationships_conflicts = fedoracommunity.widgets.package.relationships:ConflictsWidget
-
-    [moksha.stream]
-    stats_cla_done = fedoracommunity.streams.stats:ClaDoneDataStream
-    wiki_all_revisions = fedoracommunity.streams.stats:WikiAllRevisionsDataStream
-
     [moksha.extension_point]
     fedoracommunity = fedoracommunity.plugins.extensions
 
+    [moksha.consumer]
+    cache_invalidator = fedoracommunity.consumers:CacheInvalidator
+
     [distutils.commands]
     archive_fedoracommunity_resources = fedoracommunity.distutils.command:archive_fedoracommunity_resources
-
-    [console_scripts]
-    fcomm-cache-worker = fedoracommunity.connectors.api.worker:main
 
     """
 )
