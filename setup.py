@@ -51,7 +51,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='2.0.20',
+    version='3.0.0',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',
@@ -59,7 +59,7 @@ setup(
              'Máirín Duffy <duffy@redhat.com>',
              'Ralph Bean <rbean@redhat.com>',
              ),
-    url='http://fedoracommunity.fedorahosted.org',
+    url='https://github.com/fedora-infra/fedora-packages',
     install_requires=[
         "moksha.wsgi",
         "TurboGears2",
@@ -75,7 +75,7 @@ setup(
         #"GitPython",
         #"pytz",
         ],
-    scripts=['fedoracommunity_makeyumcache', 'bin/fcomm-index-packages', 'bin/fcomm-index-latest-builds'],
+    scripts=['bin/fcomm-index-packages'],
     packages=packages,
     include_package_data=True,
     test_suite='nose.collector',
@@ -165,13 +165,10 @@ setup(
     fedoracommunity = fedoracommunity.plugins.extensions
 
     [moksha.consumer]
-    bug_filer = fedoracommunity.consumers:CacheInvalidator
+    cache_invalidator = fedoracommunity.consumers:CacheInvalidator
 
     [distutils.commands]
     archive_fedoracommunity_resources = fedoracommunity.distutils.command:archive_fedoracommunity_resources
-
-    [console_scripts]
-    fcomm-cache-worker = fedoracommunity.connectors.api.worker:main
 
     """
 )

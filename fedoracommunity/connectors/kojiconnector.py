@@ -21,8 +21,11 @@ from datetime import datetime
 
 import requests
 
-from tg import abort, config
+from tg import config
 from cgi import escape
+from paste.httpexceptions import HTTPBadRequest
+from paste.httpexceptions import HTTPBadGateway
+
 
 from fedoracommunity.connectors.api import \
     IConnector, IQuery, ParamFilter
@@ -147,7 +150,7 @@ class KojiConnector(IConnector, IQuery):
             filters = {}
 
         if not filters.get('package_name'):
-            abort(400, '"package_name" is a required filter.')
+            raise HTTPBadRequest('"package_name" is a required filter.')
 
         package_name = filters['package_name']
         release = filters.get('release', 'rawhide')
@@ -155,7 +158,8 @@ class KojiConnector(IConnector, IQuery):
         url = '/'.join([self._mdapi_url, release, 'changelog', package_name])
         response = requests.get(url)
         if not bool(response):
-            abort(502, "Failed to talk to mdapi, %r %r" % (url, response))
+            raise HTTPBadGateway("Failed to talk to mdapi, %r %r" % (
+                url, response))
 
         data = response.json()['files']
 

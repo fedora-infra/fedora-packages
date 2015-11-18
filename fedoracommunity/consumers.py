@@ -1,3 +1,4 @@
+import os
 import json
 
 import memcache
@@ -15,9 +16,6 @@ from fedoracommunity.connectors.api.connector import (
     cache_key_generator as generator_factory,
     cache_key_mangler as mangler,
 )
-from fedoracommunity.connectors.api.worker import (
-    find_config_file,
-)
 from fedoracommunity.search import utils
 
 import logging
@@ -28,17 +26,37 @@ class FakeTG2Request(object):
     environ = {}
 
 
-def make_kwargs(connector, path, info, filters):
+def find_config_file():
+    locations = (
+        '.',
+        '/etc/fedoracommunity/',
+        '/'.join(__file__.split('/') + ['..', '..', '..', '..']),
+    )
+    for config_path in locations:
+        for config_file in ('production.ini', 'development.ini'):
+            cfg = os.path.join(os.path.abspath(config_path), config_file)
+            if os.path.isfile(cfg):
+                return cfg
+    return None
+
+
+def make_kwargs(connector, path, info, filters, op):
+
+    if op == 'method':
+        # No pagination args for method calls, and no envelope
+        return (connector, '', None,), filters
+
+    # Otherwise, we're dealing with a 'query' op, and it looks like this
     kwargs = dict(
         start_row=0,
         rows_per_page=10,
-        filters=filters,
+        filters=filters
     )
     if hasattr(connector, 'get_default_sort_col'):
         kwargs['sort_col'] = connector.get_default_sort_col(path)
     if hasattr(connector, 'get_default_sort_order'):
         kwargs['order'] = connector.get_default_sort_order(path)
-    return kwargs
+    return (connector,), kwargs
 
 
 class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
@@ -97,19 +115,19 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                     continue
 
                 fn = info['fn']
+                op = info['op']
                 namespace = info['namespace']
 
                 generator = generator_factory(namespace, fn)
                 for filters in matches:
-                    args = (connector,)
-                    kwargs = make_kwargs(connector, path, info, filters)
-                    lookup_key = generator(**kwargs)
+                    args, kw = make_kwargs(connector, path, info, filters, op)
+                    lookup_key = generator(*args[1:], **kw)
                     hashed_key = mangler(lookup_key)
                     log.info("Refreshing %s" % lookup_key)
                     # Destroy the old value
                     self.mc.delete(hashed_key)
                     # Run the connector to re-fill the cache.
-                    fn(*args, **kwargs)
+                    fn(*args, **kw)
                     log.info(" Done with %s" % hashed_key)
 
     def update_xapian(self, msg):

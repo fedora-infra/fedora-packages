@@ -48,8 +48,11 @@ def download_file(url, dest):
     # Extract the big one.
     if dest.endswith('.tar.gz'):
         log.info("Extracting %s in %s" % (dest, dirname))
-        with tarfile.open(dest) as f:
+        f = tarfile.open(dest)
+        try:
             f.extractall(path=dirname)
+        finally:
+            f.close()
 
     return dest
 
@@ -186,8 +189,11 @@ class Indexer(object):
             target = join(self.icons_path, 'tmp', str(release), fname)
 
             metadata = appstream.Store()
-            with gzip.open(target, 'rb') as f:
+            f = gzip.open(target, 'rb')
+            try:
                 metadata.parse(f.read())
+            finally:
+                f.close()
 
             for idx, component in metadata.components.items():
                 # Other types are 'stock' and 'unknown'
@@ -241,7 +247,8 @@ class Indexer(object):
 
         for i in range(pages):
             log.info("Requesting pkgdb page %i of %i" % (i + 1, pages))
-            response = local.http.get(self.pkgdb_url + '/api/packages/')
+            response = local.http.get(self.pkgdb_url + '/api/packages/',
+                                      params=dict(page=i+1))
             if not bool(response):
                 raise IOError("Failed to talk to pkgdb: %r" % response)
             for package in response.json()['packages']:

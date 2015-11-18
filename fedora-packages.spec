@@ -4,8 +4,8 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        2.0.20
-Release:        1%{?dist}
+Version:        3.0.0
+Release:        3%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
 License:        AGPLv3
@@ -144,6 +144,12 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-packages
 
 %changelog
+* Tue Nov 17 2015 Ralph Bean <rbean@redhat.com> - 3.0.0-3
+- Major rewrite of backend.
+- Removed all yum and rpm cache management.
+- Introduced new service dep on mdapi.
+- Replaced cronjobs with a fedmsg updater.
+
 * Tue Oct 20 2015 Ralph Bean <rbean@redhat.com> - 2.0.20-1
 - new version
 
