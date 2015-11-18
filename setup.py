@@ -165,7 +165,7 @@ setup(
     fedoracommunity = fedoracommunity.plugins.extensions
 
     [moksha.consumer]
-    bug_filer = fedoracommunity.consumers:CacheInvalidator
+    cache_invalidator = fedoracommunity.consumers:CacheInvalidator
 
     [distutils.commands]
     archive_fedoracommunity_resources = fedoracommunity.distutils.command:archive_fedoracommunity_resources
