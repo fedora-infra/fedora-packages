@@ -423,6 +423,7 @@ class Indexer(object):
             if package is None:
                 continue
             # And then prepare everything for xapian
+            log.info("Processing final details for %s" % package['name'])
             document = self._create_document(package)
             processed = self._process_document(package, document)
             self.indexer.add(processed)
