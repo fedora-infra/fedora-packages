@@ -127,8 +127,12 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                     # Destroy the old value
                     self.mc.delete(hashed_key)
                     # Run the connector to re-fill the cache.
-                    fn(*args, **kw)
-                    log.info(" Done with %s" % hashed_key)
+                    try:
+                        fn(*args, **kw)
+                        log.info(" Done with %s" % hashed_key)
+                    except Exception as e:
+                        # Log a warning, but don't email us...
+                        log.warning(str(e))
 
     def update_xapian(self, msg):
         # If any number of different pkgdb things happen to a package, let's
