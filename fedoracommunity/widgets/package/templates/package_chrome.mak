@@ -15,7 +15,7 @@ if package_name != w.package_info['name']:
 
             break
 
-icon_url = tg.url("/images/icons/%s.png" % icon)
+icon_url = tg.url("/images/icons/%s" % icon)
 %>
 <div id="container">
     <div class="container_24" id="package-details">
