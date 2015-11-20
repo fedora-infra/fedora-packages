@@ -138,7 +138,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         collection = ('Fedora', 'Fedora EPEL')
 
-        queries = ['open', 'blockers', 'new_this_week', 'closed_this_week']
+        queries = ['open', 'blockers']
 
         last_week = str(datetime.utcnow() - timedelta(days=7)),
 
@@ -166,29 +166,9 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
             return [b.blocks for b in blockers if b.blocks]
 
-        # Closed Bugs this week - returns an int
-        def closed_bugs():
-            return len(self._bugzilla.query({
-                'product': collection,
-                'component': package,
-                'status': 'CLOSED',
-                'creation_time': last_week,
-            }))
-
-        # New bugs this week - returns a list
-        def new_bugs():
-            return len(self._bugzilla.query({
-                'product': collection,
-                'component': package,
-                'status': 'NEW',
-                'creation_time': last_week,
-            }))
-
         results = [
             open_bugs(),     # int
             blocker_bugs(),  # list of lists of bug_ids
-            closed_bugs(),   # int
-            new_bugs(),      # int
         ]
 
         blocks = set()
