@@ -14,16 +14,12 @@ class BugStatsWidget(twc.Widget):
     version = twc.Param(default='rawhide')
     epel_version = twc.Param(default='el6')
     num_open = twc.Param(default='-')
-    num_new_this_week = twc.Param(default='')
-    num_closed_this_week = twc.Param(default='')
 
     bz_prefix = "https://bugzilla.redhat.com/buglist.cgi"
     status_open_string = "bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
     status_closed_string = "bug_status=CLOSED"
 
     base_query_string = twc.Variable(default='')
-    open_query_string = twc.Variable(default='')
-    closed_query_string = twc.Variable(default='')
 
     def prepare(self):
         super(BugStatsWidget, self).prepare()
@@ -31,17 +27,6 @@ class BugStatsWidget(twc.Widget):
             "query_format": "advanced",
             "product": self.product,
             "component": self.package,
-        })
-        self.open_query_string = urllib.urlencode({
-            "chfieldto": "Now",
-            "chfield": "[Bug creation]",
-            "chfieldfrom": datetime.datetime.now().isoformat().split('T')[0],
-        })
-        self.closed_query_string = urllib.urlencode({
-            "chfieldto": "Now",
-            "chfield": "bug_status",
-            "chfieldvalue": "CLOSED",
-            "chfieldfrom": datetime.datetime.now().isoformat().split('T')[0],
         })
 
 
