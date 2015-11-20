@@ -67,7 +67,7 @@ class Indexer(object):
         self.cache_path = cache_path
         self.dbpath = join(cache_path, 'search')
         self.icons_path = join(cache_path, 'icons')
-        self.default_icon = 'package_128x128'
+        self.default_icon = 'package_128x128.png'
         self.tagger_url = tagger_url or "https://apps.fedoraproject.org/tagger"
         self.pkgdb_url = pkgdb_url or "https://admin.fedoraproject.org/pkgdb"
         self.mdapi_url = mdapi_url or "https://apps.fedoraproject.org/mdapi"
