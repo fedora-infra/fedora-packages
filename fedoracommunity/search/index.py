@@ -414,18 +414,18 @@ class Indexer(object):
             if package is None:
                 return None
 
+            return package
+
+        pool = fedoracommunity.pool.ThreadPool(20)
+        packages = pool.map(io_work, packages)
+
+        for package in packages:
+            if package is None:
+                continue
             # And then prepare everything for xapian
             document = self._create_document(package)
             processed = self._process_document(package, document)
-            return processed
-
-        pool = fedoracommunity.pool.ThreadPool(20)
-        documents = pool.map(io_work, packages)
-
-        for document in documents:
-            if document is None:
-                continue
-            self.indexer.add(document)
+            self.indexer.add(processed)
 
         self.indexer.close()
 
