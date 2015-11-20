@@ -259,7 +259,7 @@ class Indexer(object):
         url = self.pkgdb_url + "/api/package/" + name
         response = local.http.get(url)
         if not bool(response):
-            raise IOError("Failed to talk to pkgdb: %s %r" % (url, response))
+            raise KeyError("Failed to talk to pkgdb: %s %r" % (url, response))
         data = response.json()
         # Figure out the latest active, non-retired branch
         by_version = lambda p: p['collection']['version']
