@@ -37,7 +37,7 @@
                                 <% icon = tg.url("/images/16_build_state_${state}.png") %>
                                 <img src="${icon}"></img>&nbsp;${'${package_name}'}
                             </span>
-                            <br/>${'${version}'}-${'${release}'}&nbsp;
+                            <br/><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=${'${build_id}'}">${'${version}'}-${'${release}'}</a>&nbsp;
                             <div id="menu_panel_${'${build_id}'}" class="menu_panel" >
 <div id="items_${'${build_id}'}">
 <h4>Quick Links for <strong>${'${package_name}'}</strong>:</h4>
