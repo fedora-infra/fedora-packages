@@ -27,7 +27,7 @@ icon_url = tg.url("/images/icons/%s" % icon)
              </div>
 
              <div class="owner">
-                 <div><h3>OWNER</h3></div>
+                 <div><h3>POINT OF CONTACT</h3></div>
                  % if w.package_info.get('devel_owner', None):
                      % if w.package_info['devel_owner'].endswith('-maint'):
                          <div class="package-owner"><a class="package-owner" href="https://admin.fedoraproject.org/pkgdb/users/packages/${w.package_info['devel_owner']}">${w.package_info['devel_owner']}</a></div><div class="package-dist">(Rawhide)</div>
