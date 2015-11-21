@@ -9,9 +9,7 @@
                 <li><a href="https://github.com/fedora-infra/fedora-packages">Get the source for Fedora Packages</a></li>
                 <li><a href="https://fedorahosted.org/moksha">Get the source for Moksha</a></li>
 
-                <li><a href="https://infrastructure.fedoraproject.org/testing/5/SRPMS/">RHEL5 Testing SRPMS</a></li>
                 <li><a href="https://infrastructure.fedoraproject.org/testing/6/SRPMS/">RHEL6 Testing SRPMS</a></li>
-                <li><a href="https://infrastructure.fedoraproject.org/5/SRPMS/">RHEL5 Production SRPMS</a></li>
                 <li><a href="https://infrastructure.fedoraproject.org/6/SRPMS/">RHEL6 Production SRPMS</a></li>
             </ul>
           </div>
