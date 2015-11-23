@@ -75,7 +75,7 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
 
         self.cache_path = config.get(
             'fedoracommunity.connector.xapian.package-search.db',
-            'xapian')
+            'xapian').strip('search')
         self.tagger_url = config.get(
             'fedoracommunity.connector.tagger.baseurl',
             'https://apps.fedoraproject.org/tagger')
