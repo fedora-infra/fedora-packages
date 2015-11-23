@@ -1,4 +1,12 @@
 
+3.0.2
+-----
+
+Pull Requests
+
+- (@ralphbean)      #209, Use a threadpool when refreshing cache items.
+  https://github.com/fedora-infra/fedora-packages/pull/209
+
 3.0.1
 -----
 
