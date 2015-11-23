@@ -17,6 +17,7 @@ from fedoracommunity.connectors.api.connector import (
     cache_key_mangler as mangler,
 )
 from fedoracommunity.search import utils
+from fedoracommunity.pool import ThreadPool
 
 import logging
 log = logging.getLogger("fedmsg")
@@ -74,7 +75,7 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
 
         self.cache_path = config.get(
             'fedoracommunity.connector.xapian.package-search.db',
-            'xapian')
+            'xapian').strip('search')
         self.tagger_url = config.get(
             'fedoracommunity.connector.tagger.baseurl',
             'https://apps.fedoraproject.org/tagger')
@@ -111,6 +112,9 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
             for path, info in connector._cache_prompts.items():
 
                 matches = info['prompt'](msg)
+                if matches is None:
+                    continue
+                matches = list(matches)
                 if not matches:
                     continue
 
@@ -119,7 +123,7 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                 namespace = info['namespace']
 
                 generator = generator_factory(namespace, fn)
-                for filters in matches:
+                def clear_and_refresh_items(filters):
                     args, kw = make_kwargs(connector, path, info, filters, op)
                     lookup_key = generator(*args[1:], **kw)
                     hashed_key = mangler(lookup_key)
@@ -133,6 +137,10 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                     except Exception as e:
                         # Log a warning, but don't email us...
                         log.warning(str(e))
+
+                log.info("Found %r matches..." % len(matches))
+                pool = ThreadPool(min([len(matches), 20]))
+                list(pool.map(clear_and_refresh_items, matches))
 
     def update_xapian(self, msg):
         # If any number of different pkgdb things happen to a package, let's
