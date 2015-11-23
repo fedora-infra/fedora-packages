@@ -140,10 +140,11 @@ class FedoraGitRepo(object):
 
     def get_creation_time(self, filename):
         """ Return a datetime object for the date a given file was created """
-        date = ' '.join(
-            self.repo.git.log(
-                filename, reverse=True).split('\n')[2].split()[1:-1])
-        return DateTimeDisplay(date, format='%a %b %d %H:%M:%S %Y').datetime
+        data = self.repo.git.log(filename, reverse=True)
+        lines = (l for l in data.split('\n') if l.startswith('Date'))
+        date = ' '.join(lines.next().split()[1:-1])
+        fmt = '%a %b %d %H:%M:%S %Y'
+        return DateTimeDisplay(date, format=fmt).datetime
 
     def get_source_url(self):
         source = self._run('spectool -S *.spec')

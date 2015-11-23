@@ -67,7 +67,7 @@ class Indexer(object):
         self.cache_path = cache_path
         self.dbpath = join(cache_path, 'search')
         self.icons_path = join(cache_path, 'icons')
-        self.default_icon = 'package_128x128'
+        self.default_icon = 'package_128x128.png'
         self.tagger_url = tagger_url or "https://apps.fedoraproject.org/tagger"
         self.pkgdb_url = pkgdb_url or "https://admin.fedoraproject.org/pkgdb"
         self.mdapi_url = mdapi_url or "https://apps.fedoraproject.org/mdapi"
@@ -259,7 +259,7 @@ class Indexer(object):
         url = self.pkgdb_url + "/api/package/" + name
         response = local.http.get(url)
         if not bool(response):
-            raise IOError("Failed to talk to pkgdb: %s %r" % (url, response))
+            raise KeyError("Failed to talk to pkgdb: %s %r" % (url, response))
         data = response.json()
         # Figure out the latest active, non-retired branch
         by_version = lambda p: p['collection']['version']
@@ -414,18 +414,19 @@ class Indexer(object):
             if package is None:
                 return None
 
-            # And then prepare everything for xapian
-            document = self._create_document(package)
-            processed = self._process_document(package, document)
-            return processed
+            return package
 
         pool = fedoracommunity.pool.ThreadPool(20)
-        documents = pool.map(io_work, packages)
+        packages = pool.map(io_work, packages)
 
-        for document in documents:
-            if document is None:
+        for package in packages:
+            if package is None:
                 continue
-            self.indexer.add(document)
+            # And then prepare everything for xapian
+            log.info("Processing final details for %s" % package['name'])
+            document = self._create_document(package)
+            processed = self._process_document(package, document)
+            self.indexer.add(processed)
 
         self.indexer.close()
 
