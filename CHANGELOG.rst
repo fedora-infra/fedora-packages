@@ -1,4 +1,53 @@
 
+3.0.1
+-----
+
+Pull Requests
+
+- (@ralphbean)      #204, Log a warning, but don't email us.
+  https://github.com/fedora-infra/fedora-packages/pull/204
+- (@ralphbean)      #199, Fix icon suffix.
+  https://github.com/fedora-infra/fedora-packages/pull/199
+- (@ralphbean)      #201, Remove broken/unused rhbz stuff.
+  https://github.com/fedora-infra/fedora-packages/pull/201
+- (@ralphbean)      #202, Fix .spec pygments lexer.
+  https://github.com/fedora-infra/fedora-packages/pull/202
+- (@ralphbean)      #203, Fix git scraping.
+  https://github.com/fedora-infra/fedora-packages/pull/203
+- (@ralphbean)      #207, Remove rhel5 links.
+  https://github.com/fedora-infra/fedora-packages/pull/207
+- (@ralphbean)      #208, Change text from Owner to Point of Contact.
+  https://github.com/fedora-infra/fedora-packages/pull/208
+- (@ralphbean)      #200, Fix up links to bodhi and koji.
+  https://github.com/fedora-infra/fedora-packages/pull/200
+
+Commits
+
+- 600480058 Raise a keyerror just to make this simpler.
+  https://github.com/fedora-infra/fedora-packages/commit/600480058
+- 0c5ab0a58 Move xapian document preparation out of the threadpool.  The bindings aren't threadsafe on el6.
+  https://github.com/fedora-infra/fedora-packages/commit/0c5ab0a58
+- a891c2938 Also, log, so we know where we are on the fan-in thread.
+  https://github.com/fedora-infra/fedora-packages/commit/a891c2938
+- 7202059f4 Fix icon suffix.
+  https://github.com/fedora-infra/fedora-packages/commit/7202059f4
+- 1dfb63dbb Add build links on the Active Releases page.
+  https://github.com/fedora-infra/fedora-packages/commit/1dfb63dbb
+- 777f0ea55 Make koji builds a link to koji.
+  https://github.com/fedora-infra/fedora-packages/commit/777f0ea55
+- 1651a67a4 Remove broken/unused rhbz stuff.
+  https://github.com/fedora-infra/fedora-packages/commit/1651a67a4
+- e4e6cb79e Fix .spec pygments lexer.
+  https://github.com/fedora-infra/fedora-packages/commit/e4e6cb79e
+- 6d9dd0da7 Fix git scraping.
+  https://github.com/fedora-infra/fedora-packages/commit/6d9dd0da7
+- 84ddb19a4 Log a warning, but don't email us.
+  https://github.com/fedora-infra/fedora-packages/commit/84ddb19a4
+- dcdeaaf90 Remove rhel5 links.  Fixes #205.
+  https://github.com/fedora-infra/fedora-packages/commit/dcdeaaf90
+- 954b76de3 Change text from Owner to Point of Contact.
+  https://github.com/fedora-infra/fedora-packages/commit/954b76de3
+
 2.0.20
 ------
 
