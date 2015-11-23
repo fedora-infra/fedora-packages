@@ -4,7 +4,7 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        3.0.1
+Version:        3.0.2
 Release:        1%{?dist}
 Summary:        A modular framework for consolidating Fedora Infrastructure
 Group:          Applications/Internet
@@ -144,6 +144,9 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-packages
 
 %changelog
+* Mon Nov 23 2015 Ralph Bean <rbean@redhat.com> - 3.0.2-1
+- ThreadPool for the fedmsg cache worker.
+
 * Mon Nov 23 2015 Ralph Bean <rbean@redhat.com> - 3.0.1-1
 - Minor release with small enhancements and bugfixes.
 
