@@ -35,6 +35,9 @@ from fedoracommunity.lib.utils import parse_build
 
 log = logging.getLogger(__name__)
 
+koji_build_url = (
+    'http://koji.fedoraproject.org/koji/search?'
+    'terms=%(name)s-%(version)s-%(release)s&type=build&match=glob')
 
 class BodhiConnector(IConnector, ICall, IQuery):
     _method_paths = dict()
@@ -568,7 +571,10 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 if query == 'dist-rawhide':
                     if release:
                         nvr = parse_build(release[0]['nvr'])
-                        row['stable_version'] = '%(version)s-%(release)s' % nvr
+                        row['stable_version'] = HTML.tag(
+                            'a',
+                            c='%(version)s-%(release)s' % nvr,
+                            href=koji_build_url % nvr)
                     else:
                         row['stable_version'] = \
                             'No builds tagged with %s' % tag
@@ -579,21 +585,25 @@ class BodhiConnector(IConnector, ICall, IQuery):
                     if query.endswith('-testing'):
                         nvr = parse_build(release['nvr'])
                         row['testing_version'] = HTML.tag(
-                            'a', c='%(version)s-%(release)s' % nvr,
-                            href='%s/updates/%s' % (self._prod_url, nvr['nvr']))
+                            'a',
+                            c='%(version)s-%(release)s' % nvr,
+                            href=koji_build_url % nvr)
                         testing_builds.append(release['nvr'])
                         testing_builds_row[release['nvr']] = row
                     else:
                         # stable
                         nvr = parse_build(release['nvr'])
+                        row['stable_version'] = HTML.tag(
+                            'a',
+                            c='%(version)s-%(release)s' % nvr,
+                            href=koji_build_url % nvr)
                         if release['tag_name'].endswith('-updates'):
-                            row['stable_version'] = HTML.tag(
-                                'a',
-                                c='%(version)s-%(release)s' % nvr,
-                                href='%s/updates/%s' % (self._prod_url, nvr['nvr']))
-                        else:
-                            row['stable_version'] = \
-                                '%(version)s-%(release)s' % nvr
+                            row['stable_version'] +=  ' (' + HTML.tag(
+                                'a', c='update',
+                                href='%s/updates/?builds=%s' % (
+                                    self._prod_url, nvr['nvr']
+                                )
+                            ) + ')'
 
         # If there are updates in testing, then query bodhi with a single call
         if testing_builds:
