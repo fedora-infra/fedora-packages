@@ -166,10 +166,10 @@ class KojiConnector(IConnector, IQuery):
         if 'files' in data:
             # This is the *old* way to do it
             data = data['files']
-        elif 'changelog' in data:
+        elif 'changelogs' in data:
             # This is the *new* way to do it
             # https://github.com/fedora-infra/mdapi/commit/c2eafd8d05171fdcb3fd699835c0a44e02088724#commitcomment-14646204
-            data = data['changelog']
+            data = data['changelogs']
         else:
             # IMPOSSIBLE!
             raise HTTPBadGateway("Got unexpected response from mdapi.")
