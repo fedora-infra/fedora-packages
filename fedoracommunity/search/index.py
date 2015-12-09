@@ -235,6 +235,8 @@ class Indexer(object):
                     self.icon_cache[component.pkgname] = icon['value']
                 except IOError as e:
                     log.warning("appstream metadata lied: %s %r" % (source, e))
+                except OSError as e:
+                    log.warning("fail %r->%r.  %r" % (source, destination, e))
 
         shutil.rmtree(join(self.icons_path, 'tmp'))
 
