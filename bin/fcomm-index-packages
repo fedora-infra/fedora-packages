@@ -75,6 +75,8 @@ if __name__=="__main__":
             log.warn("No icons_dest specified.  Skipping copy.")
         else:
             icon_dir = os.path.join(options.cache_path, 'icons')
+            if not os.path.isdir(icon_dir):
+                icon_dir = os.path.join(options.cache_path, '..', 'icons')
 
             for file_name in os.listdir(icon_dir):
                 new_file_path = os.path.join(icon_dir, file_name)
