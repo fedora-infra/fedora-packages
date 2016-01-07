@@ -1,5 +1,6 @@
 import os
 import json
+import time
 
 import memcache
 import pkg_resources
@@ -160,17 +161,14 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
         name = msg['msg']['package_listing']['package']['name']
         log.info("Considering xapian index updates for %r" % name)
 
-        from fedoracommunity.search import index
-        indexer = index.Indexer(
-            cache_path=self.cache_path,
-            tagger_url=self.tagger_url,
-            pkgdb_url=self.pkgdb_url,
-            mdapi_url=self.mdapi_url,
-            icons_url=self.icons_url,
-        )
+        indexer = self.try_real_hard_to_get_the_xapian_indexer()
 
-        indexer.pull_icons()
-        indexer.cache_icons()
+        try:
+            indexer.pull_icons()
+            indexer.cache_icons()
+        except Exception as e:
+            log.warn("Failed to cache icons %r" % e)
+
         try:
             package = indexer.construct_package_dictionary(dict(name=name))
 
@@ -213,3 +211,28 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                 return cls(request.environ, request)
 
         raise ValueError("No Xapian connector could be found.")
+
+    def try_real_hard_to_get_the_xapian_indexer(self):
+        """ Try over and over again to get a lock on the xapian indexer.
+
+        We may end up trying forever, in which case our inbound queue will fill
+        up, nagios will alert, and then a human being will come and restart us.
+        """
+        import xapian
+        from fedoracommunity.search import index
+        interval = 0.5
+        indexer = None
+        while indexer is None:
+            try:
+                indexer = index.Indexer(
+                    cache_path=self.cache_path,
+                    tagger_url=self.tagger_url,
+                    pkgdb_url=self.pkgdb_url,
+                    mdapi_url=self.mdapi_url,
+                    icons_url=self.icons_url,
+                )
+            except xapian.DatabaseLockError as e:
+                log.warn(str(e))
+                log.info("Trying again in %f seconds." % interval)
+                time.sleep(interval)
+        return indexer
