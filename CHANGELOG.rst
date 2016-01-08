@@ -1,4 +1,33 @@
 
+3.0.3
+-----
+
+Pull Requests
+
+- (@ralphbean)      #212, Handle past and future mdapi json keys.
+  https://github.com/fedora-infra/fedora-packages/pull/212
+- (@ralphbean)      #214, Handle failure to copy an icon.
+  https://github.com/fedora-infra/fedora-packages/pull/214
+- (@ralphbean)      #218, Try a second icon_dir location.
+  https://github.com/fedora-infra/fedora-packages/pull/218
+- (@ralphbean)      #219, Try real hard to get a write lock for xapian.
+  https://github.com/fedora-infra/fedora-packages/pull/219
+
+Commits
+
+- f378758a1 Specbump.
+  https://github.com/fedora-infra/fedora-packages/commit/f378758a1
+- 540079884 Handle past and future mdapi json keys.
+  https://github.com/fedora-infra/fedora-packages/commit/540079884
+- 47da24a64 Adjust key name as per review feedback.
+  https://github.com/fedora-infra/fedora-packages/commit/47da24a64
+- 9c63da97e Handle failure to copy an icon.
+  https://github.com/fedora-infra/fedora-packages/commit/9c63da97e
+- f688f30f2 Try a second icon_dir location.
+  https://github.com/fedora-infra/fedora-packages/commit/f688f30f2
+- 5b124ee39 Try real hard to get a write lock for xapian.
+  https://github.com/fedora-infra/fedora-packages/commit/5b124ee39
+
 3.0.2
 -----
 
