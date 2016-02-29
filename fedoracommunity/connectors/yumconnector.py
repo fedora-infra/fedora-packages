@@ -49,10 +49,20 @@ class YumConnector(IConnector, ICall, IQuery):
             return
 
         repo = msg['msg']['name']
-        table = msg['msg']['differences'].get('filelist', {})
-        added = table.get('added', [])
-        removed = table.get('removed', [])
-        names = set([entry[0] for entry in added + removed])
+
+        if 'differences' in msg['msg']:
+            # This is the "old school" way of getting the list of changed
+            # packages from an mdapi message.  We used to include a ton of info
+            # in the messages, but they were enormous.. like 25MB.  So, we
+            # don't do this anymore.  This is here for backwards compatibility.
+            table = msg['msg']['differences'].get('filelist', {})
+            added = table.get('added', [])
+            removed = table.get('removed', [])
+            names = set([entry[0] for entry in added + removed])
+        else:
+            # This is the new school way.  It is nice.
+            names = msg['msg']['packages']
+
         for name in names:
             yield {'repo': repo, 'package': name}
 
