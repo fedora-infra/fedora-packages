@@ -1,4 +1,19 @@
 
+3.0.4
+-----
+
+Pull Requests
+
+- (@ralphbean)      #225, Streamline mdapi updates.
+  https://github.com/fedora-infra/fedora-packages/pull/225
+
+Commits
+
+- 0b24e1438 specbump
+  https://github.com/fedora-infra/fedora-packages/commit/0b24e1438
+- 57d7637f3 Streamline mdapi updates.
+  https://github.com/fedora-infra/fedora-packages/commit/57d7637f3
+
 3.0.3
 -----
 
