@@ -48,7 +48,6 @@ md5_data = {
     'setuptools-0.6c7-py2.5.egg': '45d2ad28f9750e7434111fde831e8372',
 }
 
-import sys
 import os
 
 
