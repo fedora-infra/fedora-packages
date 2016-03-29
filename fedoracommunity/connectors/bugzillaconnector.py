@@ -65,9 +65,16 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         return Bugzilla(url=self._base_url, cookiefile=None, tokenfile=None)
 
     @classmethod
-    def cache_prompt(*args, **kwargs):
-        # TODO -- it will be awesome to handle bugzilla fedmsg messages here.
-        raise NotImplementedError
+    def query_bugs_cache_prompt(cls, msg):
+        if not '.bugzilla.bug' in msg['topic']:
+            return
+        return [{'package': msg['msg']['bug']['component'], 'version': ''}]
+
+    @classmethod
+    def query_bug_stats_cache_prompt(cls, msg):
+        if not '.bugzilla.bug' in msg['topic']:
+            return
+        return [{'package': msg['msg']['bug']['component']}]
 
     # IConnector
     @classmethod
@@ -80,7 +87,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
 
         cls.register_method(
             'get_bug_stats', cls.query_bug_stats,
-            cache_prompt=None, #cls.cache_prompt,
+            cache_prompt=cls.query_bug_stats_cache_prompt,
         )
 
     #IQuery
@@ -89,7 +96,7 @@ class BugzillaConnector(IConnector, ICall, IQuery):
         path = cls.register_query(
             'query_bugs',
             cls.query_bugs,
-            cache_prompt=None, #cls.cache_prompt,
+            cache_prompt=cls.query_bugs_cache_prompt,
             primary_key_col='id',
             default_sort_col='date',
             default_sort_order=-1,
