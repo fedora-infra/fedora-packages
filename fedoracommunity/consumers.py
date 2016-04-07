@@ -154,11 +154,15 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
         if '.pkgdb.acl.update' in msg['topic']:
             return
 
-        # We'll take all others, so long as they have this field.
-        if not 'package_listing' in msg['msg']:
+        # We'll take all others, so long as they have these fields.
+        if 'package_listing' in msg['msg']:
+            name = msg['msg']['package_listing']['package']['name']
+        elif 'package' in msg['msg']:
+            name = msg['msg']['package']['name']
+        else:
+            # If the message doesn't have either of those two, then give up.
             return
 
-        name = msg['msg']['package_listing']['package']['name']
         log.info("Considering xapian index updates for %r" % name)
 
         indexer = self.try_real_hard_to_get_the_xapian_indexer()
