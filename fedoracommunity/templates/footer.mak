@@ -2,7 +2,7 @@
     <%def name="footer(package_name=None)">
         <div class="container_24">
           <div id="bottom" class="grid_24">
-            <p>Found a bug?  <a href="https://github.com/fedora-infra/fedora-packages/issues/new">File a ticket.</a>    Note:  There's some caching going on here.  If you expect something and don't see it, check back in 5 minutes.</p>
+            <p>Found a bug on this website?  <a href="https://github.com/fedora-infra/fedora-packages/issues/new">File a ticket.</a> For bugs in packages, click the "Open a New Bug" link on the packages Bugs page.   Note:  There's some caching going on here.  If you expect something and don't see it, check back in 5 minutes.</p>
             This Web Site is licensed under the GNU Affero General Public License.  You may get sources for the current running code from these repositories:
             <ul>
                 <li><a href="https://fedoraproject.org/wiki/Legal/TrademarkGuidelines">Trademark Guidelines</a></li>
