@@ -1,0 +1,71 @@
+---
+- name: Install dev packages
+  dnf:
+      name: "{{ item }}"
+      state: present
+  with_items:
+      - python
+      - python-devel
+      - python-webhelpers
+      - fedmsg
+      - python-kitchen
+      - python-fedora
+      - python-bugzilla
+      - koji
+      - xapian-bindings-python
+      - diffstat
+      - fedpkg
+      - svn
+      - wget
+      - python-xappy
+      - python-webob
+      - moksha
+      - TurboGears2
+      - python-dogpile-cache
+      - python-dogpile-core
+      - python-memcached
+      - memcached
+      - python-markdown
+
+- name: Install python packages
+  pip:
+      name: "{{ item }}"
+      state: present
+  with_items:
+      - python-appstream
+      - gearbox
+
+- command: "{{ item }}"
+  become: yes
+  become_user: vagrant
+  args:
+    chdir: /vagrant/
+  with_items:
+    - rm -rf /vagrant/xapian/
+    - wget -N http://lmacken.fedorapeople.org/fedora-packages/xapian-LATEST.tar.xz
+    - tar xvf xapian-LATEST.tar.xz
+    - rm -rf xapian-LATEST.tar.xz
+
+- command: "{{ item }}"
+  become: yes
+  become_user: vagrant
+  args:
+    chdir: /var/tmp/
+  with_items:
+    - rm -rf /vagrant/fedoracommunity/public/images/icons/
+    - wget -N http://lmacken.fedorapeople.org/fedora-packages/icons.tar.xz
+    - tar xvf icons.tar.xz
+    - mv icons /vagrant/fedoracommunity/public/images/
+    - rm -rf icons.tar.xz
+
+- command: "{{ item }}"
+  args:
+    chdir: /vagrant/
+  with_items:
+    - python setup.py develop
+
+
+- service:
+    name: memcached
+    state: started
+    enabled: yes
