@@ -54,10 +54,11 @@ icon_url = tg.url("/images/icons/%s" % icon)
 		 <h3> In other apps </h3>
                  <ul>
 	           <li><a class="other-app" href="https://admin.fedoraproject.org/updates/${w.package_info['name']}"><img src="${tg.url('/images/16_bodhi.png')}"/> Bodhi </a> </li>
-                   <li><a class="other-app" href="http://koji.fedoraproject.org/koji/search?match=glob&type=package&terms=${quote(w.package_info['name'])}"><img src = "https://fedoraproject.org/static/images/icons/fedora-infra-icon_koji.png"/> Koji Builds </a> </li>
                    <li><a class="other-app" href="https://bugzilla.redhat.com/buglist.cgi?component=${w.package_info['name']}&query_format=advanced&product=Fedora&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"><img src = "https://admin.fedoraproject.org/community/images/16_bugs.png"/> Bugzilla </a> </li>
-                   <li><a class="other-app" href="https://pkgs.fedoraproject.org/cgit/${w.package_info['name']}.git"><img src = "https://apps.fedoraproject.org/img/icons/git-logo.png"/> SCM </a> </li>
+                   <li><a class="other-app" href="https://retrace.fedoraproject.org/faf/problems/?component_names=${w.package_info['name']}"><img src = "https://admin.fedoraproject.org/community/images/16_abrt.png"/> FAF </a> </li>
+                   <li><a class="other-app" href="http://koji.fedoraproject.org/koji/search?match=glob&type=package&terms=${quote(w.package_info['name'])}"><img src = "https://fedoraproject.org/static/images/icons/fedora-infra-icon_koji.png"/> Koji Builds </a> </li>
                    <li><a class="other-app" href="https://admin.fedoraproject.org/pkgdb/package/${w.package_info['name']}"><img src = "https://fedoraproject.org/static/images/icons/fedora-infra-icon_pkgdb.png"/> Pkgdb Package Info </a></li>
+                   <li><a class="other-app" href="https://pkgs.fedoraproject.org/cgit/${w.package_info['name']}.git"><img src = "https://apps.fedoraproject.org/img/icons/git-logo.png"/> SCM </a> </li>
                    <li><a class="other-app" href="https://apps.fedoraproject.org/tagger/${w.package_info['name']}"><img src = "${tg.url('/images/16_tagger.png')}"/> Tagger </a></li>
                  </ul>
              </div>
