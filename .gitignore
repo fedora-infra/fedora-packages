@@ -35,3 +35,5 @@ var
 *.dbm*
 versionmap
 xapian-backup*
+.vagrant
+devel/ansible/playbook.retry
