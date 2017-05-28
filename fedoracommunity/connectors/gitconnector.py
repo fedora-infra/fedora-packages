@@ -153,7 +153,7 @@ class FedoraGitRepo(object):
 
     def get_fedora_source(self):
         url = config.get(
-            'fedora_lookaside', 'http://pkgs.fedoraproject.org/repo/pkgs')
+            'fedora_lookaside', 'https://src.fedoraproject.org/repo/pkgs')
         source = self.get_source_url()
         if source:
             tarball = source.split('/')[-1]
