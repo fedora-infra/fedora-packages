@@ -83,6 +83,7 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
         self.mdapi_url = config.get(
             'fedoracommunity.connector.mdapi.baseurl',
             'https://apps.fedoraproject.org/mdapi')
+        # TODO - this can be removed.
         self.pkgdb_url = config.get(
             'fedoracommunity.connector.pkgdb.baseurl',
             'https://admin.fedoraproject.org/pkgdb')
@@ -144,6 +145,12 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                 list(pool.map(clear_and_refresh_items, matches))
 
     def update_xapian(self, msg):
+
+        # TODO - this needs to be rethought to figure out *when* to update the
+        # fedora-packages xapian cache.  It used to happen anytime anything
+        # changed in pkgdb, but when is a new good event?  Yash - you don't
+        # have to modify this function (in the beginning).  Save it for last.
+
         # If any number of different pkgdb things happen to a package, let's
         # just update and not care too much about whatever it was that just
         # happened.
@@ -231,6 +238,7 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                 indexer = index.Indexer(
                     cache_path=self.cache_path,
                     tagger_url=self.tagger_url,
+                    # TODO - this can be removed.  Make sure to remove it from the source of index.Indexer too.
                     pkgdb_url=self.pkgdb_url,
                     mdapi_url=self.mdapi_url,
                     icons_url=self.icons_url,

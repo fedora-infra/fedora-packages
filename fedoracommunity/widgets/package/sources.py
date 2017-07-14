@@ -49,6 +49,7 @@ class ReleaseFilter(twc.Widget):
         super(ReleaseFilter, self).prepare()
         releases = []
         top_repo = os.path.join(config.get('git_repo_path'), self.package)
+        # XXX - This is the collection table, just like in the bugs widget.
         pkgdb = get_connector('pkgdb')
         collections = pkgdb.get_collection_table(active_only=True)
         for id, collection in collections.iteritems():

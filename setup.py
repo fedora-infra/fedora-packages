@@ -137,7 +137,6 @@ setup(
     [fcomm.connector]
     koji = fedoracommunity.connectors:KojiConnector
     bodhi = fedoracommunity.connectors:BodhiConnector
-    pkgdb = fedoracommunity.connectors:PkgdbConnector
     bugzilla = fedoracommunity.connectors:BugzillaConnector
     yum = fedoracommunity.connectors:YumConnector
     xapian = fedoracommunity.connectors:XapianConnector

@@ -529,6 +529,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
         koji = get_connector('koji')._koji_client
         koji.multicall = True
 
+        # TODO - the list of Fedora releases can be obtained from the Bodhi API, instead of the pkgdb API.
+        # See https://bodhi.fedoraproject.org/releases/
         for release in pkgdb.get_fedora_releases():
             tag = release[0]
             name = release[1]

@@ -43,6 +43,8 @@ class BugsGrid(Grid):
 
         releases = []
         self.filters = {'package': self.package}
+        # This is getting the list of "collections", which really correpond to releases.
+        # You can *probably* get that info from Bodhi, first.  If not, try PDC.
         pkgdb = get_connector('pkgdb')
         collections = pkgdb.get_collection_table(active_only=True)
 

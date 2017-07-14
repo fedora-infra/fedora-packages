@@ -29,6 +29,7 @@ class Updates(Grid):
         self.rows_per_page = 10
 
         releases = []
+        # This is the same collection table.  Same as the other two widgets.
         pkgdb = get_connector('pkgdb')
         collections = pkgdb.get_collection_table(active_only=True)
 

@@ -69,6 +69,7 @@ class Indexer(object):
         self.icons_path = join(cache_path, 'icons')
         self.default_icon = 'package_128x128.png'
         self.tagger_url = tagger_url or "https://apps.fedoraproject.org/tagger"
+        # killit!
         self.pkgdb_url = pkgdb_url or "https://admin.fedoraproject.org/pkgdb"
         self.mdapi_url = mdapi_url or "https://apps.fedoraproject.org/mdapi"
         self.icons_url = icons_url or "https://alt.fedoraproject.org/pub/alt/screenshots"
@@ -110,6 +111,7 @@ class Indexer(object):
 
     @property
     def latest_release(self):
+        # TODO - query PDC (or Bodhi) for this info
         if not self._latest_release:
             response = local.http.get(self.pkgdb_url + "/api/collections")
             if not bool(response):
@@ -130,6 +132,7 @@ class Indexer(object):
     @property
     def active_fedora_releases(self):
         if not self._active_fedora_releases:
+            # TODO - query PDC (or Bodhi) for this info
             response = local.http.get(self.pkgdb_url + "/api/collections")
             if not bool(response):
                 raise IOError("Unable to find releases %r" % response)
@@ -257,6 +260,7 @@ class Indexer(object):
                 yield package
 
     def latest_active(self, name, ignore=None):
+        # TODO - Query the PDC component-branches API endpoint for this
         ignore = ignore or []
         url = self.pkgdb_url + "/api/package/" + name
         response = local.http.get(url)
@@ -400,6 +404,15 @@ class Indexer(object):
 
     def index_packages(self):
         # This is a generator that yields dicts of package info that we index
+        # TODO - replace this with gather_pdc_packages() and get the master list from there.
+        #
+        # This is *probably* the endpoint you want, but you might need to use another:
+        #   https://pdc.fedoraproject.org/rest_api/v1/global-components/
+        #
+        # See some pull requests here for examples of how to query PDC:
+        #   https://pagure.io/releng/pull-requests
+        #
+        # You can delete the gather_pkgdb_packages one.
         packages = self.gather_pkgdb_packages()
 
         # XXX - Only grab the first N for dev purposes
@@ -501,6 +514,7 @@ class Indexer(object):
         return doc
 
 
+# TODO - pkgdb url here can go
 def run(cache_path, tagger_url=None, pkgdb_url=None, mdapi_url=None, icons_url=None):
     indexer = Indexer(cache_path, tagger_url, pkgdb_url, mdapi_url, icons_url)
 
