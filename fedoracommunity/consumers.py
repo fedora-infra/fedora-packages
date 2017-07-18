@@ -83,10 +83,6 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
         self.mdapi_url = config.get(
             'fedoracommunity.connector.mdapi.baseurl',
             'https://apps.fedoraproject.org/mdapi')
-        # TODO - this can be removed.
-        self.pkgdb_url = config.get(
-            'fedoracommunity.connector.pkgdb.baseurl',
-            'https://admin.fedoraproject.org/pkgdb')
         self.icons_url = config.get(
             'fedoracommunity.connector.icons.baseurl',
             'https://alt.fedoraproject.org/pub/alt/screenshots')
@@ -146,60 +142,52 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
 
     def update_xapian(self, msg):
 
-        # TODO - this needs to be rethought to figure out *when* to update the
-        # fedora-packages xapian cache.  It used to happen anytime anything
-        # changed in pkgdb, but when is a new good event?  Yash - you don't
-        # have to modify this function (in the beginning).  Save it for last.
+        # If any repo update things happen to packages in mdapi then
+        # just update the cache.
 
-        # If any number of different pkgdb things happen to a package, let's
-        # just update and not care too much about whatever it was that just
-        # happened.
-        if '.pkgdb.' not in msg['topic']:
+        #filter for mdapi msgs
+        if '.mdapi.repo.update' not in msg['topic']:
             return
 
-        # This one is spammy
-        if '.pkgdb.acl.update' in msg['topic']:
-            return
-
+        list_packages = []
         # We'll take all others, so long as they have these fields.
-        if 'package_listing' in msg['msg']:
-            name = msg['msg']['package_listing']['package']['name']
-        elif 'package' in msg['msg']:
-            name = msg['msg']['package']['name']
+        if 'packages' in msg['msg']:
+            list_packages = msg['msg']['packages']
         else:
-            # If the message doesn't have either of those two, then give up.
+            # If the message doesn't have a name, then give up.
             return
 
-        log.info("Considering xapian index updates for %r" % name)
+        for name in list_packages:
+            log.info("Considering xapian index updates for %r" % name)
 
-        indexer = self.try_real_hard_to_get_the_xapian_indexer()
+            indexer = self.try_real_hard_to_get_the_xapian_indexer()
 
-        try:
-            indexer.pull_icons()
-            indexer.cache_icons()
-        except Exception as e:
-            log.warn("Failed to cache icons %r" % e)
+            try:
+                indexer.pull_icons()
+                indexer.cache_icons()
+            except Exception as e:
+                log.warn("Failed to cache icons %r" % e)
 
-        try:
-            package = indexer.construct_package_dictionary(dict(name=name))
+            try:
+                package = indexer.construct_package_dictionary(dict(name=name))
 
-            if package is None:
-                log.warn("Unable to construct xapian pkg dict for %r" % name)
-                return
+                if package is None:
+                    log.warn("Unable to construct xapian pkg dict for %r" % name)
+                    return
 
-            document = indexer._create_document(package)
-            processed = indexer._process_document(package, document)
+                document = indexer._create_document(package)
+                processed = indexer._process_document(package, document)
 
-            old_document = self._get_old_document(name)
-            if old_document:
-                docid = old_document.get_docid()
-                log.debug('Deleting old document %r.' % docid)
-                indexer.indexer.delete(xapid=docid)
+                old_document = self._get_old_document(name)
+                if old_document:
+                    docid = old_document.get_docid()
+                    log.debug('Deleting old document %r.' % docid)
+                    indexer.indexer.delete(xapid=docid)
 
-            indexer.indexer.add(processed)
-            log.info("Done adding new document %r" % name)
-        finally:
-            indexer.indexer.close()
+                indexer.indexer.add(processed)
+                log.info("Done adding new document %r" % name)
+            finally:
+                indexer.indexer.close()
 
     def _get_old_document(self, package_name):
         search_name = utils.filter_search_string(package_name)
@@ -238,8 +226,6 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                 indexer = index.Indexer(
                     cache_path=self.cache_path,
                     tagger_url=self.tagger_url,
-                    # TODO - this can be removed.  Make sure to remove it from the source of index.Indexer too.
-                    pkgdb_url=self.pkgdb_url,
                     mdapi_url=self.mdapi_url,
                     icons_url=self.icons_url,
                 )

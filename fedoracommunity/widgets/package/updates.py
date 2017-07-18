@@ -29,19 +29,19 @@ class Updates(Grid):
         self.rows_per_page = 10
 
         releases = []
-        # This is the same collection table.  Same as the other two widgets.
-        pkgdb = get_connector('pkgdb')
-        collections = pkgdb.get_collection_table(active_only=True)
+        bodhi = get_connector('bodhi')
 
-        for id, collection in collections.items():
-            name = collection['name']
+        for collection in bodhi.get_all_releases():
+            if collection['state'] != 'current':
+                continue
+            name = collection['id_prefix']
             ver = collection['version']
-            label = "%s %s" % (name, ver)
-            branchname = collection['branchname']
+            label = collection['long_name']
+            branchname = collection['branch']
             value = ""
             if branchname:
                 value = branchname
-            if label != 'Fedora devel' and name in ('Fedora', 'Fedora EPEL'
+            if label != 'Fedora devel' and name in ('FEDORA', 'FEDORA-EPEL'
 ):
                 releases.append({
                     'label': label,

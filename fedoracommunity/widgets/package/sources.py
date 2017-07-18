@@ -49,21 +49,22 @@ class ReleaseFilter(twc.Widget):
         super(ReleaseFilter, self).prepare()
         releases = []
         top_repo = os.path.join(config.get('git_repo_path'), self.package)
-        # XXX - This is the collection table, just like in the bugs widget.
-        pkgdb = get_connector('pkgdb')
-        collections = pkgdb.get_collection_table(active_only=True)
-        for id, collection in collections.iteritems():
-            name = collection['name']
+        bodhi = get_connector('bodhi')
+
+        for collection in bodhi.get_all_releases():
+            if collection['state'] != 'current':
+                continue
+            name = collection['id_prefix']
             ver = collection['version']
-            label = "%s %s" % (name, ver)
+            label = collection['long_name']
             value = ""
-            branchname = collection['branchname']
+            branchname = collection['branch']
             if branchname:
                 repo_path = os.path.join(top_repo, branchname)
                 if not os.path.isdir(repo_path):
                     continue
                 value = branchname
-            if label != 'Fedora devel' and name in ('Fedora', 'Fedora EPEL'):
+            if label != 'Fedora devel' and name in ('FEDORA', 'FEDORA-EPEL'):
                 releases.append({
                     'label': label,
                     'value': value,

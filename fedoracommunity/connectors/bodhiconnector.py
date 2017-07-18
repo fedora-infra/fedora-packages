@@ -512,6 +512,21 @@ class BodhiConnector(IConnector, ICall, IQuery):
         f.add_filter('package', ['nvr'], allow_none=False)
         cls._query_active_releases = f
 
+    def get_all_releases(self):
+        releases_obj = self.call('releases', {})
+        releases_all = None
+        for i in range(1, releases_obj['pages'] + 1):
+            if releases_all == None:
+                releases_all = releases_obj['releases']
+                continue
+            temp = self.call('releases?page=' + str(i), {})['releases']
+            releases_all.extend(temp)
+
+        if releases_all == None:
+          raise TypeError
+
+        return releases_all
+
     def query_active_releases(self, filters=None, **params):
         releases = list()
         queries = list()
@@ -525,15 +540,22 @@ class BodhiConnector(IConnector, ICall, IQuery):
             filters = dict()
         filters = self._query_updates_filter.filter(filters, conn=self)
         package = filters.get('package')
-        pkgdb = get_connector('pkgdb')
         koji = get_connector('koji')._koji_client
         koji.multicall = True
 
-        # TODO - the list of Fedora releases can be obtained from the Bodhi API, instead of the pkgdb API.
-        # See https://bodhi.fedoraproject.org/releases/
-        for release in pkgdb.get_fedora_releases():
-            tag = release[0]
-            name = release[1]
+        releases_all = self.get_all_releases()
+        releases_all.append({'dist_tag': 'rawhide',
+                             'long_name':'Rawhide',
+                             'stable_tag': 'rawhide',
+                             'testing_tag': 'no_testing_tag_found',
+                             'state': 'current'})
+        releases_all = sorted(releases_all, key=lambda k: k['dist_tag'], reverse=True)
+
+        for release in releases_all:
+            if release['state'] != 'current':
+                continue
+            tag = release['dist_tag']
+            name = release['long_name']
             r = {'release': name, 'stable_version': 'None',
                  'testing_version': 'None'}
             if tag == 'rawhide':
@@ -543,11 +565,11 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 release_tag[tag] = r
             else:
                 if 'epel' in tag:
-                    stable_tag = tag
-                    testing_tag = tag + '-testing'
+                    stable_tag = release['stable_tag']
+                    testing_tag = release['testing_tag']
                 else:
-                    stable_tag = tag + '-updates'
-                    testing_tag = stable_tag + '-testing'
+                    stable_tag = release['stable_tag']
+                    testing_tag = release['testing_tag']
                 koji.listTagged(stable_tag, package=package,
                                 latest=True, inherit=True)
                 queries.append(stable_tag)

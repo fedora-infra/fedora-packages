@@ -43,24 +43,20 @@ class BugsGrid(Grid):
 
         releases = []
         self.filters = {'package': self.package}
-        # This is getting the list of "collections", which really correpond to releases.
-        # You can *probably* get that info from Bodhi, first.  If not, try PDC.
-        pkgdb = get_connector('pkgdb')
-        collections = pkgdb.get_collection_table(active_only=True)
+        bodhi = get_connector('bodhi')
 
-        for id, collection in collections.items():
-            name = collection['name']
+        for collection in bodhi.get_all_releases():
+            if collection['state'] != 'current':
+                continue
+            name = collection['id_prefix']
             ver = collection['version']
-            label = "%s %s" % (name, ver)
+            label = collection['long_name']
             value = str(ver)
-            if ver == 'devel':
-                name = 'Rawhide'
-                ver = 9999999
-                label = 'Rawhide'
-                value = 'rawhide'
 
-            if name in ('Fedora', 'Rawhide', 'Fedora EPEL'):
+            if name in ('FEDORA', 'Rawhide', 'FEDORA-EPEL'):
                 releases.append({'label': label, 'value': value, 'version': ver})
+
+        releases.append({'label': 'Rawhide', 'value': 'rawhide', 'version': 9999999})
 
         def _sort(a,b):
             return cmp(int(b['version']), int(a['version']))
