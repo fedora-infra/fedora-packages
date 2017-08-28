@@ -6,7 +6,7 @@ Note: Some more dependencies to be installed:-
 
     $ pip install python-appstream gearbox
 
-# Hacking with Vagrant #
+### Hacking with Vagrant
 
 We have a simple vagrant setup for hacking on the fedora-packages app.
 
