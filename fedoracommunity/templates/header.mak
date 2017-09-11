@@ -4,13 +4,12 @@
     </%def>
     <%def name="header()">
         <script src="${tg.url('/js/typeahead.min.js')}"></script>
-
+        <link href="${tg.url('/css/typeaheadjs.css')}" rel="stylesheet"/>
         <div class="head" id="head-main">
             ${resources()}
 
-       <div id="container">
-       <div id="searchbar">
-           <div class="container_24">
+       <div class="masthead">
+       <div class="container">
                <script type="text/javascript">
                    function do_search(form) {
                        moksha.goto(form.action + '/' + form.search['value']);
@@ -19,22 +18,23 @@
                </script>
                <form action="${tg.url('/s')}"
                      onSubmit="return do_search(this);">
-                   <div class="grid_5" id="header-main">
-		      <h1 style="font-size:large;">
+                   <div class="col-sm-6" id="header-main">
+		      <div>
                          <a href="${tg.url('/')}">
-			    <span>Fedora</span> Packages
+          <img src="${tg.url('/images/fedora_packages_logo.png')}" alt="Fedora Packages" height="40px">
 			 </a>
-		      </h1>
+     </div>
                    </div>
-                   <div class="grid_13">
-                       <input type="text" name="search" class="searchbar" />
-                   </div>
-                   <div class="grid_2">
-                       <input type="submit" value="Search" class="searchsubmit" />
+                   <div class="col-sm-6">
+                     <div class="input-group">
+                       <input type="text" name="search" class="form-control searchbar" />
+                        <span class="input-group-btn">
+                          <input type="submit" value="Search" class="btn btn-primary" />
+                        </span>
+                    </div>
                    </div>
                </form>
                <div class="clear"></div>
-           </div>
        </div>
        </div>
 
@@ -59,6 +59,7 @@
                url: "${tg.url('/fcomm_connector/xapian/query/search_packages/%7B%22filters%22:%20%7B%22search%22:%22%QUERY%22%7D,%22rows_per_page%22:10,%22start_row%22:%200%7D')}",
                filter: function(resp) {
                  thing = [];
+                 console.log("pants")
                  for (idx in resp['rows']) {
                    row = resp['rows'][idx];
                    // This is potentially client-side expensive, but might be worth it.

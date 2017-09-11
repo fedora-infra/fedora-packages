@@ -34,7 +34,7 @@
             </div>
           </form>
         </div>
-        <table id="${w.id}">
+        <table id="${w.id}" class="table">
             <thead>
               <th>Version</th>
               <th>Changes</th>

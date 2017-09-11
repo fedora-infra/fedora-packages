@@ -3,12 +3,12 @@
 <head></head>
 <body>
     <div class="list header-list">
-        <div id="grid-controls">
+        <div id="grid-controls" class="text-xs-right pb-1">
             <form>
               <div id="filter" class="grid_filter" name="status_filter">
 
                 <label for="state">Status:</label>
-                <select name="state">
+                <select name="state" class="custom-select custom-select-sm">
                     <option selected="selected" value="">All</option>
                     <option value="0" style="background:url(${tg.url('/images/16_build_state_0.png')}) no-repeat center left; padding-left: 18px;"></img>Building</option>
                     <option value="1" style="background:url(${tg.url('/images/16_build_state_1.png')}) no-repeat center left; padding-left: 18px;">Success</option>
@@ -19,7 +19,7 @@
               </div>
             </form>
         </div>
-        <table id="${w.id}" class="">
+        <table id="${w.id}" class="table">
             <thead>
                 <tr>
                     <th>Package</th>
@@ -35,9 +35,9 @@
                           <div id="menu_${'${build_id}'}" class="menu" panel="menu_panel_${'${build_id}'}">
                             <span class="package-name">
                                 <% icon = tg.url("/images/16_build_state_${state}.png") %>
-                                <img src="${icon}"></img>&nbsp;${'${package_name}'}
+                                <img src="${icon}"></img>
                             </span>
-                            <br/><a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=${'${build_id}'}">${'${version}'}-${'${release}'}</a>&nbsp;
+                            <a href="http://koji.fedoraproject.org/koji/buildinfo?buildID=${'${build_id}'}">${'${package_name}'}-${'${version}'}-${'${release}'}</a>&nbsp;
                             <div id="menu_panel_${'${build_id}'}" class="menu_panel" >
 <div id="items_${'${build_id}'}">
 <h4>Quick Links for <strong>${'${package_name}'}</strong>:</h4>

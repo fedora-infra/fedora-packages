@@ -1,0 +1,491 @@
+.subheader
+{
+background: #f3f3f3;
+
+}
+
+.tabs{
+  background: #f3f3f3;
+  border-bottom: 1px solid #DDD;
+}
+
+.subheader .package-image{
+  float:left;
+}
+
+.package-header
+{
+  padding-top:15px;
+  margin-left: 110px;
+}
+
+.nav-tabs{
+  margin-bottom:-1px;
+}
+
+.stretch-table-column{
+  min-width:99%;
+}
+
+.nowrap{
+  white-space: nowrap;
+}
+
+
+.package-tree ul {
+  list-style: none;
+  margin-left: 0.4em;
+  padding: 0;
+}
+
+.package-tree ul ul {
+  list-style: square url('../images/list_tree_marker.png');
+  margin-left: 1.3em;
+}
+
+.history-cards .list-group-item img {
+  height: 25px;
+  width: 25px;
+  margin: 2px auto;
+}
+
+.moksha_extpoint {
+  display: none;
+}
+
+.menu_panel {
+  display: none;
+  position: absolute;
+  border: 1px solid #ddd;
+  background-color: #eee;
+  padding: .5em 1em;
+}
+
+.menu_panel ul {
+  margin: 0em !important;
+  margin-top: .5em !important;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+}
+
+.menu_panel li a {
+  vertical-align: middle;
+}
+
+.menu_panel li a img {
+  width: 16px;
+  padding-right: .5em;
+  height: 16px;
+}
+
+.menu_panel li {
+  min-height: 18px !important;
+}
+
+.menu_panel img {
+  padding-top: 4px;
+  float: left;
+}
+
+.menu_panel a {
+  display: block;
+  min-height: 2em;
+}
+
+.menu_panel a:hover {
+  background-color: #5f94c9;
+  color: white !important;
+}
+
+.menu_panel span {
+  float: left;
+  height: 100%;
+  margin-top: 5px;
+}
+
+.message_row{
+  display:none;
+}
+
+
+/** LIST PAGER **/
+
+.list .message {
+  float: left;
+  width: auto;
+  margin-top: 2px;
+}
+
+.overlay {
+  display: none;
+}
+
+.list .pager {
+  float: right;
+  width: auto;
+  margin-top: 2px;
+}
+
+.list .pager ul {
+  height: 22px;
+  padding: 0px;
+  margin: 0px !important;
+
+}
+
+.list .pager li {
+  float: left;
+  list-style-image: none;
+  list-style-type: none;
+  list-style-position: outside;
+  border: none;
+
+  margin-left: 0px;
+  margin-right: 0px;
+  border-right: 1px solid #ddd;
+  height: 19px !important;
+}
+
+.list .pager li.page-button a,
+.list .pager li.current-page,
+.list .pager li.page-ellipses,
+.list .pager li.no-link {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.list .pager li.page-ellipses {
+  width: 1.5em;
+}
+
+.list .pager a {
+  vertical-align: middle !important;
+  height: 19px !important;
+}
+
+.list .pager li.page-button:hover {
+  background-color: #6AA6E2;
+  color: white;
+}
+
+.list .pager li.page-button:hover a {
+  color: white !important;
+}
+
+.list .pager li.current-page {
+  font-weight: bold !important;
+}
+
+.pager {
+  height: 22px;
+}
+
+.alpha-pager {
+  float: none !important;
+}
+
+.bugcount{
+  font-size: 4em;
+  text-align: center;
+}
+
+/* Patches stuff */
+
+.patches pre {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+ /* white-space: -o-pre-wrap: */
+  word-wrap: break-word;
+}
+
+.patches a {
+  text-decoration: none;
+  font-size: 11pt;
+}
+
+.patches .highlight pre {
+  margin-top: -7px;
+  padding-left: 7px;
+  border-bottom: 1px solid #DB347A !important;
+}
+
+.patches table tr#patch table td {
+  padding-left: 15px;
+}
+
+
+.patches {
+  display: table;
+  background-color: #ddd;
+  border: 1px solid #ddd;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.patches table {
+  background-color: white;
+  width: 100%;
+  border: 10px solid #ddd;
+  border-top: 5px solid #ddd;
+  border-collapse: collapse;
+}
+
+.patches td {
+  border-bottom: 1px solid #ededed;
+  padding: 3px 5px;
+}
+
+.patches table table {
+  width: 100%;
+  border: none !important;
+  background-color: none;
+}
+
+.patches table table td {
+  border: white !important;
+}
+
+.patches table tr#patch table td {
+  border: none;
+}
+
+.patches .patch_footer {
+  background-color:  #efefef;
+}
+
+.patches .patch_footer a {
+  text-decoration: none;
+  padding-left: 5px;
+}
+
+.patches .frame_link {
+  display: block;
+  text-align: center;
+  padding-top: 3px;
+}
+
+.patches .changelog {
+  background-color: #f3f3f3;
+  width: 100%;
+  font-size: small;
+}
+
+.patches h4 {
+  color: #666;
+  font-size: small;
+  padding-top: 5px;
+  padding-bottom: 3px;
+  background-color: #f9f9f9;
+  padding-left: 8px;
+}
+
+.patches .diffstat {
+  background-color: #f3f3f3;
+  font-size: small;
+}
+
+.patches .diffstat th {
+  font-size: x-small;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-left: 5px;
+  color: black;
+}
+
+.patches .diffstat .split {
+  font-size: x-small;
+  font-weight: bold;
+}
+
+#patches table td.age {
+  text-align: right;
+  font-size: 90%;
+  min-width: 30%;
+}
+
+#patches table td.age .date {
+  color: #999;
+}
+
+#patches .changelog .author {
+  font-weight: bold;
+}
+
+#patch > td {
+  padding-top: 0px !important;
+}
+
+#patches table {
+ border-collapse: separate;
+}
+
+#patches .active-patch td {
+  border-bottom: 0px !important;
+  border-top: 1px solid #DB347A !important;
+  background: #FCFCFC;
+  margin-top: 0px;
+}
+
+#patches .active-patch td:first-child,
+#patches .changelog td:first-child,
+#patches .diffstat td:first-child,
+#patches .diffstat th:first-child,
+#patches div.highlight {
+  border-left: 1px solid #DB347A !important;
+}
+
+#patches .active-patch td:last-child,
+#patches .changelog td:last-child,
+#patches .diffstat td:last-child,
+#patches .diffstat th:last-child,
+#patches div.highlight {
+  border-right: 1px solid #DB347A !important;
+}
+
+#patches .highlight pre {
+  margin-top: -19px !important;
+  padding-top: 10px;
+}
+
+#patches .patch_raw {
+  border-left: 1px solid #DB347A !important;
+  border-right: 1px solid #DB347A !important;
+  background-color: #F3F3F3;
+  padding-left: 4px;
+}
+
+.patches td {
+  padding: 0px !important;
+}
+
+.patches td > table td {
+  padding: 3px 5px !important;
+}
+
+.changelog td {
+  padding-right: 0px;
+}
+
+.patches .patch-name td:first-child {
+  padding-left: 7px !important;
+  border-left: 1px solid #ccc;
+}
+
+.patches .patch-name td:last-child {
+  padding-right: 7px !important;
+  border-right: 1px solid #ccc;
+}
+
+#patches .diffstat-all .diffstat th:first-child,
+#patches .diffstat-all .diffstat td:first-child { border-left: 0px !important; padding-left: 7px !important;}
+#patches .diffstat-all .diffstat th:last-child,
+#patches .diffstat-all .diffstat td:last-child { border-right: 0px !important; padding-right: 7px !important;}
+
+#patches .diffstat-all { display: none; }
+
+tr.patch-name:hover td {
+  background-color: #eef6ff;
+}
+
+tr.patch-name:hover a {
+  display: inline;
+}
+
+#patches .active-patch a {
+  display: block;
+  color: white !important;
+}
+
+#patches .diffstat-all table.diffstat td {
+  border-bottom: 0px;
+  padding-bottom: 3px !important;
+}
+
+#patches .diffstat-all table.diffstat .split {
+  padding-top: 5px !important;
+}
+
+.patches .patch-name td {
+  border-bottom: 1px solid #ccc;
+}
+
+.patches .patch-name:first-child td {
+  border-top: 1px solid #ccc;
+}
+
+.patches .patch-name td { padding-top: 4px !important; padding-bottom: 4px !important;}
+
+.patches .frame_link { text-decoration: underline; color: #a07cbc; }
+
+#patches .diffstat-all .diffstat th:last-child {
+  padding-left: 0px;
+}
+
+.active-patch td,
+.patch td {
+  background-color: #888 !important;
+}
+
+#patches .active-patch td a,
+#patches .active-patch td,
+#patches .active-patch td span {
+  color: white;
+}
+
+.patch-content .changelog tr:last-child td {
+  padding-bottom: 10px !important;
+}
+
+.patch-name td:first-child a {
+  font-weight: 700;
+  font-size: 100%;
+}
+
+#patches .active-patch td .date {
+  display: none;
+}
+
+/* Specfile stuff */
+
+#specfile .code .highlight {
+  margin-left: 1em;
+}
+
+#specfile {
+  margin-top: 1em;
+}
+
+#search-results-table .subpackage td{
+  text-indent: 1.5em;
+  border:none;
+}
+
+#search-results-table .subpackage
+{
+  font-size: smaller;
+}
+
+.front-search-results {
+  min-height:300px;
+}
+
+
+/*temp fix for custom-select image not showing */
+.custom-select{
+  display: inline-block;
+  max-width: 100%;
+  height: calc(2.25rem + 2px);
+  padding: .375rem 1.75rem .375rem .75rem;
+  line-height: 1.25;
+  color: #464a4c;
+  vertical-align: middle;
+  background: #fff url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23333' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .75rem center;
+  -webkit-background-size: 8px 10px;
+  background-size: 8px 10px;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
