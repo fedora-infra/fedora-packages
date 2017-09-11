@@ -5,12 +5,8 @@
     <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title>${title}</title>
-    <link rel="stylesheet" type="text/css" href="${tg.url('/css/960_24_col.css')}" media="all" />
-    <link rel="stylesheet" type="text/css" href="${tg.url('/css/text.css')}" media="all" />
-    <link rel="stylesheet" type="text/css" href="${tg.url('/css/application-chrome.css')}" media="all" />
-    <link rel="stylesheet" type="text/css" href="${tg.url('/css/myfedora-branding.css')}" media="all" />
-    <link rel="stylesheet" type="text/css" href="${tg.url('/css/fedora.css')}" media="all" />
-    <link rel="stylesheet" type="text/css" href="${tg.url('/css/reset.css')}" media="all" />
+		<link rel="stylesheet" type="text/css" href="https://apps.fedoraproject.org/global/fedora-bootstrap-1.0.2/fedora-bootstrap.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="${tg.url('/css/fedora-packages.css')}" media="all" />
 
     <script type="text/javascript">
         moksha.update_title("${title}", 0);
@@ -34,21 +30,20 @@
 <body id="chrome" class="home">
     ${resources()}
     <div id="wrapper">
-        <div id="main_app">
-    <div id="container">
-       <div class="container_24">
+        <div id="main_app" class="bodycontent">
+    <div class="container">
            <!-- START Logo -->
            <div class="grid_8 prefix_9" id="header-search">
-               <h1><a href="${tg.url('/')}"><span id="logo">Fedora</span> Packages</a></h1>
+               <h1 class="text-xs-center py-3"><img src="${tg.url('/images/fedora_packages_logo.png')}" alt="Fedora Packages"></h1>
            </div>
            <!-- END Logo -->
            <div class="clear"></div>
-       </div>
-       <div id="searchbar">
-           <div class="container_24">
+    </div>
+       <div id="searchbar" class="masthead py-3">
+           <div class="container">
 		<div class="grid_2">
 		&nbsp;
-               <!-- 
+               <!--
                    <a href="#" class="active">Search</a>
                    <a href="#">Browse</a>
 	       -->
@@ -64,19 +59,19 @@
                </script>
                <form action="${tg.url('/s')}"
                       onSubmit="return do_search(this);">
-                   <div class="grid_20">
-                     <input type="text" name="search"
-                            autofocus="autofocus"
-                            value="${options['filters']['search']}" />
-                   </div>
-                   <div class="grid_2">
-                       <input type="submit" value="Search"/>
-                   </div>
+                      <div class="input-group">
+                        <input class ="form-control form-control-lg" type="text" name="search"
+                               autofocus="autofocus"
+                               value="${options['filters']['search']}" />
+                         <span class="input-group-btn">
+                           <input type="submit" value="Search" class="btn btn-primary btn-lg" />
+                         </span>
+                     </div>
                </form>
                <div class="clear"></div>
            </div>
        </div>
-       <div id="search_grid" class="container_24">
+       <div id="search_grid" class="container front-search-results">
            ${tmpl_context.widget.display(**options) | n}
        </div>
 </div>

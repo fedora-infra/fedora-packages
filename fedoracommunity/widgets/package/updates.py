@@ -20,6 +20,7 @@ class Updates(Grid):
     def prepare(self):
         self.package_name = self.kwds['package_name']
         self.subpackage_of = self.kwds.get('subpackage_of', '')
+        self.total_rows = -1
         main_pkg = self.package_name
         if self.subpackage_of:
             main_pkg = self.subpackage_of

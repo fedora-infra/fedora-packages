@@ -5,12 +5,8 @@
     <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <title>${title}</title>
-    <link rel="stylesheet" type="text/css" href="${tg.url('css/960_24_col.css')}" media="all" />
+    <link rel="stylesheet" type="text/css" href="https://apps.fedoraproject.org/global/fedora-bootstrap-1.0.2/fedora-bootstrap.css" media="all" />
     <link rel="stylesheet" type="text/css" href="${tg.url('css/text.css')}" media="all" />
-    <link rel="stylesheet" type="text/css" href="${tg.url('css/application-chrome.css')}" media="all" />
-    <link rel="stylesheet" type="text/css" href="${tg.url('css/myfedora-branding.css')}" media="all" />
-    <link rel="stylesheet" type="text/css" href="${tg.url('css/fedora.css')}" media="all" />
-    <link rel="stylesheet" type="text/css" href="${tg.url('css/reset.css')}" media="all" />
 
     <script type="text/javascript">
         moksha.update_title("${title}", 0);

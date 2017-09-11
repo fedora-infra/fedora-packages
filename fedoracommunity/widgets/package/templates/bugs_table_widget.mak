@@ -1,4 +1,4 @@
-<div class="list header-list">
+<div class="list header-list col-sm-9 pull-sm-3">
     <script type="text/javascript">
         function _text_filter(text) {
             var results = $("<div />");
@@ -40,14 +40,14 @@
                 % endfor
             </select>
 
-            <span class="pull-right">
+            <!--<span class="pull-right">
                 <label for="version">Search:</label>
                 <input id="bug_search" type="text" name="search" placeholder="Bugzilla..."/>
-            </span>
+            </span>-->
         </div>
     </form>
     </div>
-    <table id="${w.id}">
+    <table id="${w.id}" class="table">
         <thead>
           <th>Bug</th>
           <th>Status</th>
@@ -81,11 +81,11 @@
             This package has no bugs - go file some!!!
         </div>
     </div>
-    <div id="grid-controls" if="visible_rows >= total_rows && total_rows > 0">
+    <!--<div id="grid-controls" if="visible_rows >= total_rows && total_rows > 0">
         <div class="message template" id="info_display" >
            Viewing all bugs for this package
         </div>
-    </div>
+    </div>-->
     <div id="grid-controls" if="visible_rows < total_rows && total_rows > 0">
         <div class="message template" id="info_display" >
            Viewing ${'${first_visible_row}'}-${'${last_visible_row}'} of ${'${total_rows}'} bugs
