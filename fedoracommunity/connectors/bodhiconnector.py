@@ -564,12 +564,9 @@ class BodhiConnector(IConnector, ICall, IQuery):
                 queries.append(tag)
                 release_tag[tag] = r
             else:
-                if 'epel' in tag:
-                    stable_tag = release['stable_tag']
-                    testing_tag = release['testing_tag']
-                else:
-                    stable_tag = release['stable_tag']
-                    testing_tag = release['testing_tag']
+                stable_tag = release['stable_tag']
+                testing_tag = release['testing_tag']
+
                 koji.listTagged(stable_tag, package=package,
                                 latest=True, inherit=True)
                 queries.append(stable_tag)
