@@ -11,10 +11,12 @@ import logging
 import shutil
 import tarfile
 import threading
+import re
 
 import appstream
 import requests
 import xappy
+import pdc_client
 
 from os.path import join
 
@@ -60,17 +62,22 @@ def download_file(url, dest):
 class Indexer(object):
     def __init__(self, cache_path,
                  tagger_url=None,
-                 pkgdb_url=None,
+                 bodhi_url=None,
                  mdapi_url=None,
-                 icons_url=None):
+                 icons_url=None,
+                 pdc_url=None,
+                 pagure_url=None):
 
         self.cache_path = cache_path
         self.dbpath = join(cache_path, 'search')
         self.icons_path = join(cache_path, 'icons')
         self.default_icon = 'package_128x128.png'
         self.tagger_url = tagger_url or "https://apps.fedoraproject.org/tagger"
+        self.bodhi_url = bodhi_url or "https://bodhi.fedoraproject.org"
         self.mdapi_url = mdapi_url or "https://apps.fedoraproject.org/mdapi"
         self.icons_url = icons_url or "https://alt.fedoraproject.org/pub/alt/screenshots"
+        self.pdc_url = pdc_url or "https://pdc.fedoraproject.org/rest_api/v1"
+        self.pagure_url = pagure_url or "https://src.fedoraproject.org/pagure/api/0"
         self._latest_release = None
         self._active_fedora_releases = None
         self.icon_cache = {}
@@ -111,51 +118,53 @@ class Indexer(object):
     def latest_release(self):
         # TODO - query PDC (or Bodhi) for this info
         if not self._latest_release:
-            response = local.http.get(self.pkgdb_url + "/api/collections")
-            if not bool(response):
-                raise IOError("Unable to find latest release %r" % response)
-            data = response.json()
-
-            # Strip off rawhide
-            data['collections'] = [
-                c for c in data['collections'] if c['version'] != 'devel'
-            ]
+            releases_all = self.get_all_releases_from_bodhi()
 
             # Find the latest
             by_version = lambda c: int(c['version'])
-            data['collections'].sort(key=by_version, reverse=True)
-            self._latest_release = int(data['collections'][0]['version'])
+            releases_all.sort(key=by_version, reverse=True)
+            self._latest_release = int(releases_all[0]['version'])
         return self._latest_release
 
     @property
     def active_fedora_releases(self):
         if not self._active_fedora_releases:
-            # TODO - query PDC (or Bodhi) for this info
-            response = local.http.get(self.pkgdb_url + "/api/collections")
-            if not bool(response):
-                raise IOError("Unable to find releases %r" % response)
-            data = response.json()
+            releases_all = self.get_all_releases_from_bodhi()
 
-            # Strip off rawhide
-            data['collections'] = [
-                c for c in data['collections']
-            ]
-
-            # Strip off rawhide, inactive releases, and epel
-            data['collections'] = [
-                c for c in data['collections'] if (
-                    c['version'] != 'devel' and
-                    c['status'] == 'Active' and
-                    c['name'] == 'Fedora'
+            # Strip off inactive releases, and epel
+            releases_all = [
+                c for c in releases_all if (
+                    c['state'] == 'current' and
+                    c['id_prefix'] == 'FEDORA'
                 )
             ]
 
             by_version = lambda c: int(c['version'])
-            data['collections'].sort(key=by_version, reverse=True)
+            releases_all.sort(key=by_version, reverse=True)
             self._active_fedora_releases = [
-                int(item['version']) for item in data['collections']
+                int(item['version']) for item in releases_all
             ]
         return self._active_fedora_releases
+
+    def get_all_releases_from_bodhi(self):
+        response = local.http.get(self.bodhi_url + "/releases").json()
+        if not bool(response):
+            raise IOError("Unable to find latest release %r" % response)
+
+        releases_all = None
+        for i in range(1,response['pages']+1):
+            if releases_all is None:
+                releases_all = response['releases']
+                continue
+            else:
+                temp = local.http.get(self.bodhi_url + "/releases?page="+str(i)).json()
+                temp = temp['releases']
+                releases_all.extend(temp)
+        if releases_all == None:
+            raise TypeError
+
+        return releases_all
+
 
     def pull_icons(self):
         for release in reversed(self.active_fedora_releases):
@@ -241,43 +250,47 @@ class Indexer(object):
 
         shutil.rmtree(join(self.icons_path, 'tmp'))
 
-    def gather_pkgdb_packages(self):
-        response = local.http.get(self.pkgdb_url + '/api/packages/')
-        if not bool(response):
-            raise IOError("Failed to talk to pkgdb: %r" % response)
+    def gather_pdc_packages(self, pkg_name=None):
+        pdc = pdc_client.PDCClient(self.pdc_url, develop=True)
+        
+        kwargs = dict()
+        if pkg_name is not None:
+            kwargs['name'] = pkg_name
 
-        pages = response.json()['page_total']
-
-        for i in range(pages):
-            log.info("Requesting pkgdb page %i of %i" % (i + 1, pages))
-            response = local.http.get(self.pkgdb_url + '/api/packages/',
-                                      params=dict(page=i+1))
-            if not bool(response):
-                raise IOError("Failed to talk to pkgdb: %r" % response)
-            for package in response.json()['packages']:
-                yield package
+        for component in pdc.get_paged(pdc['global-components']._, **kwargs):
+            yield component
 
     def latest_active(self, name, ignore=None):
-        # TODO - Query the PDC component-branches API endpoint for this
-        ignore = ignore or []
-        url = self.pkgdb_url + "/api/package/" + name
-        response = local.http.get(url)
-        if not bool(response):
-            raise KeyError("Failed to talk to pkgdb: %s %r" % (url, response))
-        data = response.json()
-        # Figure out the latest active, non-retired branch
-        by_version = lambda p: p['collection']['version']
-        data['packages'].sort(key=by_version, reverse=True)
-        for info in data['packages']:
-            if info['collection']['version'] in ignore:
-                continue
-            if info['status'] == 'Approved':
-                return info
 
-        raise KeyError("Couldn't find active pkgdb branch for %r" % name)
+        # First, check to see if it is retired.
+        # PDCClient pulls connection information from /etc/pdc.d/
+        # develop=True means: don't authenticate.
+        ignore = ignore or []
+        pdc = pdc_client.PDCClient(self.pdc_url, develop=True)
+        kwargs = dict(global_component=name, active=True, type='rpm')
+        latest_version = None
+        branch_info = None 
+        for branch in pdc.get_paged(pdc['component-branches']._, **kwargs):
+            if re.match(r'f\d+', branch['name']):
+                version = int(branch['name'].strip('f'))
+                if version in ignore:
+                    continue
+                if latest_version:
+                    latest_version = max(latest_version, version)
+                    if latest_version == version:
+                        branch_info = branch 
+                else:
+                    latest_version = version
+                    branch_info = branch
+
+
+        if latest_version is None:
+            raise ValueError('There is no active branch tied to a Fedora release')
+        return branch_info
+
 
     def construct_package_dictionary(self, package):
-        """ Return structured package dictionary from a pkgdb package.
+        """ Return structured package dictionary from a pkg package.
 
         Result looks like this::
 
@@ -301,18 +314,36 @@ class Indexer(object):
         try:
             info = self.latest_active(name)
         except KeyError:
-            log.warning("Failed to get pkgdb info for %r" % name)
+            log.warning("Failed to get pdc info for %r" % name)
             return
 
-        package['summary'] = info['package']['summary'] or \
-            '(no summary in pkgdb)'
-        package['description'] = info['package']['description'] or \
-            '(no description in pkgdb)'
-        package['devel_owner'] = info['point_of_contact']
-        package['status'] = info['package']['status']
+        # Getting summary and description
+        mdapi_pkg_url = '/'.join([self.mdapi_url, info['name'], 'srcpkg', info['global_component']])
+        meta_data = local.http.get(mdapi_pkg_url).json()
+
+        # Getting the upstream url for the package
+        upstream_url_gen = self.gather_pdc_packages(info['global_component'])
+        for obj in upstream_url_gen:
+            if obj['upstream']:
+                package['upstream_url'] = obj['upstream']
+
+        try:
+            # Getting the owner name
+            pagure_pkg_url = '/'.join([self.pagure_url, 'rpms', info['global_component']])
+            owner_data = local.http.get(pagure_pkg_url).json()
+            package['devel_owner'] = owner_data['access_users']['owner'][0]
+        except:
+            log.exception("Failed to get owner name for %r at %s." % (
+                info['global_component'], pagure_pkg_url))
+            package['devel_owner'] = 'no owner info in pagure'
+
+
+        package['summary'] = meta_data['summary'] or 'no summary in mdapi'
+        package['description'] = meta_data['description'] or 'no description in mdapi'
+        package['status'] = info['active']
 
         package['icon'] = self.icon_cache.get(name, self.default_icon)
-        package['branch'] =  info['collection']['branchname']
+        package['branch'] =  info['name']
         package['sub_pkgs'] = list(self.get_sub_packages(package))
 
         # This is a "parent" reference.  the base packages always have "none"
@@ -330,7 +361,7 @@ class Indexer(object):
         if branch == 'master':
             branch = 'rawhide'
 
-        url = "/".join([self.mdapi_url, branch, "pkg", name])
+        url = "/".join([self.mdapi_url, branch, "srcpkg", name])
         response = local.http.get(url)
 
         if not bool(response):
@@ -402,16 +433,8 @@ class Indexer(object):
 
     def index_packages(self):
         # This is a generator that yields dicts of package info that we index
-        # TODO - replace this with gather_pdc_packages() and get the master list from there.
-        #
-        # This is *probably* the endpoint you want, but you might need to use another:
-        #   https://pdc.fedoraproject.org/rest_api/v1/global-components/
-        #
-        # See some pull requests here for examples of how to query PDC:
-        #   https://pagure.io/releng/pull-requests
-        #
-        # You can delete the gather_pkgdb_packages one.
-        packages = self.gather_pkgdb_packages()
+
+        packages = self.gather_pdc_packages()
 
         # XXX - Only grab the first N for dev purposes
         #packages = [packages.next() for i in range(50)]
@@ -512,9 +535,9 @@ class Indexer(object):
         return doc
 
 
-# TODO - pkgdb url here can go
-def run(cache_path, tagger_url=None, pkgdb_url=None, mdapi_url=None, icons_url=None):
-    indexer = Indexer(cache_path, tagger_url, pkgdb_url, mdapi_url, icons_url)
+def run(cache_path, tagger_url=None, bodhi_url=None,
+        mdapi_url=None, icons_url=None, pdc_url=None, pagure_url=None):
+    indexer = Indexer(cache_path, tagger_url, bodhi_url, mdapi_url, icons_url, pdc_url, pagure_url)
 
     indexer.pull_icons()
     indexer.cache_icons()
