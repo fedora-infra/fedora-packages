@@ -116,6 +116,7 @@ class Indexer(object):
 
     @property
     def latest_release(self):
+        # TODO - query PDC (or Bodhi) for this info
         if not self._latest_release:
             releases_all = self.get_all_releases_from_bodhi()
 
@@ -260,6 +261,7 @@ class Indexer(object):
             yield component
 
     def latest_active(self, name, ignore=None):
+
         # First, check to see if it is retired.
         # PDCClient pulls connection information from /etc/pdc.d/
         # develop=True means: don't authenticate.
@@ -431,6 +433,7 @@ class Indexer(object):
 
     def index_packages(self):
         # This is a generator that yields dicts of package info that we index
+
         packages = self.gather_pdc_packages()
 
         # XXX - Only grab the first N for dev purposes

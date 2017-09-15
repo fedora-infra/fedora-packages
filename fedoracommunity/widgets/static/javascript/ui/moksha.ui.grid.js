@@ -522,7 +522,7 @@
       var $overlay = $('.overlay', self.element)
       if ($overlay.length == 0) {
           $overlay = $('<div />').addClass('overlay')
-          $overlay.css({'opacity': .75,
+          $overlay.css({'opacity': 1,
                         'z-index': 99,
                         'background-color': 'white',
                         'position': 'absolute'

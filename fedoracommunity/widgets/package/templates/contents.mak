@@ -1,5 +1,5 @@
 <div class="tab-container">
-        <div id="grid-controls"">
+        <div id="grid-controls">
           <form>
             <div id="filter" class="grid_filter" name="build_filter"
                 <!-- BEGIN Release Dropdown Filter **/ -->
@@ -59,4 +59,3 @@
             $(document).ready( function () { displayTree(); } );
         </script>
 </div>
-

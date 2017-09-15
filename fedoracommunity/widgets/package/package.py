@@ -85,7 +85,6 @@ class PackageWidget(twc.Widget):
     package_name = twc.Param()
     args = twc.Param(default=None)
     kwds = twc.Param(default=None)
-    latest_build = twc.Variable(default='Koji unavailable')
     summary = twc.Variable(default='No summary provided')
     description = twc.Variable(default='No description provided')
     navigation_widget = PackageNavWidget
@@ -116,17 +115,6 @@ class PackageWidget(twc.Widget):
                     break
             else:
                 tg.redirect('/s/' + name)
-
-        koji = get_connector('koji')
-        try:
-            builds = koji._koji_client.getLatestBuilds('rawhide', package=result['name'])
-            if builds:
-                self.latest_build = builds[0]['version'] + '-' + \
-                                    builds[0]['release']
-            else:
-                self.latest_build = 'Not built in rawhide'
-        except Exception, e:
-            log.error('Unable to query koji: %s' % str(e))
 
     def __repr__(self):
         return u"<PackageWidget %s>" % self.package_name

@@ -4,12 +4,12 @@
   <div class="grid_24" id="search-results-table">
     <div class="grid_12 suffix_12" id="search-notes">
       <div id="grid-controls" if="filters.search!=''">
-        <div class="message template" id="info_display">
+        <div class="message template text-xs-center text-muted py-1" id="info_display">
            ${'${total_rows}'} results
         </div>
       </div>
     </div>
-    <table id="${w.id}">
+    <table id="${w.id}" class="table">
       <tbody class="rowtemplate">
         <tr class="priority4">
             <td>
@@ -30,7 +30,7 @@
       </tbody>
     </table>
     <div id="grid-controls">
-        <div class="pager" id="pager" type="more" ></div>
+        <div class="pager text-xs-center mb-3" id="pager" type="more"></div>
    </div>
    <script type="text/javascript">
 

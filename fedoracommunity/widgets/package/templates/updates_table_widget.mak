@@ -3,18 +3,18 @@
 <head></head>
 <body>
 <div class="list header-list">
-    <div id="grid-controls">
+    <div id="grid-controls" class="text-xs-right pb-1">
         <form>
           <div id="filter" class="grid_filter" name="release_filter">
             <label for="release">Release:</label>
-            <select name="release">
+            <select name="release" class="custom-select">
                 <option selected="selected" value="">All Dists</option>
                 % for (i, rel) in enumerate(w.release_table):
                     <option value="${rel['value']}">${rel['label']}</option>
                 % endfor
             </select>
             <label for="status">Status:</label>
-            <select name="status">
+            <select name="status" class="custom-select">
                 <option selected="selected" value="">All</option>
                 <option value="stable">Stable</option>
                 <option value="testing">Testing</option>
@@ -25,7 +25,7 @@
           </div>
         </form>
     </div>
-    <table id="${w.id}">
+    <table id="${w.id}" class="table">
         <thead>
             <tr>
                 <th><a href="#nvr">Version</a></th>
@@ -59,12 +59,12 @@
            There are no updates for this package
         </div>
     </div>
-    <div id="grid-controls" if="visible_rows > total_rows && total_rows != 0">
+    <div id="grid-controls" if="visible_rows > total_rows && total_rows > 0">
         <div class="message template" id="info_display" >
            Viewing all ${'${total_rows}'} updates for this package
         </div>
     </div>
-    <div id="grid-controls" if="visible_rows > total_rows && total_rows != 0">
+    <div id="grid-controls" if="visible_rows > total_rows && total_rows > 0">
         <div class="message template" id="info_display" >
            Viewing ${'${first_visible_row}'}-${'${last_visible_row}'} of ${'${total_rows}'} updates for this packahge
         </div>
