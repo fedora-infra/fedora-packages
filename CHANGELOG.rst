@@ -1,4 +1,149 @@
 
+4.0.0
+-----
+
+Pull Requests
+
+- (@puiterwijk)           #316, Fix tw2 resource path when mounted outside siteroot.
+  https://github.com/fedora-infra/fedora-packages/pull/316
+- (@pypingou)             #315, Fixes
+  https://github.com/fedora-infra/fedora-packages/pull/315
+- (@pypingou)             #313, Couple of fixes
+  https://github.com/fedora-infra/fedora-packages/pull/313
+- (@cverna)               #312, Fix tw2 resource path when mounted outside siteroot
+  https://github.com/fedora-infra/fedora-packages/pull/312
+- (@cverna)               #304, Create the logger for the package overview widget.
+  https://github.com/fedora-infra/fedora-packages/pull/304
+- (@cverna)               #302, Remove fedorahosted link from Readme and only keep Vagrant setup for now.
+  https://github.com/fedora-infra/fedora-packages/pull/302
+- (@cverna)               #301, Remove dependency to xappy.
+  https://github.com/fedora-infra/fedora-packages/pull/301
+- (@cverna)               #300, Fix the default url to call pagure's api.
+  https://github.com/fedora-infra/fedora-packages/pull/300
+- (@cverna)               #297, Flake8 cleanup of index.py with max-line-length=90.
+  https://github.com/fedora-infra/fedora-packages/pull/297
+- (@cverna)               #295, Making the indexing more robust.
+  https://github.com/fedora-infra/fedora-packages/pull/295
+- (@cverna)		            #292, Replace python-appstream by the Gobject python bindings.
+  https://github.com/fedora-infra/fedora-packages/pull/292
+- (@cverna)               #290, Remove pkgdb pr280.
+  https://github.com/fedora-infra/fedora-packages/pull/290
+- (@techtonik)            #287, Rename README.txt to README.md for readability.
+  https://github.com/fedora-infra/fedora-packages/pull/287
+- (@yashvardhannanavati)  #283, point scm links to pagure instead of cgit.
+  https://github.com/fedora-infra/fedora-packages/pull/283
+- (@yashvardhannanavati)  #281, Final elimination of pkgdb.
+  https://github.com/fedora-infra/fedora-packages/pull/281
+- (@cverna)               #273, Use f25 in the vagrant env.
+  https://github.com/fedora-infra/fedora-packages/pull/273
+- (@ryanlech)             #266, Fedora bootstrap.
+  https://github.com/fedora-infra/fedora-packages/pull/266
+- (@ryanlech)             #263, change koji link in development.ini to https.
+  https://github.com/fedora-infra/fedora-packages/pull/263
+- (@lubomir)              #262, Use src.fedoraproject.org instead of pkgs.fp.o.
+  https://github.com/fedora-infra/fedora-packages/pull/262
+- (@xsuchy)               #255, add link to FAF.
+  https://github.com/fedora-infra/fedora-packages/pull/255
+- (@ryanlech)             #253, Added vagrant setup.
+  https://github.com/fedora-infra/fedora-packages/pull/253
+- (@cicku)                #249, Update default version of EPEL bug.
+  https://github.com/fedora-infra/fedora-packages/pull/249
+- (@puiterwijk)           #237, Make clear that bugs for packages aren't in this repo.
+  https://github.com/fedora-infra/fedora-packages/pull/237
+- (@ralphbean)            #234, Update xapian index when pkgdb_updater changes things like upstream_url.
+  https://github.com/fedora-infra/fedora-packages/pull/234
+- (@ralphbean)            #232, Add caching and cache invalidation to the bugzilla tab.
+  https://github.com/fedora-infra/fedora-packages/pull/232
+- (@thunderoy)            #227, My branch.
+  https://github.com/fedora-infra/fedora-packages/pull/227
+
+Commits
+
+- 2da2b066b Fix tw2 resource path when mounted outside siteroot.
+  https://github.com/fedora-infra/fedora-packages/commit/2da2b066b
+- 0f3f1f422 Merge pull request #315 from fedora-infra/fixes
+  https://github.com/fedora-infra/fedora-packages/commit/0f3f1f422
+- a0408a7ef Make the package description look prettier by respecting their break line
+  https://github.com/fedora-infra/fedora-packages/commit/a0408a7ef
+- fa24bdc30 Fix small html error.
+  https://github.com/fedora-infra/fedora-packages/commit/fa24bdc30
+- 4c20b82d7 Merge pull request #313 from fedora-infra/icon_url.
+  https://github.com/fedora-infra/fedora-packages/commit/4c20b82d7
+- 8c9bfcc91 The new indexing get the full name of the icons with the .png.
+  https://github.com/fedora-infra/fedora-packages/commit/8c9bfcc91
+- 49404054f Widget templates are not full HTML pages...
+  https://github.com/fedora-infra/fedora-packages/commit/49404054f
+- e204eedca Fix url to the icon since the new indexer returns the full name.
+  https://github.com/fedora-infra/fedora-packages/commit/e204eedca
+- 1bf1face0 Create the logger for the package overview widget.
+  https://github.com/fedora-infra/fedora-packages/commit/1bf1face0
+- af4be7984 Refactor Indexing http get requests.
+  https://github.com/fedora-infra/fedora-packages/commit/af4be7984
+- 124d8ac15 Catch all exception to avoid Threads form dying.
+  https://github.com/fedora-infra/fedora-packages/commit/124d8ac15
+- 2deab5ed8 Prevent infinite call of latest_active method.
+  https://github.com/fedora-infra/fedora-packages/commit/2deab5ed8
+- 51e2d0352 Add weight to xapian indexing and complete indexing.
+  https://github.com/fedora-infra/fedora-packages/commit/51e2d0352
+- 206323b36 Removal of xappy depedency.
+  https://github.com/fedora-infra/fedora-packages/commit/206323b36
+- 8cb3fc7f5 Remove fedorahosted link from Readme and only keep Vagrant setup for now.
+  https://github.com/fedora-infra/fedora-packages/commit/8cb3fc7f5
+- b5d8619af Fix the default url to call pagure's api.
+  https://github.com/fedora-infra/fedora-packages/commit/b5d8619af
+- 55d832b88 Flake8 cleanup of index.py with max-line-length=90
+  https://github.com/fedora-infra/fedora-packages/commit/55d832b88
+- 5d54d0ad6 Check the main package branch info if we are checking a sub package.
+  https://github.com/fedora-infra/fedora-packages/commit/5d54d0ad6
+- b0545d23d Handle execption for mdapi.
+  https://github.com/fedora-infra/fedora-packages/commit/b0545d23d
+- b3b7d39ae Ask pdc to return 100 results per pages to speed things up.
+  https://github.com/fedora-infra/fedora-packages/commit/b3b7d39ae
+- 8f7b75dc2 Replace python-appstream by the Gobject python bindings.
+  https://github.com/fedora-infra/fedora-packages/commit/8f7b75dc2
+- 8ea5e8680 Merge pull request #281 from yashvardhannanavati/pkgdb-Massacre.
+  https://github.com/fedora-infra/fedora-packages/commit/8ea5e8680
+- f957a2b6d Merge branch 'develop' into pkgdb-Massacre.
+  https://github.com/fedora-infra/fedora-packages/commit/f957a2b6d
+- 495bfa655 Cleanup after code review.
+  https://github.com/fedora-infra/fedora-packages/commit/495bfa655
+- 0e3b81ba8 Initial massacre.
+  https://github.com/fedora-infra/fedora-packages/commit/0e3b81ba8
+- f5c30dd92 Initial removal of pkgdb.
+  https://github.com/fedora-infra/fedora-packages/commit/f5c30dd92
+- b2a27ee28d style fedora-packages to use the new fedora-bootstrap.
+  https://github.com/fedora-infra/fedora-packages/commit/b2a27ee28
+- 347f7383c Update README.md
+  https://github.com/fedora-infra/fedora-packages/commit/347f7383c
+- 6361e9538 Update and rename README.txt to README.md
+  https://github.com/fedora-infra/fedora-packages/commit/6361e9538
+- 08c1ea5dd point scm links to pagure instead of cgit
+  https://github.com/fedora-infra/fedora-packages/commit/08c1ea5dd
+- 491d6e4e5 Final elimination of pkgdb
+  https://github.com/fedora-infra/fedora-packages/commit/491d6e4e5
+- f678688d6 Use f25 in the vagrant environment. crank need to be set to 0.7.x for Turbogears2
+  https://github.com/fedora-infra/fedora-packages/commit/f678688d6
+- e602d29ac Use src.fedoraproject.org instead of pkgs.fp.o
+  https://github.com/fedora-infra/fedora-packages/commit/e602d29ac
+- 9183426d0 change koji link in development.ini to https
+  https://github.com/fedora-infra/fedora-packages/commit/9183426d0
+- 4320af5d9 add link to FAF
+  https://github.com/fedora-infra/fedora-packages/commit/4320af5d9
+- 537cb3d72 sort applications alphabeticaly
+  https://github.com/fedora-infra/fedora-packages/commit/537cb3d72
+- 3b31d2cba Added vagrant setup
+  https://github.com/fedora-infra/fedora-packages/commit/3b31d2cba
+- 0ff024ed1 Make clear that bugs for packages aren't in this repo
+  https://github.com/fedora-infra/fedora-packages/commit/0ff024ed1
+- 7c13cfbd9 Update xapian index when pkgdb_updater changes things like upstream_url.
+  https://github.com/fedora-infra/fedora-packages/commit/7c13cfbd9
+- 9e34af6cc Add caching and cache invalidation to the bugzilla tab.
+  https://github.com/fedora-infra/fedora-packages/commit/9e34af6cc
+- 6a90c33b4 Fix ez_setup like in #221.
+  https://github.com/fedora-infra/fedora-packages/commit/6a90c33b4
+- cbfc1bac4 added some missing dependencies
+  https://github.com/fedora-infra/fedora-packages/commit/cbfc1bac4
+
 3.0.4
 -----
 

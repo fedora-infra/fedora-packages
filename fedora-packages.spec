@@ -4,27 +4,18 @@
 %define oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        3.0.4
+Version:        4.0.0
 Release:        1%{?dist}
-Summary:        A modular framework for consolidating Fedora Infrastructure
+Summary:        Fedora packages search engine
 Group:          Applications/Internet
 License:        AGPLv3
-URL:            https://fedorahosted.org/fedoracommunity
-Source0:        fedoracommunity-%{version}.tar.gz
+URL:            https://github.com/fedora-infra/fedora-packages
+Source0:        https://github.com/fedora-infra/fedora-packages/archive/%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
-%if 0%{?rhel}
-%if "%rhel" < "6"
 BuildRequires: python-setuptools
-%else
-BuildRequires: python-setuptools-devel
-%endif
-%else
-BuildRequires: python-setuptools-devel
-%endif
-
 BuildRequires: python-devel
 BuildRequires: python-pygments
 BuildRequires: pytz
@@ -40,13 +31,7 @@ BuildRequires: python-markdown
 BuildRequires: pygobject3
 BuildRequires: fedmsg
 BuildRequires: python-daemon
-
-%if 0%{?el6} || 0%{?el5}
-BuildRequires:  python-ordereddict
-Requires:       python-ordereddict
-BuildRequires:  python-webob1.0
-Requires:       python-webob1.0
-%endif
+BuildRequires: python-webob
 
 Requires: TurboGears2
 Requires: python-moksha-wsgi
@@ -61,12 +46,10 @@ Requires: httpd
 Requires: mod_wsgi
 Requires: diffstat
 Requires: fedpkg
-Requires: python-ordereddict
 Requires: python-lockfile
 Requires: python-tw2-jqplugins-ui
 Requires: python-bugzilla
 Requires: xapian-bindings-python
-Requires: python-xappy
 Requires: python-dogpile-core > 0.4.0
 Requires: python-dogpile-cache > 0.4.1
 Requires: python-memcached
@@ -74,35 +57,31 @@ Requires: packagedb-cli
 Requires: python-markdown
 Requires: pygobject3
 Requires: fedmsg
+Requires: python-pdc-client
+Requires: python-webhelpers
+Requires: libappstream-glib
 # For spectool
 Requires: rpmdevtools
 Requires: python-daemon
+Requires: python-webob
 
 Obsoletes: myfedora
 Conflicts: fedoracommunity
 
 
 %description
-Fedora Community is a set of web applications for consolidating Fedora Infrastructure
-
+Fedora-packages is a web application that allow the user to search for packages inside Fedora.
 %prep
-%setup -q -n fedoracommunity-%{version}
-
-%if %{?rhel}%{!?rhel:0} >= 6
-# Make sure that epel/rhel picks up the correct version of webob
-awk 'NR==1{print "import __main__; __main__.__requires__ = __requires__ = [\"WebOb==1.0.8\", \"sqlalchemy>=0.7\"]; import pkg_resources"}1' setup.py > setup.py.tmp
-mv setup.py.tmp setup.py
-%endif
-
+%autosetup -n fedoracommunity-%{version}
 
 %build
-%{__python} setup.py build
+%py2_build
 
 %install
 %{__rm} -rf %{buildroot}
-%{__python} setup.py install -O1 --skip-build \
+%{__python2} setup.py install -O1 --skip-build \
     --install-data=%{_datadir} --root %{buildroot}
-%{__python} setup.py archive_fedoracommunity_resources -f -o %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets -d moksha -d fedoracommunity
+%{__python2} setup.py archive_fedoracommunity_resources -f -o %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets -d moksha -d fedoracommunity
 
 # Hack, to work around tw2 resource archiving issues
 %{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.jquery_template/static/javascript
@@ -132,18 +111,31 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 
 %files
 %defattr(-,root,root,-)
-%doc README.txt COPYING AUTHORS
+%doc README.md AUTHORS
+%license COPYING
 %{python_sitelib}/%{oldname}/
 %attr(-,apache,root) %dir %{_datadir}/%{oldname}
 %attr(-,apache,root) %{_datadir}/%{oldname}/production
 %attr(-,apache,root) %{_datadir}/%{oldname}/public
 %attr(-,apache,root) %{_localstatedir}/log/%{oldname}
 %{python_sitelib}/%{oldname}-%{version}-py%{pyver}.egg-info/
-#%{python_sitelib}/%{oldname}-%{version}-py%{pyver}-nspkg.pth
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/%{oldname}
 %{_bindir}/fcomm-index-packages
 
 %changelog
+* Sun Dec 05 2017 Clement Verna <cverna@tutanota.com> - 4.0.0-1
+- Use the license macro
+- Fix Source0 url
+- Remove python-ordereddict dependency.
+- Replace python-appstream by pygobject3 to support rhel7.
+- Remove call to pkgdb.
+- Point SCM links to pagure.io instead of cgit.
+- Use Fedora bootstrap for the frontend.
+- Add link to Fedora Analysis Server.
+- Update EPEL default version.
+- Add caching and cache invalidation to the bugzilla tab.
+- Update xapian index when pkgdb_updater changes things like upstream_url.
+
 * Tue Mar 01 2016 Ralph Bean <rbean@redhat.com> - 3.0.4-1
 - new version
 
