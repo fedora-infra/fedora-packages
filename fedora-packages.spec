@@ -37,7 +37,7 @@ BuildRequires: python-dogpile-core > 0.4.0
 BuildRequires: python-dogpile-cache > 0.4.1
 BuildRequires: python-memcached
 BuildRequires: python-markdown
-BuildRequires: python-appstream
+BuildRequires: pygobject3
 BuildRequires: fedmsg
 BuildRequires: python-daemon
 
@@ -72,7 +72,7 @@ Requires: python-dogpile-cache > 0.4.1
 Requires: python-memcached
 Requires: packagedb-cli
 Requires: python-markdown
-Requires: python-appstream
+Requires: pygobject3
 Requires: fedmsg
 # For spectool
 Requires: rpmdevtools

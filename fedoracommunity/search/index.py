@@ -13,7 +13,6 @@ import tarfile
 import threading
 import re
 
-import appstream
 import requests
 import xappy
 import pdc_client
@@ -21,6 +20,12 @@ import pdc_client
 from os.path import join
 
 from utils import filter_search_string
+
+import gi
+
+gi.require_version('AppStreamGlib', '1.0')
+
+from gi.repository import AppStreamGlib
 
 # It is on the roof.
 import fedoracommunity.pool
@@ -198,51 +203,43 @@ class Indexer(object):
             fname = 'fedora-%i.xml.gz' % release
             target = join(self.icons_path, 'tmp', str(release), fname)
 
-            metadata = appstream.Store()
-            f = gzip.open(target, 'rb')
-            try:
-                metadata.parse(f.read())
-            finally:
-                f.close()
+            metadata = AppStreamGlib.Store()
 
-            for idx, component in metadata.components.items():
+            with gzip.open(target, 'rb') as f:
+                metadata.from_xml(f.read(), '')
+
+
+            for app in metadata.get_apps():
                 # Other types are 'stock' and 'unknown'
-                icons = component.icons.get('cached', [])
+                icons = app.get_icons()
+                pkgname = app.get_pkgnames()[0]
 
                 # Pick the biggest one..
                 icon = None
                 for candidate in icons:
                     if not icon:
-                        icon = candidate
+                        if candidate.get_kind().value_nick == 'cached':
+                            icon = candidate
                         continue
-                    if int(icon['width']) < int(candidate['width']):
+                    if int(icon.get_width()) < int(candidate.get_width()):
                         icon = candidate
 
                 if not icon:
                     continue
 
-                # Some old F21 and F22 metadata entries have this weirdness.
-                prefix = '{width}x{height}'.format(**icon)
-                if icon['value'].startswith(prefix + '/'):
-                    icon['value'] = icon['value'].strip(prefix + '/')
-
                 # Move the file out of the temp dir and into place
                 s = join(self.icons_path, 'tmp', str(release),
                          '{width}x{height}', '{value}')
                 d = join(self.icons_path, '{value}')
-                source = s.format(**icon)
-                destination = d.format(**icon)
-
-                # Furthermore, none of the F21 icons are namespaced
-                if release == 21:
-                    source = source.replace(prefix + '/', '')
+                source = s.format(width=icon.get_width(), height=icon.get_height(), value=icon.get_name())
+                destination = d.format(value=icon.get_name())
 
                 try:
                     shutil.copy(source, destination)
 
                     # And hang the name in the dict for other code to find it
                     # ... but only if we succeeded at placing the icon file.
-                    self.icon_cache[component.pkgname] = icon['value']
+                    self.icon_cache[pkgname] = icon.get_name()
                 except IOError as e:
                     log.warning("appstream metadata lied: %s %r" % (source, e))
                 except OSError as e:

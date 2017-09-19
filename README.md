@@ -2,9 +2,9 @@ https://fedorahosted.org/fedoracommunity/wiki/Development
 
 Note: Some more dependencies to be installed:-
 
-    $ sudo dnf install python-webhelpers fedmsg
+    $ sudo dnf install python-webhelpers fedmsg pygobject3
 
-    $ pip install python-appstream gearbox
+    $ pip install gearbox
 
 ### Hacking with Vagrant
 

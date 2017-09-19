@@ -26,13 +26,13 @@
       - python-memcached
       - memcached
       - python-markdown
+      - pygobject3
 
 - name: Install python packages
   pip:
       name: "{{ item }}"
       state: present
   with_items:
-      - python-appstream
       - gearbox
       - crank==0.7.3
 

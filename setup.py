@@ -66,7 +66,6 @@ setup(
         "dogpile.cache",
         "python-memcached",
         "markdown",
-        "python-appstream",
         "fedmsg",
         #"PyOpenSSL",
         #"SQLAlchemy>=0.5",
