@@ -307,16 +307,25 @@ class Indexer(object):
         """
         package = copy.deepcopy(package)
 
-        name = package['name']
+
         try:
+            name = package['name']
             info = self.latest_active(name)
         except KeyError:
             log.warning("Failed to get pdc info for %r" % name)
             return
 
         # Getting summary and description
-        mdapi_pkg_url = '/'.join([self.mdapi_url, info['name'], 'srcpkg', info['global_component']])
-        meta_data = local.http.get(mdapi_pkg_url).json()
+        try:
+            mdapi_pkg_url = '/'.join([self.mdapi_url, info['name'], 'srcpkg', info['global_component']])
+            meta_data = local.http.get(mdapi_pkg_url).json()
+            package['summary'] = meta_data['summary']
+            package['description'] = meta_data['description']
+        except:
+            log.exception("Failed to get summary and description for %r at %s." % (
+                info['global_component'], mdapi_pkg_url))
+            package['summary'] = 'no summary in mdapi'
+            package['description'] = 'no description in mdapi'
 
         # Getting the upstream url for the package
         upstream_url_gen = self.gather_pdc_packages(info['global_component'])
@@ -334,11 +343,7 @@ class Indexer(object):
                 info['global_component'], pagure_pkg_url))
             package['devel_owner'] = 'no owner info in pagure'
 
-
-        package['summary'] = meta_data['summary'] or 'no summary in mdapi'
-        package['description'] = meta_data['description'] or 'no description in mdapi'
         package['status'] = info['active']
-
         package['icon'] = self.icon_cache.get(name, self.default_icon)
         package['branch'] =  info['name']
         package['sub_pkgs'] = list(self.get_sub_packages(package))
