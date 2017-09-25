@@ -248,7 +248,7 @@ class Indexer(object):
         shutil.rmtree(join(self.icons_path, 'tmp'))
 
     def gather_pdc_packages(self, pkg_name=None):
-        pdc = pdc_client.PDCClient(self.pdc_url, develop=True)
+        pdc = pdc_client.PDCClient(self.pdc_url, develop=True, page_size=100)
         
         kwargs = dict()
         if pkg_name is not None:
