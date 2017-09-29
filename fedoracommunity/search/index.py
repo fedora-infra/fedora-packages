@@ -95,27 +95,27 @@ class Indexer(object):
 
         indexer.add_field_action('exact_name', xappy.FieldActions.INDEX_FREETEXT)
         indexer.add_field_action('name', xappy.FieldActions.INDEX_FREETEXT,
-                               language='en', spell=True)
+                                 language='en', spell=True)
 
         indexer.add_field_action('summary', xappy.FieldActions.INDEX_FREETEXT,
-                               language='en')
+                                 language='en')
 
         indexer.add_field_action('description', xappy.FieldActions.INDEX_FREETEXT,
-                               language='en')
+                                 language='en')
 
-        indexer.add_field_action('subpackages',xappy.FieldActions.INDEX_FREETEXT,
-                               language='en', spell=True)
+        indexer.add_field_action('subpackages', xappy.FieldActions.INDEX_FREETEXT,
+                                 language='en', spell=True)
 
         indexer.add_field_action('category_tags', xappy.FieldActions.INDEX_FREETEXT,
-                               language='en', spell=True)
+                                 language='en', spell=True)
 
         indexer.add_field_action('cmd', xappy.FieldActions.INDEX_FREETEXT, spell=True)
         # FieldActions.TAG not currently supported in F15 xapian (1.2.7)
-        #indexer.add_field_action('tags', xappy.FieldActions.TAG)
+        # indexer.add_field_action('tags', xappy.FieldActions.TAG)
         indexer.add_field_action('tag', xappy.FieldActions.INDEX_FREETEXT, spell=True)
 
-        #indexer.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
-        #indexer.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
+        # indexer.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
+        # indexer.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
 
         self.indexer = indexer
 
@@ -157,7 +157,7 @@ class Indexer(object):
             raise IOError("Unable to find latest release %r" % response)
 
         releases_all = None
-        for i in range(1,response['pages']+1):
+        for i in range(1, response['pages']+1):
             if releases_all is None:
                 releases_all = response['releases']
                 continue
@@ -165,11 +165,10 @@ class Indexer(object):
                 temp = local.http.get(self.bodhi_url + "/releases?page="+str(i)).json()
                 temp = temp['releases']
                 releases_all.extend(temp)
-        if releases_all == None:
+        if releases_all is None:
             raise TypeError
 
         return releases_all
-
 
     def pull_icons(self):
         for release in reversed(self.active_fedora_releases):
@@ -208,7 +207,6 @@ class Indexer(object):
             with gzip.open(target, 'rb') as f:
                 metadata.from_xml(f.read(), '')
 
-
             for app in metadata.get_apps():
                 # Other types are 'stock' and 'unknown'
                 icons = app.get_icons()
@@ -231,7 +229,8 @@ class Indexer(object):
                 s = join(self.icons_path, 'tmp', str(release),
                          '{width}x{height}', '{value}')
                 d = join(self.icons_path, '{value}')
-                source = s.format(width=icon.get_width(), height=icon.get_height(), value=icon.get_name())
+                source = s.format(width=icon.get_width(), height=icon.get_height(),
+                                  value=icon.get_name())
                 destination = d.format(value=icon.get_name())
 
                 try:
@@ -249,7 +248,7 @@ class Indexer(object):
 
     def gather_pdc_packages(self, pkg_name=None):
         pdc = pdc_client.PDCClient(self.pdc_url, develop=True, page_size=100)
-        
+
         kwargs = dict()
         if pkg_name is not None:
             kwargs['name'] = pkg_name
@@ -266,7 +265,7 @@ class Indexer(object):
         pdc = pdc_client.PDCClient(self.pdc_url, develop=True)
         kwargs = dict(global_component=name, active=True, type='rpm')
         latest_version = None
-        branch_info = None 
+        branch_info = None
         for branch in pdc.get_paged(pdc['component-branches']._, **kwargs):
             if re.match(r'f\d+', branch['name']):
                 version = int(branch['name'].strip('f'))
@@ -275,13 +274,14 @@ class Indexer(object):
                 if latest_version:
                     latest_version = max(latest_version, version)
                     if latest_version == version:
-                        branch_info = branch 
+                        branch_info = branch
                 else:
                     latest_version = version
                     branch_info = branch
 
         if latest_version is None:
-            # Check if we are a subpackage, if so run latest_active with the main package name
+            # Check if we are a subpackage,
+            # if so run latest_active with the main package name
             kwargs = {'name': name}
             for comp in pdc.get_paged(pdc['rpms']._, **kwargs):
                 branch_info = self.latest_active(comp.get('srpm_name'))
@@ -289,7 +289,6 @@ class Indexer(object):
 
             raise ValueError('There is no active branch tied to a Fedora release')
         return branch_info
-
 
     def construct_package_dictionary(self, package):
         """ Return structured package dictionary from a pkg package.
@@ -312,7 +311,6 @@ class Indexer(object):
         """
         package = copy.deepcopy(package)
 
-
         try:
             name = package['name']
             info = self.latest_active(name)
@@ -322,7 +320,8 @@ class Indexer(object):
 
         # Getting summary and description
         try:
-            mdapi_pkg_url = '/'.join([self.mdapi_url, info['name'], 'srcpkg', info['global_component']])
+            mdapi_pkg_url = '/'.join([self.mdapi_url, info['name'],
+                                     'srcpkg', info['global_component']])
             meta_data = local.http.get(mdapi_pkg_url).json()
             package['summary'] = meta_data['summary']
             package['description'] = meta_data['description']
@@ -350,7 +349,7 @@ class Indexer(object):
 
         package['status'] = info['active']
         package['icon'] = self.icon_cache.get(name, self.default_icon)
-        package['branch'] =  info['name']
+        package['branch'] = info['name']
         package['sub_pkgs'] = list(self.get_sub_packages(package))
 
         # This is a "parent" reference.  the base packages always have "none"
@@ -388,7 +387,8 @@ class Indexer(object):
             url = "/".join([self.mdapi_url, branch, "pkg", sub_package_name])
             response = local.http.get(url)
             if not bool(response):
-                log.warn("Failed to get sub info for %r, %r" % (sub_package_name, response))
+                log.warn("Failed to get sub info for %r, %r" %
+                         (sub_package_name, response))
                 continue
             data = response.json()
             yield {
@@ -444,7 +444,7 @@ class Indexer(object):
         packages = self.gather_pdc_packages()
 
         # XXX - Only grab the first N for dev purposes
-        #packages = [packages.next() for i in range(50)]
+        # packages = [packages.next() for i in range(50)]
 
         def io_work(package):
             log.info("indexing %s" % (package['name']))
@@ -486,7 +486,8 @@ class Indexer(object):
         filtered_summary = filter_search_string(package['summary'])
         filtered_description = filter_search_string(package['description'])
 
-        doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_name + '__EX', weight=10.0))
+        doc.fields.append(xappy.Field('exact_name',
+                          'EX__' + filtered_name + '__EX', weight=10.0))
 
         name_parts = filtered_name.split('_')
         for i in range(20):
@@ -506,13 +507,16 @@ class Indexer(object):
             filtered_sub_package_name = filter_search_string(sub_package['name'])
             log.info("       indexing subpackage %s" % sub_package['name'])
 
-            doc.fields.append(xappy.Field('subpackages', filtered_sub_package_name, weight=1.0))
-            doc.fields.append(xappy.Field('exact_name', 'EX__' + filtered_sub_package_name + '__EX', weight=10.0))
+            doc.fields.append(xappy.Field('subpackages',
+                                          filtered_sub_package_name, weight=1.0))
+            doc.fields.append(xappy.Field('exact_name',
+                                          'EX__' + filtered_sub_package_name + '__EX',
+                                          weight=10.0))
 
             self.index_files_of_interest(doc, sub_package)
 
             # fedora-tagger does not provide special tags for sub-packages...
-            #self.index_tags(doc, sub_package)
+            # self.index_tags(doc, sub_package)
 
             # Set special sub-package icon if appstream has one
             sub_package['icon'] = self.icon_cache.get(
@@ -520,7 +524,7 @@ class Indexer(object):
 
             # If the parent has a dull icon, give it ours!
             if sub_package['icon'] != self.default_icon \
-                and package['icon'] == self.default_icon:
+                    and package['icon'] == self.default_icon:
                 package['icon'] = sub_package['icon']
 
             # remove anything we don't want to store
@@ -528,12 +532,11 @@ class Indexer(object):
 
         # @@: Right now we're only indexing the first part of the
         # provides/requires, and not boolean comparison or version
-        #for requires in package.requires:
+        # for requires in package.requires:
         #    print requires[0]
         #    doc.fields.append(xappy.Field('requires', requires[0]))
-        #for provides in package.provides:
+        # for provides in package.provides:
         #    doc.fields.append(xappy.Field('provides', provides[0]))
-
 
         # remove anything we don't want to store and then store data in
         # json format
@@ -544,7 +547,8 @@ class Indexer(object):
 
 def run(cache_path, tagger_url=None, bodhi_url=None,
         mdapi_url=None, icons_url=None, pdc_url=None, pagure_url=None):
-    indexer = Indexer(cache_path, tagger_url, bodhi_url, mdapi_url, icons_url, pdc_url, pagure_url)
+    indexer = Indexer(cache_path, tagger_url, bodhi_url, mdapi_url,
+                      icons_url, pdc_url, pagure_url)
 
     indexer.pull_icons()
     indexer.cache_icons()
