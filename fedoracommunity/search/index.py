@@ -14,7 +14,7 @@ import threading
 import re
 
 import requests
-import xappy
+import xapian
 import pdc_client
 
 from os.path import join
@@ -91,37 +91,12 @@ class Indexer(object):
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
-        indexer = xappy.IndexerConnection(self.dbpath)
-
-        indexer.add_field_action('exact_name', xappy.FieldActions.INDEX_FREETEXT)
-        indexer.add_field_action('name', xappy.FieldActions.INDEX_FREETEXT,
-                                 language='en', spell=True)
-
-        indexer.add_field_action('summary', xappy.FieldActions.INDEX_FREETEXT,
-                                 language='en')
-
-        indexer.add_field_action('description', xappy.FieldActions.INDEX_FREETEXT,
-                                 language='en')
-
-        indexer.add_field_action('subpackages', xappy.FieldActions.INDEX_FREETEXT,
-                                 language='en', spell=True)
-
-        indexer.add_field_action('category_tags', xappy.FieldActions.INDEX_FREETEXT,
-                                 language='en', spell=True)
-
-        indexer.add_field_action('cmd', xappy.FieldActions.INDEX_FREETEXT, spell=True)
-        # FieldActions.TAG not currently supported in F15 xapian (1.2.7)
-        # indexer.add_field_action('tags', xappy.FieldActions.TAG)
-        indexer.add_field_action('tag', xappy.FieldActions.INDEX_FREETEXT, spell=True)
-
-        # indexer.add_field_action('requires', xappy.FieldActions.INDEX_EXACT)
-        # indexer.add_field_action('provides', xappy.FieldActions.INDEX_EXACT)
-
-        self.indexer = indexer
+        self.db = xapian.WritableDatabase(self.dbpath, xapian.DB_CREATE_OR_OPEN)
+        self.indexer = xapian.TermGenerator()
+        self.indexer.set_stemmer(xapian.Stem("en"))
 
     @property
     def latest_release(self):
-        # TODO - query PDC (or Bodhi) for this info
         if not self._latest_release:
             releases_all = self.get_all_releases_from_bodhi()
 
@@ -467,53 +442,39 @@ class Indexer(object):
                 continue
             # And then prepare everything for xapian
             log.info("Processing final details for %s" % package['name'])
-            document = self._create_document(package)
-            processed = self._process_document(package, document)
-            self.indexer.add(processed)
-
-        self.indexer.close()
-
-    def _process_document(self, package, document):
-        processed = self.indexer.process(document, False)
-        processed._doc.set_data(json.dumps(package))
-        # preempt xappy's processing of data
-        processed._data = None
-        return processed
+            self._create_document(package)
 
     def _create_document(self, package):
-        doc = xappy.UnprocessedDocument()
+        doc = xapian.Document()
+        self.indexer.set_document(doc)
         filtered_name = filter_search_string(package['name'])
         filtered_summary = filter_search_string(package['summary'])
         filtered_description = filter_search_string(package['description'])
 
-        doc.fields.append(xappy.Field('exact_name',
-                          'EX__' + filtered_name + '__EX', weight=10.0))
+        self.indexer.index_text_without_positions('EX__' + filtered_name + '__EX')
 
         name_parts = filtered_name.split('_')
         for i in range(20):
             if len(name_parts) > 1:
                 for part in name_parts:
-                    doc.fields.append(xappy.Field('name', part, weight=1.0))
-            doc.fields.append(xappy.Field('name', filtered_name, weight=10.0))
+                    self.indexer.index_text_without_positions(part)
+            self.indexer.index_text_without_positions(filtered_name)
 
         for i in range(4):
-            doc.fields.append(xappy.Field('summary', filtered_summary, weight=1.0))
-        doc.fields.append(xappy.Field('description', filtered_description, weight=0.2))
+            self.indexer.index_text_without_positions(filtered_summary)
+        self.indexer.index_text_without_positions(filtered_description)
 
-        self.index_files_of_interest(doc, package)
-        self.index_tags(doc, package)
+        # self.index_files_of_interest(doc, package)
+        # self.index_tags(doc, package)
 
         for sub_package in package['sub_pkgs']:
             filtered_sub_package_name = filter_search_string(sub_package['name'])
             log.info("       indexing subpackage %s" % sub_package['name'])
 
-            doc.fields.append(xappy.Field('subpackages',
-                                          filtered_sub_package_name, weight=1.0))
-            doc.fields.append(xappy.Field('exact_name',
-                                          'EX__' + filtered_sub_package_name + '__EX',
-                                          weight=10.0))
+            self.indexer.index_text_without_positions(filtered_sub_package_name)
+            self.indexer.index_text_without_positions('EX__' + filtered_sub_package_name + '__EX')
 
-            self.index_files_of_interest(doc, sub_package)
+#            self.index_files_of_interest(doc, sub_package)
 
             # fedora-tagger does not provide special tags for sub-packages...
             # self.index_tags(doc, sub_package)
@@ -542,7 +503,9 @@ class Indexer(object):
         # json format
         del package['package']
 
-        return doc
+        doc.set_data(json.dumps(package))
+        doc_id = doc.get_docid()
+        self.db.replace_document(str(doc_id), doc)
 
 
 def run(cache_path, tagger_url=None, bodhi_url=None,
