@@ -82,7 +82,7 @@ class Indexer(object):
         self.mdapi_url = mdapi_url or "https://apps.fedoraproject.org/mdapi"
         self.icons_url = icons_url or "https://alt.fedoraproject.org/pub/alt/screenshots"
         self.pdc_url = pdc_url or "https://pdc.fedoraproject.org/rest_api/v1"
-        self.pagure_url = pagure_url or "https://src.fedoraproject.org/pagure/api/0"
+        self.pagure_url = pagure_url or "https://src.fedoraproject.org/api/0"
         self._latest_release = None
         self._active_fedora_releases = None
         self.icon_cache = {}
