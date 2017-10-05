@@ -395,7 +395,7 @@ class Indexer(object):
                     # index executables
                     log.info("        indexing exe file %s" % os.path.basename(filename))
                     exe_name = filter_search_string(os.path.basename(filename))
-                    doc.fields.append(xappy.Field('cmd', "EX__%s__EX" % exe_name))
+                    self.indexer.index_text_without_positions("EX__%s__EX" % exe_name)
 
     def index_tags(self, doc, package):
         name = package['name']
@@ -411,15 +411,12 @@ class Indexer(object):
                 log.debug("    adding '%s' tag (%d)" % (
                     tag_name.encode('utf-8'), total))
             for i in range(total):
-                doc.fields.append(xappy.Field('tag', tag_name))
+                self.indexer.index_text_without_positions(tag_name)
 
     def index_packages(self):
         # This is a generator that yields dicts of package info that we index
 
         packages = self.gather_pdc_packages()
-
-        # XXX - Only grab the first N for dev purposes
-        # packages = [packages.next() for i in range(50)]
 
         def io_work(package):
             log.info("indexing %s" % (package['name']))
@@ -451,28 +448,28 @@ class Indexer(object):
         filtered_summary = filter_search_string(package['summary'])
         filtered_description = filter_search_string(package['description'])
 
-        self.indexer.index_text_without_positions('EX__' + filtered_name + '__EX')
+        self.indexer.index_text_without_positions('EX__' + filtered_name + '__EX', 10, '')
 
         name_parts = filtered_name.split('_')
         for i in range(20):
             if len(name_parts) > 1:
                 for part in name_parts:
                     self.indexer.index_text_without_positions(part)
-            self.indexer.index_text_without_positions(filtered_name)
+            self.indexer.index_text_without_positions(filtered_name, 10, '')
 
         for i in range(4):
             self.indexer.index_text_without_positions(filtered_summary)
         self.indexer.index_text_without_positions(filtered_description)
 
-        # self.index_files_of_interest(doc, package)
-        # self.index_tags(doc, package)
+        self.index_files_of_interest(doc, package)
+        self.index_tags(doc, package)
 
         for sub_package in package['sub_pkgs']:
             filtered_sub_package_name = filter_search_string(sub_package['name'])
             log.info("       indexing subpackage %s" % sub_package['name'])
 
             self.indexer.index_text_without_positions(filtered_sub_package_name)
-            self.indexer.index_text_without_positions('EX__' + filtered_sub_package_name + '__EX')
+            self.indexer.index_text_without_positions('EX__' + filtered_sub_package_name + '__EX', 10, '')
 
 #            self.index_files_of_interest(doc, sub_package)
 
