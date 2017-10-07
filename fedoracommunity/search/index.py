@@ -259,9 +259,9 @@ class Indexer(object):
             # if so run latest_active with the main package name
             kwargs = {'name': name}
             for comp in pdc.get_paged(pdc['rpms']._, **kwargs):
-                branch_info = self.latest_active(comp.get('srpm_name'))
-                return branch_info
-
+                if name != comp.get('srpm_name'):
+                    branch_info = self.latest_active(comp.get('srpm_name'))
+                    return branch_info
             raise ValueError('There is no active branch tied to a Fedora release')
         return branch_info
 
