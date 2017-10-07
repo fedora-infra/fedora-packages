@@ -1,10 +1,9 @@
-https://fedorahosted.org/fedoracommunity/wiki/Development
+# fedora-packages
 
-Note: Some more dependencies to be installed:-
+fedora-packages allows to search for packages in Fedora.
 
-    $ sudo dnf install python-webhelpers fedmsg pygobject3
-
-    $ pip install gearbox
+## Documentation
+Would be nice to have a bit more documentation.
 
 ### Hacking with Vagrant
 
