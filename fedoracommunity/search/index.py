@@ -289,7 +289,7 @@ class Indexer(object):
         try:
             name = package['name']
             info = self.latest_active(name)
-        except KeyError:
+        except:
             log.warning("Failed to get pdc info for %r" % name)
             return
 
@@ -471,7 +471,7 @@ class Indexer(object):
             self.indexer.index_text_without_positions(filtered_sub_package_name)
             self.indexer.index_text_without_positions('EX__' + filtered_sub_package_name + '__EX', 10, '')
 
-#            self.index_files_of_interest(doc, sub_package)
+            self.index_files_of_interest(doc, sub_package)
 
             # fedora-tagger does not provide special tags for sub-packages...
             # self.index_tags(doc, sub_package)
