@@ -81,13 +81,22 @@ class Indexer(object):
         self.bodhi_url = bodhi_url or "https://bodhi.fedoraproject.org"
         self.mdapi_url = mdapi_url or "https://apps.fedoraproject.org/mdapi"
         self.icons_url = icons_url or "https://alt.fedoraproject.org/pub/alt/screenshots"
-        self.pdc_url = pdc_url or "https://pdc.fedoraproject.org/rest_api/v1"
         self.pagure_url = pagure_url or "https://src.fedoraproject.org/api/0"
         self._latest_release = None
         self._active_fedora_releases = None
         self.icon_cache = {}
+        pdc_url = pdc_url or "https://pdc.fedoraproject.org/rest_api/v1"
+        self.pdc = pdc_client.PDCClient(pdc_url, develop=True, page_size=100)
 
         self.create_index()
+
+    def _call_api(self, url):
+        data = {}
+        response = local.http.get(url)
+        if bool(response):
+            data = response.json()
+
+        return data
 
     def create_index(self):
         """ Create a new index, and set up its field structure """
@@ -127,21 +136,22 @@ class Indexer(object):
         return self._active_fedora_releases
 
     def get_all_releases_from_bodhi(self):
-        response = local.http.get(self.bodhi_url + "/releases").json()
-        if not bool(response):
-            raise IOError("Unable to find latest release %r" % response)
-
-        releases_all = None
-        for i in range(1, response['pages']+1):
+        response = self._call_api(self.bodhi_url + "/releases")
+        if response.get('pages') is not None:
+            releases_all = None
+            for i in range(1, response['pages'] + 1):
+                if releases_all is None:
+                    releases_all = response['releases']
+                    continue
+                else:
+                    temp = local.http.get(self.bodhi_url + "/releases?page="
+                                          + str(i)).json()
+                    temp = temp['releases']
+                    releases_all.extend(temp)
             if releases_all is None:
-                releases_all = response['releases']
-                continue
-            else:
-                temp = local.http.get(self.bodhi_url + "/releases?page="+str(i)).json()
-                temp = temp['releases']
-                releases_all.extend(temp)
-        if releases_all is None:
-            raise TypeError
+                raise TypeError
+        else:
+            raise IOError("Unable to find latest release %r" % response)
 
         return releases_all
 
@@ -222,13 +232,12 @@ class Indexer(object):
         shutil.rmtree(join(self.icons_path, 'tmp'))
 
     def gather_pdc_packages(self, pkg_name=None):
-        pdc = pdc_client.PDCClient(self.pdc_url, develop=True, page_size=100)
 
         kwargs = dict()
         if pkg_name is not None:
             kwargs['name'] = pkg_name
 
-        for component in pdc.get_paged(pdc['global-components']._, **kwargs):
+        for component in self.pdc.get_paged(self.pdc['global-components']._, **kwargs):
             yield component
 
     def latest_active(self, name, ignore=None):
@@ -237,11 +246,10 @@ class Indexer(object):
         # PDCClient pulls connection information from /etc/pdc.d/
         # develop=True means: don't authenticate.
         ignore = ignore or []
-        pdc = pdc_client.PDCClient(self.pdc_url, develop=True)
         kwargs = dict(global_component=name, active=True, type='rpm')
         latest_version = None
         branch_info = None
-        for branch in pdc.get_paged(pdc['component-branches']._, **kwargs):
+        for branch in self.pdc.get_paged(self.pdc['component-branches']._, **kwargs):
             if re.match(r'f\d+', branch['name']):
                 version = int(branch['name'].strip('f'))
                 if version in ignore:
@@ -258,7 +266,7 @@ class Indexer(object):
             # Check if we are a subpackage,
             # if so run latest_active with the main package name
             kwargs = {'name': name}
-            for comp in pdc.get_paged(pdc['rpms']._, **kwargs):
+            for comp in self.pdc.get_paged(self.pdc['rpms']._, **kwargs):
                 if name != comp.get('srpm_name'):
                     branch_info = self.latest_active(comp.get('srpm_name'))
                     return branch_info
@@ -294,17 +302,13 @@ class Indexer(object):
             return
 
         # Getting summary and description
-        try:
-            mdapi_pkg_url = '/'.join([self.mdapi_url, info['name'],
-                                     'srcpkg', info['global_component']])
-            meta_data = local.http.get(mdapi_pkg_url).json()
-            package['summary'] = meta_data['summary']
-            package['description'] = meta_data['description']
-        except:
-            log.exception("Failed to get summary and description for %r at %s." % (
-                info['global_component'], mdapi_pkg_url))
-            package['summary'] = 'no summary in mdapi'
-            package['description'] = 'no description in mdapi'
+
+        mdapi_pkg_url = '/'.join([self.mdapi_url, info['name'],
+                                 'srcpkg', info['global_component']])
+
+        meta_data = self._call_api(mdapi_pkg_url)
+        package['summary'] = meta_data.get('summary', 'no summary in mdapi')
+        package['description'] = meta_data.get('description', 'no description in mdapi')
 
         # Getting the upstream url for the package
         upstream_url_gen = self.gather_pdc_packages(info['global_component'])
@@ -312,16 +316,13 @@ class Indexer(object):
             if obj['upstream']:
                 package['upstream_url'] = obj['upstream']
 
-        try:
-            # Getting the owner name
-            pagure_pkg_url = '/'.join([self.pagure_url, 'rpms', info['global_component']])
-            owner_data = local.http.get(pagure_pkg_url).json()
+        # Getting the owner name
+        pagure_pkg_url = '/'.join([self.pagure_url, 'rpms', info['global_component']])
+        owner_data = self._call_api(pagure_pkg_url)
+        if owner_data.get('access_users') is not None:
             package['devel_owner'] = owner_data['access_users']['owner'][0]
-        except:
-            log.exception("Failed to get owner name for %r at %s." % (
-                info['global_component'], pagure_pkg_url))
-            package['devel_owner'] = 'no owner info in pagure'
-
+        else:
+            package['devel_owner'] = 'no owner info in src.fp.o'
         package['status'] = info['active']
         package['icon'] = self.icon_cache.get(name, self.default_icon)
         package['branch'] = info['name']
@@ -360,16 +361,11 @@ class Indexer(object):
 
         for sub_package_name in sub_package_names:
             url = "/".join([self.mdapi_url, branch, "pkg", sub_package_name])
-            response = local.http.get(url)
-            if not bool(response):
-                log.warn("Failed to get sub info for %r, %r" %
-                         (sub_package_name, response))
-                continue
-            data = response.json()
+            data = self._call_api(url)
             yield {
                 'name': sub_package_name,
-                'summary': data['summary'],
-                'description': data['description'],
+                'summary': data.get('summary', 'no summary in mdapi'),
+                'description': data.get('description', 'no description in mdapi'),
                 'icon': icon,
                 'package': name,
                 'branch': branch,
@@ -383,35 +379,38 @@ class Indexer(object):
             branch = 'rawhide'
 
         url = "/".join([self.mdapi_url, branch, "files", name])
-        response = local.http.get(url)
-        if not bool(response):
-            log.warn("Failed to get file list for %r, %r" % (name, response))
+        data = self._call_api(url)
+        if data.get('files') is not None:
+            for entry in data['files']:
+                filenames = entry['filenames'].split('/')
+                for filename in filenames:
+                    if filename.startswith('/usr/bin'):
+                        # index executables
+                        log.info("indexing exe file %s" % os.path.basename(filename))
+                        exe_name = filter_search_string(os.path.basename(filename))
+                        self.indexer.index_text_without_positions("EX__%s__EX" % exe_name)
+        else:
+            log.warn("Failed to get file list for %r, %r" % (name, url))
             return
-        data = response.json()
-        for entry in data['files']:
-            filenames = entry['filenames'].split('/')
-            for filename in filenames:
-                if filename.startswith('/usr/bin'):
-                    # index executables
-                    log.info("        indexing exe file %s" % os.path.basename(filename))
-                    exe_name = filter_search_string(os.path.basename(filename))
-                    self.indexer.index_text_without_positions("EX__%s__EX" % exe_name)
 
     def index_tags(self, doc, package):
         name = package['name']
-        response = local.http.get(self.tagger_url + '/api/v1/' + name)
-        if not bool(response):
-            log.warn("Failed to get tagger info for %r, %r" % (name, response))
+        url = self.tagger_url + '/api/v1/' + name
+        data = self._call_api(url)
+        if data.get('tags') is not None:
+            tags = data.get('tags')
+            for tag_info in tags:
+                tag_name = tag_info['tag']
+                total = tag_info['total']
+                if total > 0:
+                    log.debug("    adding '%s' tag (%d)" % (
+                        tag_name.encode('utf-8'), total))
+                for i in range(total):
+                    self.indexer.index_text_without_positions(tag_name)
+
+        else:
+            log.warn("Failed to get tagger info for %r, %r" % (name, url))
             return
-        tags = response.json()['tags']
-        for tag_info in tags:
-            tag_name = tag_info['tag']
-            total = tag_info['total']
-            if total > 0:
-                log.debug("    adding '%s' tag (%d)" % (
-                    tag_name.encode('utf-8'), total))
-            for i in range(total):
-                self.indexer.index_text_without_positions(tag_name)
 
     def index_packages(self):
         # This is a generator that yields dicts of package info that we index
@@ -469,7 +468,8 @@ class Indexer(object):
             log.info("       indexing subpackage %s" % sub_package['name'])
 
             self.indexer.index_text_without_positions(filtered_sub_package_name)
-            self.indexer.index_text_without_positions('EX__' + filtered_sub_package_name + '__EX', 10, '')
+            self.indexer.index_text_without_positions('EX__' + filtered_sub_package_name
+                                                      + '__EX', 10, '')
 
             self.index_files_of_interest(doc, sub_package)
 
