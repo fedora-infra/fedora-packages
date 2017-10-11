@@ -1,11 +1,10 @@
+import logging
 import tw2.core as twc
-import tg
-import requests
-
-from kitchen.text.converters import to_bytes
 
 from fedoracommunity.connectors.api import get_connector
 from fedoracommunity.widgets.grid import Grid
+
+log = logging.getLogger(__name__)
 
 class ActiveReleasesGrid(Grid):
     template = 'mako:fedoracommunity.widgets.package.templates.active_releases'
