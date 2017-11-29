@@ -15,7 +15,7 @@ if package_name != w.package_info['name']:
 
             break
 
-icon_url = tg.url("/images/icons/%s.png" % icon)
+icon_url = tg.url("/images/icons/%s" % icon)
 %>
 <div class="bodycontent pb-3">
     <div class="subheader pb-2 clearfix">
