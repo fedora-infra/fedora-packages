@@ -1,6 +1,3 @@
-<html>
-<head></head>
-<body>
 <div class="list header-list">
     <table id="${w.id}" class="table table-sm table-hover">
         <thead class="thead-default">
@@ -21,5 +18,3 @@
         </tbody>
     </table>
 </div>
-</body>
-</html>
