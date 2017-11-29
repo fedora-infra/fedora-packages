@@ -67,7 +67,7 @@
                    datum = {
                      'name': strip(row['name']),
                      'value': strip(row['name']),
-                     'icon': "${tg.url('/images/icons/')}" + row['icon'] + ".png"
+                     'icon': "${tg.url('/images/icons/')}" + row['icon']
                    };
                    thing.push(datum);
                  }
