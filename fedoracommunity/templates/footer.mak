@@ -7,10 +7,8 @@
             <div>
                 <a href="https://fedoraproject.org/wiki/Legal/TrademarkGuidelines">Trademark Guidelines</a> |
                 <a href="https://github.com/fedora-infra/fedora-packages">Get the source for Fedora Packages</a> |
-                <a href="https://fedorahosted.org/moksha">Get the source for Moksha</a> |
-
-                <a href="https://infrastructure.fedoraproject.org/testing/6/SRPMS/">RHEL6 Testing SRPMS</a> |
-                <a href="https://infrastructure.fedoraproject.org/6/SRPMS/">RHEL6 Production SRPMS</a>
+                <a href="https://github.com/mokshaproject">Get the source for Moksha</a> |
+                <a href="https://kojipkgs.fedoraproject.org/packages/fedora-packages/">Fedora Packages SRPMS</a>
             </div>
           </div>
         </div>
