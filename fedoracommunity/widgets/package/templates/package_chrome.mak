@@ -32,8 +32,7 @@ icon_url = tg.url("/images/icons/%s" % icon)
               <a class="dropdown-item" href="https://bugzilla.redhat.com/buglist.cgi?component=${w.package_info['name']}&query_format=advanced&product=Fedora&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"><img src = "https://admin.fedoraproject.org/community/images/16_bugs.png"/> Bugzilla </a>
               <a class="dropdown-item" href="https://retrace.fedoraproject.org/faf/problems/?component_names=${w.package_info['name']}"><img src = "${tg.url('/images/16_abrt.png')}"/> FAF </a>
               <a class="dropdown-item" href="http://koji.fedoraproject.org/koji/search?match=glob&type=package&terms=${quote(w.package_info['name'])}"><img src = "https://fedoraproject.org/static/images/icons/fedora-infra-icon_koji.png"/> Koji Builds </a>
-              <a class="dropdown-item" href="https://admin.fedoraproject.org/pkgdb/package/${w.package_info['name']}"><img src = "https://fedoraproject.org/static/images/icons/fedora-infra-icon_pkgdb.png"/> Pkgdb Package Info </a>
-              <a class="dropdown-item" href="https://pkgs.fedoraproject.org/rpms/${w.package_info['name']}"><img src = "https://apps.fedoraproject.org/img/icons/git-logo.png" width=16px/> SCM </a>
+              <a class="dropdown-item" href="https://src.fedoraproject.org/rpms/${w.package_info['name']}"><img src = "https://apps.fedoraproject.org/img/icons/git-logo.png" width=16px/> SCM </a>
               <a class="dropdown-item" href="https://apps.fedoraproject.org/tagger/${w.package_info['name']}"><img src = "${tg.url('/images/16_tagger.png')}"/> Tagger </a>
             </div>
           </span>
