@@ -26,7 +26,7 @@ ${w.children[0].display(on_change='on_change', package=w.package, subpackage_of=
 <%namespace file="diffstat.mak" import="render_diffstat"/>
 
 <a class="frame_link" href="#" onclick="return toggle_diffstat()">Show summary of all patches</a>
-<div id="diffstat" class="diffstat-all" "style="display:none">
+<div id="diffstat" class="diffstat-all" style="display:none">
 % if w.diffstat:
 	${render_diffstat(w.diffstat)}
 % endif
