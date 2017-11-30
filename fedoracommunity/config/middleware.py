@@ -38,6 +38,11 @@ def make_app(global_conf, full_stack=True, **app_conf):
         app = make_moksha_middleware(app, tg.config)
         return app
 
+    if tg_version_tuple >= (2, 1):
+        app_conf['custom_tw2_config'] = {
+            'script_name': global_conf.get('fedoracommunity.script_name', '/')
+        }
+
     app = make_base_app(global_conf,
                         wrap_app=make_middleware,
                         full_stack=full_stack,
