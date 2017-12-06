@@ -10,7 +10,7 @@ Summary:        Fedora packages search engine
 Group:          Applications/Internet
 License:        AGPLv3
 URL:            https://github.com/fedora-infra/fedora-packages
-Source0:        https://github.com/fedora-infra/fedora-packages/archive/%{version}.tar.gz
+Source0:        %{url}/archive/%{name}-%{version}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
@@ -72,7 +72,7 @@ Conflicts: fedoracommunity
 %description
 Fedora-packages is a web application that allow the user to search for packages inside Fedora.
 %prep
-%autosetup -n fedoracommunity-%{version}
+%autosetup -n fedora-packages-%{version}
 
 %build
 %py2_build
@@ -123,7 +123,7 @@ cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_dat
 %{_bindir}/fcomm-index-packages
 
 %changelog
-* Sun Dec 05 2017 Clement Verna <cverna@tutanota.com> - 4.0.0-1
+* Tue Dec 05 2017 Clement Verna <cverna@tutanota.com> - 4.0.0-1
 - Use the license macro
 - Fix Source0 url
 - Remove python-ordereddict dependency.
