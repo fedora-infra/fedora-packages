@@ -82,11 +82,11 @@ class Indexer(object):
         self.mdapi_url = mdapi_url or "https://apps.fedoraproject.org/mdapi"
         self.icons_url = icons_url or "https://alt.fedoraproject.org/pub/alt/screenshots"
         self.pagure_url = pagure_url or "https://src.fedoraproject.org/api/0"
-        self._latest_release = None
-        self._active_fedora_releases = None
         self.icon_cache = {}
         pdc_url = pdc_url or "https://pdc.fedoraproject.org/rest_api/v1"
         self.pdc = pdc_client.PDCClient(pdc_url, develop=True, page_size=100)
+
+        self.active_fedora_releases = self._get_active_fedora_releases()
 
         self.create_index()
 
@@ -104,56 +104,18 @@ class Indexer(object):
         self.indexer = xapian.TermGenerator()
         self.indexer.set_stemmer(xapian.Stem("en"))
 
-    @property
-    def latest_release(self):
-        if not self._latest_release:
-            releases_all = self.get_all_releases_from_bodhi()
+    def _get_active_fedora_releases(self):
+        response = self._call_api(self.bodhi_url + "/releases?page=1&row_per_page=20")
+        releases = response.get('releases', [])
+        active_fedora_releases = []
+        for release in releases:
+            if release['id_prefix'] == 'Fedora' and\
+               release['state'] == 'current':
+                active_fedora_releases.append(int(release['version']))
 
-            # Find the latest
-            by_version = lambda c: int(c['version'])
-            releases_all.sort(key=by_version, reverse=True)
-            self._latest_release = int(releases_all[0]['version'])
-        return self._latest_release
+        active_fedora_releases.sort(reverse=True)
 
-    @property
-    def active_fedora_releases(self):
-        if not self._active_fedora_releases:
-            releases_all = self.get_all_releases_from_bodhi()
-
-            # Strip off inactive releases, and epel
-            releases_all = [
-                c for c in releases_all if (
-                    c['state'] == 'current' and
-                    c['id_prefix'] == 'FEDORA'
-                )
-            ]
-
-            by_version = lambda c: int(c['version'])
-            releases_all.sort(key=by_version, reverse=True)
-            self._active_fedora_releases = [
-                int(item['version']) for item in releases_all
-            ]
-        return self._active_fedora_releases
-
-    def get_all_releases_from_bodhi(self):
-        response = self._call_api(self.bodhi_url + "/releases")
-        if response.get('pages') is not None:
-            releases_all = None
-            for i in range(1, response['pages'] + 1):
-                if releases_all is None:
-                    releases_all = response['releases']
-                    continue
-                else:
-                    temp = local.http.get(self.bodhi_url + "/releases?page="
-                                          + str(i)).json()
-                    temp = temp['releases']
-                    releases_all.extend(temp)
-            if releases_all is None:
-                raise TypeError
-        else:
-            raise IOError("Unable to find latest release %r" % response)
-
-        return releases_all
+        return active_fedora_releases
 
     def pull_icons(self):
         for release in reversed(self.active_fedora_releases):
