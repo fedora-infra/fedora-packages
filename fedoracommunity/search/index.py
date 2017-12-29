@@ -309,12 +309,7 @@ class Indexer(object):
         meta_data = self._call_api(mdapi_pkg_url)
         package['summary'] = meta_data.get('summary', 'no summary in mdapi')
         package['description'] = meta_data.get('description', 'no description in mdapi')
-
-        # Getting the upstream url for the package
-        upstream_url_gen = self.gather_pdc_packages(info['global_component'])
-        for obj in upstream_url_gen:
-            if obj['upstream']:
-                package['upstream_url'] = obj['upstream']
+        package['upstream_url'] = meta_data.get('url', 'no upstream url in mdapi')
 
         # Getting the owner name
         pagure_pkg_url = '/'.join([self.pagure_url, 'rpms', info['global_component']])
