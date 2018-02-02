@@ -67,33 +67,6 @@ class XapianConnector(IConnector, ICall, IQuery):
                         can_sort = False,
                         can_filter_wildcards = False)
 
-    def _highlight_str(self, string, term):
-        terms = "|".join(term)
-        regex = re.compile(r'(\b(%s)\b(\s*(%s)\b)*)' % (terms, terms), re.I)
-        return regex.sub(r'<span class="match">\1</span>', string)
-
-    def _highlight_matches(self, row_data, term):
-
-        term = [re.escape(item) for item in term]
-
-        # make link from name before we potentially rewrite it
-        # if we haven't already
-        if 'link' not in row_data:
-            row_data['link'] = row_data['name']
-
-        row_data['name'] = self._highlight_str(row_data['name'], term);
-        row_data['summary'] = self._highlight_str(row_data['summary'], term);
-        row_data['description'] = self._highlight_str(row_data['description'], term);
-
-        for pkg in row_data['sub_pkgs']:
-
-            if 'link' not in pkg:
-                pkg['link'] = pkg['name']
-
-            pkg['name'] = self._highlight_str(pkg['name'], term);
-            pkg['summary'] = self._highlight_str(pkg['summary'], term);
-            pkg['description'] = self._highlight_str(pkg['description'], term);
-
     def search_packages(self, start_row=None,
                               rows_per_page=None,
                               order=-1,
@@ -143,8 +116,12 @@ class XapianConnector(IConnector, ICall, IQuery):
         for m in matches:
             result = json.loads(m.document.get_data())
 
-            # mark matches in <span class="match">
-            self._highlight_matches(result, unfiltered_search_terms)
+            if 'link' not in result:
+                result['link'] = result['name']
+
+            for pkg in result['sub_pkgs']:
+                if 'link' not in pkg:
+                    pkg['link'] = pkg['name']
 
             rows.append(result)
 
