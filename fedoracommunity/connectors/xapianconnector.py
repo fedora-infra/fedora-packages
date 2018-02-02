@@ -18,7 +18,6 @@ from fedoracommunity.connectors.api import IConnector, ICall, IQuery
 from tg import config
 from fedoracommunity.search import utils
 
-import re
 import urllib
 import xapian
 
@@ -26,6 +25,7 @@ try:
     import json
 except ImportError:
     import simplejson as json
+
 
 class XapianConnector(IConnector, ICall, IQuery):
     _method_paths = {}
@@ -35,7 +35,8 @@ class XapianConnector(IConnector, ICall, IQuery):
     def __init__(self, environ=None, request=None):
         super(XapianConnector, self).__init__(environ, request)
         self._search_db = xapian.Database(
-            config.get('fedoracommunity.connector.xapian.package-search.db', 'xapian/search'))
+            config.get('fedoracommunity.connector.xapian.package-search.db',
+                       'xapian/search'))
 
     # IConnector
     @classmethod
@@ -52,27 +53,27 @@ class XapianConnector(IConnector, ICall, IQuery):
                       'search_packages',
                       cls.search_packages,
                       cache_prompt=None,  # This means "don't cache".
-                      primary_key_col = 'name',
-                      default_sort_col = 'name',
-                      default_sort_order = -1,
-                      can_paginate = True)
+                      primary_key_col='name',
+                      default_sort_col='name',
+                      default_sort_order=-1,
+                      can_paginate=True)
 
         path.register_column('name',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
 
         path.register_column('summary',
-                        default_visible = True,
-                        can_sort = False,
-                        can_filter_wildcards = False)
+                             default_visible=True,
+                             can_sort=False,
+                             can_filter_wildcards=False)
 
     def search_packages(self, start_row=None,
-                              rows_per_page=None,
-                              order=-1,
-                              sort_col=None,
-                              filters = {},
-                              **params):
+                        rows_per_page=None,
+                        order=-1,
+                        sort_col=None,
+                        filters={},
+                        **params):
 
         search_string = filters.get('search')
         # short circut for empty string
@@ -80,10 +81,6 @@ class XapianConnector(IConnector, ICall, IQuery):
             return (0, [])
 
         search_string = urllib.unquote_plus(search_string)
-
-        unfiltered_search_terms = [
-            t.strip() for t in search_string.split(' ') if t.strip()
-        ]
 
         search_string = utils.filter_search_string(search_string)
         phrase = '"%s"' % search_string
@@ -155,8 +152,8 @@ class XapianConnector(IConnector, ICall, IQuery):
         qp = xapian.QueryParser()
         qp.set_database(self._search_db)
         flags = xapian.QueryParser.FLAG_DEFAULT | \
-                xapian.QueryParser.FLAG_PARTIAL | \
-                xapian.QueryParser.FLAG_WILDCARD
+            xapian.QueryParser.FLAG_PARTIAL | \
+            xapian.QueryParser.FLAG_WILDCARD
         query = qp.parse_query(search_string, flags)
 
         enquire.set_query(query)
