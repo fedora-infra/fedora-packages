@@ -1,0 +1,13 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./docker
+      dockerfile: packages
+    image: packages:latest
+    ports:
+      - "80:80"
+    volumes:
+      - $PWD/..:/usr/share/fedoracommunity:z
+      - $PWD/../fedoracommunity:/usr/lib/python2.7/site-packages/fedoracommunity:z
+    command: ["/root/entry-point.sh"]

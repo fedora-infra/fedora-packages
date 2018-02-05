@@ -1,0 +1,30 @@
+FROM registry.fedoraproject.org/fedora:27
+
+RUN dnf install -y TurboGears2 python-moksha-wsgi intltool koji python2-fedora\
+    python-feedparser python-iniparse pytz python2-pyOpenSSL httpd mod_wsgi diffstat\
+    fedpkg python-lockfile python-tw2-jqplugins-ui python-bugzilla\
+    xapian-bindings-python python-dogpile-core python-dogpile-cache\
+    python-memcached python2-markdown pygobject3 fedmsg python2-pytest\
+    python2-pdc-client python2-webhelpers libappstream-glib dumb-init\
+    python2-GitPython git python2-pytest-mock\
+    && dnf clean all
+
+RUN mkdir -p  /var/log/fedoracommunity\
+    /var/cache/fedoracommunity/packages/icons\
+    /var/cache/fedoracommunity/packages/xapian/search\
+    /var/cache/fedoracommunity/packages/tmp/icons\
+    /var/cache/fedoracommunity/packages/tmp/search\
+    /var/cache/fedoracommunity/packages/tmp/var\
+    /var/tmp/fedoracommunity/icons/tmp\
+    /usr/share/fedoracommunity \
+    /tmp/xapian\
+    #forward error logs to docker log collector
+    && ln -sf /dev/stdout /var/log/httpd/fedoracommunity_error_log
+
+EXPOSE 80
+
+ADD  xapian.tar.gz /var/cache/fedoracommunity/packages
+
+COPY entry-point.sh /root/entry-point.sh
+COPY fedora-packages.conf /etc/httpd/conf.d/fedora-pacakges.conf
+COPY development.ini /etc/fedoracommunity/production.ini

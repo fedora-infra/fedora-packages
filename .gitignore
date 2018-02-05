@@ -37,3 +37,5 @@ versionmap
 xapian-backup*
 .vagrant
 devel/ansible/playbook.retry
+*.tar.gz
+.cache
