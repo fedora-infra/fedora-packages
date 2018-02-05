@@ -1,5 +1,4 @@
 import os
-import json
 import time
 
 import memcache
@@ -17,7 +16,6 @@ from fedoracommunity.connectors.api.connector import (
     cache_key_generator as generator_factory,
     cache_key_mangler as mangler,
 )
-from fedoracommunity.search import utils
 from fedoracommunity.pool import ThreadPool
 
 import logging
@@ -121,6 +119,7 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                 namespace = info['namespace']
 
                 generator = generator_factory(namespace, fn)
+
                 def clear_and_refresh_items(filters):
                     args, kw = make_kwargs(connector, path, info, filters, op)
                     lookup_key = generator(*args[1:], **kw)
@@ -145,7 +144,7 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
         # If any repo update things happen to packages in mdapi then
         # just update the cache.
 
-        #filter for mdapi msgs
+        # filter for mdapi msgs
         if '.mdapi.repo.update' not in msg['topic']:
             return
 
@@ -175,41 +174,11 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                     log.warn("Unable to construct xapian pkg dict for %r" % name)
                     return
 
-                document = indexer._create_document(package)
-                processed = indexer._process_document(package, document)
-
-                old_document = self._get_old_document(name)
-                if old_document:
-                    docid = old_document.get_docid()
-                    log.debug('Deleting old document %r.' % docid)
-                    indexer.indexer.delete(xapid=docid)
-
-                indexer.indexer.add(processed)
+                indexer._create_document(package)
                 log.info("Done adding new document %r" % name)
-            finally:
-                indexer.indexer.close()
-
-    def _get_old_document(self, package_name):
-        search_name = utils.filter_search_string(package_name)
-        search_string = "%s EX__%s__EX" % (search_name, search_name)
-        matches = self._xapian_connector().do_search(search_string, 0, 10)
-
-        for match in matches:
-            result = json.loads(match.document.get_data())
-            if result['name'] == package_name:
-                return match.document
-
-        return None
-
-    def _xapian_connector(self):
-        request = FakeTG2Request()
-        for conn_entry in pkg_resources.iter_entry_points('fcomm.connector'):
-            if conn_entry.name == 'xapian':
-                cls = conn_entry.load()
-                cls.register()
-                return cls(request.environ, request)
-
-        raise ValueError("No Xapian connector could be found.")
+            except Exception as e:
+                indexer.db.close()
+                log.warn("Failed to update the xapian document %r" % e)
 
     def try_real_hard_to_get_the_xapian_indexer(self):
         """ Try over and over again to get a lock on the xapian indexer.

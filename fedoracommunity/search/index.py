@@ -460,6 +460,7 @@ class Indexer(object):
         doc.set_data(json.dumps(package))
         doc_id = doc.get_docid()
         self.db.replace_document(str(doc_id), doc)
+        self.db.close()
 
 
 def run(cache_path, tagger_url=None, bodhi_url=None,
