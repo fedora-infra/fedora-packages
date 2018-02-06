@@ -397,7 +397,7 @@ class Indexer(object):
             log.info("Processing final details for %s" % package['name'])
             self._create_document(package)
 
-    def _create_document(self, package):
+    def _create_document(self, package, old_doc=None):
         doc = xapian.Document()
         self.indexer.set_document(doc)
         filtered_name = filter_search_string(package['name'])
@@ -458,8 +458,14 @@ class Indexer(object):
         del package['package']
 
         doc.set_data(json.dumps(package))
-        doc_id = doc.get_docid()
-        self.db.replace_document(str(doc_id), doc)
+
+        # It seems that xapian db.replace_document still creates a new
+        # document. In order to avoid duplicating the document we are
+        # using add_document and then delete the old document.
+        self.db.add_document(doc)
+        if old_doc is not None:
+            self.db.delete_document(old_doc.get_docid())
+        self.db.commit()
         self.db.close()
 
 

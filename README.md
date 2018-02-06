@@ -50,6 +50,11 @@ command to reload the application to test some code changes.
 
 This will change the timestamp of the .wsgi file and ask apache to reload the application.
 
+#### Running the unit tests
+To execute the test suite simply run the following command
+
+	$ docker-compose exec web py.test /usr/share/fedoracommunity/tests
+
 
 ### Hacking with Vagrant
 
