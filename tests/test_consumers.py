@@ -2,7 +2,6 @@ import fedmsg.config
 import json
 import mock
 import pytest
-import pytest_mock
 import xapian
 
 from fedoracommunity.consumers import CacheInvalidator
@@ -14,28 +13,19 @@ msg = {
   }
 
 pkg_guake = {'name': 'guake',
-            'summary': 'Drop-down terminal for GNOME',
-            'description': 'Guake is a drop-down terminal for Gnome Desktop Environment',
-            'devel_owner': 'pingou',
-            'icon': 'guake',
-            'package': None,
-            'upstream_url': 'http://guake.org/',
-            'sub_pkgs': []
-           }
+             'summary': 'Drop-down terminal for GNOME',
+             'description': 'Guake is a drop-down terminal for Gnome Desktop Environment',
+             'devel_owner': 'pingou',
+             'icon': 'guake',
+             'package': None,
+             'upstream_url': 'http://guake.org/',
+             'sub_pkgs': []}
 
 
 class MockHub(mock.MagicMock):
     """ Class that mock a fedmsg hub """
     config = fedmsg.config.load_config()
     config['fedoracommunity.fedmsg.consumer.enabled'] = True
-
-
-@pytest.fixture(scope='module')
-def create_xapian_db():
-    """ Fixture that creates an empty xapian db """
-
-    db = xapian.WritableDatabase('/tmp/xapian/search', xapian.DB_CREATE_OR_OPEN)
-    db.close()
 
 
 def test_CacheInvalidator_new_package(create_xapian_db, mocker):
@@ -74,8 +64,8 @@ def test_CacheInvalidator_update_package(mocker):
                         'icon': 'guake',
                         'package': None,
                         'upstream_url': 'http://guake.org/',
-                        'sub_pkgs': []
-                       }
+                        'sub_pkgs': []}
+
     mocker.patch('fedoracommunity.consumers.find_config_file',
                  return_value='/usr/share/fedoracommunity/tests/config.py')
     mocker.patch('fedoracommunity.search.index.Indexer.pull_icons')
@@ -97,13 +87,13 @@ def test_CacheInvalidator_update_package(mocker):
     assert db.get_doccount() == 1
 
 
-@pytest.fixture(params=
-    [{"topic": "org.fedoraproject.prod.mdapi.wrong.topic",
-      "msg": {"packages": ["guake"]}},
+@pytest.fixture(params=[
+    {"topic": "org.fedoraproject.prod.mdapi.wrong.topic",
+     "msg": {"packages": ["guake"]}},
     {"topic": "org.fedoraproject.prod.mdapi.repo.update",
-      "msg": {"wrong": ["guake"]}},
+     "msg": {"wrong": ["guake"]}},
     {"topic": "org.fedoraproject.prod.mdapi.repo.update",
-      "msg": {"wrong": [""]}},
+     "msg": {"wrong": [""]}},
     ])
 def test_wrong_fedmsg(request):
     return request.param
