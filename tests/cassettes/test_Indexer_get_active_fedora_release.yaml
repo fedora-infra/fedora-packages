@@ -1,0 +1,172 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://bodhi.fedoraproject.org/releases/?page=1&row_per_page=20
+  response:
+    body: {string: !!python/unicode '{"rows_per_page": 20, "total": 11, "pages": 1,
+        "releases": [{"composes": [], "dist_tag": "f22", "name": "F22", "testing_tag":
+        "f22-updates-testing", "pending_stable_tag": "f22-updates-pending", "pending_signing_tag":
+        "", "long_name": "Fedora 22", "state": "archived", "version": "22", "override_tag":
+        "f22-override", "branch": "f22", "id_prefix": "FEDORA", "pending_testing_tag":
+        "f22-updates-testing-pending", "stable_tag": "f22-updates", "candidate_tag":
+        "f22-updates-candidate"}, {"composes": [], "dist_tag": "dist-6E-epel", "name":
+        "EL-6", "testing_tag": "dist-6E-epel-testing", "pending_stable_tag": "", "pending_signing_tag":
+        "", "long_name": "Fedora EPEL 6", "state": "current", "version": "6", "override_tag":
+        "dist-6E-epel-override", "branch": "el6", "id_prefix": "FEDORA-EPEL", "pending_testing_tag":
+        "", "stable_tag": "dist-6E-epel", "candidate_tag": "dist-6E-epel-testing-candidate"},
+        {"composes": [], "dist_tag": "f21", "name": "F21", "testing_tag": "f21-updates-testing",
+        "pending_stable_tag": "f21-updates-pending", "pending_signing_tag": "", "long_name":
+        "Fedora 21", "state": "archived", "version": "21", "override_tag": "f21-override",
+        "branch": "f21", "id_prefix": "FEDORA", "pending_testing_tag": "f21-updates-testing-pending",
+        "stable_tag": "f21-updates", "candidate_tag": "f21-updates-candidate"}, {"composes":
+        [], "dist_tag": "f25", "name": "F25", "testing_tag": "f25-updates-testing",
+        "pending_stable_tag": "f25-updates-pending", "pending_signing_tag": "f25-signing-pending",
+        "long_name": "Fedora 25", "state": "archived", "version": "25", "override_tag":
+        "f25-override", "branch": "f25", "id_prefix": "FEDORA", "pending_testing_tag":
+        "f25-updates-testing-pending", "stable_tag": "f25-updates", "candidate_tag":
+        "f25-updates-candidate"}, {"composes": [], "dist_tag": "f24", "name": "F24",
+        "testing_tag": "f24-updates-testing", "pending_stable_tag": "f24-updates-pending",
+        "pending_signing_tag": "f24-signing-pending", "long_name": "Fedora 24", "state":
+        "archived", "version": "24", "override_tag": "f24-override", "branch": "f24",
+        "id_prefix": "FEDORA", "pending_testing_tag": "f24-updates-testing-pending",
+        "stable_tag": "f24-updates", "candidate_tag": "f24-updates-candidate"}, {"composes":
+        [], "dist_tag": "epel7", "name": "EPEL-7", "testing_tag": "epel7-testing",
+        "pending_stable_tag": "epel7-pending", "pending_signing_tag": "epel7-signing-pending",
+        "long_name": "Fedora EPEL 7", "state": "current", "version": "7", "override_tag":
+        "epel7-override", "branch": "epel7", "id_prefix": "FEDORA-EPEL", "pending_testing_tag":
+        "epel7-testing-pending", "stable_tag": "epel7", "candidate_tag": "epel7-testing-candidate"},
+        {"composes": [], "dist_tag": "dist-5E-epel", "name": "EL-5", "testing_tag":
+        "dist-5E-epel-testing", "pending_stable_tag": "", "pending_signing_tag": "",
+        "long_name": "Fedora EPEL 5", "state": "archived", "version": "5", "override_tag":
+        "dist-5E-epel-override", "branch": "el5", "id_prefix": "FEDORA-EPEL", "pending_testing_tag":
+        "", "stable_tag": "dist-5E-epel", "candidate_tag": "dist-5E-epel-testing-candidate"},
+        {"composes": [], "dist_tag": "f23", "name": "F23", "testing_tag": "f23-updates-testing",
+        "pending_stable_tag": "f23-updates-pending", "pending_signing_tag": "f23-signing-pending",
+        "long_name": "Fedora 23", "state": "archived", "version": "23", "override_tag":
+        "f23-override", "branch": "f23", "id_prefix": "FEDORA", "pending_testing_tag":
+        "f23-updates-testing-pending", "stable_tag": "f23-updates", "candidate_tag":
+        "f23-updates-candidate"}, {"composes": [], "dist_tag": "f26", "name": "F26",
+        "testing_tag": "f26-updates-testing", "pending_stable_tag": "f26-updates-pending",
+        "pending_signing_tag": "f26-signing-pending", "long_name": "Fedora 26", "state":
+        "current", "version": "26", "override_tag": "f26-override", "branch": "f26",
+        "id_prefix": "FEDORA", "pending_testing_tag": "f26-updates-testing-pending",
+        "stable_tag": "f26-updates", "candidate_tag": "f26-updates-candidate"}, {"composes":
+        [], "dist_tag": "f27-modular", "name": "F27M", "testing_tag": "f27-modular-updates-testing",
+        "pending_stable_tag": "f27-modular-updates-pending", "pending_signing_tag":
+        "f27-modular-signing-pending", "long_name": "Fedora 27 Server Edition", "state":
+        "pending", "version": "27", "override_tag": "f27-modular-override", "branch":
+        "f27m", "id_prefix": "FEDORA-MODULAR", "pending_testing_tag": "f27-modular-updates-testing-pending",
+        "stable_tag": "f27-modular-updates", "candidate_tag": "f27-modular-updates-candidate"},
+        {"composes": [], "dist_tag": "f27", "name": "F27", "testing_tag": "f27-updates-testing",
+        "pending_stable_tag": "f27-updates-pending", "pending_signing_tag": "f27-signing-pending",
+        "long_name": "Fedora 27", "state": "current", "version": "27", "override_tag":
+        "f27-override", "branch": "f27", "id_prefix": "FEDORA", "pending_testing_tag":
+        "f27-updates-testing-pending", "stable_tag": "f27-updates", "candidate_tag":
+        "f27-updates-candidate"}], "page": 1}'}
+    headers:
+      appserver: [proxy11.fedoraproject.org]
+      apptime: [D=207701]
+      connection: [Keep-Alive]
+      content-length: ['4922']
+      content-type: [application/json]
+      date: ['Fri, 09 Feb 2018 08:50:01 GMT']
+      keep-alive: ['timeout=15, max=500']
+      referrer-policy: [same-origin]
+      server: [Apache/2.4.29 (Fedora) mod_wsgi/4.5.15 Python/2.7]
+      strict-transport-security: [max-age=15768000; includeSubDomains; preload]
+      x-content-type-options: [nosniff, nosniff]
+      x-frame-options: [SAMEORIGIN]
+      x-xss-protection: [1; mode=block]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://bodhi.fedoraproject.org/releases/?page=1&row_per_page=20
+  response:
+    body: {string: !!python/unicode '{"rows_per_page": 20, "total": 11, "pages": 1,
+        "releases": [{"composes": [], "dist_tag": "f22", "name": "F22", "testing_tag":
+        "f22-updates-testing", "pending_stable_tag": "f22-updates-pending", "pending_signing_tag":
+        "", "long_name": "Fedora 22", "state": "archived", "version": "22", "override_tag":
+        "f22-override", "branch": "f22", "id_prefix": "FEDORA", "pending_testing_tag":
+        "f22-updates-testing-pending", "stable_tag": "f22-updates", "candidate_tag":
+        "f22-updates-candidate"}, {"composes": [], "dist_tag": "dist-6E-epel", "name":
+        "EL-6", "testing_tag": "dist-6E-epel-testing", "pending_stable_tag": "", "pending_signing_tag":
+        "", "long_name": "Fedora EPEL 6", "state": "current", "version": "6", "override_tag":
+        "dist-6E-epel-override", "branch": "el6", "id_prefix": "FEDORA-EPEL", "pending_testing_tag":
+        "", "stable_tag": "dist-6E-epel", "candidate_tag": "dist-6E-epel-testing-candidate"},
+        {"composes": [], "dist_tag": "f21", "name": "F21", "testing_tag": "f21-updates-testing",
+        "pending_stable_tag": "f21-updates-pending", "pending_signing_tag": "", "long_name":
+        "Fedora 21", "state": "archived", "version": "21", "override_tag": "f21-override",
+        "branch": "f21", "id_prefix": "FEDORA", "pending_testing_tag": "f21-updates-testing-pending",
+        "stable_tag": "f21-updates", "candidate_tag": "f21-updates-candidate"}, {"composes":
+        [], "dist_tag": "f25", "name": "F25", "testing_tag": "f25-updates-testing",
+        "pending_stable_tag": "f25-updates-pending", "pending_signing_tag": "f25-signing-pending",
+        "long_name": "Fedora 25", "state": "archived", "version": "25", "override_tag":
+        "f25-override", "branch": "f25", "id_prefix": "FEDORA", "pending_testing_tag":
+        "f25-updates-testing-pending", "stable_tag": "f25-updates", "candidate_tag":
+        "f25-updates-candidate"}, {"composes": [], "dist_tag": "f24", "name": "F24",
+        "testing_tag": "f24-updates-testing", "pending_stable_tag": "f24-updates-pending",
+        "pending_signing_tag": "f24-signing-pending", "long_name": "Fedora 24", "state":
+        "archived", "version": "24", "override_tag": "f24-override", "branch": "f24",
+        "id_prefix": "FEDORA", "pending_testing_tag": "f24-updates-testing-pending",
+        "stable_tag": "f24-updates", "candidate_tag": "f24-updates-candidate"}, {"composes":
+        [], "dist_tag": "epel7", "name": "EPEL-7", "testing_tag": "epel7-testing",
+        "pending_stable_tag": "epel7-pending", "pending_signing_tag": "epel7-signing-pending",
+        "long_name": "Fedora EPEL 7", "state": "current", "version": "7", "override_tag":
+        "epel7-override", "branch": "epel7", "id_prefix": "FEDORA-EPEL", "pending_testing_tag":
+        "epel7-testing-pending", "stable_tag": "epel7", "candidate_tag": "epel7-testing-candidate"},
+        {"composes": [], "dist_tag": "dist-5E-epel", "name": "EL-5", "testing_tag":
+        "dist-5E-epel-testing", "pending_stable_tag": "", "pending_signing_tag": "",
+        "long_name": "Fedora EPEL 5", "state": "archived", "version": "5", "override_tag":
+        "dist-5E-epel-override", "branch": "el5", "id_prefix": "FEDORA-EPEL", "pending_testing_tag":
+        "", "stable_tag": "dist-5E-epel", "candidate_tag": "dist-5E-epel-testing-candidate"},
+        {"composes": [], "dist_tag": "f23", "name": "F23", "testing_tag": "f23-updates-testing",
+        "pending_stable_tag": "f23-updates-pending", "pending_signing_tag": "f23-signing-pending",
+        "long_name": "Fedora 23", "state": "archived", "version": "23", "override_tag":
+        "f23-override", "branch": "f23", "id_prefix": "FEDORA", "pending_testing_tag":
+        "f23-updates-testing-pending", "stable_tag": "f23-updates", "candidate_tag":
+        "f23-updates-candidate"}, {"composes": [], "dist_tag": "f26", "name": "F26",
+        "testing_tag": "f26-updates-testing", "pending_stable_tag": "f26-updates-pending",
+        "pending_signing_tag": "f26-signing-pending", "long_name": "Fedora 26", "state":
+        "current", "version": "26", "override_tag": "f26-override", "branch": "f26",
+        "id_prefix": "FEDORA", "pending_testing_tag": "f26-updates-testing-pending",
+        "stable_tag": "f26-updates", "candidate_tag": "f26-updates-candidate"}, {"composes":
+        [], "dist_tag": "f27-modular", "name": "F27M", "testing_tag": "f27-modular-updates-testing",
+        "pending_stable_tag": "f27-modular-updates-pending", "pending_signing_tag":
+        "f27-modular-signing-pending", "long_name": "Fedora 27 Server Edition", "state":
+        "pending", "version": "27", "override_tag": "f27-modular-override", "branch":
+        "f27m", "id_prefix": "FEDORA-MODULAR", "pending_testing_tag": "f27-modular-updates-testing-pending",
+        "stable_tag": "f27-modular-updates", "candidate_tag": "f27-modular-updates-candidate"},
+        {"composes": [], "dist_tag": "f27", "name": "F27", "testing_tag": "f27-updates-testing",
+        "pending_stable_tag": "f27-updates-pending", "pending_signing_tag": "f27-signing-pending",
+        "long_name": "Fedora 27", "state": "current", "version": "27", "override_tag":
+        "f27-override", "branch": "f27", "id_prefix": "FEDORA", "pending_testing_tag":
+        "f27-updates-testing-pending", "stable_tag": "f27-updates", "candidate_tag":
+        "f27-updates-candidate"}], "page": 1}'}
+    headers:
+      appserver: [proxy11.fedoraproject.org]
+      apptime: [D=207118]
+      connection: [Keep-Alive]
+      content-length: ['4922']
+      content-type: [application/json]
+      date: ['Fri, 09 Feb 2018 08:50:02 GMT']
+      keep-alive: ['timeout=15, max=499']
+      referrer-policy: [same-origin]
+      server: [Apache/2.4.29 (Fedora) mod_wsgi/4.5.15 Python/2.7]
+      strict-transport-security: [max-age=15768000; includeSubDomains; preload]
+      x-content-type-options: [nosniff, nosniff]
+      x-frame-options: [SAMEORIGIN]
+      x-xss-protection: [1; mode=block]
+    status: {code: 200, message: OK}
+version: 1

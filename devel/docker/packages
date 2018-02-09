@@ -6,7 +6,7 @@ RUN dnf install -y TurboGears2 python-moksha-wsgi intltool koji python2-fedora\
     xapian-bindings-python python-dogpile-core python-dogpile-cache\
     python-memcached python2-markdown pygobject3 fedmsg python2-pytest\
     python2-pdc-client python2-webhelpers libappstream-glib dumb-init\
-    python2-GitPython git python2-pytest-mock\
+    python2-GitPython git python2-pytest-mock python2-pytest-vcr\
     && dnf clean all
 
 RUN mkdir -p  /var/log/fedoracommunity\

@@ -1,0 +1,155 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+      accept: [application/json]
+      content-type: [application/json]
+    method: GET
+    uri: https://pdc.fedoraproject.org/rest_api/v1/component-branches/?active=True&type=rpm&global_component=guake&page_size=100&page=1
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA6WT3Y7CIBCF34XrNgFaoPVVNsZgHZUsbQkFf2J89x3d1O5G0zbKFUPmgzlnmAup
+        2tgEshAJaeCEmyZamxDn4WDa2PWxhy7agOHXhZgNWShZSpmQnW3X2q6qtnZtA7d7yC7qbyB4m64B
+        Q7ASg87qgWUiK0p+P8SELui1hZV2BvOgtXjEKacpY2lGyTUZmII9GKiiN+G82poTdFOcynpuHXcj
+        yDIh4exuRXtXY4augjlgGHyEhFT4oKlQrNNhTxZbbTvoX1GKKj7LDQdWPfuRMyrG/chTKv/rymkp
+        pv14xRVi1I8H8okfTM7yY8tf/I6cKzWpjBUpVSllf5VxqcaUDcj7yjJeiKycJ+2p0VL8Ts1oifgZ
+        ef5QdUem+zxwHzRNFsWska51F8C/mGrFaV+p18e92cBQIi60/l33l9cfzigTzqkEAAA=
+    headers:
+      allow: ['GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS']
+      appserver: [proxy03.fedoraproject.org]
+      apptime: [D=254460]
+      cache-control: ['private, max-age=0, must-revalidate']
+      connection: [Keep-Alive]
+      content-encoding: [gzip]
+      content-length: ['335']
+      content-type: [application/json]
+      date: ['Fri, 09 Feb 2018 11:47:16 GMT']
+      keep-alive: ['timeout=15, max=500']
+      referrer-policy: [same-origin]
+      server: [Apache/2.4.6 (Red Hat Enterprise Linux) mod_wsgi/3.4 Python/2.7.5]
+      set-cookie: [SERVERID=pdc-web01; path=/]
+      strict-transport-security: [max-age=15768000; includeSubDomains; preload]
+      vary: ['Accept,Cookie,Accept-Encoding']
+      x-content-type-options: [nosniff]
+      x-frame-options: [SAMEORIGIN, SAMEORIGIN]
+      x-xss-protection: [1; mode=block]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://apps.fedoraproject.org/mdapi/f27/srcpkg/guake
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA9VVwW6cMBD9FYtTIi2Q0kOiXJvVntqq5zYHgwfjYDyubWhRtP9eD7CbpE23UsVK
+        7Y15nnnzZmxmHhPuqia5ZYnB6WvDErA4Q1dkDeC8QjPZ2U12Q5gDDdwDYW+zuiquCfR913E3Enjn
+        0KYCvxkWwHXKcM1qdGz34eP7LbkK8JVTNiy8u563wJRnnInfRBrsgN2BbwNatjWDcmg6MGHzxXhk
+        I/bsofeBGQDBAjLrwBNdCyOZygwYMzSqi/7ciMO55MrQeaMEZCSsjFUZ3k2VSVJFYO802U0I9jbP
+        Jzi1Dh+gChk6mZNPhabWqgo+en6+jwCWHjUEOAIxYohpJvsxOSTh1sYwTp24uHzefNNr/aL7C/DU
+        +gWoNZd+Mfcb9jr1QTTUPhNzF8+d7Ux5jrfyl6/0QJxsPyX7+8nra6/cz/eSl8rkvllX+/9DunsX
+        33Px73OKsvepHUMTw9clnh9vajCoennXqeDQrZ1I0mRbSihSSXNk3QRTBeNZmmRHGdri5M9YZG+u
+        klOkyW6bvEKaalVKzQWsrZi6cMFLdfkH2denVdP0+JU4jfsm/o4C3Nqyvwu5LuUQVmgtzU8wDTfV
+        055zUGEXV7M4Ir6XEnx4ZsddAbS9j1CFqeVVy+XMs0z5mc4i6T0I2f8AhmMcMrIIAAA=
+    headers:
+      appserver: [proxy11.fedoraproject.org]
+      apptime: [D=323295]
+      connection: [Keep-Alive]
+      content-encoding: [gzip]
+      content-length: ['506']
+      content-type: [application/json]
+      date: ['Fri, 09 Feb 2018 11:47:17 GMT']
+      keep-alive: ['timeout=15, max=500']
+      referrer-policy: [same-origin]
+      server: [Python/3.6 aiohttp/2.3.0]
+      strict-transport-security: [max-age=15768000; includeSubDomains; preload]
+      vary: [Accept-Encoding]
+      x-content-type-options: [nosniff]
+      x-frame-options: [SAMEORIGIN]
+      x-xss-protection: [1; mode=block]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://src.fedoraproject.org/api/0/rpms/guake
+  response:
+    body: {string: !!python/unicode "{\n  \"access_groups\": {\n    \"admin\": [],\n
+        \   \"commit\": [],\n    \"ticket\": []\n  },\n  \"access_users\": {\n    \"admin\":
+        [],\n    \"commit\": [\n      \"ohaessler\"\n    ],\n    \"owner\": [\n      \"pingou\"\n
+        \   ],\n    \"ticket\": []\n  },\n  \"close_status\": [],\n  \"custom_keys\":
+        [],\n  \"date_created\": \"1501868998\",\n  \"date_modified\": \"1501868998\",\n
+        \ \"description\": \"The guake rpms\",\n  \"fullname\": \"rpms/guake\",\n
+        \ \"id\": 5989,\n  \"milestones\": {},\n  \"name\": \"guake\",\n  \"namespace\":
+        \"rpms\",\n  \"parent\": null,\n  \"priorities\": {},\n  \"tags\": [],\n  \"url_path\":
+        \"rpms/guake\",\n  \"user\": {\n    \"fullname\": \"Pierre-YvesChibon\",\n
+        \   \"name\": \"pingou\"\n  }\n}"}
+    headers:
+      appserver: [proxy01.phx2.fedoraproject.org]
+      apptime: [D=245103]
+      connection: [Keep-Alive]
+      content-length: ['619']
+      content-type: [application/json]
+      date: ['Fri, 09 Feb 2018 11:47:18 GMT']
+      keep-alive: ['timeout=15, max=500']
+      referrer-policy: [same-origin]
+      server: [Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips mod_auth_gssapi/1.5.1
+          mod_wsgi/3.4 Python/2.7.5]
+      set-cookie: ['disgit_pagure=eyJfcGVybWFuZW50Ijp0cnVlfQ.DV8bxg.GI2pzDKB8oH6B0nSTWGixV46Z20;
+          Expires=Mon, 12-Mar-2018 11:47:18 GMT; Secure; HttpOnly; Path=/']
+      strict-transport-security: [max-age=15768000; includeSubDomains; preload]
+      x-content-type-options: [nosniff]
+      x-frame-options: [SAMEORIGIN]
+      x-xss-protection: [1; mode=block]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://apps.fedoraproject.org/mdapi/f27/srcpkg/guake
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA9VVwW6cMBD9FYtTIi2Q0kOiXJvVntqq5zYHgwfjYDyubWhRtP9eD7CbpE23UsVK
+        7Y15nnnzZmxmHhPuqia5ZYnB6WvDErA4Q1dkDeC8QjPZ2U12Q5gDDdwDYW+zuiquCfR913E3Enjn
+        0KYCvxkWwHXKcM1qdGz34eP7LbkK8JVTNiy8u563wJRnnInfRBrsgN2BbwNatjWDcmg6MGHzxXhk
+        I/bsofeBGQDBAjLrwBNdCyOZygwYMzSqi/7ciMO55MrQeaMEZCSsjFUZ3k2VSVJFYO802U0I9jbP
+        Jzi1Dh+gChk6mZNPhabWqgo+en6+jwCWHjUEOAIxYohpJvsxOSTh1sYwTp24uHzefNNr/aL7C/DU
+        +gWoNZd+Mfcb9jr1QTTUPhNzF8+d7Ux5jrfyl6/0QJxsPyX7+8nra6/cz/eSl8rkvllX+/9DunsX
+        33Px73OKsvepHUMTw9clnh9vajCoennXqeDQrZ1I0mRbSihSSXNk3QRTBeNZmmRHGdri5M9YZG+u
+        klOkyW6bvEKaalVKzQWsrZi6cMFLdfkH2denVdP0+JU4jfsm/o4C3Nqyvwu5LuUQVmgtzU8wDTfV
+        055zUGEXV7M4Ir6XEnx4ZsddAbS9j1CFqeVVy+XMs0z5mc4i6T0I2f8AhmMcMrIIAAA=
+    headers:
+      appserver: [proxy11.fedoraproject.org]
+      apptime: [D=323447]
+      connection: [Keep-Alive]
+      content-encoding: [gzip]
+      content-length: ['506']
+      content-type: [application/json]
+      date: ['Fri, 09 Feb 2018 11:47:19 GMT']
+      keep-alive: ['timeout=15, max=499']
+      referrer-policy: [same-origin]
+      server: [Python/3.6 aiohttp/2.3.0]
+      strict-transport-security: [max-age=15768000; includeSubDomains; preload]
+      vary: [Accept-Encoding]
+      x-content-type-options: [nosniff]
+      x-frame-options: [SAMEORIGIN]
+      x-xss-protection: [1; mode=block]
+    status: {code: 200, message: OK}
+version: 1
