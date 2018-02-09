@@ -105,11 +105,11 @@ class Indexer(object):
         self.indexer.set_stemmer(xapian.Stem("en"))
 
     def _get_active_fedora_releases(self):
-        response = self._call_api(self.bodhi_url + "/releases?page=1&row_per_page=20")
+        response = self._call_api(self.bodhi_url + "/releases/?page=1&row_per_page=20")
         releases = response.get('releases', [])
         active_fedora_releases = []
         for release in releases:
-            if release['id_prefix'] == 'Fedora' and\
+            if release['id_prefix'].lower() == 'fedora' and\
                release['state'] == 'current':
                 active_fedora_releases.append(int(release['version']))
 
