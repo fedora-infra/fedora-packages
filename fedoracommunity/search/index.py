@@ -396,6 +396,7 @@ class Indexer(object):
             # And then prepare everything for xapian
             log.info("Processing final details for %s" % package['name'])
             self._create_document(package)
+        self.db.close()
 
     def _create_document(self, package, old_doc=None):
         doc = xapian.Document()
@@ -466,7 +467,6 @@ class Indexer(object):
         if old_doc is not None:
             self.db.delete_document(old_doc.get_docid())
         self.db.commit()
-        self.db.close()
 
 
 def run(cache_path, tagger_url=None, bodhi_url=None,

@@ -176,6 +176,7 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
                     return
                 old_doc = self._get_old_document(name)
                 indexer._create_document(package, old_doc)
+                indexer.db.close()
 
                 log.info("Done adding new document %r" % name)
             except Exception as e:
