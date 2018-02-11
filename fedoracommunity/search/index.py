@@ -404,8 +404,10 @@ class Indexer(object):
         filtered_name = filter_search_string(package['name'])
         filtered_summary = filter_search_string(package['summary'])
         filtered_description = filter_search_string(package['description'])
+        filtered_owner = filter_search_string(package['devel_owner'])
 
         self.indexer.index_text_without_positions('EX__' + filtered_name + '__EX', 10, '')
+        self.indexer.index_text_without_positions('EX__' + filtered_owner + '__EX', 10, '')
 
         name_parts = filtered_name.split('_')
         for i in range(20):
