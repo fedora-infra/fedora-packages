@@ -9,7 +9,6 @@
       - python-webhelpers
       - fedmsg
       - python-kitchen
-      - python-fedora
       - python-bugzilla
       - koji
       - xapian-bindings-python
@@ -17,7 +16,6 @@
       - fedpkg
       - svn
       - wget
-      - python-xappy
       - python-webob
       - moksha
       - TurboGears2
@@ -27,6 +25,7 @@
       - memcached
       - python-markdown
       - pygobject3
+      - bodhi-client
 
 - name: Install python packages
   pip:

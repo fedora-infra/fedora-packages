@@ -20,7 +20,7 @@ from itertools import product
 
 from paste.deploy.converters import asbool
 from tg import config
-from fedora.client.bodhi import Bodhi2Client
+from bodhi.client.bindings import BodhiClient
 from datetime import datetime
 from webhelpers.html import HTML
 
@@ -49,8 +49,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
         self._prod_url = config.get(
             'fedoracommunity.connector.bodhi.produrl',
             'https://bodhi.fedoraproject.org')
-        self._bodhi_client = Bodhi2Client(self._base_url,
-                                          insecure=self._insecure)
+        self._bodhi_client = BodhiClient(self._base_url,
+                                         insecure=self._insecure)
 
     @classmethod
     def query_updates_cache_prompt(cls, msg):

@@ -1,6 +1,6 @@
 FROM registry.fedoraproject.org/fedora:27
 
-RUN dnf install -y TurboGears2 python-moksha-wsgi intltool koji python2-fedora\
+RUN dnf install -y TurboGears2 python-moksha-wsgi intltool koji bodhi-client\
     python-feedparser python-iniparse pytz python2-pyOpenSSL httpd mod_wsgi diffstat\
     fedpkg python-lockfile python-tw2-jqplugins-ui python-bugzilla\
     xapian-bindings-python python-dogpile-core python-dogpile-cache\
