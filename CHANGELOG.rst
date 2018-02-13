@@ -1,3 +1,73 @@
+4.1.0
+-----
+
+Pull Requests
+
+- (cverna)            #345, Use the new bodhi client provided by the bodhi-client package
+  https://github.com/fedora-infra/fedora-packages/pull/345
+- (@cverna)           #344, Fix the sources tab in the development environment
+  https://github.com/fedora-infra/fedora-packages/pull/344
+- (@cverna)           #343, Index packager
+  https://github.com/fedora-infra/fedora-packages/pull/343
+- (@cverna)           #342, Add some basic test for the indexer
+  https://github.com/fedora-infra/fedora-packages/pull/342
+- (@cverna)           #340, Delete the old document after an update.
+  https://github.com/fedora-infra/fedora-packages/pull/340
+- (@cverna)           #339, Add a docker-compose dev environment
+  https://github.com/fedora-infra/fedora-packages/pull/339
+- (@cverna)           #338, Update the fedmsg consumer code with newer xapain bindings.
+  https://github.com/fedora-infra/fedora-packages/pull/338
+- (@cverna)           #337, Remove result highlighting
+  https://github.com/fedora-infra/fedora-packages/pull/337
+- (@cverna)           #336, Remove module that are not used anymore
+  https://github.com/fedora-infra/fedora-packages/pull/336
+- (@cverna)           #335, Remove the widgets that are not used by the current app
+  https://github.com/fedora-infra/fedora-packages/pull/335
+- (@cverna)           #334, Load the logging configuration.
+  https://github.com/fedora-infra/fedora-packages/pull/334
+- (@cverna)           #327, Simplify how we get the active Fedora releases
+  https://github.com/fedora-infra/fedora-packages/pull/327
+- (@cverna)           #326, Use mdapi to get the upstream url instead of pdc
+  https://github.com/fedora-infra/fedora-packages/pull/326
+
+Commits
+
+- f78f9cc9 Use the new bodhi client provided by the bodhi-client package
+  https://github.com/fedora-infra/fedora-packages/commit/f78f9cc9
+- a1457d56 Adding test for indexing the point of contact
+  https://github.com/fedora-infra/fedora-packages/commit/a1457d56
+- b87e0d77 Index the point of contact of a package.
+  https://github.com/fedora-infra/fedora-packages/commit/b87e0d77
+- 5343d698 We need to close the database after creating documents
+  https://github.com/fedora-infra/fedora-packages/commit/5343d698
+- 54022dab Fix the sources tab in the development environment
+  https://github.com/fedora-infra/fedora-packages/commit/54022dab
+- edb73761 Flake8 cleanup and use conftest.py
+  https://github.com/fedora-infra/fedora-packages/commit/edb73761
+- ae1afa4c Add some super simple test to begin with indexer testing
+  https://github.com/fedora-infra/fedora-packages/commit/ae1afa4c
+- eb44f829 Update indexer following bodhi API change.
+  https://github.com/fedora-infra/fedora-packages/commit/eb44f829
+- 09d5b5ed Delete the old document after an update.
+  https://github.com/fedora-infra/fedora-packages/commit/09d5b5ed
+- f92bb8ef Add a docker-compose dev environment
+  https://github.com/fedora-infra/fedora-packages/commit/f92bb8ef
+- d22ec10f Update the fedmsg consumer code with newer xapain bindings.
+  https://github.com/fedora-infra/fedora-packages/commit/d22ec10f
+- 07c78dab flake8 cleanup
+  https://github.com/fedora-infra/fedora-packages/commit/07c78dab
+- b072a3cc Remove result highlighting
+  https://github.com/fedora-infra/fedora-packages/commit/b072a3cc
+- 13f9b0a8 Remove module that are not used anymore
+  https://github.com/fedora-infra/fedora-packages/commit/13f9b0a8
+- eefaa126 Remove the widgets that are not used by the current app
+  https://github.com/fedora-infra/fedora-packages/commit/eefaa126
+- 91de5efe Load the logging configuration.
+  https://github.com/fedora-infra/fedora-packages/commit/91de5efe
+- fa4e3fc3 Simplify how we get the active Fedora releases
+  https://github.com/fedora-infra/fedora-packages/commit/fa4e3fc3
+- fcbabacb Use mdapi to get the upstream url instead of pdc
+  https://github.com/fedora-infra/fedora-packages/commit/fcbabacb
 
 4.0.0
 -----

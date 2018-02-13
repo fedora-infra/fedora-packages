@@ -1,18 +1,15 @@
-%{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%{!?pyver: %define pyver %(%{__python} -c "import sys ; print sys.version[:3]")}
-
-%define oldname fedoracommunity
+%global oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        4.0.0
+Version:        4.1.0
 Release:        1%{?dist}
 Summary:        Fedora packages search engine
 Group:          Applications/Internet
 License:        AGPLv3
 URL:            https://github.com/fedora-infra/fedora-packages
-Source0:        %{url}/archive/%{name}-%{version}.tar.gz
+Source0:        %{url}/archive/%{oldname}-%{version}.tar.gz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:      %{_tmppath}/%{oldname}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
 BuildRequires: python-setuptools
@@ -37,7 +34,7 @@ Requires: TurboGears2
 Requires: python-moksha-wsgi
 Requires: intltool
 Requires: koji
-Requires: python-fedora
+Requires: bodhi-client
 Requires: python-feedparser
 Requires: python-iniparse
 Requires: pytz
@@ -53,72 +50,44 @@ Requires: xapian-bindings-python
 Requires: python-dogpile-core > 0.4.0
 Requires: python-dogpile-cache > 0.4.1
 Requires: python-memcached
-Requires: packagedb-cli
 Requires: python-markdown
 Requires: pygobject3
 Requires: fedmsg
 Requires: python-pdc-client
 Requires: python-webhelpers
 Requires: libappstream-glib
-# For spectool
-Requires: rpmdevtools
 Requires: python-daemon
 Requires: python-webob
 
-Obsoletes: myfedora
-Conflicts: fedoracommunity
+# For spectool
+Requires: rpmdevtools
 
 
 %description
 Fedora-packages is a web application that allow the user to search for packages inside Fedora.
+
 %prep
-%autosetup -n fedora-packages-%{version}
+%autosetup -n %{oldname}-%{version}
 
 %build
 %py2_build
 
 %install
-%{__rm} -rf %{buildroot}
-%{__python2} setup.py install -O1 --skip-build \
-    --install-data=%{_datadir} --root %{buildroot}
-%{__python2} setup.py archive_fedoracommunity_resources -f -o %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets -d moksha -d fedoracommunity
+%{__python2} setup.py install -O1 --skip-build --install-data=%{_datadir} --root %{buildroot}
 
-# Hack, to work around tw2 resource archiving issues
-%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.jquery_template/static/javascript
-cp fedoracommunity/widgets/static/javascript/jquery.tmpl.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.jquery_template/static/javascript
-%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.connectors.widgets.widgets/static/js
-cp fedoracommunity/connectors/widgets/static/js/fcomm.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.connectors.widgets.widgets/static/js
-%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.grid/static/javascript/ui/
-cp fedoracommunity/widgets/static/javascript/ui/moksha.ui.{grid,popup}.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.grid/static/javascript/ui
-%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.package.updates/static/javascript/
-cp fedoracommunity/widgets/package/static/javascript/bodhi.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.package.updates/static/javascript/
-%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.expander/static/javascript/
-cp fedoracommunity/widgets/static/javascript/jquery.expander.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.expander/static/javascript/
-%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.tree/static/javascript/
-cp fedoracommunity/widgets/static/javascript/jquery.jstree.js %{buildroot}%{_datadir}/%{oldname}/public/toscawidgets/resources/fedoracommunity.widgets.tree/static/javascript/
-
-%{__mkdir_p} %{buildroot}/var/lib/
 %{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/production/apache
-%{__mkdir_p} -m 0755 %{buildroot}/%{_localstatedir}/log/%{oldname}
 %{__mkdir_p} -m 0700 %{buildroot}/%{_localstatedir}/cache/%{oldname}
-
-%{__install} -m 640 production/apache/%{oldname}.conf %{buildroot}%{_datadir}/%{oldname}/production/apache
 %{__install} production/apache/%{oldname}.wsgi %{buildroot}%{_datadir}/%{oldname}/production/apache/%{oldname}.wsgi
-%{__install} production/sample-production.ini %{buildroot}%{_datadir}/%{oldname}/production
 
-%clean
-%{__rm} -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %doc README.md AUTHORS
 %license COPYING
-%{python_sitelib}/%{oldname}/
+%{python2_sitelib}/%{oldname}/
+%{python2_sitelib}/%{oldname}-%{version}-py2.7.egg-info/
 %attr(-,apache,root) %dir %{_datadir}/%{oldname}
 %attr(-,apache,root) %{_datadir}/%{oldname}/production
 %attr(-,apache,root) %{_datadir}/%{oldname}/public
-%attr(-,apache,root) %{_localstatedir}/log/%{oldname}
-%{python_sitelib}/%{oldname}-%{version}-py%{pyver}.egg-info/
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/%{oldname}
 %{_bindir}/fcomm-index-packages
 

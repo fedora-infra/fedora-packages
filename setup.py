@@ -51,7 +51,7 @@ packages = find_packages(exclude=['ez_setup'])
 
 setup(
     name='fedoracommunity',
-    version='4.0.0',
+    version='4.1.0',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',
@@ -80,13 +80,7 @@ setup(
     test_suite='nose.collector',
     tests_require=['webtest'],
     data_files=data_files,
-    package_data={'fedoracommunity': ['i18n/*/LC_MESSAGES/*.mo']
-                               },
-    #message_extractors = {'myfedora': [
-    #        ('**.py', 'python', None),
-    #        ('templates/**.mako', 'mako', None),
-    #        ('templates/**.html', 'genshi', None),
-    #        ('public/**', 'ignore', None)]},
+    package_data={'fedoracommunity': ['i18n/*/LC_MESSAGES/*.mo']},
 
     entry_points="""
     [setuptools.file_finders]
@@ -97,9 +91,6 @@ setup(
 
     [paste.app_install]
     main = pylons.util:PylonsInstaller
-
-#    [fas.repoze.who.metadata_plugins]
-#    blog_info = myfedora.plugins.identity.bloginfo:add_metadata
 
     # list all the widgets we need for deployment - this is messy but the
     # easiest way to get things working
@@ -124,15 +115,6 @@ setup(
     package_changelog = fedoracommunity.widgets.package.changelog
     package_sources = fedoracommunity.widgets.package.sources
 
-    package_relationships = fedoracommunity.widgets.package.relationships
-
-    [moksha.global]
-    #fedora_css = fedoracommunity.widgets:fedora_css
-    #jquery_json_js = moksha.widgets.json:jquery_json_js
-    #jquery_ui_tabs = tw.jquery.ui_tabs:jquery_ui_tabs_js
-    #moksha_js = moksha.widgets.moksha_js:moksha_js
-    #jquery_template_js = fedoracommunity.widgets.jquery_template:jquery_template_js
-
     [fcomm.connector]
     koji = fedoracommunity.connectors:KojiConnector
     bodhi = fedoracommunity.connectors:BodhiConnector
@@ -155,18 +137,9 @@ setup(
     package_sources_spec = fedoracommunity.widgets.package.sources:Spec
     package_sources_patches = fedoracommunity.widgets.package.sources:Patches
     package_sources_patch = fedoracommunity.widgets.package.sources:Patch
-    package_sources_diffs = fedoracommunity.widgets.package.sources:Diffs
-    package_sources_tarballs = fedoracommunity.widgets.package.sources:Tarballs
-    package_sources_git = fedoracommunity.widgets.package.sources:GitRepo
-
-    [moksha.extension_point]
-    fedoracommunity = fedoracommunity.plugins.extensions
 
     [moksha.consumer]
     cache_invalidator = fedoracommunity.consumers:CacheInvalidator
-
-    [distutils.commands]
-    archive_fedoracommunity_resources = fedoracommunity.distutils.command:archive_fedoracommunity_resources
 
     """
 )
