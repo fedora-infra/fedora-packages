@@ -93,7 +93,7 @@ included in the release.
 Once these 3 files have been updated and commited to the develop branch, you create a new
 Git tag.
 
-	$ git tag -a 4.1.0 -m 'Release 4.1.0'
+	$ git tag -a 4.1.0 -s -m 'Release 4.1.0'
 	$ git push && git push --tag
 
 Once the tag has been successfully pushed, a new release will be available in github.
