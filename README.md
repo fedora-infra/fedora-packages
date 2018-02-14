@@ -80,3 +80,20 @@ ommand to start the fedora-packages server:
 
 Once that is running, simply go to http://localhost:8080/ in your browser on
 your host to see your running fedora-packages test instance.
+
+
+## Create a new release.
+
+To create a new release, you need to update `setup.py` and `fedora-packages.spec`
+with the new version number and any dependencies added or removed.
+
+The `CHANGELOG.rst` needs also to be updated with the commits and pull-requests
+included in the release.
+
+Once these 3 files have been updated and commited to the develop branch, you create a new
+Git tag.
+
+	$ git tag -a 4.1.0 -m 'Release 4.1.0'
+	$ git push && git push --tag
+
+Once the tag has been successfully pushed, a new release will be available in github.
