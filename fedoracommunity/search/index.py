@@ -110,7 +110,7 @@ class Indexer(object):
         active_fedora_releases = []
         for release in releases:
             if release['id_prefix'].lower() == 'fedora' and\
-               release['state'] == 'current':
+               release['state'] in ['current', 'pending']:
                 active_fedora_releases.append(int(release['version']))
 
         active_fedora_releases.sort(reverse=True)

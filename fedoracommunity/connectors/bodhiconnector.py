@@ -552,7 +552,8 @@ class BodhiConnector(IConnector, ICall, IQuery):
         releases_all = sorted(releases_all, key=lambda k: k['dist_tag'], reverse=True)
 
         for release in releases_all:
-            if release['state'] != 'current':
+            if release['state'] not in ['current', 'pending']\
+              or 'Modular' in release['long_name']:
                 continue
             tag = release['dist_tag']
             name = release['long_name']
