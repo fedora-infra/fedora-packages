@@ -6,7 +6,7 @@ import xapian
 from fedoracommunity.search import index
 
 
-pkg_guake = {'branch': 'f27',
+pkg_guake = {'branch': 'f28',
              'status': True,
              'name': 'guake',
              'summary': 'Drop-down terminal for GNOME',
@@ -64,7 +64,7 @@ def test_Indexer_create_index(delete_xapian_db):
 def test_Indexer_get_active_fedora_release(indexer):
     """ Test the _get_active_fedora_release """
     active_releases = indexer._get_active_fedora_releases()
-    assert active_releases == [27, 26]
+    assert active_releases == [28, 27, 26]
 
 
 @pytest.mark.vcr()

@@ -28,7 +28,7 @@ class MockHub(mock.MagicMock):
     config['fedoracommunity.fedmsg.consumer.enabled'] = True
 
 
-def test_CacheInvalidator_new_package(create_xapian_db, mocker):
+def test_CacheInvalidator_new_package(delete_xapian_db, create_xapian_db, mocker):
     """ Test that the update_xapian method
     creates a new xapian document when we receive
     an update from a new package.

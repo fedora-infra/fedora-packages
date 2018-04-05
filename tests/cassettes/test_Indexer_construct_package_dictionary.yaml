@@ -12,27 +12,28 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA6WT3Y7CIBCF34XrNgFaoPVVNsZgHZUsbQkFf2J89x3d1O5G0zbKFUPmgzlnmAup
-        2tgEshAJaeCEmyZamxDn4WDa2PWxhy7agOHXhZgNWShZSpmQnW3X2q6qtnZtA7d7yC7qbyB4m64B
-        Q7ASg87qgWUiK0p+P8SELui1hZV2BvOgtXjEKacpY2lGyTUZmII9GKiiN+G82poTdFOcynpuHXcj
-        yDIh4exuRXtXY4augjlgGHyEhFT4oKlQrNNhTxZbbTvoX1GKKj7LDQdWPfuRMyrG/chTKv/rymkp
-        pv14xRVi1I8H8okfTM7yY8tf/I6cKzWpjBUpVSllf5VxqcaUDcj7yjJeiKycJ+2p0VL8Ts1oifgZ
-        ef5QdUem+zxwHzRNFsWska51F8C/mGrFaV+p18e92cBQIi60/l33l9cfzigTzqkEAAA=
+        H4sIAAAAAAAAA6WU3Y7CIBCF34XrNgFKgfoqG9NgHZUs/UkLrsb47ju6abu7mrbRXjFkPphzZsqF
+        FHWoPFnJiFRwwkUVnItI08LR1qHr4xa64DyGHxdit2SlZCYR2bt6Y1xe1GVTV3A7h+yD+QSCp5kS
+        MAQnMeicGVmWJjrj901M6LzZOMhNYzEPaodbnHIaMxYnlFyjkdFsYKAIrfXnfGdP0M1xKum5TdhP
+        IOuI+HNzK7ptSswwhbdHDH0bICIFXmgLFNsYfyCrnXEd9LcoRRVf5EYDTj36IRhNp/0QMZV/dQma
+        pfN+PON0OunHgLzjB5OL/NjxJ9MhuFKzypiOqYop+62MSzWlbEReV5ZwnSbZMmkPjZbpz18zWSIO
+        IxeDqjsy3+eRe0NayrNkYdf0f2mKCi7EpLQsptgAPUi7I8m8tIF7Yx6l1oteq9J0HtonD5bitK+0
+        NV8Hu4WxRPxwql4drPX1GwHasKWEBQAA
     headers:
       allow: ['GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS']
-      appserver: [proxy03.fedoraproject.org]
-      apptime: [D=254460]
+      appserver: [proxy01.phx2.fedoraproject.org]
+      apptime: [D=66567]
       cache-control: ['private, max-age=0, must-revalidate']
       connection: [Keep-Alive]
       content-encoding: [gzip]
-      content-length: ['335']
+      content-length: ['366']
       content-type: [application/json]
-      date: ['Fri, 09 Feb 2018 11:47:16 GMT']
+      date: ['Thu, 05 Apr 2018 08:16:14 GMT']
       keep-alive: ['timeout=15, max=500']
       referrer-policy: [same-origin]
       server: [Apache/2.4.6 (Red Hat Enterprise Linux) mod_wsgi/3.4 Python/2.7.5]
-      set-cookie: [SERVERID=pdc-web01; path=/]
-      strict-transport-security: [max-age=15768000; includeSubDomains; preload]
+      set-cookie: [SERVERID=pdc-web02; path=/]
+      strict-transport-security: [max-age=31536000; includeSubDomains; preload]
       vary: ['Accept,Cookie,Accept-Encoding']
       x-content-type-options: [nosniff]
       x-frame-options: [SAMEORIGIN, SAMEORIGIN]
@@ -46,31 +47,31 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.18.4]
     method: GET
-    uri: https://apps.fedoraproject.org/mdapi/f27/srcpkg/guake
+    uri: https://apps.fedoraproject.org/mdapi/f28/srcpkg/guake
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA9VVwW6cMBD9FYtTIi2Q0kOiXJvVntqq5zYHgwfjYDyubWhRtP9eD7CbpE23UsVK
-        7Y15nnnzZmxmHhPuqia5ZYnB6WvDErA4Q1dkDeC8QjPZ2U12Q5gDDdwDYW+zuiquCfR913E3Enjn
-        0KYCvxkWwHXKcM1qdGz34eP7LbkK8JVTNiy8u563wJRnnInfRBrsgN2BbwNatjWDcmg6MGHzxXhk
-        I/bsofeBGQDBAjLrwBNdCyOZygwYMzSqi/7ciMO55MrQeaMEZCSsjFUZ3k2VSVJFYO802U0I9jbP
-        Jzi1Dh+gChk6mZNPhabWqgo+en6+jwCWHjUEOAIxYohpJvsxOSTh1sYwTp24uHzefNNr/aL7C/DU
-        +gWoNZd+Mfcb9jr1QTTUPhNzF8+d7Ux5jrfyl6/0QJxsPyX7+8nra6/cz/eSl8rkvllX+/9DunsX
-        33Px73OKsvepHUMTw9clnh9vajCoennXqeDQrZ1I0mRbSihSSXNk3QRTBeNZmmRHGdri5M9YZG+u
-        klOkyW6bvEKaalVKzQWsrZi6cMFLdfkH2denVdP0+JU4jfsm/o4C3Nqyvwu5LuUQVmgtzU8wDTfV
-        055zUGEXV7M4Ir6XEnx4ZsddAbS9j1CFqeVVy+XMs0z5mc4i6T0I2f8AhmMcMrIIAAA=
+        H4sIAAAAAAAAA9VVwW6cMBD9FYtTIi2QokqNcm1We2qrntscDB6Mg/G4tqFF0f57PSxs0jbdShEr
+        pTfmeebNm7GZeUi4q5rkhiUGp68NS8DiAboiawDnFZrJzq6za8IcaOAeCHub1VUxgb7vOu5GAm8d
+        2lTgd8MCuE4ZrlmNju0+fvqwJVcBvnLKhpl31/MWmPKMM/GXSIMdsFvwbUDLtmZQDk0HJmy+Go9s
+        xJ7d9z4wAyBYQGYdeKJrYSRTmQFjhkZ10Z8bsZxLrgydN0pARsLKWJXh3VSZJFUE9k6T3YRgb/J8
+        glPr8B6qkKGTOflUaGqtquCj55e7CGDpUUOAIxAjhphmsh+SJQm3NoZx6sTF5dPmm17rX7o/A4+t
+        n4Fac+lnc79hz1MvoqH2mTh08dzZzpTneCsvfKULcbL9nOzvJq9vvXK/30teKpP7Zl3t/w/p7n18
+        z8Xr5xRl71M7hiaGr0t8eLypwaDq+V2ngkO3diJJk20uoUglzZF1E0wVjGdpkh1laIuTP2ORvblK
+        TpEmu23yDGmqVSk1F7C2YurCBS/V5T9kvzutmqbHn8Rp3DfxdxTg1pb9Q8h1KYewQmtpfoJpuKke
+        95yDCru4msUR8b2U4MMTO+4KoO19hCpMLa9aLg8885Q/0FkkvYuQ/U8Ot6V7sggAAA==
     headers:
-      appserver: [proxy11.fedoraproject.org]
-      apptime: [D=323295]
+      appserver: [proxy06.fedoraproject.org]
+      apptime: [D=216097]
       connection: [Keep-Alive]
       content-encoding: [gzip]
-      content-length: ['506']
+      content-length: ['505']
       content-type: [application/json]
-      date: ['Fri, 09 Feb 2018 11:47:17 GMT']
+      date: ['Thu, 05 Apr 2018 08:16:15 GMT']
       keep-alive: ['timeout=15, max=500']
       referrer-policy: [same-origin]
       server: [Python/3.6 aiohttp/2.3.0]
-      strict-transport-security: [max-age=15768000; includeSubDomains; preload]
+      strict-transport-security: [max-age=31536000; includeSubDomains; preload]
       vary: [Accept-Encoding]
       x-content-type-options: [nosniff]
       x-frame-options: [SAMEORIGIN]
@@ -98,18 +99,18 @@ interactions:
         \   \"name\": \"pingou\"\n  }\n}"}
     headers:
       appserver: [proxy01.phx2.fedoraproject.org]
-      apptime: [D=245103]
+      apptime: [D=122960]
       connection: [Keep-Alive]
       content-length: ['619']
       content-type: [application/json]
-      date: ['Fri, 09 Feb 2018 11:47:18 GMT']
+      date: ['Thu, 05 Apr 2018 08:16:16 GMT']
       keep-alive: ['timeout=15, max=500']
       referrer-policy: [same-origin]
       server: [Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips mod_auth_gssapi/1.5.1
           mod_wsgi/3.4 Python/2.7.5]
-      set-cookie: ['disgit_pagure=eyJfcGVybWFuZW50Ijp0cnVlfQ.DV8bxg.GI2pzDKB8oH6B0nSTWGixV46Z20;
-          Expires=Mon, 12-Mar-2018 11:47:18 GMT; Secure; HttpOnly; Path=/']
-      strict-transport-security: [max-age=15768000; includeSubDomains; preload]
+      set-cookie: ['disgit_pagure=eyJfcGVybWFuZW50Ijp0cnVlfQ.Dads0A.w4oBEurBmxcaFMN2dnteBHg4FAU;
+          Expires=Sun, 06-May-2018 08:16:16 GMT; Secure; HttpOnly; Path=/']
+      strict-transport-security: [max-age=31536000; includeSubDomains; preload]
       x-content-type-options: [nosniff]
       x-frame-options: [SAMEORIGIN]
       x-xss-protection: [1; mode=block]
@@ -122,31 +123,31 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.18.4]
     method: GET
-    uri: https://apps.fedoraproject.org/mdapi/f27/srcpkg/guake
+    uri: https://apps.fedoraproject.org/mdapi/f28/srcpkg/guake
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA9VVwW6cMBD9FYtTIi2Q0kOiXJvVntqq5zYHgwfjYDyubWhRtP9eD7CbpE23UsVK
-        7Y15nnnzZmxmHhPuqia5ZYnB6WvDErA4Q1dkDeC8QjPZ2U12Q5gDDdwDYW+zuiquCfR913E3Enjn
-        0KYCvxkWwHXKcM1qdGz34eP7LbkK8JVTNiy8u563wJRnnInfRBrsgN2BbwNatjWDcmg6MGHzxXhk
-        I/bsofeBGQDBAjLrwBNdCyOZygwYMzSqi/7ciMO55MrQeaMEZCSsjFUZ3k2VSVJFYO802U0I9jbP
-        Jzi1Dh+gChk6mZNPhabWqgo+en6+jwCWHjUEOAIxYohpJvsxOSTh1sYwTp24uHzefNNr/aL7C/DU
-        +gWoNZd+Mfcb9jr1QTTUPhNzF8+d7Ux5jrfyl6/0QJxsPyX7+8nra6/cz/eSl8rkvllX+/9DunsX
-        33Px73OKsvepHUMTw9clnh9vajCoennXqeDQrZ1I0mRbSihSSXNk3QRTBeNZmmRHGdri5M9YZG+u
-        klOkyW6bvEKaalVKzQWsrZi6cMFLdfkH2denVdP0+JU4jfsm/o4C3Nqyvwu5LuUQVmgtzU8wDTfV
-        055zUGEXV7M4Ir6XEnx4ZsddAbS9j1CFqeVVy+XMs0z5mc4i6T0I2f8AhmMcMrIIAAA=
+        H4sIAAAAAAAAA9VVwW6cMBD9FYtTIi2QokqNcm1We2qrntscDB6Mg/G4tqFF0f57PSxs0jbdShEr
+        pTfmeebNm7GZeUi4q5rkhiUGp68NS8DiAboiawDnFZrJzq6za8IcaOAeCHub1VUxgb7vOu5GAm8d
+        2lTgd8MCuE4ZrlmNju0+fvqwJVcBvnLKhpl31/MWmPKMM/GXSIMdsFvwbUDLtmZQDk0HJmy+Go9s
+        xJ7d9z4wAyBYQGYdeKJrYSRTmQFjhkZ10Z8bsZxLrgydN0pARsLKWJXh3VSZJFUE9k6T3YRgb/J8
+        glPr8B6qkKGTOflUaGqtquCj55e7CGDpUUOAIxAjhphmsh+SJQm3NoZx6sTF5dPmm17rX7o/A4+t
+        n4Fac+lnc79hz1MvoqH2mTh08dzZzpTneCsvfKULcbL9nOzvJq9vvXK/30teKpP7Zl3t/w/p7n18
+        z8Xr5xRl71M7hiaGr0t8eLypwaDq+V2ngkO3diJJk20uoUglzZF1E0wVjGdpkh1laIuTP2ORvblK
+        TpEmu23yDGmqVSk1F7C2YurCBS/V5T9kvzutmqbHn8Rp3DfxdxTg1pb9Q8h1KYewQmtpfoJpuKke
+        95yDCru4msUR8b2U4MMTO+4KoO19hCpMLa9aLg8885Q/0FkkvYuQ/U8Ot6V7sggAAA==
     headers:
-      appserver: [proxy11.fedoraproject.org]
-      apptime: [D=323447]
+      appserver: [proxy06.fedoraproject.org]
+      apptime: [D=176882]
       connection: [Keep-Alive]
       content-encoding: [gzip]
-      content-length: ['506']
+      content-length: ['505']
       content-type: [application/json]
-      date: ['Fri, 09 Feb 2018 11:47:19 GMT']
+      date: ['Thu, 05 Apr 2018 08:16:16 GMT']
       keep-alive: ['timeout=15, max=499']
       referrer-policy: [same-origin]
       server: [Python/3.6 aiohttp/2.3.0]
-      strict-transport-security: [max-age=15768000; includeSubDomains; preload]
+      strict-transport-security: [max-age=31536000; includeSubDomains; preload]
       vary: [Accept-Encoding]
       x-content-type-options: [nosniff]
       x-frame-options: [SAMEORIGIN]
