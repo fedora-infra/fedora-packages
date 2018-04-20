@@ -1,7 +1,7 @@
 %global oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        4.1.0
+Version:        4.1.1
 Release:        1%{?dist}
 Summary:        Fedora packages search engine
 Group:          Applications/Internet
@@ -92,6 +92,9 @@ Fedora-packages is a web application that allow the user to search for packages 
 %{_bindir}/fcomm-index-packages
 
 %changelog
+* Thu Apr 05 2018 Clement Verna <cverna@tutanota.com> - 4.0.1-1
+- Display pending release in the Release overview
+
 * Tue Dec 05 2017 Clement Verna <cverna@tutanota.com> - 4.0.0-1
 - Use the license macro
 - Fix Source0 url
