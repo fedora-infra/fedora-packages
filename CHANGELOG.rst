@@ -11,13 +11,13 @@ Pull Requests
 Commits
 
 - 643263d4 Update unit tests
-https://github.com/fedora-infra/fedora-packages/commit/643263d4
+  https://github.com/fedora-infra/fedora-packages/commit/643263d4
 - f314776c Add pending release to the Active release overview
-https://github.com/fedora-infra/fedora-packages/commit/f314776c
+  https://github.com/fedora-infra/fedora-packages/commit/f314776c
 - 902ffa44 Oops forgot to add the signed tag
-https://github.com/fedora-infra/fedora-packages/commit/902ffa44
+  https://github.com/fedora-infra/fedora-packages/commit/902ffa44
 - 74de4b89 Add basic info about creating a new release
-https://github.com/fedora-infra/fedora-packages/commit/74de4b89
+  https://github.com/fedora-infra/fedora-packages/commit/74de4b89
 
 
 4.1.0
