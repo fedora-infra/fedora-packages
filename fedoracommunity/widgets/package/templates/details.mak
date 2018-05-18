@@ -86,19 +86,18 @@ $(document).ready(function() {
           }
 
           line = line + ' <span class="datetime">' + msg['human_time'] + '</span>';
-          
+
+	  var link = $("<a>");
+
           if (msg.link != null) {
-            line = line + '<a href="' + msg.link + '">';
+	    link = link.attr("href", msg.link);
           }
 
           if (msg.subtitle != null) {
-            line = line + ' ' + msg.subtitle;
+	    link = link.text(msg.subtitle);
           }
 
-          if (msg.link != null) {
-            line = line + '</a>';
-          }
-          line = line + '</div>';
+          line = line + link.html() + '</div>';
           $('.history-cards').append(line);
       });
     }
