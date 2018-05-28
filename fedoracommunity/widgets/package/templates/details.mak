@@ -85,7 +85,7 @@ $(document).ready(function() {
             line = line + '<img src="' + msg.secondary_icon + '"/>'
           }
 
-          line = line + ' <span class="datetime">' + msg['human_time'] + '</span>';
+          line = line + ' <span class="datetime">' + msg['human_time'] + ' </span>';
 
 	  var link = $("<a>");
 
