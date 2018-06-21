@@ -46,7 +46,7 @@ Since we are using apache HTTP server to serve the application we need to run th
 command to reload the application to test some code changes.
 
 	$ cd devel
-	$ docker-compose exec web touch /usr/share/fedoracommunity/productiom/apache/fedoracommunity.wsgi
+	$ docker-compose exec web touch /usr/share/fedoracommunity/production/apache/fedoracommunity.wsgi
 
 This will change the timestamp of the .wsgi file and ask apache to reload the application.
 
