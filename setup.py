@@ -106,6 +106,7 @@ setup(
     package_builds = fedoracommunity.widgets.package.builds
 
     package_bugs = fedoracommunity.widgets.package.bugs
+    package_problems = fedoracommunity.widgets.package.problems
     package_contents = fedoracommunity.widgets.package.contents
     package_changelog = fedoracommunity.widgets.package.changelog
     package_sources = fedoracommunity.widgets.package.sources
@@ -113,6 +114,7 @@ setup(
     [fcomm.connector]
     koji = fedoracommunity.connectors:KojiConnector
     bodhi = fedoracommunity.connectors:BodhiConnector
+    faf = fedoracommunity.connectors:FafConnector
     bugzilla = fedoracommunity.connectors:BugzillaConnector
     yum = fedoracommunity.connectors:YumConnector
     xapian = fedoracommunity.connectors:XapianConnector
@@ -126,6 +128,7 @@ setup(
     package_updates = fedoracommunity.widgets.package.updates:Updates
     package_builds = fedoracommunity.widgets.package.builds:Builds
     package_bugs = fedoracommunity.widgets.package.bugs:BugsWidget
+    package_problems = fedoracommunity.widgets.package.problems:Problems
     package_contents = fedoracommunity.widgets.package.contents:ContentsWidget
     package_changelog = fedoracommunity.widgets.package.changelog:ChangelogWidget
     package_sources = fedoracommunity.widgets.package.sources:Sources

@@ -32,7 +32,6 @@ from fedoracommunity.connectors.api import \
 from fedoracommunity.connectors.api import get_connector
 from moksha.common.lib.dates import DateTimeDisplay
 
-
 class KojiConnector(IConnector, IQuery):
     _method_paths = {}
     _query_paths = {}

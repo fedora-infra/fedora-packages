@@ -69,6 +69,7 @@ class PackageNavWidget(TabWidget):
                         ('Builds', 'package_builds'),
                         ('Updates', 'package_updates'),
                         ('Bugs', 'package_bugs'),
+                        ('Problems', 'package_problems'),
                         ('Contents', 'package_contents'),
                         ('Changelog', 'package_changelog'),
                         ('Sources', 'package_sources')])
