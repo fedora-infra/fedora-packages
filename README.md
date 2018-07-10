@@ -1,20 +1,18 @@
-# fedora-packages
-
-fedora-packages allows to search for packages in Fedora.
+**fedora-packages** allows to search for packages in Fedora.
 
 ## Documentation
 Would be nice to have a bit more documentation.
 
 ### Hacking with docker-compose
 We have a docker-compose setup for hacking on the fedora-packages app.
-This setup matches the production deployment of fedora-packages (ie
-apache HTTP server with mod_wsgi).
+This setup matches [the production deployment](https://infrastructure.fedoraproject.org/cgit/ansible.git/tree/playbooks/groups/packages.yml)
+of fedora-packages (i.e. Apache HTTP server with mod_wsgi).
 
 To bring the environment up you should first install the following.
 
 	$ sudo dnf install docker-compose
 
-And then make sure that the docker daemon is running
+And then make sure that the docker daemon is running.
 
 	$ sudo systemctl start docker
 	$ sudo systemctl enable docker
@@ -28,7 +26,7 @@ your user to the docker group as follow.
 This is has for effect to give root permission to users added to the docker
 group.
 
-You will also need to get a development instance of the xapian database.
+You will also need a copy of Xapian database with indexed packages.
 
 	$ curl -o devel/docker/xapian.tar.gz https://cverna.fedorapeople.org/xapian.tar.gz
 
