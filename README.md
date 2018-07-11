@@ -66,8 +66,7 @@ your dev environment:
     $ vagrant up
 
 When this command is completed (it may take a while) you will be able to
-ssh into your dev VM with vagrant ssh and then run the c
-ommand to start the fedora-packages server:
+ssh into your dev VM with vagrant ssh and then run the command to start the fedora-packages server:
 
     $ vagrant ssh
     [vagrant@localhost ~]$ pushd /vagrant/; gearbox serve;
