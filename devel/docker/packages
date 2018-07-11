@@ -23,8 +23,6 @@ RUN mkdir -p  /var/log/fedoracommunity\
 
 EXPOSE 80
 
-RUN pwd
-
 # download and unpack production database
 WORKDIR /var/cache/fedoracommunity/packages
 RUN curl -O https://cverna.fedorapeople.org/xapian.tar.gz
