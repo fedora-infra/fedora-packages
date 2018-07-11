@@ -23,8 +23,13 @@ RUN mkdir -p  /var/log/fedoracommunity\
 
 EXPOSE 80
 
-ADD  xapian.tar.gz /var/cache/fedoracommunity/packages
+RUN pwd
+
+# download and unpack production database
+WORKDIR /var/cache/fedoracommunity/packages
+RUN curl -O https://cverna.fedorapeople.org/xapian.tar.gz
+RUN tar -xvf xapian.tar.gz
 
 COPY entry-point.sh /root/entry-point.sh
-COPY fedora-packages.conf /etc/httpd/conf.d/fedora-pacakges.conf
+COPY fedora-packages.conf /etc/httpd/conf.d/fedora-packages.conf
 COPY development.ini /etc/fedoracommunity/production.ini

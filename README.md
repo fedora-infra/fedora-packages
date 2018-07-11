@@ -26,10 +26,6 @@ your user to the docker group as follow.
 This is has for effect to give root permission to users added to the docker
 group.
 
-You will also need a copy of Xapian database with indexed packages.
-
-	$ curl -o devel/docker/xapian.tar.gz https://cverna.fedorapeople.org/xapian.tar.gz
-
 Now from the devel directory you can run docker-compose.
 
 	$ cd devel
