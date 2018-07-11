@@ -28,7 +28,6 @@ fedoracommunity/search/cache
 xappy
 logs
 git.fedoraproject.org
-paster.pid
 icons
 fedoracommunity/templates/home/
 var
