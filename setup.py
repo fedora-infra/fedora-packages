@@ -25,12 +25,7 @@ import glob
 import multiprocessing
 import logging
 
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
-    from setuptools import setup, find_packages
+from setuptools import setup, find_packages
 
 data_files = [
     ('fedoracommunity/public', filter(os.path.isfile, glob.glob('fedoracommunity/public/*'))),
@@ -47,7 +42,7 @@ data_files = [
     ('fedoracommunity/public/javascript', filter(os.path.isfile, glob.glob('fedoracommunity/public/javascript/*.js'))),
 ]
 
-packages = find_packages(exclude=['ez_setup'])
+packages = find_packages()
 
 setup(
     name='fedoracommunity',
