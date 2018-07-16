@@ -129,6 +129,9 @@ Fedora-packages is a web application that allow the user to search for packages 
 * Tue Oct 20 2015 Ralph Bean <rbean@redhat.com> - 2.0.20-1
 - new version
 
+* Tue May 20 2014 Ralph Bean <rbean@redhat.com> - 2.0.17-1
+- Further pkgdb2 updates.
+
 * Wed May 14 2014 Ralph Bean <rbean@redhat.com> - 2.0.16-2
 - Further pkgdb2 updates.
 
