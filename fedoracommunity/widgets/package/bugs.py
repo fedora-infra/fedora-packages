@@ -12,7 +12,7 @@ class BugStatsWidget(twc.Widget):
     kwds = twc.Param(default=None)
     product = twc.Param(default='Fedora')
     version = twc.Param(default='rawhide')
-    epel_version = twc.Param(default='el6')
+    epel_version = twc.Param(default='epel7')
     num_open = twc.Param(default='-')
 
     bz_prefix = "https://bugzilla.redhat.com/buglist.cgi"
