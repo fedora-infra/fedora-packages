@@ -77,7 +77,7 @@ Fedora-packages is a web application that allow the user to search for packages 
 
 %{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/production/apache
 %{__mkdir_p} -m 0700 %{buildroot}/%{_localstatedir}/cache/%{oldname}
-%{__install} production/apache/%{oldname}.wsgi %{buildroot}%{_datadir}/%{oldname}/production/apache/%{oldname}.wsgi
+%{__install} %{name}.wsgi %{buildroot}%{_datadir}/%{oldname}/%{name}.wsgi
 
 
 %files
