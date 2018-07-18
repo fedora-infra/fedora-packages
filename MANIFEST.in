@@ -6,8 +6,7 @@ recursive-include fedoracommunity/public/css *.css *.ttf *.png *.gif *.svg *.eot
 recursive-include initsys *
 include logrotate
 
-include fedoracommunity_makeyumcache
-include fedoracommunity.spec
+include fedora-packages.*
 include orbited.cfg
 include README.txt
 include AUTHORS
