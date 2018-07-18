@@ -75,7 +75,6 @@ Fedora-packages is a web application that allow the user to search for packages 
 %install
 %{__python2} setup.py install -O1 --skip-build --install-data=%{_datadir} --root %{buildroot}
 
-%{__mkdir_p} %{buildroot}%{_datadir}/%{oldname}/production/apache
 %{__mkdir_p} -m 0700 %{buildroot}/%{_localstatedir}/cache/%{oldname}
 %{__install} %{name}.wsgi %{buildroot}%{_datadir}/%{oldname}/%{name}.wsgi
 
@@ -86,7 +85,6 @@ Fedora-packages is a web application that allow the user to search for packages 
 %{python2_sitelib}/%{oldname}/
 %{python2_sitelib}/%{oldname}-%{version}-py2.7.egg-info/
 %attr(-,apache,root) %dir %{_datadir}/%{oldname}
-%attr(-,apache,root) %{_datadir}/%{oldname}/production
 %attr(-,apache,root) %{_datadir}/%{oldname}/public
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/%{oldname}
 %{_bindir}/fcomm-index-packages
@@ -274,7 +272,7 @@ Fedora-packages is a web application that allow the user to search for packages 
 - 0.3.8.1 - make sure js files are packaged
 
 * Thu Oct 29 2009 John (J5) Palmieri <johnp@redhat.com> - 0.3.8-1
-- 0.3.8 - add demos tab w/ amqp demo app 
+- 0.3.8 - add demos tab w/ amqp demo app
 
 * Tue Sep 22 2009 Luke Macken <lmacken@redhat.com> - 0.3.7-1
 - 0.3.7

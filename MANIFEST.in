@@ -1,4 +1,3 @@
-recursive-include production *
 recursive-include fedoracommunity *.mak
 recursive-include fedoracommunity *.js
 recursive-include fedoracommunity *.png *.gif *.svg
