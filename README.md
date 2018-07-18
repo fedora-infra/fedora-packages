@@ -5,10 +5,10 @@ Would be nice to have a bit more documentation.
 
 ### Hacking with docker-compose
 
-We have a `docker-compose setup` for hacking on the fedora-packages app.
+We have a `docker-compose` setup for hacking on the fedora-packages app.
 This setup matches the production deployment of fedora-packages (i.e.
-Apache HTTP server with mod_wsgi) that is split over several Ansible files
-in Fedora infrastructure repository.
+Apache HTTP server with `mod_wsgi`) that is split over several Ansible
+files in Fedora infrastructure repository.
 
 * https://infrastructure.fedoraproject.org/cgit/ansible.git/tree/playbooks/groups/packages.yml
 * https://infrastructure.fedoraproject.org/cgit/ansible.git/tree/roles/packages3/web
