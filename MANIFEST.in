@@ -10,6 +10,5 @@ include orbited.cfg
 include README.txt
 include AUTHORS
 include COPYING
-include build.ini
 include bin/fcomm-index-packages
 include bin/fcomm-index-latest-builds
