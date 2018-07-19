@@ -1,13 +1,15 @@
+# This image can only be built when it is executed with context
+# set to root directory or project checkout.
+#
+#     docker build -f packages ../
+#
+# `docker-compose build` from parent dir does this automatically.
+
 FROM registry.fedoraproject.org/fedora:27
 
-RUN dnf install -y TurboGears2 python-moksha-wsgi intltool koji bodhi-client\
-    python-feedparser python-iniparse pytz python2-pyOpenSSL httpd mod_wsgi diffstat\
-    fedpkg python-lockfile python-tw2-jqplugins-ui python-bugzilla\
-    xapian-bindings-python python-dogpile-core python-dogpile-cache\
-    python-memcached python2-markdown pygobject3 fedmsg python2-pytest\
-    python2-pdc-client python2-webhelpers libappstream-glib dumb-init\
-    python2-GitPython git python2-pytest-mock python2-pytest-vcr\
-    && dnf clean all
+COPY 01packages.txt /root/01packages.txt
+RUN dnf install -y $(grep "^[^#]" /root/01packages.txt)
+RUN dnf clean all
 
 RUN mkdir -p  /var/log/fedoracommunity\
     /var/cache/fedoracommunity/packages/icons\
@@ -28,6 +30,6 @@ WORKDIR /var/cache/fedoracommunity/packages
 RUN curl -O https://cverna.fedorapeople.org/xapian.tar.gz
 RUN tar -xvf xapian.tar.gz
 
-COPY entry-point.sh /root/entry-point.sh
-COPY fedora-packages.conf /etc/httpd/conf.d/fedora-packages.conf
-COPY development.ini /etc/fedoracommunity/production.ini
+COPY docker/entry-point.sh /root/entry-point.sh
+COPY docker/fedora-packages.conf /etc/httpd/conf.d/fedora-packages.conf
+COPY docker/development.ini /etc/fedoracommunity/production.ini

@@ -2,8 +2,8 @@ version: '3'
 services:
   web:
     build:
-      context: ./docker
-      dockerfile: packages
+      context: .
+      dockerfile: ./docker/packages
     image: packages:latest
     ports:
       - "80:80"
