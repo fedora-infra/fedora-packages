@@ -14,8 +14,6 @@
       - xapian-bindings-python
       - diffstat
       - fedpkg
-      - svn
-      - wget
       - python-webob
       - moksha
       - TurboGears2
@@ -42,9 +40,9 @@
     chdir: /vagrant/
   with_items:
     - rm -rf /vagrant/xapian/
-    - wget -N http://lmacken.fedorapeople.org/fedora-packages/xapian-LATEST.tar.xz
-    - tar xvf xapian-LATEST.tar.xz
-    - rm -rf xapian-LATEST.tar.xz
+    - curl -O https://cverna.fedorapeople.org/xapian.tar.gz
+    - tar xvf xapian.tar.gz
+    - rm -rf xapian.tar.gz
 
 - command: "{{ item }}"
   become: yes
@@ -53,7 +51,7 @@
     chdir: /var/tmp/
   with_items:
     - rm -rf /vagrant/fedoracommunity/public/images/icons/
-    - wget -N http://lmacken.fedorapeople.org/fedora-packages/icons.tar.xz
+    - curl -O https://lmacken.fedorapeople.org/fedora-packages/icons.tar.xz
     - tar xvf icons.tar.xz
     - mv icons /vagrant/fedoracommunity/public/images/
     - rm -rf icons.tar.xz
