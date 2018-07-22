@@ -31,7 +31,6 @@
       state: present
   with_items:
       - gearbox
-      - crank==0.7.3
 
 - command: "{{ item }}"
   become: yes
