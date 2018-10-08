@@ -66,7 +66,6 @@ def download_file(url, dest):
 
 class Indexer(object):
     def __init__(self, cache_path,
-                 tagger_url=None,
                  bodhi_url=None,
                  mdapi_url=None,
                  icons_url=None,
@@ -77,7 +76,6 @@ class Indexer(object):
         self.dbpath = join(cache_path, 'search')
         self.icons_path = join(cache_path, 'icons')
         self.default_icon = 'package_128x128.png'
-        self.tagger_url = tagger_url or "https://apps.fedoraproject.org/tagger"
         self.bodhi_url = bodhi_url or "https://bodhi.fedoraproject.org"
         self.mdapi_url = mdapi_url or "https://apps.fedoraproject.org/mdapi"
         self.icons_url = icons_url or "https://alt.fedoraproject.org/pub/alt/screenshots"
@@ -350,25 +348,6 @@ class Indexer(object):
             log.warn("Failed to get file list for %r, %r" % (name, url))
             return
 
-    def index_tags(self, doc, package):
-        name = package['name']
-        url = self.tagger_url + '/api/v1/' + name
-        data = self._call_api(url)
-        if data.get('tags') is not None:
-            tags = data.get('tags')
-            for tag_info in tags:
-                tag_name = tag_info['tag']
-                total = tag_info['total']
-                if total > 0:
-                    log.debug("    adding '%s' tag (%d)" % (
-                        tag_name.encode('utf-8'), total))
-                for i in range(total):
-                    self.indexer.index_text_without_positions(tag_name)
-
-        else:
-            log.warn("Failed to get tagger info for %r, %r" % (name, url))
-            return
-
     def index_packages(self):
         # This is a generator that yields dicts of package info that we index
 
@@ -421,7 +400,6 @@ class Indexer(object):
         self.indexer.index_text_without_positions(filtered_description)
 
         self.index_files_of_interest(doc, package)
-        self.index_tags(doc, package)
 
         for sub_package in package['sub_pkgs']:
             filtered_sub_package_name = filter_search_string(sub_package['name'])
@@ -432,9 +410,6 @@ class Indexer(object):
                                                       + '__EX', 10, '')
 
             self.index_files_of_interest(doc, sub_package)
-
-            # fedora-tagger does not provide special tags for sub-packages...
-            # self.index_tags(doc, sub_package)
 
             # Set special sub-package icon if appstream has one
             sub_package['icon'] = self.icon_cache.get(
@@ -471,9 +446,9 @@ class Indexer(object):
         self.db.commit()
 
 
-def run(cache_path, tagger_url=None, bodhi_url=None,
+def run(cache_path, bodhi_url=None,
         mdapi_url=None, icons_url=None, pdc_url=None, pagure_url=None):
-    indexer = Indexer(cache_path, tagger_url, bodhi_url, mdapi_url,
+    indexer = Indexer(cache_path, bodhi_url, mdapi_url,
                       icons_url, pdc_url, pagure_url)
 
     indexer.pull_icons()

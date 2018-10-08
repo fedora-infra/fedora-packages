@@ -33,7 +33,6 @@ icon_url = tg.url("/images/icons/%s" % icon)
               <a class="dropdown-item" href="https://retrace.fedoraproject.org/faf/problems/?component_names=${w.package_info['name']}"><img src = "${tg.url('/images/16_abrt.png')}"/> FAF </a>
               <a class="dropdown-item" href="http://koji.fedoraproject.org/koji/search?match=glob&type=package&terms=${quote(w.package_info['name'])}"><img src = "https://fedoraproject.org/static/images/icons/fedora-infra-icon_koji.png"/> Koji Builds </a>
               <a class="dropdown-item" href="https://src.fedoraproject.org/rpms/${w.package_info['name']}"><img src = "https://apps.fedoraproject.org/img/icons/git-logo.png" width=16px/> SCM </a>
-              <a class="dropdown-item" href="https://apps.fedoraproject.org/tagger/${w.package_info['name']}"><img src = "${tg.url('/images/16_tagger.png')}"/> Tagger </a>
             </div>
           </span>
         </h2>

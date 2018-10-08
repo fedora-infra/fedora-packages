@@ -28,9 +28,6 @@ if __name__=="__main__":
     parser.add_option("--index-db-dest", dest="index_db_dest", default=None,
                       help="directory to move the xapian index to when we are done",
                       metavar="INDEXDBDEST")
-    parser.add_option("--tagger-url", dest="tagger_url", default=None,
-                      help="the url to get the tagger json data from",
-                      metavar="TAGGERURL")
     parser.add_option("--pagure-url", dest="pagure_url", default=None,
                       help="the base url to get pagure data from",
                       metavar="PAGUREURL")
@@ -65,7 +62,6 @@ if __name__=="__main__":
 
     try:
         run(cache_path=options.cache_path,
-            tagger_url=options.tagger_url,
             pagure_url=options.pagure_url,
             icons_url=options.icons_url,
             mdapi_url=options.mdapi_url,

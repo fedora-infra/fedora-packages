@@ -76,9 +76,6 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
         self.cache_path = config.get(
             'fedoracommunity.connector.xapian.package-search.db',
             'xapian').strip('search')
-        self.tagger_url = config.get(
-            'fedoracommunity.connector.tagger.baseurl',
-            'https://apps.fedoraproject.org/tagger')
         self.mdapi_url = config.get(
             'fedoracommunity.connector.mdapi.baseurl',
             'https://apps.fedoraproject.org/mdapi')
@@ -219,7 +216,6 @@ class CacheInvalidator(fedmsg.consumers.FedmsgConsumer):
             try:
                 indexer = index.Indexer(
                     cache_path=self.cache_path,
-                    tagger_url=self.tagger_url,
                     mdapi_url=self.mdapi_url,
                     icons_url=self.icons_url,
                 )
