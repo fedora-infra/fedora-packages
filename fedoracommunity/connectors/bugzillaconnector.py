@@ -32,7 +32,7 @@ from bugzillahacks import hotpatch_bugzilla
 # Do it at import-time.
 hotpatch_bugzilla()
 
-PRODUCTS = ['Fedora', 'Fedora EPEL']
+PRODUCTS = ['Fedora', 'Fedora EPEL', 'Fedora Modules']
 
 # Don't query closed bugs for these packages, since the queries timeout
 BLACKLIST = ['kernel']
