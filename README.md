@@ -95,3 +95,6 @@ Git tag.
 	$ git push && git push --tag
 
 Once the tag has been successfully pushed, a new release will be available in github.
+
+## License
+fedora-packages is free software; you can redistribute it and/or modify it under the terms of the GNU Affero General Public License v3.0. See COPYING included with the distribution for details.
