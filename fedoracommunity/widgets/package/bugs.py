@@ -10,7 +10,11 @@ class BugStatsWidget(twc.Widget):
     template = "mako:fedoracommunity.widgets.package.templates.bugs_stats_widget"
     id = twc.Param(default='bugs_widget')
     kwds = twc.Param(default=None)
-    product = twc.Param(default='Fedora')
+    # To get more than one key/value pair with the same key in urllib.urlencode, we need to create a tuple first
+    query_product = (
+        ("query_format", "advanced"),
+        ("product", "Fedora"), 
+        ("product", "FedoraEPEL"))
     version = twc.Param(default='rawhide')
     epel_version = twc.Param(default='epel7')
     num_open = twc.Param(default='-')
@@ -20,15 +24,11 @@ class BugStatsWidget(twc.Widget):
     status_closed_string = "bug_status=CLOSED"
 
     base_query_string = twc.Variable(default='')
-
+    
     def prepare(self):
         super(BugStatsWidget, self).prepare()
-        self.base_query_string = urllib.urlencode({
-            "query_format": "advanced",
-            "product": self.product,
-            "component": self.package,
-        })
-
+        # Here we use the tuple and the package to create a string for bugzilla
+        self.base_query_string = urllib.urlencode(self.query_product, {"component":self.package})
 
 class BugsGrid(Grid):
     resource = 'bugzilla'
