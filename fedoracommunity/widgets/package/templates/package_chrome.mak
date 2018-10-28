@@ -40,6 +40,10 @@ icon_url = tg.url("/images/icons/%s" % icon)
             Subpackage of <a class="subpackage_link" href="${tg.url('/%s' % w.package_info['name'])}">${w.package_info['name']}</a>
         % endif
         <div><em>${w.summary}</em></div>
+        <div>
+            <h4>Install this package:</h4>
+            <em> dnf install ${w.kwds['package_name']} </em>
+        </div>
       </div>
     </div>
 
