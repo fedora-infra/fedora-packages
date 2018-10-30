@@ -24,7 +24,7 @@ class BugStatsWidget(twc.Widget):
     def prepare(self):
         super(BugStatsWidget, self).prepare()
         # To get more than one key/value pair with the same key in urllib.urlencode, we need to create a tuple first
-        query_product = (
+        self.query_product = (
             ("query_format", "advanced"),
             ("product", "Fedora"), 
             ("product", "FedoraEPEL"),
