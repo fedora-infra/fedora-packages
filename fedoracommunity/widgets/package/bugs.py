@@ -27,7 +27,7 @@ class BugStatsWidget(twc.Widget):
         self.query_product = (
             ("query_format", "advanced"),
             ("product", "Fedora"), 
-            ("product", "FedoraEPEL"),
+            ("product", "Fedora EPEL"),
             ("component", self.package))
         # Here we use the tuple and the package to create a string for bugzilla
         self.base_query_string = urllib.urlencode(self.query_product)
