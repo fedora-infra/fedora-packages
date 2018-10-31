@@ -1,3 +1,53 @@
+4.2.0
+-----
+
+Pull Requests
+- (steaksauce)      #405,  A step in the right direction for #279
+  https://github.com/fedora-infra/fedora-packages/pull/405
+- (steaksauce)      #404, Resolving #350 -- adding product FedoraEPEL to the bz string
+  https://github.com/fedora-infra/fedora-packages/pull/404
+- (berroteran)      #403, Add license topic entry on readme file
+  https://github.com/fedora-infra/fedora-packages/pull/403
+- (mattiaverga)     #402, Add Fedora Modules to bugzilla allowed products list
+  https://github.com/fedora-infra/fedora-packages/pull/402
+- (cverna)          #400, Remove references to fedora-tagger
+  https://github.com/fedora-infra/fedora-packages/pull/400
+- (abitrolly)       #395, Bring Vagrant development environment up to date
+  https://github.com/fedora-infra/fedora-packages/pull/395
+- (mhabrnal)        #393, Introduce "problems" tab in package page
+  https://github.com/fedora-infra/fedora-packages/pull/393
+- (abitrolly)       #392, Move F27 package dependencies into separate file
+  https://github.com/fedora-infra/fedora-packages/pull/392
+- (abitrolly)       #391, Remove unused archive_fedoracommunity_resources distutils command
+  https://github.com/fedora-infra/fedora-packages/pull/391
+- (cverna)          #389, The production folder is not needed anymore
+  https://github.com/fedora-infra/fedora-packages/pull/389
+- (cverna)          #389, The production folder is not needed anymore
+  https://github.com/fedora-infra/fedora-packages/pull/389
+- (abitrolly)       #388, Link all Ansible files in README.md (fixes #387)
+  https://github.com/fedora-infra/fedora-packages/pull/388
+- (abitrolly)       #385, Merged `master` to `devel`
+  https://github.com/fedora-infra/fedora-packages/pull/385
+- (abitrolly)       #383, Move .wsgi to the top
+  https://github.com/fedora-infra/fedora-packages/pull/383
+- (abitrolly)       #382, Cleanup unused cruft in repository
+  https://github.com/fedora-infra/fedora-packages/pull/382
+- (manaswinidas)    #381, Fixes minor typo in Readme
+  https://github.com/fedora-infra/fedora-packages/pull/381
+- (abitrolly)       #380, `paster` doesn't seem to be used anymore.
+  https://github.com/fedora-infra/fedora-packages/pull/380
+- (abitrolly)       #378, Download Xapian DB during docker-compose build
+  https://github.com/fedora-infra/fedora-packages/pull/378
+- (abitrolly)       #377, README.md Xapian database is a copy (fixes #375)
+  https://github.com/fedora-infra/fedora-packages/pull/377
+- (mhabrnal)        #371, Fix typo in README
+  https://github.com/fedora-infra/fedora-packages/pull/371
+- (cverna)          #367, Add missing space after fedmsg time
+  https://github.com/fedora-infra/fedora-packages/pull/367
+- (puiterwijk)      #365, Escape the fedmsg subitlte from datagrepper correctly
+  https://github.com/fedora-infra/fedora-packages/pull/365
+
+
 4.1.1
 -----
 

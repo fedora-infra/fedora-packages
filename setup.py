@@ -46,7 +46,7 @@ packages = find_packages()
 
 setup(
     name='fedoracommunity',
-    version='4.1.1',
+    version='4.2.0',
     description='',
     license='AGPLv3',
     authors=('John (J5) Palmieri <johnp@redhat.com>',

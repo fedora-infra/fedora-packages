@@ -1,7 +1,7 @@
 %global oldname fedoracommunity
 
 Name:           fedora-packages
-Version:        4.1.1
+Version:        4.2.0
 Release:        1%{?dist}
 Summary:        Fedora packages search engine
 Group:          Applications/Internet
@@ -85,11 +85,14 @@ Fedora-packages is a web application that allow the user to search for packages 
 %{python2_sitelib}/%{oldname}/
 %{python2_sitelib}/%{oldname}-%{version}-py2.7.egg-info/
 %attr(-,apache,root) %dir %{_datadir}/%{oldname}
-%attr(-,apache,root) %{_datadir}/%{oldname}/public
+%attr(-,apache,root) %{_datadir}/%{oldname}
 %attr(-,apache,apache) %dir %{_localstatedir}/cache/%{oldname}
 %{_bindir}/fcomm-index-packages
 
 %changelog
+* Wed Oct 31 2018 Clement Verna <cverna@tutanota.com> - 4.2.0
+- New version
+
 * Thu Apr 05 2018 Clement Verna <cverna@tutanota.com> - 4.0.1-1
 - Display pending release in the Release overview
 
