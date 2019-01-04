@@ -38,3 +38,5 @@ xapian-backup*
 devel/ansible/playbook.retry
 *.tar.gz
 .cache
+.venv/
+.vscode/
