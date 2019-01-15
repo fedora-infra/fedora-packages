@@ -2,7 +2,7 @@
 
 Name:           fedora-packages
 Version:        4.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Fedora packages search engine
 Group:          Applications/Internet
 License:        AGPLv3
@@ -33,8 +33,8 @@ BuildRequires: python-webob
 Requires: TurboGears2
 Requires: python-moksha-wsgi
 Requires: intltool
-Requires: koji
-Requires: bodhi-client
+Requires: python2-koji
+Requires: python2-bodhi-client
 Requires: python-feedparser
 Requires: python-iniparse
 Requires: pytz
@@ -58,6 +58,7 @@ Requires: python-webhelpers
 Requires: libappstream-glib
 Requires: python-daemon
 Requires: python-webob
+Requires: python2-GitPython
 
 # For spectool
 Requires: rpmdevtools
@@ -90,7 +91,10 @@ Fedora-packages is a web application that allow the user to search for packages 
 %{_bindir}/fcomm-index-packages
 
 %changelog
-* Wed Oct 31 2018 Clement Verna <cverna@tutanota.com> - 4.2.0
+* Tue Jan 15 2019 Clement Verna <cverna@tutanota.com> - 4.2.0-2
+- Fix dependencies
+
+* Wed Oct 31 2018 Clement Verna <cverna@tutanota.com> - 4.2.0-1
 - New version
 
 * Thu Apr 05 2018 Clement Verna <cverna@tutanota.com> - 4.0.1-1
