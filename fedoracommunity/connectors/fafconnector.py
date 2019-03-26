@@ -15,6 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import requests
+from paste.httpexceptions import HTTPBadRequest
+from paste.httpexceptions import HTTPBadGateway
 
 from fedoracommunity.connectors.api import \
     IConnector, IQuery, ParamFilter
@@ -66,10 +68,8 @@ class FafConnector(IConnector, IQuery):
             can_filter_wildcards=False)
 
         f = ParamFilter()
-        f.add_filter('package', ['p'], allow_none=True)
-        f.add_filter('status', ['s'], allow_none=True)
-        f.add_filter('crash_function', ['c'], allow_none=True)
-        cls._query_builds_filter = f
+        f.add_filter('package_name', list(), allow_none=False)
+        cls._query_problems_filter = f
 
     def query_problems(self, start_row=None,
                        rows_per_page=10,
@@ -80,16 +80,24 @@ class FafConnector(IConnector, IQuery):
 
         if not filters:
             filters = {}
-        filters = self._query_builds_filter.filter(filters, conn=self)
 
-        package = filters.get('package', '')
+        if not filters.get('package_name'):
+            raise HTTPBadRequest('"package_name" is a required filter.')
+
+        package = filters['package_name']
 
         url = "https://retrace.fedoraproject.org/faf/problems/?component_names=" + package
         headers = {'Accept': 'application/json'}
 
         response = requests.get(url, headers=headers)
 
-        if response.status_code == requests.codes['ok']:
-            problems = response.json()['problems']
+        if not bool(response):
+            raise HTTPBadGateway("Failed to talk to FAF, %r %r" % (url, response))
+
+        data = response.json()
+        if 'problems' in data:
+            problems = data['problems']
+        else:
+            raise HTTPBadGateway("Got unexpected response from FAF.")
 
         return (len(problems), problems)

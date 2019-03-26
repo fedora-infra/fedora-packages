@@ -128,7 +128,7 @@ setup(
     package_updates = fedoracommunity.widgets.package.updates:Updates
     package_builds = fedoracommunity.widgets.package.builds:Builds
     package_bugs = fedoracommunity.widgets.package.bugs:BugsWidget
-    package_problems = fedoracommunity.widgets.package.problems:Problems
+    package_problems = fedoracommunity.widgets.package.problems:ProblemsWidget
     package_contents = fedoracommunity.widgets.package.contents:ContentsWidget
     package_changelog = fedoracommunity.widgets.package.changelog:ChangelogWidget
     package_sources = fedoracommunity.widgets.package.sources:Sources

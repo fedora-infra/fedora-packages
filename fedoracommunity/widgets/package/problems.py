@@ -7,21 +7,16 @@ class ProblemsGrid(Grid):
     resource_path='query_problems'
 
     def prepare(self):
-        self.package = self.package_name
+        self.filters = {
+            'package_name' : self.package_name
+        }
+
+        self.rows_per_page = 10
 
         # Must do this last for our Grids
         super(ProblemsGrid, self).prepare()
 
 
-class Problems(twc.Widget):
+class ProblemsWidget(twc.Widget):
     template = 'mako:fedoracommunity.widgets.package.templates.problems'
-    in_progress_builds = ProblemsGrid
-
-    def prepare(self):
-        super(Problems, self).prepare()
-        subpackage_of = self.kwds.get('subpackage_of', '')
-
-        if subpackage_of:
-            self.main_package = subpackage_of
-        else:
-            self.main_package = self.kwds['package_name']
+    problems_grid = ProblemsGrid
