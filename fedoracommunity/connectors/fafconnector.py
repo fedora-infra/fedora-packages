@@ -86,7 +86,9 @@ class FafConnector(IConnector, IQuery):
 
         package = filters['package_name']
 
-        url = "https://retrace.fedoraproject.org/faf/problems/?component_names=" + package
+        url = "https://retrace.fedoraproject.org/faf/problems/?component_names={package}&limit={rows}"
+        url = url.format(package=package, rows=rows_per_page)
+
         headers = {'Accept': 'application/json'}
 
         response = requests.get(url, headers=headers)
