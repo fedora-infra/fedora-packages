@@ -94,12 +94,12 @@ class FafConnector(IConnector, IQuery):
         response = requests.get(url, headers=headers)
 
         if not bool(response):
-            raise HTTPBadGateway("Failed to talk to FAF, %r %r" % (url, response))
+            raise HTTPBadGateway("Failed to talk to ABRT Analytics, %r %r" % (url, response))
 
         data = response.json()
         if 'problems' in data:
             problems = data['problems']
         else:
-            raise HTTPBadGateway("Got unexpected response from FAF.")
+            raise HTTPBadGateway("Got unexpected response from ABRT Analytics.")
 
         return (len(problems), problems)
