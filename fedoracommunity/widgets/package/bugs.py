@@ -16,17 +16,17 @@ class BugStatsWidget(twc.Widget):
     num_open = twc.Param(default='-')
 
     bz_prefix = "https://bugzilla.redhat.com/buglist.cgi"
-    status_open_string = "bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
-    status_closed_string = "bug_status=CLOSED"
+    status_open_string = "bug_status=__open__"
+    status_closed_string = "bug_status=__closed__"
 
     base_query_string = twc.Variable(default='')
-    
+
     def prepare(self):
         super(BugStatsWidget, self).prepare()
         # To get more than one key/value pair with the same key in urllib.urlencode, we need to create a tuple first
         self.query_product = (
             ("query_format", "advanced"),
-            ("product", "Fedora"), 
+            ("product", "Fedora"),
             ("product", "Fedora EPEL"),
             ("component", self.package))
         # Here we use the tuple and the package to create a string for bugzilla

@@ -40,9 +40,7 @@ BLACKLIST = ['kernel']
 MAX_BZ_QUERIES = 200
 BUG_SORT_KEYS = ['status', 'product', 'version', 'bug_id']
 
-OPEN_BUG_STATUS = ['ASSIGNED', 'NEW', 'MODIFIED', 'ON_DEV', 'ON_QA',
-                   'VERIFIED', 'FAILS_QA', 'RELEASE_PENDING', 'POST',
-                   'REOPENED']
+OPEN_BUG_STATUS = ['__open__']
 
 
 def chunks(l, n):

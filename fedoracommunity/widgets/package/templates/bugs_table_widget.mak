@@ -17,7 +17,7 @@
           $("#bug_search").keypress(function(e) {
             if (e.which == 13) {
               window.location = 'https://bugzilla.redhat.com/buglist.cgi?' + $.param({
-                bug_status: ['NEW', 'ASSIGNED', 'REOPENED'],
+                bug_status: '__open__',
                 short_desc: $(this).val(),
                 short_desc_type: 'allwords',
                 component: '${w.package}',

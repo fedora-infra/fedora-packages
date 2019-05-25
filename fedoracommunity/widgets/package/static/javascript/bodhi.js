@@ -98,7 +98,7 @@ function get_menu_links(nvr) {
        )
     ).append(
        $('<li/>').append(
-         $('<a/>').attr('href', 'https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&classification=Fedora&product=Fedora&bug_status=NEW&bug_status=ASSIGNED&bug_status=MODIFIED&component=' + nvr.name).append(
+         $('<a/>').attr('href', 'https://bugzilla.redhat.com/buglist.cgi?query_format=advanced&classification=Fedora&product=Fedora&bug_status=__open__&component=' + nvr.name).append(
            $('<img/>').attr('src', moksha.url('/images/16_bugzilla.png'))
          ).append(
            $('<span/>')
