@@ -348,7 +348,8 @@ def bug_sort(arg1, arg2):
         elif key == 'status':
             # We want items to appear by status in a certain order, not
             # alphabetically.  Items I forgot to hardcode just go last.
-            status_order = ['NEW', 'ASSIGNED', 'MODIFIED', 'ON_QA', 'POST']
+            status_order = ['NEW', 'VERIFIED', 'ASSIGNED', 'MODIFIED',
+                            'ON_DEV', 'ON_QA', 'RELEASE_PENDING', 'POST']
 
             def status_to_index(val):
                 try:
